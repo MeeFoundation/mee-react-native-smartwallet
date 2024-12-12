@@ -1,3 +1,8 @@
-const lightColors = {}
+export const lightColors = {
+  primary: "#4F868E",
+}
 
-const themeColors: typeof lightColors = {}
+// TODO - Add dark mode colors
+export const darkColors: typeof lightColors = {
+  ...lightColors,
+}
