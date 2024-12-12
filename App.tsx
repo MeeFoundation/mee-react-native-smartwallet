@@ -1,26 +1,17 @@
-import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import React from "react"
+import { SafeAreaView, StatusBar, useColorScheme } from "react-native"
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const isDarkMode = useColorScheme() === "dark"
 
   return (
     <SafeAreaView>
-      {/* <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      /> */}
-      <Text>dadasdasdasdasdadas</Text>
-      <ScrollView contentInsetAdjustmentBehavior="automatic"></ScrollView>
+      <StatusBar
+        barStyle={isDarkMode ? "light-content" : "dark-content"}
+        // backgroundColor={backgroundStyle.backgroundColor}
+      />
     </SafeAreaView>
-  );
+  )
 }
 
-export default App;
+export default App
