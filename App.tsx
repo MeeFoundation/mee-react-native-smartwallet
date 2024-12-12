@@ -1,17 +1,10 @@
-import React from "react"
-import { SafeAreaView, StatusBar, useColorScheme } from "react-native"
+import { NavigationContainer } from "@react-navigation/native"
+import { RootStack } from "./src/navigation/rootNavigation"
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === "dark"
-
+export default function App() {
   return (
-    <SafeAreaView>
-      <StatusBar
-        barStyle={isDarkMode ? "light-content" : "dark-content"}
-        // backgroundColor={backgroundStyle.backgroundColor}
-      />
-    </SafeAreaView>
+    <NavigationContainer>
+      <RootStack />
+    </NavigationContainer>
   )
 }
-
-export default App

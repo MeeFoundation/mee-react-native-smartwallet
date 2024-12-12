@@ -1,0 +1,18 @@
+current directory: /Users/dmitry/project/swiftinvention/mee/mee-react-native-smartwallet/vendor/cache/ruby/3.3.0/gems/nkf-0.2.0/ext/nkf
+/Users/dmitry/.asdf/installs/ruby/3.3.6/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /Users/dmitry/project/swiftinvention/mee/mee-react-native-smartwallet/vendor/cache/ruby/3.3.0/gems/nkf-0.2.0/ext/nkf
+make DESTDIR\= sitearchdir\=./.gem.20241212-38929-6m6uut sitelibdir\=./.gem.20241212-38929-6m6uut clean
+
+current directory: /Users/dmitry/project/swiftinvention/mee/mee-react-native-smartwallet/vendor/cache/ruby/3.3.0/gems/nkf-0.2.0/ext/nkf
+make DESTDIR\= sitearchdir\=./.gem.20241212-38929-6m6uut sitelibdir\=./.gem.20241212-38929-6m6uut
+compiling nkf.c
+linking shared-object nkf.bundle
+
+current directory: /Users/dmitry/project/swiftinvention/mee/mee-react-native-smartwallet/vendor/cache/ruby/3.3.0/gems/nkf-0.2.0/ext/nkf
+make DESTDIR\= sitearchdir\=./.gem.20241212-38929-6m6uut sitelibdir\=./.gem.20241212-38929-6m6uut install
+/opt/homebrew/bin/ginstall -c -m 0755 nkf.bundle ./.gem.20241212-38929-6m6uut
+
+current directory: /Users/dmitry/project/swiftinvention/mee/mee-react-native-smartwallet/vendor/cache/ruby/3.3.0/gems/nkf-0.2.0/ext/nkf
+make DESTDIR\= sitearchdir\=./.gem.20241212-38929-6m6uut sitelibdir\=./.gem.20241212-38929-6m6uut clean
