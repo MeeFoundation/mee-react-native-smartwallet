@@ -1,12 +1,17 @@
 import BellIcon from "@assets/images/bell.svg"
+import MenuIcon from "@assets/images/menu.svg"
+import SearchIcon from "@assets/images/search.svg"
 import { useRoute } from "@react-navigation/native"
 import { colors } from "@utils/theme"
-import { StyleSheet, Text, View } from "react-native"
+import { StyleSheet, View } from "react-native"
+import { Typography } from "./Typography"
 
 export const HeaderRight = () => {
   return (
-    <View style={styles.blockPaddings}>
+    <View style={{ ...styles.horizontalGaps, ...styles.menu }}>
+      <SearchIcon />
       <BellIcon />
+      <MenuIcon />
     </View>
   )
 }
@@ -15,8 +20,8 @@ export const HeaderLeft = () => {
   const route = useRoute()
 
   return (
-    <View style={styles.blockPaddings}>
-      <Text>{route.name}</Text>
+    <View style={styles.horizontalGaps}>
+      <Typography style={styles.text}>{route.name}</Typography>
     </View>
   )
 }
@@ -28,7 +33,11 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     color: colors.white,
   },
-  blockPaddings: {
+  horizontalGaps: {
     paddingHorizontal: 16,
+  },
+  menu: {
+    flexDirection: "row",
+    gap: 8,
   },
 })
