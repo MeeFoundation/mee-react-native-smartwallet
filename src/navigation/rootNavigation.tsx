@@ -8,10 +8,21 @@ import { Categories } from "../screens/Categories"
 import { Connections } from "../screens/Connections"
 import { colors } from "../utils/theme"
 
+export type RootStackParamList = {
+  "Manage Connection": { id: string }
+}
+
+declare global {
+  namespace ReactNavigation {
+    interface RootParamList extends RootStackParamList {}
+  }
+}
+
 export const rootNavigationLinks = {
-  Home: "Home",
-  Connections: "Connections",
-  Categories: "Categories",
+  home: "Home",
+  connections: "Connections",
+  categories: "Categories",
+  manageConnection: "Manage Connection",
 }
 
 const Stack = createNativeStackNavigator()
@@ -31,14 +42,14 @@ const TabsStack = () => {
       }}
     >
       <Tab.Screen
-        name={rootNavigationLinks.Connections}
+        name={rootNavigationLinks.connections}
         component={Connections}
         options={{
           tabBarIcon: ({ focused }) => <LinkIcon opacity={focused ? 0.5 : 1} />,
         }}
       />
       <Tab.Screen
-        name={rootNavigationLinks.Categories}
+        name={rootNavigationLinks.categories}
         component={Categories}
         options={{
           tabBarIcon: ({ focused }) => <DatabaseIcon opacity={focused ? 0.5 : 1} />,
@@ -51,10 +62,11 @@ const TabsStack = () => {
 export function RootStack() {
   return (
     <Stack.Navigator
-      initialRouteName={rootNavigationLinks.Home}
-      screenOptions={{ headerShown: false }}
+      initialRouteName={rootNavigationLinks.home}
+      // screenOptions={{ headerShown: false }}
     >
-      <Stack.Screen name={rootNavigationLinks.Home} component={TabsStack} />
+      <Stack.Screen name={rootNavigationLinks.home} component={TabsStack} />
+      <Stack.Screen name={rootNavigationLinks.manageConnection} component={Connections} />
     </Stack.Navigator>
   )
 }

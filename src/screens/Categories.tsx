@@ -1,10 +1,17 @@
-import { Text, View } from "react-native"
-import { colors } from "../utils/theme"
+import { useNavigation } from "@react-navigation/native"
+import { Button, View } from "react-native"
+
+// const navigation = useNavigation<NavigationProp<RootStackParamList>>()
 
 export function Categories() {
+  const navigation = useNavigation()
+
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text style={{ color: colors.primary }}>Categories</Text>
+      <Button
+        title="Old York Time"
+        onPress={() => navigation.navigate("Manage Connection", { id: "1" })}
+      />
     </View>
   )
 }

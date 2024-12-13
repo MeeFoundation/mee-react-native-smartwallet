@@ -6,7 +6,7 @@ export function Connections() {
   const navigation = useNavigation()
 
   useEffect(() => {
-    navigation.setOptions({ headerRight: () => <Text>Header Right</Text> })
+    // navigation.setOptions({ headerRight: () => <Text>Header Right</Text> })
   }, [navigation])
 
   return (
