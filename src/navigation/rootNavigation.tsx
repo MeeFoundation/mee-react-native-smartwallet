@@ -1,6 +1,6 @@
+import DatabaseIcon from "@assets/images/database.svg"
+import LinkIcon from "@assets/images/link.svg"
 import { HeaderLeft, HeaderRight } from "@components/Header"
-import { DatabaseIcon } from "@components/icons/DatabaseIcon"
-import { LinkIcon } from "@components/icons/LinkIcon"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { Categories } from "@screens/Categories"
