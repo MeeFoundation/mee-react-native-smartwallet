@@ -1,12 +1,14 @@
+import { HeaderLeft, HeaderRight } from "@components/Header"
+import { DatabaseIcon } from "@components/icons/DatabaseIcon"
+import { LinkIcon } from "@components/icons/LinkIcon"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import { Categories } from "@screens/Categories"
+import { Connections } from "@screens/Connections"
+import { ManageConnection } from "@screens/ManageConnection"
+import { colors, fonts } from "@utils/theme"
 import { useEffect } from "react"
 import { StatusBar } from "react-native"
-import { DatabaseIcon } from "../components/icons/DatabaseIcon"
-import { LinkIcon } from "../components/icons/LinkIcon"
-import { Categories } from "../screens/Categories"
-import { Connections } from "../screens/Connections"
-import { colors } from "../utils/theme"
 
 export type RootStackParamList = {
   "Manage Connection": { id: string }
@@ -38,7 +40,13 @@ const TabsStack = () => {
       screenOptions={{
         tabBarActiveTintColor: colors.tabBarActiveColor,
         tabBarInactiveTintColor: colors.primary,
+        tabBarLabelStyle: {
+          fontFamily: fonts.publicSans.regular,
+        },
         headerStyle: { backgroundColor: colors.primary },
+        headerLeft: HeaderLeft,
+        headerRight: HeaderRight,
+        headerTitle: "",
       }}
     >
       <Tab.Screen
@@ -61,12 +69,13 @@ const TabsStack = () => {
 
 export function RootStack() {
   return (
-    <Stack.Navigator
-      initialRouteName={rootNavigationLinks.home}
-      // screenOptions={{ headerShown: false }}
-    >
-      <Stack.Screen name={rootNavigationLinks.home} component={TabsStack} />
-      <Stack.Screen name={rootNavigationLinks.manageConnection} component={Connections} />
+    <Stack.Navigator initialRouteName={rootNavigationLinks.home}>
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name={rootNavigationLinks.home}
+        component={TabsStack}
+      />
+      <Stack.Screen name={rootNavigationLinks.manageConnection} component={ManageConnection} />
     </Stack.Navigator>
   )
 }

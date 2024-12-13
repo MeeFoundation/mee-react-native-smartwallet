@@ -1,5 +1,13 @@
 import { Appearance } from "react-native"
 
+export const fonts = {
+  publicSans: {
+    regular: "PublicSans-Regular",
+    bold: "PublicSans-Bold",
+    medium: "PublicSans-Medium",
+  },
+} as const
+
 const colorScheme = Appearance.getColorScheme()
 
 export const lightColors = {

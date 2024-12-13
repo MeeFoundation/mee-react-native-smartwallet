@@ -1,8 +1,6 @@
 import { useNavigation } from "@react-navigation/native"
 import { Button, View } from "react-native"
 
-// const navigation = useNavigation<NavigationProp<RootStackParamList>>()
-
 export function Categories() {
   const navigation = useNavigation()
 
