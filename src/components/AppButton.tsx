@@ -12,13 +12,13 @@ const ANUMATION_DURATION = 100
 
 const bgColorMap: Record<Variant, [string, string]> = {
   primary: [colors.primary, colors.primaryActive],
-  danger: [colors.danger, colors.dangerActive],
+  danger: [colors.white, colors.transparentActive],
   tertiary: [colors.transparent, colors.transparentActive],
 }
 
 const textColorMap: Record<Variant, string> = {
   primary: colors.white,
-  danger: colors.white,
+  danger: colors.danger,
   tertiary: colors.primary,
 }
 

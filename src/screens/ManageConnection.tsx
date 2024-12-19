@@ -1,3 +1,4 @@
+import TrashIcon from "@assets/images/trash.svg"
 import { AppButton } from "@components/AppButton"
 import { RootStackParamList } from "@navigation/rootNavigation"
 import { RouteProp, useRoute } from "@react-navigation/native"
@@ -8,7 +9,7 @@ export const ManageConnection = () => {
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <AppButton variant="tertiary" text="Hello" />
+      <AppButton IconRight={TrashIcon} variant="danger" text="Hello" />
     </View>
   )
 }
