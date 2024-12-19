@@ -5,3 +5,7 @@ export type NestedKeyOf<ObjectType extends object> = {
     ? `${Key}` | `${Key}.${NestedKeyOf<ObjectType[Key]>}`
     : `${Key}`
 }[keyof ObjectType & (string | number)]
+
+export const filterNullable = <T>(items: T[]) => {
+  return items.filter((x): x is Exclude<T, null | undefined> => x !== undefined && x !== null)
+}
