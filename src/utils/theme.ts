@@ -20,6 +20,10 @@ export const lightColors = {
   danger: "#EF4444",
   dangerActive: "#F87171",
   link: "blue",
+  "gray-100": "#F5F6F6",
+  "gray-200": "#D1D2D1",
+  "gray-400": "#A1A4A3",
+  secondary: "#111827",
 }
 
 // TODO - Add dark mode colors
