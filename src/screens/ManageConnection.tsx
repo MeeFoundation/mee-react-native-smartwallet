@@ -1,4 +1,4 @@
-import { Typography } from "@components/Typography"
+import { AppButton } from "@components/AppButton"
 import { RootStackParamList } from "@navigation/rootNavigation"
 import { RouteProp, useRoute } from "@react-navigation/native"
 import { View } from "react-native"
@@ -8,7 +8,7 @@ export const ManageConnection = () => {
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Typography>{route.params.id}</Typography>
+      <AppButton variant="tertiary" text="Hello" />
     </View>
   )
 }

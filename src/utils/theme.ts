@@ -12,8 +12,14 @@ const colorScheme = Appearance.getColorScheme()
 
 export const lightColors = {
   primary: "#4F868E",
+  primaryActive: "#69A0A7",
   tabBarActiveColor: "#4f868e80",
   white: "#FFFFFF",
+  transparent: "transparent",
+  transparentActive: "#CBD5E1",
+  danger: "#EF4444",
+  dangerActive: "#F87171",
+  link: "blue",
 }
 
 // TODO - Add dark mode colors
