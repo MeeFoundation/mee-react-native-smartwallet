@@ -1,13 +1,15 @@
 import SearchIcon from "@assets/images/search.svg"
-import { lightColors } from "@utils/theme"
+import { colors } from "@utils/theme"
 import { ComponentProps, FC, useState } from "react"
-import { StyleSheet, Text, TextInput, View } from "react-native"
+import { Keyboard, StyleSheet, Text, TextInput, View } from "react-native"
 
 type TextFieldProps = {
   value: string
   onChangeText: (text: string) => void
   label?: string
   placeholder?: string
+  onFocus?: () => void
+  onBlur?: () => void
 } & ComponentProps<typeof TextInput>
 
 export const TextField: FC<TextFieldProps> = ({
@@ -16,10 +18,22 @@ export const TextField: FC<TextFieldProps> = ({
   onChangeText,
   placeholder,
   style,
+  onFocus,
+  onBlur,
 }) => {
   const [focus, setFocus] = useState(false)
 
   const inputStyle = focus ? StyleSheet.compose(styles.input, styles.inputFocus) : styles.input
+
+  const focusHandler = () => {
+    onFocus && onFocus()
+    setFocus(true)
+  }
+
+  const blurHandler = () => {
+    onBlur && onBlur()
+    setFocus(false)
+  }
 
   return (
     <View style={StyleSheet.compose(styles.container, style)}>
@@ -29,8 +43,9 @@ export const TextField: FC<TextFieldProps> = ({
         onChangeText={onChangeText}
         placeholder={placeholder}
         style={inputStyle}
-        onFocus={() => setFocus(true)}
-        onBlur={() => setFocus(false)}
+        onFocus={focusHandler}
+        onBlur={blurHandler}
+        onSubmitEditing={Keyboard.dismiss}
       />
       {!focus && <SearchIcon width={24} height={24} style={styles.inputIcon} />}
     </View>
@@ -38,14 +53,16 @@ export const TextField: FC<TextFieldProps> = ({
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    // flex: 1,
+  },
   inputWrapper: {
     flex: 1,
     position: "relative",
     flexDirection: "row",
   },
   inputIcon: {
-    color: lightColors["gray-400"],
+    color: colors["gray-400"],
     position: "absolute",
     right: 16,
     bottom: 13,
@@ -54,7 +71,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "500",
     lineHeight: 24,
-    color: lightColors.secondary,
+    color: colors.secondary,
     marginBottom: 8,
   },
   input: {
@@ -62,10 +79,10 @@ const styles = StyleSheet.create({
     paddingVertical: 11,
     paddingHorizontal: 16,
     borderWidth: 1,
-    borderColor: lightColors["gray-200"],
+    borderColor: colors["gray-200"],
     borderRadius: 8,
   },
   inputFocus: {
-    borderColor: lightColors.primary,
+    borderColor: colors.primary,
   },
 })
