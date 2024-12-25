@@ -1,8 +1,8 @@
 import CloseIcon from "@assets/images/close.svg"
 import SearchIcon from "@assets/images/search.svg"
 import { colors } from "@utils/theme"
-import { ComponentProps, FC, useState } from "react"
-import { Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native"
+import { ComponentProps, FC, useRef } from "react"
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native"
 
 type TextFieldProps = {
   value: string
@@ -22,31 +22,31 @@ export const TextField: FC<TextFieldProps> = ({
   onFocus,
   onBlur,
 }) => {
-  const [focus, setFocus] = useState(false)
+  const inputRef = useRef<TextInput>(null)
 
-  const inputStyle = focus ? StyleSheet.compose(styles.input, styles.inputFocus) : styles.input
+  const inputStyle = inputRef.current?.isFocused()
+    ? StyleSheet.compose(styles.input, styles.inputFocus)
+    : styles.input
 
   const focusHandler = () => {
+    inputRef.current?.focus()
     onFocus && onFocus()
-    setFocus(true)
   }
 
   const blurHandler = () => {
+    inputRef.current?.blur()
     onBlur && onBlur()
-    setFocus(false)
   }
 
-  const onClearHandler = () => {
+  const clearHandler = () => {
     onChangeText("")
-    onBlur && onBlur()
-    setFocus(false)
-    Keyboard.dismiss()
   }
 
   return (
     <View style={StyleSheet.compose(styles.container, style)}>
       {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
+        ref={inputRef}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
@@ -54,12 +54,14 @@ export const TextField: FC<TextFieldProps> = ({
         onFocus={focusHandler}
         onSubmitEditing={blurHandler}
       />
-      {focus ? (
-        <TouchableOpacity onPress={onClearHandler}>
+      {inputRef.current?.isFocused() ? (
+        <TouchableOpacity onPress={clearHandler}>
           <CloseIcon width={24} height={24} style={[styles.inputIcon, { color: "black" }]} />
         </TouchableOpacity>
       ) : (
-        <SearchIcon width={24} height={24} style={styles.inputIcon} />
+        <TouchableOpacity onPress={focusHandler}>
+          <SearchIcon width={24} height={24} style={styles.inputIcon} />
+        </TouchableOpacity>
       )}
     </View>
   )
