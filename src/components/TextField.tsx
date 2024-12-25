@@ -1,7 +1,8 @@
+import CloseIcon from "@assets/images/close.svg"
 import SearchIcon from "@assets/images/search.svg"
 import { colors } from "@utils/theme"
 import { ComponentProps, FC, useState } from "react"
-import { Keyboard, StyleSheet, Text, TextInput, View } from "react-native"
+import { Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native"
 
 type TextFieldProps = {
   value: string
@@ -35,6 +36,13 @@ export const TextField: FC<TextFieldProps> = ({
     setFocus(false)
   }
 
+  const onClearHandler = () => {
+    onChangeText("")
+    onBlur && onBlur()
+    setFocus(false)
+    Keyboard.dismiss()
+  }
+
   return (
     <View style={StyleSheet.compose(styles.container, style)}>
       {label && <Text style={styles.label}>{label}</Text>}
@@ -44,10 +52,15 @@ export const TextField: FC<TextFieldProps> = ({
         placeholder={placeholder}
         style={inputStyle}
         onFocus={focusHandler}
-        onBlur={blurHandler}
-        onSubmitEditing={Keyboard.dismiss}
+        onSubmitEditing={blurHandler}
       />
-      {!focus && <SearchIcon width={24} height={24} style={styles.inputIcon} />}
+      {focus ? (
+        <TouchableOpacity onPress={onClearHandler}>
+          <CloseIcon width={24} height={24} style={[styles.inputIcon, { color: "black" }]} />
+        </TouchableOpacity>
+      ) : (
+        <SearchIcon width={24} height={24} style={styles.inputIcon} />
+      )}
     </View>
   )
 }

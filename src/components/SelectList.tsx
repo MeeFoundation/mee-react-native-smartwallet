@@ -42,7 +42,6 @@ export const SelectList: FC<SelectListProps> = ({
   const [dropdown, setDropdown] = useState<boolean>(showDropdown)
   const [height, setHeight] = useState<number>(350)
   const dropdownHeight = useRef(new Animated.Value(0)).current
-  const contentHeight = useRef(new Animated.Value(0)).current
   const [filteredData, setFilteredData] = useState(data)
   const [search, setSearch] = useState<string>("")
   const [collapsed, setCollapsed] = useState<boolean>(false)
@@ -191,10 +190,6 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     boxShadow: "0px 10px 10px -5px #0000000A, 0px 20px 25px -5px #0000001A",
     zIndex: 100,
-  },
-  contentWrapper: {
-    flex: 1,
-    overflow: "hidden",
   },
   option: {
     paddingHorizontal: 16,
