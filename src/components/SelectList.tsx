@@ -63,6 +63,13 @@ export const SelectList: FC<SelectListProps> = ({
     }).start(() => setDropdown(false))
   }
 
+  const toggleContent = () => {
+    setCollapsed(!collapsed)
+    if (!collapsed) {
+      collapseDropdown()
+    }
+  }
+
   // Set initial height and filtered data
   useEffect(() => {
     if (maxHeight) setHeight(maxHeight)
@@ -95,10 +102,9 @@ export const SelectList: FC<SelectListProps> = ({
 
   return (
     <View>
-      <View style={styles.labelWrapper}>
-        <Text>Tags</Text>
-        {/* TODO: Add animation */}
-        <Pressable onPress={() => setCollapsed(!collapsed)}>
+      <View style={[styles.labelWrapper, collapsed ? { marginBottom: 0 } : null]}>
+        <Text style={styles.label}>Tags</Text>
+        <Pressable onPress={toggleContent}>
           <ChevronDownIcon
             width={24}
             height={24}
@@ -106,7 +112,7 @@ export const SelectList: FC<SelectListProps> = ({
           />
         </Pressable>
       </View>
-      <View>
+      <View style={collapsed ? styles.collapsedContent : null}>
         <TextField
           placeholder={searchPlaceholder}
           label={label}
@@ -238,5 +244,15 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 8,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: "500",
+    lineHeight: 24,
+    color: colors.secondary,
+    marginBottom: 8,
+  },
+  collapsedContent: {
+    display: "none",
   },
 })
