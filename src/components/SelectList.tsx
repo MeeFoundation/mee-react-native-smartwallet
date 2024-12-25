@@ -1,7 +1,8 @@
 import CheckIcon from "@assets/images/check.svg"
 import ChevronDownIcon from "@assets/images/chevron-down.svg"
 import CloseIcon from "@assets/images/close.svg"
-import { colors, hexAlphaColor } from "@utils/theme"
+import { hexAlphaColor } from "@utils/color"
+import { colors } from "@utils/theme"
 import { FC, PropsWithChildren, useEffect, useRef, useState } from "react"
 import {
   Animated,

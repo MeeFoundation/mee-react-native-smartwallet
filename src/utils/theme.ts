@@ -24,6 +24,9 @@ const lightColors = {
   "gray-100": "#F5F6F6",
   "gray-200": "#D1D2D1",
   "gray-400": "#A1A4A3",
+  /**
+   * Default/gray/900 #111827
+   */
   secondary: "#111827",
 }
 
@@ -33,10 +36,3 @@ export const darkColors: typeof lightColors = {
 }
 
 export const colors = colorScheme === "dark" ? darkColors : lightColors
-
-export const hexAlphaColor = (hex: string, opacityPercent: number) => {
-  const decimal = `0${Math.round(255 * (opacityPercent / 100)).toString(16)}`
-    .slice(-2)
-    .toUpperCase()
-  return hex + decimal
-}
