@@ -1,8 +1,8 @@
 import { useNavigation } from "@react-navigation/native"
 import { useEffect } from "react"
-import { Text, View } from "react-native"
+import { StyleSheet, Text, View } from "react-native"
 
-export function Connections() {
+export const Connections = () => {
   const navigation = useNavigation()
 
   useEffect(() => {
@@ -10,8 +10,23 @@ export function Connections() {
   }, [navigation])
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Connections</Text>
+    <View style={styles.container}>
+      <Text style={styles.titleText}>Connections</Text>
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  baseText: {
+    fontFamily: "Cochin",
+  },
+  titleText: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+})

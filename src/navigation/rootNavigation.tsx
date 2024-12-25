@@ -8,7 +8,7 @@ import { Connections } from "@screens/Connections"
 import { ManageConnection } from "@screens/ManageConnection"
 import { colors, fonts } from "@utils/theme"
 import { useEffect } from "react"
-import { StatusBar } from "react-native"
+import { Platform, StatusBar } from "react-native"
 
 export type RootStackParamList = {
   "Manage Connection": { id: string }
@@ -32,7 +32,9 @@ const Tab = createBottomTabNavigator()
 
 const TabsStack = () => {
   useEffect(() => {
-    StatusBar.setBackgroundColor(colors.primary)
+    if (Platform.OS === "android") {
+      StatusBar.setBackgroundColor(colors.primary)
+    }
   }, [])
 
   return (
