@@ -10,7 +10,7 @@ export const fonts = {
 
 const colorScheme = Appearance.getColorScheme()
 
-export const lightColors = {
+const lightColors = {
   primary: "#4F868E",
   primaryActive: "#69A0A7",
   tabBarActiveColor: "#4f868e80",
@@ -20,6 +20,7 @@ export const lightColors = {
   danger: "#EF4444",
   dangerActive: "#F87171",
   link: "blue",
+  gray: "#AEAEB2",
   "gray-100": "#F5F6F6",
   "gray-200": "#D1D2D1",
   "gray-400": "#A1A4A3",
@@ -32,3 +33,10 @@ export const darkColors: typeof lightColors = {
 }
 
 export const colors = colorScheme === "dark" ? darkColors : lightColors
+
+export const hexAlphaColor = (hex: string, opacityPercent: number) => {
+  const decimal = `0${Math.round(255 * (opacityPercent / 100)).toString(16)}`
+    .slice(-2)
+    .toUpperCase()
+  return hex + decimal
+}
