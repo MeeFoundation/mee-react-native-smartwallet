@@ -131,6 +131,7 @@ export function Categories() {
         renderSectionHeader={({ section: { title } }) => (
           <Text style={styles.header}>#{title}</Text>
         )}
+        renderSectionFooter={() => <View style={{ height: 8 }} />}
         SectionSeparatorComponent={() => <View style={styles.sectionSeparator} />}
         style={styles.sectionContainer}
       />
@@ -145,10 +146,10 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     paddingHorizontal: 16,
     backgroundColor: colors.white,
-    gap: 16,
   },
   separator: {
     height: 1,
+    marginVertical: 16,
   },
   item: {
     flex: 1,
@@ -175,7 +176,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     fontWeight: "500",
-    marginBottom: -8,
     color: colors.secondary,
     backgroundColor: colors.white,
   },
@@ -186,10 +186,10 @@ const styles = StyleSheet.create({
   },
   sectionContainer: {
     flex: 1,
-    // marginTop: 8,
+    marginTop: 8,
   },
   sectionSeparator: {
-    height: 24,
+    height: 16,
     width: "100%",
   },
 })

@@ -250,7 +250,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     lineHeight: 24,
     color: colors.secondary,
-    marginBottom: 8,
   },
   collapsedContent: {
     display: "none",
