@@ -1,8 +1,8 @@
+import { Avatar } from "@components/Avatar"
 import { SelectTags } from "@components/SelectTags"
 import { Separator } from "@components/Separator"
 import { Link } from "@react-navigation/native"
 import { colors } from "@utils/theme"
-import { useState } from "react"
 import {
   Image,
   ImageRequireSource,
@@ -19,6 +19,7 @@ type DataItem = {
   id: string
 }
 
+// Mocked data example
 const DATA: SectionListData<DataItem>[] = [
   {
     title: "Entertainment",
@@ -100,7 +101,7 @@ const DATA: SectionListData<DataItem>[] = [
   },
 ]
 
-export const CategoryItem = ({ item }: { item: DataItem }) => {
+const CategoryItem = ({ item }: { item: DataItem }) => {
   return (
     <View style={styles.item}>
       <View style={styles.contentBlock}>
@@ -117,8 +118,6 @@ export const CategoryItem = ({ item }: { item: DataItem }) => {
 }
 
 export function Categories() {
-  const [search, setSearch] = useState("")
-
   return (
     <View style={styles.container}>
       <SelectTags />
@@ -129,7 +128,16 @@ export function Categories() {
         renderItem={({ item }) => <CategoryItem item={item} />}
         stickySectionHeadersEnabled
         renderSectionHeader={({ section: { title } }) => (
-          <Text style={styles.header}>#{title}</Text>
+          <View style={styles.sectionHeader}>
+            <Avatar
+              text={title}
+              size={22}
+              style={{
+                boxShadow: "0px 1px 2px 0px #0000000F, 0px 1px 3px 0px #0000001A",
+              }}
+            />
+            <Text style={styles.header}>#{title}</Text>
+          </View>
         )}
         renderSectionFooter={() => <View style={{ height: 8 }} />}
         SectionSeparatorComponent={() => <View style={styles.sectionSeparator} />}
@@ -188,8 +196,17 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 8,
   },
+  sectionHeader: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    paddingVertical: 4,
+    backgroundColor: colors.white,
+    gap: 8,
+  },
   sectionSeparator: {
-    height: 16,
+    height: 12,
     width: "100%",
   },
 })
