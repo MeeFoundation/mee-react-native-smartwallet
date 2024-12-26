@@ -20,6 +20,18 @@ declare global {
   }
 }
 
+const screenOptions = {
+  tabBarActiveTintColor: colors.tabBarActiveColor,
+  tabBarInactiveTintColor: colors.primary,
+  tabBarLabelStyle: {
+    fontFamily: fonts.publicSans.regular,
+  },
+  headerStyle: { backgroundColor: colors.primary },
+  headerLeft: HeaderLeft,
+  headerRight: HeaderRight,
+  headerTitle: "",
+}
+
 export const rootNavigationLinks = {
   home: "Home",
   connections: "Connections",
@@ -69,14 +81,35 @@ const TabsStack = () => {
   )
 }
 
+const ConnectionsStack = () => {
+  useEffect(() => {
+    if (Platform.OS === "android") {
+      StatusBar.setBackgroundColor(colors.primary)
+    }
+  }, [])
+
+  return (
+    <Stack.Navigator screenOptions={screenOptions}>
+      <Stack.Screen name={rootNavigationLinks.connections} component={Categories} />
+    </Stack.Navigator>
+  )
+}
+
 export function RootStack() {
   return (
-    <Stack.Navigator initialRouteName={rootNavigationLinks.home}>
+    <Stack.Navigator initialRouteName={rootNavigationLinks.connections}>
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name={rootNavigationLinks.connections}
+        component={ConnectionsStack}
+      />
+      {/* 
       <Stack.Screen
         options={{ headerShown: false }}
         name={rootNavigationLinks.home}
         component={TabsStack}
-      />
+      /> */}
+
       <Stack.Screen name={rootNavigationLinks.manageConnection} component={ManageConnection} />
     </Stack.Navigator>
   )

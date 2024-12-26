@@ -1,7 +1,8 @@
 import Dots from "@assets/images/dots-vertical.svg"
 import { colors } from "@utils/theme"
-import { Image, ImageSourcePropType, StyleSheet, View } from "react-native"
+import { ImageSourcePropType, StyleSheet, View } from "react-native"
 import { AppButton } from "./AppButton"
+import { Avatar } from "./Avatar"
 import { Typography } from "./Typography"
 
 type Props = {
@@ -14,7 +15,7 @@ export const ProviderCard = (props: Props) => {
 
   return (
     <View style={styles.contaner}>
-      <Image source={logo} style={styles.image} />
+      <Avatar src={logo} text={name} size={48} />
       <Typography style={styles.name} fontFamily="publicSans.bold" weight="500">
         {name}
       </Typography>

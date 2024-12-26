@@ -67,7 +67,7 @@ const Tabs = () => {
           })
         })}
       </View>
-      {activeBody}IconSources
+      {activeBody}
     </View>
   )
 }

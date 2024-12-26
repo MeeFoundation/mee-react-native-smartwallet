@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   horizontalGaps: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 0,
   },
   menu: {
     flexDirection: "row",
