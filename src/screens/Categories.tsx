@@ -1,114 +1,18 @@
-import { IconSources } from "@assets/index"
 import { Avatar } from "@components/Avatar"
 import { SelectTags } from "@components/SelectTags"
 import { Separator } from "@components/Separator"
 import { Link } from "@react-navigation/native"
+import { Connection, coreService } from "@services/core.service"
 import { colors } from "@utils/theme"
-import { useState } from "react"
-import {
-  Image,
-  ImageRequireSource,
-  SectionList,
-  SectionListData,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native"
+import { useEffect, useState } from "react"
+import { Image, SectionList, SectionListData, StyleSheet, Text, View } from "react-native"
 
-type DataItem = {
-  iconSrc?: ImageRequireSource
-  title: string
-  id: string
-}
-
-// Mocked data example
-const DATA: SectionListData<DataItem>[] = [
-  {
-    title: "Entertainment",
-    data: [
-      { iconSrc: IconSources.disney, title: "Disney", id: "6767" },
-      {
-        iconSrc: IconSources.disneyPlus,
-        title: "Disney Plus",
-        id: "7979878",
-      },
-    ],
-  },
-  {
-    title: "Google",
-    data: [
-      {
-        iconSrc: IconSources.google,
-        title: "Google connection",
-        id: "google-1",
-      },
-      {
-        iconSrc: IconSources.google,
-        title: "Google connection",
-        id: "google-2",
-      },
-    ],
-  },
-  {
-    title: "Entertainments",
-    data: [
-      { iconSrc: IconSources.disney, title: "Disney", id: "6767" },
-      {
-        iconSrc: IconSources.disneyPlus,
-        title: "Disney Plus",
-        id: "7979878",
-      },
-    ],
-  },
-  {
-    title: "Social",
-    data: [
-      {
-        iconSrc: IconSources.google,
-        title: "Google connection",
-        id: "google-1",
-      },
-      {
-        iconSrc: IconSources.google,
-        title: "Google connection",
-        id: "google-2",
-      },
-    ],
-  },
-  {
-    title: "Smths",
-    data: [
-      { iconSrc: IconSources.disney, title: "Disney", id: "6767" },
-      {
-        iconSrc: IconSources.disneyPlus,
-        title: "Disney Plus",
-        id: "7979878",
-      },
-    ],
-  },
-  {
-    title: "Group",
-    data: [
-      {
-        iconSrc: IconSources.google,
-        title: "Google connection",
-        id: "google-1",
-      },
-      {
-        iconSrc: IconSources.google,
-        title: "Google connection",
-        id: "google-2",
-      },
-    ],
-  },
-]
-
-const CategoryItem = ({ item }: { item: DataItem }) => {
+const CategoryItem = ({ item }: { item: Connection }) => {
   return (
     <View style={styles.item}>
       <View style={styles.contentBlock}>
         {item.iconSrc && <Image source={item.iconSrc} style={styles.itemIcon} />}
-        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.title}>{item.name}</Text>
       </View>
       <View style={StyleSheet.compose(styles.contentBlock, styles.contentBlockRight)}>
         <Link screen="Manage Connection" params={{ id: item.id }}>
@@ -119,12 +23,50 @@ const CategoryItem = ({ item }: { item: DataItem }) => {
   )
 }
 
-const tags = DATA.map((section) => section.title)
+const sortByTags = (selectedTags: string[], connections: Connection[]) => {
+  if (selectedTags.length === 0) {
+    return [{ title: "All", data: connections }]
+  }
+
+  const result: SectionListData<Connection>[] = []
+  const map: Record<string, { title: string; data: Connection[] }> = {}
+
+  for (const tag of selectedTags) map[tag] = { title: tag, data: [] }
+
+  for (const connection of connections) {
+    for (const tag of connection.tags) {
+      if (tag in map) {
+        map[tag].data.push(connection)
+      }
+    }
+  }
+
+  for (const tag of selectedTags) {
+    result.push(map[tag])
+  }
+
+  return result
+}
 
 export function Categories() {
-  const [selectedTags, setSelectedTags] = useState<string[]>(tags)
+  const [connections, setConnections] = useState<Connection[]>([])
+  const [tags, setTags] = useState<string[]>([])
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const filteredData = sortByTags(selectedTags, connections)
 
-  const filteredData = DATA.filter((section) => selectedTags.indexOf(section.title) != -1)
+  useEffect(() => {
+    const get = async () => {
+      const [tags, connections] = await Promise.all([
+        coreService.getTags(),
+        coreService.getConnections(),
+      ])
+      setConnections(connections)
+      setTags(tags)
+      setSelectedTags(tags)
+    }
+
+    get()
+  }, [])
 
   return (
     <View style={styles.container}>

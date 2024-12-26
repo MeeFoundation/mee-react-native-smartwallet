@@ -3,8 +3,9 @@ import { ProviderCard } from "@components/ProviderCard"
 import { Typography } from "@components/Typography"
 import { RootStackParamList } from "@navigation/rootNavigation"
 import { RouteProp, useRoute } from "@react-navigation/native"
+import { Connection, coreService } from "@services/core.service"
 import { colors } from "@utils/theme"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { DimensionValue, Pressable, StyleSheet, View } from "react-native"
 
 type TabItem = {
@@ -26,15 +27,9 @@ const splitIntoRows = (items: TabItem[], maxInRow: number) => {
 const Tabs = () => {
   const menus: TabItem[] = [
     {
-      label: "Password",
+      label: "Profile",
       component: <Typography></Typography>,
     },
-    { label: "Pdasdasd", component: <Typography></Typography> },
-    { label: "dasd ", component: <Typography></Typography> },
-    { label: "Dasda", component: <Typography></Typography> },
-    { label: "Dasdadas", component: <Typography></Typography> },
-    { label: "Dasda dasd", component: <Typography></Typography> },
-    { label: "Dasda dasddasda", component: <Typography></Typography> },
   ]
   const [activeTab, setActiveTab] = useState(menus?.[0].label)
   const activeBody = menus.find((menu) => menu.label === activeTab)?.component
@@ -74,6 +69,19 @@ const Tabs = () => {
 
 export const ManageConnection = () => {
   const route = useRoute<RouteProp<RootStackParamList, "Manage Connection">>()
+  const connectionId = route.params.id
+  const [loading, setLoading] = useState(false)
+  const [connection, setConnection] = useState<Connection | null>(null)
+
+  useEffect(() => {
+    setLoading(true)
+    coreService
+      .getConnectionDetails(connectionId)
+      .then((connection) => {
+        setConnection(connection)
+      })
+      .finally(() => setLoading(false))
+  }, [connectionId])
 
   return (
     <View style={styles.page}>
