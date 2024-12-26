@@ -1,10 +1,11 @@
+import { IconSources } from "@assets/index"
 import { ProviderCard } from "@components/ProviderCard"
 import { Typography } from "@components/Typography"
 import { RootStackParamList } from "@navigation/rootNavigation"
 import { RouteProp, useRoute } from "@react-navigation/native"
 import { colors } from "@utils/theme"
 import React, { useState } from "react"
-import { DimensionValue, Pressable, StyleSheet, Text, View } from "react-native"
+import { DimensionValue, Pressable, StyleSheet, View } from "react-native"
 
 type TabItem = {
   label: string
@@ -26,11 +27,7 @@ const Tabs = () => {
   const menus: TabItem[] = [
     {
       label: "Password",
-      component: (
-        <Typography>
-          <Text>dsadas</Text>
-        </Typography>
-      ),
+      component: <Typography></Typography>,
     },
     { label: "Pdasdasd", component: <Typography></Typography> },
     { label: "dasd ", component: <Typography></Typography> },
@@ -70,8 +67,7 @@ const Tabs = () => {
           })
         })}
       </View>
-
-      {activeBody}
+      {activeBody}IconSources
     </View>
   )
 }
@@ -81,10 +77,7 @@ export const ManageConnection = () => {
 
   return (
     <View style={styles.page}>
-      <ProviderCard
-        name="New York Times"
-        logo={require("../assets/images/provider-logo/times.png")}
-      />
+      <ProviderCard name="New York Times" logo={IconSources.times} />
       <Tabs />
     </View>
   )

@@ -1,3 +1,4 @@
+import { IconSources } from "@assets/index"
 import { Avatar } from "@components/Avatar"
 import { SelectTags } from "@components/SelectTags"
 import { Separator } from "@components/Separator"
@@ -25,9 +26,9 @@ const DATA: SectionListData<DataItem>[] = [
   {
     title: "Entertainment",
     data: [
-      { iconSrc: require("../assets/images/disney-icon.png"), title: "Disney", id: "6767" },
+      { iconSrc: IconSources.disney, title: "Disney", id: "6767" },
       {
-        iconSrc: require("../assets/images/disney-plus-icon.png"),
+        iconSrc: IconSources.disneyPlus,
         title: "Disney Plus",
         id: "7979878",
       },
@@ -37,12 +38,12 @@ const DATA: SectionListData<DataItem>[] = [
     title: "Google",
     data: [
       {
-        iconSrc: require("../assets/images/google-icon.png"),
+        iconSrc: IconSources.google,
         title: "Google connection",
         id: "google-1",
       },
       {
-        iconSrc: require("../assets/images/google-icon.png"),
+        iconSrc: IconSources.google,
         title: "Google connection",
         id: "google-2",
       },
@@ -51,9 +52,9 @@ const DATA: SectionListData<DataItem>[] = [
   {
     title: "Entertainments",
     data: [
-      { iconSrc: require("../assets/images/disney-icon.png"), title: "Disney", id: "6767" },
+      { iconSrc: IconSources.disney, title: "Disney", id: "6767" },
       {
-        iconSrc: require("../assets/images/disney-plus-icon.png"),
+        iconSrc: IconSources.disneyPlus,
         title: "Disney Plus",
         id: "7979878",
       },
@@ -63,12 +64,12 @@ const DATA: SectionListData<DataItem>[] = [
     title: "Social",
     data: [
       {
-        iconSrc: require("../assets/images/google-icon.png"),
+        iconSrc: IconSources.google,
         title: "Google connection",
         id: "google-1",
       },
       {
-        iconSrc: require("../assets/images/google-icon.png"),
+        iconSrc: IconSources.google,
         title: "Google connection",
         id: "google-2",
       },
@@ -77,9 +78,9 @@ const DATA: SectionListData<DataItem>[] = [
   {
     title: "Smths",
     data: [
-      { iconSrc: require("../assets/images/disney-icon.png"), title: "Disney", id: "6767" },
+      { iconSrc: IconSources.disney, title: "Disney", id: "6767" },
       {
-        iconSrc: require("../assets/images/disney-plus-icon.png"),
+        iconSrc: IconSources.disneyPlus,
         title: "Disney Plus",
         id: "7979878",
       },
@@ -89,12 +90,12 @@ const DATA: SectionListData<DataItem>[] = [
     title: "Group",
     data: [
       {
-        iconSrc: require("../assets/images/google-icon.png"),
+        iconSrc: IconSources.google,
         title: "Google connection",
         id: "google-1",
       },
       {
-        iconSrc: require("../assets/images/google-icon.png"),
+        iconSrc: IconSources.google,
         title: "Google connection",
         id: "google-2",
       },

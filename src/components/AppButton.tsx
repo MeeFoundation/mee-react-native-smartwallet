@@ -1,4 +1,5 @@
-import { colors, hexAlphaColor } from "@utils/theme"
+import { hexAlphaColor } from "@utils/color"
+import { colors } from "@utils/theme"
 import { ComponentPropsWithoutRef, ElementRef, Fragment, forwardRef } from "react"
 import { Animated, GestureResponderEvent, Pressable, StyleSheet } from "react-native"
 import { SvgProps } from "react-native-svg"
