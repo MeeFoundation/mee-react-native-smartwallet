@@ -51,6 +51,7 @@ export const TextField: FC<TextFieldProps> = ({
         onChangeText={onChangeText}
         placeholder={placeholder}
         style={inputStyle}
+        placeholderTextColor={colors["gray-400"]}
         onFocus={focusHandler}
         onSubmitEditing={blurHandler}
       />

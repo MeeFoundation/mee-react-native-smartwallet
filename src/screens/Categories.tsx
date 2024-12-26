@@ -3,6 +3,7 @@ import { SelectTags } from "@components/SelectTags"
 import { Separator } from "@components/Separator"
 import { Link } from "@react-navigation/native"
 import { colors } from "@utils/theme"
+import { useState } from "react"
 import {
   Image,
   ImageRequireSource,
@@ -117,13 +118,24 @@ const CategoryItem = ({ item }: { item: DataItem }) => {
   )
 }
 
+const tags = DATA.map((section) => section.title)
+
 export function Categories() {
+  const [selectedTags, setSelectedTags] = useState<string[]>(tags)
+
+  const filteredData = DATA.filter((section) => selectedTags.indexOf(section.title) != -1)
+
   return (
     <View style={styles.container}>
-      <SelectTags />
+      <SelectTags
+        tags={tags}
+        selectedTags={selectedTags}
+        onSelectTags={setSelectedTags}
+        label="Filter"
+      />
       <Separator style={styles.separator} />
       <SectionList
-        sections={DATA}
+        sections={filteredData}
         keyExtractor={(item, index) => item.id + index}
         renderItem={({ item }) => <CategoryItem item={item} />}
         stickySectionHeadersEnabled
