@@ -57,10 +57,3 @@ export const darkColors: typeof lightColors = {
 }
 
 export const colors = colorScheme === "dark" ? darkColors : lightColors
-
-export const hexAlphaColor = (hex: string, opacityPercent: number) => {
-  const decimal = `0${Math.round(255 * (opacityPercent / 100)).toString(16)}`
-    .slice(-2)
-    .toUpperCase()
-  return hex + decimal
-}

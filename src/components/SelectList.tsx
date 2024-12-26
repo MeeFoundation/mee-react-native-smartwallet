@@ -1,7 +1,8 @@
 import CheckIcon from "@assets/images/check.svg"
 import ChevronDownIcon from "@assets/images/chevron-down.svg"
 import CloseIcon from "@assets/images/close.svg"
-import { colors, hexAlphaColor } from "@utils/theme"
+import { hexAlphaColor } from "@utils/color"
+import { colors } from "@utils/theme"
 import { FC, PropsWithChildren, useEffect, useRef, useState } from "react"
 import {
   Animated,
@@ -14,19 +15,14 @@ import {
 } from "react-native"
 import { TextField } from "./TextField"
 
-type DataValue = {
-  key: string
-  value: string
-}
-
 type SelectListProps = {
-  data: DataValue[]
+  data: string[]
   showDropdown?: boolean
   maxHeight?: number
-  onSelect: (value: DataValue["value"]) => void
+  onSelect: (value: string) => void
   searchPlaceholder?: string
   label?: string
-  selected: DataValue["value"][]
+  selected: string[]
 }
 
 export const SelectList: FC<SelectListProps> = ({
@@ -92,7 +88,7 @@ export const SelectList: FC<SelectListProps> = ({
   useEffect(() => {
     if (search.length > 0) {
       let filtered = data.filter((item) => {
-        return item.value.toLowerCase().includes(search.toLowerCase())
+        return item.toLowerCase().includes(search.toLowerCase())
       })
       setFilteredData(filtered)
     } else {
@@ -103,7 +99,7 @@ export const SelectList: FC<SelectListProps> = ({
   return (
     <View>
       <View style={[styles.labelWrapper, collapsed ? { marginBottom: 0 } : null]}>
-        <Text style={styles.label}>Tags</Text>
+        <Text style={styles.label}>{label}</Text>
         <Pressable onPress={toggleContent}>
           <ChevronDownIcon
             width={24}
@@ -115,7 +111,6 @@ export const SelectList: FC<SelectListProps> = ({
       <View style={collapsed ? styles.collapsedContent : null}>
         <TextField
           placeholder={searchPlaceholder}
-          label={label}
           onChangeText={setSearch}
           value={search}
           onFocus={expandDropdown}
@@ -136,7 +131,7 @@ export const SelectList: FC<SelectListProps> = ({
               <ScrollView nestedScrollEnabled={true}>
                 {filteredData.length >= 1 ? (
                   filteredData.map((item, index: number) => {
-                    let value = item.value ?? item
+                    let value = item
                     const isSelected = selected?.indexOf(value) != -1
                     return (
                       <TouchableOpacity
@@ -146,7 +141,7 @@ export const SelectList: FC<SelectListProps> = ({
                           index != filteredData.length - 1 ? styles.optionBordered : {},
                         ]}
                         key={index}
-                        onPress={() => onSelect(item.value)}
+                        onPress={() => onSelect(item)}
                       >
                         <Text style={styles.optionText}>#{value}</Text>
                         {isSelected && <CheckIcon width={24} height={24} />}
@@ -250,7 +245,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     lineHeight: 24,
     color: colors.secondary,
-    marginBottom: 8,
   },
   collapsedContent: {
     display: "none",
