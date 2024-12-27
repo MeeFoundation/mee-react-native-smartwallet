@@ -7,6 +7,7 @@ import { FC, PropsWithChildren, useEffect, useRef, useState } from "react"
 import {
   Animated,
   Keyboard,
+  PlatformColor,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -25,6 +26,7 @@ type SelectListProps = {
   label?: string
   selected: string[]
   showCounter?: boolean
+  onCreate?: (value: string) => void
 }
 
 export const SelectList: FC<SelectListProps> = ({
@@ -36,6 +38,7 @@ export const SelectList: FC<SelectListProps> = ({
   searchPlaceholder,
   label,
   showCounter = false,
+  onCreate,
 }) => {
   const [_firstRender, _setFirstRender] = useState<boolean>(true)
   const [dropdown, setDropdown] = useState<boolean>(showDropdown)
@@ -89,24 +92,16 @@ export const SelectList: FC<SelectListProps> = ({
     }
   }
 
+  const addOption = (value: string) => {
+    if (onCreate) {
+      onCreate(value)
+    }
+  }
+
   // Set initial height and filtered data
   useEffect(() => {
     if (maxHeight) setHeight(maxHeight)
   }, [maxHeight])
-
-  useEffect(() => {
-    setFilteredData(data)
-  }, [data])
-
-  useEffect(() => {
-    if (!_firstRender) {
-      if (showDropdown) {
-        expandDropdown()
-      } else {
-        collapseDropdown()
-      }
-    }
-  }, [showDropdown])
 
   useEffect(() => {
     if (search.length > 0) {
@@ -117,7 +112,17 @@ export const SelectList: FC<SelectListProps> = ({
     } else {
       setFilteredData(data)
     }
-  }, [search])
+  }, [data, search])
+
+  useEffect(() => {
+    if (!_firstRender) {
+      if (showDropdown) {
+        expandDropdown()
+      } else {
+        collapseDropdown()
+      }
+    }
+  }, [showDropdown])
 
   return (
     <View>
@@ -167,6 +172,16 @@ export const SelectList: FC<SelectListProps> = ({
             <Animated.ScrollView style={[{ maxHeight: dropdownHeight }, styles.dropdown]}>
               <View style={[{ maxHeight: height }]}>
                 <ScrollView nestedScrollEnabled={true}>
+                  {search.length > 0 && !data.includes(search) && (
+                    <View style={styles.option}>
+                      <Text style={styles.optionText}>#{search}</Text>
+                      <TouchableOpacity onPress={() => addOption(search)}>
+                        <Text style={{ fontSize: 12, color: PlatformColor("systemBlue") }}>
+                          Create
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
                   {filteredData.length >= 1 ? (
                     filteredData.map((item, index: number) => {
                       let value = item
