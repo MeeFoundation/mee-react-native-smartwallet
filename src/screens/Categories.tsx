@@ -2,9 +2,11 @@ import { Avatar } from "@components/Avatar"
 import { SelectTags } from "@components/SelectTags"
 import { Separator } from "@components/Separator"
 import { Link } from "@react-navigation/native"
-import { Connection, coreService } from "@services/core.service"
+import { Connection } from "@services/core.service"
+import { ConnectionsStore, TagsStore } from "@store/index"
 import { colors } from "@utils/theme"
-import { useEffect, useState } from "react"
+import { useAtom } from "jotai"
+import { useState } from "react"
 import { Image, SectionList, SectionListData, StyleSheet, Text, View } from "react-native"
 
 const CategoryItem = ({ item }: { item: Connection }) => {
@@ -49,29 +51,15 @@ const sortByTags = (selectedTags: string[], connections: Connection[]) => {
 }
 
 export function Categories() {
-  const [connections, setConnections] = useState<Connection[]>([])
-  const [tags, setTags] = useState<string[]>([])
+  const [connections = []] = useAtom(ConnectionsStore)
+  const [allTags = []] = useAtom(TagsStore)
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const filteredData = sortByTags(selectedTags, connections)
-
-  useEffect(() => {
-    const get = async () => {
-      const [tags, connections] = await Promise.all([
-        coreService.getTags(),
-        coreService.getConnections(),
-      ])
-      setConnections(connections)
-      setTags(tags)
-      setSelectedTags(tags)
-    }
-
-    get()
-  }, [])
 
   return (
     <View style={styles.container}>
       <SelectTags
-        tags={tags}
+        tags={allTags}
         selectedTags={selectedTags}
         onSelectTags={setSelectedTags}
         label="Filter"

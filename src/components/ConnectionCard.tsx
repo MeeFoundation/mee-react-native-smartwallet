@@ -8,13 +8,14 @@ import { Typography } from "./Typography"
 type Props = {
   logo?: ImageSourcePropType
   name: string
+  border?: boolean
 }
 
-export const ProviderCard = (props: Props) => {
-  const { logo, name } = props
+export const ConnectionCard = (props: Props) => {
+  const { logo, name, border } = props
 
   return (
-    <View style={styles.contaner}>
+    <View style={StyleSheet.compose(styles.contaner, border && styles.border)}>
       <Avatar src={logo} text={name} size={48} />
       <Typography style={styles.name} fontFamily="publicSans.bold" weight="500">
         {name}
@@ -32,8 +33,6 @@ export const ProviderCard = (props: Props) => {
 const styles = StyleSheet.create({
   contaner: {
     padding: 8,
-    // borderWidth: 2,
-    // borderColor: colors.primary,
     gap: 8,
     alignItems: "center",
     flexDirection: "row",
@@ -42,4 +41,5 @@ const styles = StyleSheet.create({
   image: { width: 48, height: 48, borderRadius: 9999 },
   open: { color: colors.link, fontSize: 12 },
   name: { flexGrow: 1 },
+  border: { borderColor: colors.primary, borderWidth: 2 },
 })

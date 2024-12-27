@@ -1,5 +1,6 @@
-import { IconSources } from "@assets/index"
-import { ProviderCard } from "@components/ProviderCard"
+import { Accordion } from "@components/Accordion"
+import { ConnectionCard } from "@components/ConnectionCard"
+import { SelectTags } from "@components/SelectTags"
 import { Typography } from "@components/Typography"
 import { RootStackParamList } from "@navigation/rootNavigation"
 import { RouteProp, useRoute } from "@react-navigation/native"
@@ -53,7 +54,10 @@ const Tabs = () => {
             return (
               <Pressable
                 onPress={() => setActive(item.label)}
-                style={{ ...tabsStyles.item, width, ...activeStyles }}
+                style={StyleSheet.compose(
+                  StyleSheet.compose(tabsStyles.item, { width }),
+                  activeStyles,
+                )}
                 key={idx}
               >
                 <Typography style={tabsStyles.text}>{item.label}</Typography>
@@ -62,7 +66,7 @@ const Tabs = () => {
           })
         })}
       </View>
-      {activeBody}
+      {/* {activeBody} */}
     </View>
   )
 }
@@ -70,23 +74,53 @@ const Tabs = () => {
 export const ManageConnection = () => {
   const route = useRoute<RouteProp<RootStackParamList, "Manage Connection">>()
   const connectionId = route.params.id
-  const [loading, setLoading] = useState(false)
   const [connection, setConnection] = useState<Connection | null>(null)
+  const [allTags, setAllTags] = useState<string[]>([])
+  const [loading, setLoading] = useState(false)
+
+  const setSelectedTags = async (tags: string[]) => {
+    if (!connection) return
+    const updatedConnection = { ...connection, tags }
+    setConnection(updatedConnection)
+    await coreService.updateConnectionTags(connectionId, tags)
+  }
 
   useEffect(() => {
-    setLoading(true)
-    coreService
-      .getConnectionDetails(connectionId)
-      .then((connection) => {
-        setConnection(connection)
-      })
-      .finally(() => setLoading(false))
+    const get = async () => {
+      try {
+        setLoading(true)
+        const [r1, r2] = await Promise.all([
+          coreService.getTags(),
+          coreService.getConnectionDetails(connectionId),
+        ])
+        setAllTags(r1)
+        setConnection(r2)
+      } finally {
+        setLoading(false)
+      }
+    }
+    get()
   }, [connectionId])
 
   return (
     <View style={styles.page}>
-      <ProviderCard name="New York Times" logo={IconSources.times} />
-      <Tabs />
+      {connection && (
+        <>
+          <ConnectionCard border name={connection.name} logo={connection.iconSrc} />
+          <Tabs />
+          <SelectTags
+            tags={allTags}
+            selectedTags={connection.tags}
+            onSelectTags={setSelectedTags}
+            label="Tags"
+          />
+
+          <Accordion
+            head={<Typography weight="500">Required info shared</Typography>}
+            body={<View></View>}
+          />
+        </>
+      )}
     </View>
   )
 }

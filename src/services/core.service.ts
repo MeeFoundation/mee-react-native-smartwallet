@@ -126,8 +126,13 @@ const connections: Connection[] = [
 ]
 
 class CoreService {
-  async getConnectionDetails(_id: string) {
-    const connection: Connection = {} as Connection
+  async getConnectionDetails(id: string) {
+    const connection = connections.find((c) => c.id === id)
+
+    if (!connection) {
+      throw new Error("Connection not found")
+    }
+
     return connection
   }
 
@@ -137,6 +142,16 @@ class CoreService {
 
   async getTags() {
     return Object.values(tags)
+  }
+
+  async updateConnectionTags(id: string, tags: string[]) {
+    const connection = connections.find((c) => c.id === id)
+
+    if (!connection) {
+      throw new Error("Connection not found")
+    }
+
+    connection.tags = tags
   }
 }
 
