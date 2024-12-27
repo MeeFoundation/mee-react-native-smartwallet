@@ -24,6 +24,7 @@ export const SelectTags: FC<SelectTagsProps> = ({ tags, selectedTags, onSelectTa
       selected={selectedTags}
       onSelect={selectTagHandler}
       label={label}
+      showCounter
     />
   )
 }

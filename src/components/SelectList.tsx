@@ -123,7 +123,14 @@ export const SelectList: FC<SelectListProps> = ({
     <View>
       {/* <View style={[styles.labelWrapper, collapsed ? { marginBottom: 0 } : null]}> */}
       <View style={[styles.labelWrapper]}>
-        <Text style={styles.label}>{label}</Text>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+          <Text style={styles.label}>{label}</Text>
+          {showCounter && (
+            <View style={styles.counterWrapper}>
+              <Text style={styles.counter}>{selected.length}</Text>
+            </View>
+          )}
+        </View>
         <Pressable onPress={toggleContent}>
           <ChevronDownIcon
             width={24}
@@ -279,7 +286,20 @@ const styles = StyleSheet.create({
     color: colors.secondary,
   },
   collapsedContent: {
-    // display: "none",
     overflow: "hidden",
+  },
+  counterWrapper: {
+    paddingHorizontal: 3,
+    paddingVertical: 1,
+    borderWidth: 1,
+    borderRadius: 3,
+    borderColor: hexAlphaColor(colors.primary, 50),
+    backgroundColor: colors["gray-100"],
+  },
+  counter: {
+    fontSize: 12,
+    lineHeight: 14,
+    fontWeight: "500",
+    color: colors.primary,
   },
 })
