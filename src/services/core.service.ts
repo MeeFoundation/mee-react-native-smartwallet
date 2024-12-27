@@ -2,7 +2,7 @@ import { IconSources } from "@assets/index"
 import { ImageRequireSource } from "react-native"
 
 const idGenerator = () => {
-  let lastId = Date.now()
+  let lastId = 0
 
   return () => {
     lastId += 1
