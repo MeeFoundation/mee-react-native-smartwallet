@@ -4,9 +4,10 @@ import { SelectTags } from "@components/SelectTags"
 import { Typography } from "@components/Typography"
 import { RootStackParamList } from "@navigation/rootNavigation"
 import { RouteProp, useRoute } from "@react-navigation/native"
-import { Connection, coreService } from "@services/core.service"
+import { ConnectionDetails, ConnectionsStore } from "@store/index"
 import { colors } from "@utils/theme"
-import React, { useEffect, useState } from "react"
+import { useAtom } from "jotai"
+import React, { useState } from "react"
 import { DimensionValue, Pressable, StyleSheet, View } from "react-native"
 
 type TabItem = {
@@ -74,33 +75,32 @@ const Tabs = () => {
 export const ManageConnection = () => {
   const route = useRoute<RouteProp<RootStackParamList, "Manage Connection">>()
   const connectionId = route.params.id
-  const [connection, setConnection] = useState<Connection | null>(null)
+  const [_, setConnections] = useAtom(ConnectionsStore)
+  const [connection] = useAtom(ConnectionDetails(route.params.id))
   const [allTags, setAllTags] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
 
   const setSelectedTags = async (tags: string[]) => {
     if (!connection) return
     const updatedConnection = { ...connection, tags }
-    setConnection(updatedConnection)
-    await coreService.updateConnectionTags(connectionId, tags)
   }
 
-  useEffect(() => {
-    const get = async () => {
-      try {
-        setLoading(true)
-        const [r1, r2] = await Promise.all([
-          coreService.getTags(),
-          coreService.getConnectionDetails(connectionId),
-        ])
-        setAllTags(r1)
-        setConnection(r2)
-      } finally {
-        setLoading(false)
-      }
-    }
-    get()
-  }, [connectionId])
+  // useEffect(() => {
+  //   const get = async () => {
+  //     try {
+  //       setLoading(true)
+  //       const [r1, r2] = await Promise.all([
+  //         coreService.getTags(),
+  //         coreService.getConnectionDetails(connectionId),
+  //       ])
+  //       setAllTags(r1)
+  //       setConnection(r2)
+  //     } finally {
+  //       setLoading(false)
+  //     }
+  //   }
+  //   get()
+  // }, [connectionId])
 
   return (
     <View style={styles.page}>

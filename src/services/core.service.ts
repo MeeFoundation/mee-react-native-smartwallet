@@ -143,16 +143,6 @@ class CoreService {
   async getTags() {
     return Object.values(tags)
   }
-
-  async updateConnectionTags(id: string, tags: string[]) {
-    const connection = connections.find((c) => c.id === id)
-
-    if (!connection) {
-      throw new Error("Connection not found")
-    }
-
-    connection.tags = tags
-  }
 }
 
 export const coreService = new CoreService()

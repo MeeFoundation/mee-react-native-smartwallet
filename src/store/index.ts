@@ -1,12 +1,25 @@
-import { coreService } from "@services/core.service"
+import { Connection } from "@services/core.service"
 import { atom } from "jotai"
+import { atomFamily } from "jotai/utils"
 
-export const ConnectionsStore = atom(async () => {
-  const connections = await coreService.getConnections()
-  return connections
+export const ConnectionsStore = atom<Connection[]>([])
+
+export const TagsStore = atom((get) => {
+  const tags: string[] = []
+  const connections = get(ConnectionsStore)
+  for (const c of connections) {
+    tags.push(...c.tags)
+  }
+  return Array.from(new Set(tags))
 })
 
-export const TagsStore = atom(async () => {
-  const tags = await coreService.getTags()
-  return tags
-})
+export const ConnectionDetails = atomFamily((id: string) =>
+  atom(async (get) => {
+    const connections = get(ConnectionsStore)
+    const connection = connections.find((c) => c.id === id)
+    if (!connection) {
+      throw new Error("Connection not found")
+    }
+    return connection
+  }),
+)
