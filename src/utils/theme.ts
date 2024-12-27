@@ -49,6 +49,11 @@ const lightColors = {
    * Fill Color/Light/Tertiary - #7676801F
    */
   tertiary: "#7676801F",
+
+  /**
+   * Default/gray/200 -  #D1D2D1
+   */
+  border: "#D1D2D1",
 }
 
 // TODO - Add dark mode colors

@@ -21,9 +21,9 @@ export const ConnectionDetails = atomFamily((id: string) =>
       const connections = await get(ConnectionsStore)
       const connection = connections.find((c) => c.id === id)
       if (!connection) {
-        throw new Error("Connection not found")
+        console.error(`Connection with id ${id} not found`)
       }
-      return connection
+      return connection!
     },
     async (get, set, connection: Connection) => {
       const connections = await get(ConnectionsStore)

@@ -1,3 +1,4 @@
+import { MailSvg, UserSvg } from "@assets/index"
 import { Accordion } from "@components/Accordion"
 import { ConnectionCard } from "@components/ConnectionCard"
 import { SelectTags } from "@components/SelectTags"
@@ -98,7 +99,23 @@ export const ManageConnection = () => {
 
           <Accordion
             head={<Typography weight="500">Required info shared</Typography>}
-            body={<View></View>}
+            body={
+              <View style={styles.infoContainer}>
+                <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
+                  <MailSvg style={styles.infoSvg} />
+                  <Typography style={styles.infoText}>{connection.sharedInfo.email}</Typography>
+                </View>
+                <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
+                  <UserSvg style={styles.infoSvg} />
+                  <Typography style={styles.infoText}>{connection.sharedInfo.firstName}</Typography>
+                </View>
+                <View style={styles.infoRow}>
+                  <UserSvg style={styles.infoSvg} />
+                  <Typography style={styles.infoText}>{connection.sharedInfo.lastName}</Typography>
+                </View>
+              </View>
+            }
+            collapsed={false}
           />
         </>
       )}
@@ -116,6 +133,11 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     gap: 24,
   },
+  infoContainer: { flexDirection: "column" },
+  infoRow: { flexDirection: "row", gap: 10, alignItems: "center", paddingVertical: 8 },
+  infoSvg: { color: colors.primary },
+  infoBorder: { borderBottomWidth: 1, borderBottomColor: colors.border },
+  infoText: { color: colors.primary },
 })
 
 const tabsStyles = StyleSheet.create({

@@ -5,10 +5,11 @@ import { Pressable, StyleSheet, View } from "react-native"
 type Props = {
   head: React.ReactNode
   body: React.ReactNode
+  collapsed?: boolean
 }
 
 export const Accordion = (props: Props) => {
-  const [collapsed, setCollapsed] = useState<boolean>(false)
+  const [collapsed, setCollapsed] = useState<boolean>(props.collapsed ?? true)
 
   return (
     <View>
@@ -20,7 +21,7 @@ export const Accordion = (props: Props) => {
           style={{ transform: [{ rotate: collapsed ? "0deg" : "180deg" }] }}
         />
       </Pressable>
-      {props.body}
+      {!collapsed && props.body}
     </View>
   )
 }
