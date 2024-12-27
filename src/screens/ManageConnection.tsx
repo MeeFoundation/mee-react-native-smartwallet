@@ -4,7 +4,7 @@ import { SelectTags } from "@components/SelectTags"
 import { Typography } from "@components/Typography"
 import { RootStackParamList } from "@navigation/rootNavigation"
 import { RouteProp, useRoute } from "@react-navigation/native"
-import { ConnectionDetails, ConnectionsStore } from "@store/index"
+import { ConnectionDetails, ConnectionsStore, TagsStore } from "@store/index"
 import { colors } from "@utils/theme"
 import { useAtom } from "jotai"
 import React, { useState } from "react"
@@ -74,33 +74,18 @@ const Tabs = () => {
 
 export const ManageConnection = () => {
   const route = useRoute<RouteProp<RootStackParamList, "Manage Connection">>()
-  const connectionId = route.params.id
   const [_, setConnections] = useAtom(ConnectionsStore)
   const [connection] = useAtom(ConnectionDetails(route.params.id))
-  const [allTags, setAllTags] = useState<string[]>([])
-  const [loading, setLoading] = useState(false)
+  const [allTags] = useAtom(TagsStore)
 
   const setSelectedTags = async (tags: string[]) => {
     if (!connection) return
     const updatedConnection = { ...connection, tags }
-  }
 
-  // useEffect(() => {
-  //   const get = async () => {
-  //     try {
-  //       setLoading(true)
-  //       const [r1, r2] = await Promise.all([
-  //         coreService.getTags(),
-  //         coreService.getConnectionDetails(connectionId),
-  //       ])
-  //       setAllTags(r1)
-  //       setConnection(r2)
-  //     } finally {
-  //       setLoading(false)
-  //     }
-  //   }
-  //   get()
-  // }, [connectionId])
+    setConnections((connections) =>
+      connections.map((c) => (c.id === updatedConnection.id ? updatedConnection : c)),
+    )
+  }
 
   return (
     <View style={styles.page}>
