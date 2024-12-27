@@ -6,6 +6,7 @@ import { colors } from "@utils/theme"
 import { FC, PropsWithChildren, useEffect, useRef, useState } from "react"
 import {
   Animated,
+  Keyboard,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -23,6 +24,7 @@ type SelectListProps = {
   searchPlaceholder?: string
   label?: string
   selected: string[]
+  showCounter?: boolean
 }
 
 export const SelectList: FC<SelectListProps> = ({
@@ -33,11 +35,13 @@ export const SelectList: FC<SelectListProps> = ({
   onSelect,
   searchPlaceholder,
   label,
+  showCounter = false,
 }) => {
   const [_firstRender, _setFirstRender] = useState<boolean>(true)
   const [dropdown, setDropdown] = useState<boolean>(showDropdown)
   const [height, setHeight] = useState<number>(350)
   const dropdownHeight = useRef(new Animated.Value(0)).current
+  const contentHeight = useRef(new Animated.Value(350)).current
   const [filteredData, setFilteredData] = useState(data)
   const [search, setSearch] = useState<string>("")
   const [collapsed, setCollapsed] = useState<boolean>(false)
@@ -59,10 +63,29 @@ export const SelectList: FC<SelectListProps> = ({
     }).start(() => setDropdown(false))
   }
 
+  const collapseContent = () => {
+    setCollapsed(true)
+    Keyboard.dismiss()
+    Animated.timing(contentHeight, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: false,
+    }).start(() => collapseDropdown())
+  }
+
+  const expandContent = () => {
+    Animated.timing(contentHeight, {
+      toValue: height,
+      duration: 300,
+      useNativeDriver: false,
+    }).start(() => setCollapsed(false))
+  }
+
   const toggleContent = () => {
-    setCollapsed(!collapsed)
-    if (!collapsed) {
-      collapseDropdown()
+    if (collapsed) {
+      expandContent()
+    } else {
+      collapseContent()
     }
   }
 
@@ -98,7 +121,8 @@ export const SelectList: FC<SelectListProps> = ({
 
   return (
     <View>
-      <View style={[styles.labelWrapper, collapsed ? { marginBottom: 0 } : null]}>
+      {/* <View style={[styles.labelWrapper, collapsed ? { marginBottom: 0 } : null]}> */}
+      <View style={[styles.labelWrapper]}>
         <Text style={styles.label}>{label}</Text>
         <Pressable onPress={toggleContent}>
           <ChevronDownIcon
@@ -108,56 +132,64 @@ export const SelectList: FC<SelectListProps> = ({
           />
         </Pressable>
       </View>
-      <View style={collapsed ? styles.collapsedContent : null}>
-        <TextField
-          placeholder={searchPlaceholder}
-          onChangeText={setSearch}
-          value={search}
-          onFocus={expandDropdown}
-          onBlur={collapseDropdown}
-        />
-        {selected.length > 0 && (
-          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
-            {selected.map((item, index) => (
-              <SelectedLabel key={index} onPress={() => onSelect(item)}>
-                {item}
-              </SelectedLabel>
-            ))}
-          </View>
-        )}
-        {dropdown && (
-          <Animated.ScrollView style={[{ maxHeight: dropdownHeight }, styles.dropdown]}>
-            <View style={[{ maxHeight: height }]}>
-              <ScrollView nestedScrollEnabled={true}>
-                {filteredData.length >= 1 ? (
-                  filteredData.map((item, index: number) => {
-                    let value = item
-                    const isSelected = selected?.indexOf(value) != -1
-                    return (
-                      <TouchableOpacity
-                        style={[
-                          styles.option,
-                          isSelected ? styles.optionSelected : {},
-                          index != filteredData.length - 1 ? styles.optionBordered : {},
-                        ]}
-                        key={index}
-                        onPress={() => onSelect(item)}
-                      >
-                        <Text style={styles.optionText}>#{value}</Text>
-                        {isSelected && <CheckIcon width={24} height={24} />}
-                      </TouchableOpacity>
-                    )
-                  })
-                ) : (
-                  <TouchableOpacity style={styles.option} onPress={() => setSearch("")}>
-                    <Text style={styles.optionText}>No data found</Text>
-                  </TouchableOpacity>
-                )}
-              </ScrollView>
+      <Animated.View
+        style={[
+          { backgroundColor: colors.white, height: "auto", zIndex: 99 },
+          { maxHeight: contentHeight, zIndex: 99 },
+          collapsed ? styles.collapsedContent : null,
+        ]}
+      >
+        <View style={{ height: "auto" }}>
+          <TextField
+            placeholder={searchPlaceholder}
+            onChangeText={setSearch}
+            value={search}
+            onFocus={expandDropdown}
+            onBlur={collapseDropdown}
+          />
+          {selected.length > 0 && (
+            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
+              {selected.map((item, index) => (
+                <SelectedLabel key={index} onPress={() => onSelect(item)}>
+                  {item}
+                </SelectedLabel>
+              ))}
             </View>
-          </Animated.ScrollView>
-        )}
-      </View>
+          )}
+          {dropdown && (
+            <Animated.ScrollView style={[{ maxHeight: dropdownHeight }, styles.dropdown]}>
+              <View style={[{ maxHeight: height }]}>
+                <ScrollView nestedScrollEnabled={true}>
+                  {filteredData.length >= 1 ? (
+                    filteredData.map((item, index: number) => {
+                      let value = item
+                      const isSelected = selected?.indexOf(value) != -1
+                      return (
+                        <TouchableOpacity
+                          style={[
+                            styles.option,
+                            isSelected ? styles.optionSelected : {},
+                            index != filteredData.length - 1 ? styles.optionBordered : {},
+                          ]}
+                          key={index}
+                          onPress={() => onSelect(item)}
+                        >
+                          <Text style={styles.optionText}>#{value}</Text>
+                          {isSelected && <CheckIcon width={24} height={24} />}
+                        </TouchableOpacity>
+                      )
+                    })
+                  ) : (
+                    <TouchableOpacity style={styles.option} onPress={() => setSearch("")}>
+                      <Text style={styles.optionText}>No data found</Text>
+                    </TouchableOpacity>
+                  )}
+                </ScrollView>
+              </View>
+            </Animated.ScrollView>
+          )}
+        </View>
+      </Animated.View>
     </View>
   )
 }
@@ -247,6 +279,7 @@ const styles = StyleSheet.create({
     color: colors.secondary,
   },
   collapsedContent: {
-    display: "none",
+    // display: "none",
+    overflow: "hidden",
   },
 })

@@ -56,9 +56,9 @@ export function Categories() {
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const filteredData = sortByTags(selectedTags, connections)
 
-  useEffect(() => {
-    if (allTags.length) setSelectedTags(allTags)
-  }, [allTags])
+  // useEffect(() => {
+  //   if (allTags.length) setSelectedTags(allTags)
+  // }, [allTags])
 
   useEffect(() => {
     coreService.getConnections().then((c) => setConnections(c))
