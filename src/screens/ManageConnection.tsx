@@ -5,7 +5,7 @@ import { SelectTags } from "@components/SelectTags"
 import { Typography } from "@components/Typography"
 import { RootStackParamList } from "@navigation/rootNavigation"
 import { RouteProp, useRoute } from "@react-navigation/native"
-import { ConnectionDetails, ConnectionsStore, TagsStore } from "@store/index"
+import { ConnectionDetails, TagsStore } from "@store/index"
 import { colors } from "@utils/theme"
 import { useAtom } from "jotai"
 import React, { useState } from "react"
@@ -75,17 +75,14 @@ const Tabs = () => {
 
 export const ManageConnection = () => {
   const route = useRoute<RouteProp<RootStackParamList, "Manage Connection">>()
-  const [_, setConnections] = useAtom(ConnectionsStore)
-  const [connection] = useAtom(ConnectionDetails(route.params.id))
+  const [connection, setConnection] = useAtom(ConnectionDetails(route.params.id))
   const [allTags] = useAtom(TagsStore)
 
   const setSelectedTags = async (tags: string[]) => {
     if (!connection) return
     const updatedConnection = { ...connection, tags }
 
-    setConnections((connections) =>
-      connections.map((c) => (c.id === updatedConnection.id ? updatedConnection : c)),
-    )
+    setConnection(updatedConnection)
   }
 
   return (
@@ -98,7 +95,6 @@ export const ManageConnection = () => {
             tags={allTags}
             selectedTags={connection.tags}
             onSelectTags={setSelectedTags}
-            label="Tags"
           />
 
           <Accordion

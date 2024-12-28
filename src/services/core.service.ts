@@ -139,10 +139,6 @@ class CoreService {
   async getConnections() {
     return connections
   }
-
-  async getTags() {
-    return Object.values(tags)
-  }
 }
 
 export const coreService = new CoreService()
