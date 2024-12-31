@@ -89,8 +89,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "flex-start",
-    paddingTop: 16,
-    paddingHorizontal: 16,
+    padding: 16,
     backgroundColor: colors.white,
   },
   separator: {

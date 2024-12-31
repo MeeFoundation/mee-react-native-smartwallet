@@ -6,6 +6,8 @@ import { colors } from "@utils/theme"
 import { FC, PropsWithChildren, useEffect, useRef, useState } from "react"
 import {
   Animated,
+  Dimensions,
+  Easing,
   Keyboard,
   PlatformColor,
   Pressable,
@@ -13,6 +15,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native"
 import { TextField } from "./TextField"
@@ -45,12 +48,23 @@ export const SelectList: FC<SelectListProps> = ({
   const [height, setHeight] = useState<number>(350)
   const dropdownHeight = useRef(new Animated.Value(0)).current
   const contentHeight = useRef(new Animated.Value(350)).current
+  const backdropOpacity = useRef(new Animated.Value(0)).current
   const [filteredData, setFilteredData] = useState(data)
   const [search, setSearch] = useState<string>("")
   const [collapsed, setCollapsed] = useState<boolean>(false)
 
+  const windowWidth = Dimensions.get("window").width
+  const windowHeight = Dimensions.get("window").height
+
   const expandDropdown = () => {
     setDropdown(true)
+
+    Animated.timing(backdropOpacity, {
+      toValue: 0.6,
+      duration: 300,
+      easing: Easing.linear,
+      useNativeDriver: false,
+    }).start()
 
     Animated.timing(dropdownHeight, {
       toValue: height,
@@ -59,6 +73,15 @@ export const SelectList: FC<SelectListProps> = ({
     }).start()
   }
   const collapseDropdown = () => {
+    Keyboard.dismiss()
+
+    Animated.timing(backdropOpacity, {
+      toValue: 0,
+      duration: 300,
+      easing: Easing.linear,
+      useNativeDriver: false,
+    }).start()
+
     Animated.timing(dropdownHeight, {
       toValue: 0,
       duration: 300,
@@ -126,7 +149,6 @@ export const SelectList: FC<SelectListProps> = ({
 
   return (
     <View>
-      {/* <View style={[styles.labelWrapper, collapsed ? { marginBottom: 0 } : null]}> */}
       <View style={[styles.labelWrapper]}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
           <Text style={styles.label}>{label}</Text>
@@ -212,6 +234,18 @@ export const SelectList: FC<SelectListProps> = ({
           )}
         </View>
       </Animated.View>
+      <TouchableWithoutFeedback onPress={collapseDropdown}>
+        <Animated.View
+          style={[
+            styles.backdrop,
+            {
+              opacity: backdropOpacity,
+              width: windowWidth,
+              height: windowHeight,
+            },
+          ]}
+        ></Animated.View>
+      </TouchableWithoutFeedback>
     </View>
   )
 }
@@ -245,6 +279,13 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     boxShadow: "0px 10px 10px -5px #0000000A, 0px 20px 25px -5px #0000001A",
     zIndex: 100,
+  },
+  backdrop: {
+    position: "absolute",
+    top: -16,
+    left: -16,
+    backgroundColor: colors.secondary,
+    zIndex: 98,
   },
   option: {
     paddingHorizontal: 16,
