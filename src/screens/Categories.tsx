@@ -1,13 +1,23 @@
+import { AddConnetionSvg } from "@assets/index"
 import { Avatar } from "@components/Avatar"
 import { SelectTags } from "@components/SelectTags"
 import { Separator } from "@components/Separator"
+import { BottomSheetModal } from "@gorhom/bottom-sheet"
 import { Link } from "@react-navigation/native"
 import { Connection, coreService } from "@services/core.service"
 import { ConnectionsStore, TagsStore } from "@store/index"
 import { colors } from "@utils/theme"
 import { useAtom } from "jotai"
-import { useEffect, useState } from "react"
-import { Image, SectionList, SectionListData, StyleSheet, Text, View } from "react-native"
+import { useEffect, useRef, useState } from "react"
+import {
+  Image,
+  Pressable,
+  SectionList,
+  SectionListData,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native"
 
 const CategoryItem = ({ item }: { item: Connection }) => {
   return (
@@ -55,6 +65,7 @@ export function Categories() {
   const [allTags = []] = useAtom(TagsStore)
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const filteredData = sortByTags(selectedTags, connections)
+  const bottomSheetRef = useRef<BottomSheetModal>(null)
 
   useEffect(() => {
     if (allTags.length) setSelectedTags(allTags)
@@ -94,9 +105,14 @@ export function Categories() {
         SectionSeparatorComponent={() => <View style={styles.sectionSeparator} />}
         style={styles.sectionContainer}
       />
+
+      <Pressable onPress={() => bottomSheetRef.current?.expand()} style={styles.addConnection}>
+        <AddConnetionSvg />
+      </Pressable>
     </View>
   )
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -159,5 +175,10 @@ const styles = StyleSheet.create({
   sectionSeparator: {
     height: 12,
     width: "100%",
+  },
+  addConnection: {
+    position: "absolute",
+    bottom: 16,
+    right: 16,
   },
 })
