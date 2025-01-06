@@ -1,13 +1,13 @@
 import { FC } from "react"
 import { SelectList } from "./SelectList"
 
-type SelectTagsProps = {
+type FilterTagsProps = {
   tags: string[]
   selectedTags: string[]
   onSelectTags: (tags: string[]) => void
 }
 
-export const SelectTags: FC<SelectTagsProps> = ({ tags, selectedTags, onSelectTags }) => {
+export const FilterTags: FC<FilterTagsProps> = ({ tags, selectedTags, onSelectTags }) => {
   const selectTagHandler = (tag: string) => {
     if (selectedTags.indexOf(tag) == -1) {
       onSelectTags([...selectedTags, tag])
@@ -16,18 +16,14 @@ export const SelectTags: FC<SelectTagsProps> = ({ tags, selectedTags, onSelectTa
     }
   }
 
-  const createTagHandler = (tag: string) => {
-    onSelectTags([...selectedTags, tag])
-  }
-
   return (
     <SelectList
-      searchPlaceholder="enter tag name"
+      searchPlaceholder="Tags"
       data={tags}
       selected={selectedTags}
       onSelect={selectTagHandler}
-      label="Tags"
-      onCreate={createTagHandler}
+      label="Filter"
+      showCounter
     />
   )
 }

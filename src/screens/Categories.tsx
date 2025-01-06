@@ -1,14 +1,13 @@
 import { AddConnetionSvg } from "@assets/index"
 import { Avatar } from "@components/Avatar"
-import { SelectTags } from "@components/SelectTags"
+import { FilterTags } from "@components/FilterTags"
 import { Separator } from "@components/Separator"
-import { BottomSheetModal } from "@gorhom/bottom-sheet"
 import { Link } from "@react-navigation/native"
-import { Connection, coreService } from "@services/core.service"
+import { Connection } from "@services/core.service"
 import { ConnectionsStore, TagsStore } from "@store/index"
 import { colors } from "@utils/theme"
-import { useAtom } from "jotai"
-import { useEffect, useRef, useState } from "react"
+import { useAtomValue } from "jotai"
+import { useState } from "react"
 import {
   Image,
   Pressable,
@@ -61,28 +60,14 @@ const sortByTags = (selectedTags: string[], connections: Connection[]) => {
 }
 
 export function Categories() {
-  const [connections, setConnections] = useAtom(ConnectionsStore)
-  const [allTags = []] = useAtom(TagsStore)
+  const connections = useAtomValue(ConnectionsStore)
+  const allTags = useAtomValue(TagsStore)
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const filteredData = sortByTags(selectedTags, connections)
-  const bottomSheetRef = useRef<BottomSheetModal>(null)
-
-  useEffect(() => {
-    if (allTags.length) setSelectedTags(allTags)
-  }, [allTags])
-
-  useEffect(() => {
-    coreService.getConnections().then((c) => setConnections(c))
-  }, [])
 
   return (
     <View style={styles.container}>
-      <SelectTags
-        tags={allTags}
-        selectedTags={selectedTags}
-        onSelectTags={setSelectedTags}
-        label="Filter"
-      />
+      <FilterTags tags={allTags} selectedTags={selectedTags} onSelectTags={setSelectedTags} />
       <Separator style={styles.separator} />
       <SectionList
         sections={filteredData}
@@ -106,7 +91,7 @@ export function Categories() {
         style={styles.sectionContainer}
       />
 
-      <Pressable onPress={() => bottomSheetRef.current?.expand()} style={styles.addConnection}>
+      <Pressable style={styles.addConnection}>
         <AddConnetionSvg />
       </Pressable>
     </View>
