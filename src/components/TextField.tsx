@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderWidth: 1,
     borderColor: colors["gray-200"],
+    backgroundColor: colors.white,
     borderRadius: 8,
   },
   inputFocus: {

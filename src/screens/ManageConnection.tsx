@@ -96,27 +96,25 @@ export const ManageConnection = () => {
             selectedTags={connection.tags}
             onSelectTags={setSelectedTags}
           />
-
           <Accordion
             head={<Typography weight="500">Required info shared</Typography>}
-            body={
-              <View style={styles.infoContainer}>
-                <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
-                  <MailSvg style={styles.infoSvg} />
-                  <Typography style={styles.infoText}>{connection.sharedInfo.email}</Typography>
-                </View>
-                <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
-                  <UserSvg style={styles.infoSvg} />
-                  <Typography style={styles.infoText}>{connection.sharedInfo.firstName}</Typography>
-                </View>
-                <View style={styles.infoRow}>
-                  <UserSvg style={styles.infoSvg} />
-                  <Typography style={styles.infoText}>{connection.sharedInfo.lastName}</Typography>
-                </View>
-              </View>
-            }
             collapsed={false}
-          />
+          >
+            <View style={styles.infoContainer}>
+              <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
+                <MailSvg style={styles.infoSvg} />
+                <Typography style={styles.infoText}>{connection.sharedInfo.email}</Typography>
+              </View>
+              <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
+                <UserSvg style={styles.infoSvg} />
+                <Typography style={styles.infoText}>{connection.sharedInfo.firstName}</Typography>
+              </View>
+              <View style={styles.infoRow}>
+                <UserSvg style={styles.infoSvg} />
+                <Typography style={styles.infoText}>{connection.sharedInfo.lastName}</Typography>
+              </View>
+            </View>
+          </Accordion>
         </>
       )}
     </View>

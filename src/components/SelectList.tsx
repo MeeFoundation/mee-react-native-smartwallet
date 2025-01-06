@@ -1,9 +1,8 @@
 import CheckIcon from "@assets/images/check.svg"
-import ChevronDownIcon from "@assets/images/chevron-down.svg"
 import CloseIcon from "@assets/images/close.svg"
 import { hexAlphaColor } from "@utils/color"
 import { colors } from "@utils/theme"
-import { FC, PropsWithChildren, useEffect, useRef, useState } from "react"
+import { FC, PropsWithChildren, useEffect, useLayoutEffect, useRef, useState } from "react"
 import {
   Animated,
   Dimensions,
@@ -18,6 +17,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native"
+import { Accordion } from "./Accordion"
 import { TextField } from "./TextField"
 
 type SelectListProps = {
@@ -43,6 +43,7 @@ export const SelectList: FC<SelectListProps> = ({
   showCounter = false,
   onCreate,
 }) => {
+  const mainRef = useRef<View>(null)
   const [_firstRender, _setFirstRender] = useState<boolean>(true)
   const [dropdown, setDropdown] = useState<boolean>(showDropdown)
   const [height, setHeight] = useState<number>(350)
@@ -52,6 +53,7 @@ export const SelectList: FC<SelectListProps> = ({
   const [filteredData, setFilteredData] = useState(data)
   const [search, setSearch] = useState<string>("")
   const [collapsed, setCollapsed] = useState<boolean>(false)
+  const backdropPos = useRef({ x: 0, y: 0 }).current
 
   const windowWidth = Dimensions.get("window").width
   const windowHeight = Dimensions.get("window").height
@@ -91,7 +93,6 @@ export const SelectList: FC<SelectListProps> = ({
 
   const collapseContent = () => {
     setCollapsed(true)
-    Keyboard.dismiss()
     Animated.timing(contentHeight, {
       toValue: 0,
       duration: 300,
@@ -147,93 +148,85 @@ export const SelectList: FC<SelectListProps> = ({
     }
   }, [showDropdown])
 
+  useLayoutEffect(() => {
+    mainRef.current?.measure((x, y, width, height, pageX, pageY) => {
+      backdropPos.x = pageX
+      backdropPos.y = pageY
+    })
+  }, [])
+
   return (
-    <View>
-      <View style={[styles.labelWrapper]}>
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
-          <Text style={styles.label}>{label}</Text>
-          {showCounter && (
-            <View style={styles.counterWrapper}>
-              <Text style={styles.counter}>{selected.length}</Text>
-            </View>
-          )}
-        </View>
-        <Pressable onPress={toggleContent}>
-          <ChevronDownIcon
-            width={24}
-            height={24}
-            style={{ transform: [{ rotate: collapsed ? "0deg" : "180deg" }] }}
-          />
-        </Pressable>
-      </View>
-      <Animated.View
-        style={[
-          { backgroundColor: colors.white, height: "auto", zIndex: 99 },
-          { maxHeight: contentHeight, zIndex: 99 },
-          collapsed ? styles.collapsedContent : null,
-        ]}
-      >
-        <View style={{ height: "auto" }}>
-          <TextField
-            placeholder={searchPlaceholder}
-            onChangeText={setSearch}
-            value={search}
-            onFocus={expandDropdown}
-            onBlur={collapseDropdown}
-          />
-          {selected.length > 0 && (
-            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
-              {selected.map((item, index) => (
-                <SelectedLabel key={index} onPress={() => onSelect(item)}>
-                  {item}
-                </SelectedLabel>
-              ))}
-            </View>
-          )}
-          {dropdown && (
-            <Animated.ScrollView style={[{ maxHeight: dropdownHeight }, styles.dropdown]}>
-              <View style={[{ maxHeight: height }]}>
-                <ScrollView nestedScrollEnabled={true}>
-                  {search.length > 0 && !data.includes(search) && (
-                    <View style={styles.option}>
-                      <Text style={styles.optionText}>#{search}</Text>
-                      <TouchableOpacity onPress={() => addOption(search)}>
-                        <Text style={{ fontSize: 12, color: PlatformColor("systemBlue") }}>
-                          Create
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  )}
-                  {filteredData.length >= 1 ? (
-                    filteredData.map((item, index: number) => {
-                      let value = item
-                      const isSelected = selected?.indexOf(value) != -1
-                      return (
-                        <TouchableOpacity
-                          style={[
-                            styles.option,
-                            isSelected ? styles.optionSelected : {},
-                            index != filteredData.length - 1 ? styles.optionBordered : {},
-                          ]}
-                          key={index}
-                          onPress={() => onSelect(item)}
-                        >
-                          <Text style={styles.optionText}>#{value}</Text>
-                          {isSelected && <CheckIcon width={24} height={24} />}
-                        </TouchableOpacity>
-                      )
-                    })
-                  ) : (
-                    <TouchableOpacity style={styles.option} onPress={() => setSearch("")}>
-                      <Text style={styles.optionText}>No data found</Text>
-                    </TouchableOpacity>
-                  )}
-                </ScrollView>
+    <View ref={mainRef}>
+      <Accordion
+        head={
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+            <Text style={styles.label}>{label}</Text>
+            {showCounter && (
+              <View style={styles.counterWrapper}>
+                <Text style={styles.counter}>{selected.length}</Text>
               </View>
-            </Animated.ScrollView>
-          )}
-        </View>
-      </Animated.View>
+            )}
+          </View>
+        }
+        collapsed={false}
+        onCollapse={collapseDropdown}
+        style={{ zIndex: 999 }}
+      >
+        <TextField
+          placeholder={searchPlaceholder}
+          onChangeText={setSearch}
+          value={search}
+          onFocus={expandDropdown}
+          onBlur={collapseDropdown}
+        />
+        {selected.length > 0 && (
+          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
+            {selected.map((item, index) => (
+              <SelectedLabel key={index} onPress={() => onSelect(item)}>
+                {item}
+              </SelectedLabel>
+            ))}
+          </View>
+        )}
+        {dropdown && (
+          <Animated.View style={[{ maxHeight: dropdownHeight }, styles.dropdown]}>
+            <ScrollView nestedScrollEnabled={true} style={[{ maxHeight: height, zIndex: 999 }]}>
+              {search.length > 0 && !data.includes(search) && (
+                <View style={styles.option}>
+                  <Text style={styles.optionText}>#{search}</Text>
+                  <TouchableOpacity onPress={() => addOption(search)}>
+                    <Text style={{ fontSize: 12, color: PlatformColor("systemBlue") }}>Create</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+              {filteredData.length >= 1 ? (
+                filteredData.map((item, index: number) => {
+                  let value = item
+                  const isSelected = selected?.indexOf(value) != -1
+                  return (
+                    <TouchableOpacity
+                      style={[
+                        styles.option,
+                        isSelected ? styles.optionSelected : {},
+                        index != filteredData.length - 1 ? styles.optionBordered : {},
+                      ]}
+                      key={index}
+                      onPress={() => onSelect(item)}
+                    >
+                      <Text style={styles.optionText}>#{value}</Text>
+                      {isSelected && <CheckIcon width={24} height={24} />}
+                    </TouchableOpacity>
+                  )
+                })
+              ) : (
+                <TouchableOpacity style={styles.option} onPress={() => setSearch("")}>
+                  <Text style={styles.optionText}>No data found</Text>
+                </TouchableOpacity>
+              )}
+            </ScrollView>
+          </Animated.View>
+        )}
+      </Accordion>
       <TouchableWithoutFeedback onPress={collapseDropdown}>
         <Animated.View
           style={[
@@ -242,6 +235,8 @@ export const SelectList: FC<SelectListProps> = ({
               opacity: backdropOpacity,
               width: windowWidth,
               height: windowHeight,
+              top: -backdropPos.y,
+              left: -backdropPos.x,
             },
           ]}
         ></Animated.View>
@@ -265,7 +260,7 @@ const SelectedLabel: FC<SelectedLabelProps> = ({ children, onPress }) => {
   )
 }
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   dropdown: {
     flex: 1,
     position: "absolute",
@@ -278,12 +273,10 @@ const styles = StyleSheet.create({
     borderColor: colors["gray-200"],
     overflow: "hidden",
     boxShadow: "0px 10px 10px -5px #0000000A, 0px 20px 25px -5px #0000001A",
-    zIndex: 100,
+    zIndex: 999,
   },
   backdrop: {
     position: "absolute",
-    top: -16,
-    left: -16,
     backgroundColor: colors.secondary,
     zIndex: 98,
   },
