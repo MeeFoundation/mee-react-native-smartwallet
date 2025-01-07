@@ -9,10 +9,11 @@ type Props = {
   logo?: ImageSourcePropType
   name: string
   border?: boolean
+  onOpenPress?: () => void
 }
 
 export const ConnectionCard = (props: Props) => {
-  const { logo, name, border } = props
+  const { logo, name, border, onOpenPress } = props
 
   return (
     <View style={StyleSheet.compose(styles.contaner, border && styles.border)}>
@@ -21,7 +22,7 @@ export const ConnectionCard = (props: Props) => {
         {name}
       </Typography>
 
-      <Typography style={styles.open}>Open</Typography>
+      {onOpenPress && <AppButton text="Open" variant="link" size="xs" onPress={onOpenPress} />}
 
       <AppButton size="sm" variant="tertiary" onPress={() => false}>
         <Dots />

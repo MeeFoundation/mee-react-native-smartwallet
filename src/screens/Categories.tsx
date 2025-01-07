@@ -1,14 +1,6 @@
-import ChevronDownIcon from "@assets/images/chevron-down.svg"
 import { AddConnetionSvg } from "@assets/index"
 import { Avatar } from "@components/Avatar"
 import { BottomSheetBackDrop } from "@components/BottomSheet"
-import {
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuItemTitle,
-  DropdownMenuRoot,
-  DropdownMenuTrigger,
-} from "@components/DropdownMenu"
 import { FilterTags } from "@components/FilterTags"
 import { Separator } from "@components/Separator"
 import BottomSheet from "@gorhom/bottom-sheet"
@@ -39,21 +31,6 @@ const CategoryItem = ({ item }: { item: Connection }) => {
         <Link screen="Manage Connection" params={{ id: item.id }}>
           Open
         </Link>
-        <DropdownMenuRoot>
-          <DropdownMenuTrigger>
-            <View>
-              <ChevronDownIcon />
-            </View>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem key="test text">
-              <DropdownMenuItemTitle>Test</DropdownMenuItemTitle>
-            </DropdownMenuItem>
-            <DropdownMenuItem key="test">
-              <DropdownMenuItemTitle>Test2</DropdownMenuItemTitle>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenuRoot>
       </View>
     </View>
   )
