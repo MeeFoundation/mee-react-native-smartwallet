@@ -1,6 +1,9 @@
+import { AddConnetionSvg } from "@assets/index"
 import { Avatar } from "@components/Avatar"
+import { BottomSheetBackDrop } from "@components/BottomSheet"
 import { FilterTags } from "@components/FilterTags"
 import { Separator } from "@components/Separator"
+import BottomSheet from "@gorhom/bottom-sheet"
 import { Link } from "@react-navigation/native"
 import { Connection } from "@services/core.service"
 import { ConnectionsStore, TagsStore } from "@store/index"
@@ -52,6 +55,11 @@ export function Categories() {
   const allTags = useAtomValue(TagsStore)
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const filteredData = sortByTags(selectedTags, connections)
+  const bottomSheetRef = useRef<BottomSheet>(null)
+
+  const onAddPress = () => {
+    bottomSheetRef.current?.expand()
+  }
 
   return (
     <View style={styles.container}>
@@ -78,9 +86,18 @@ export function Categories() {
         SectionSeparatorComponent={() => <View style={styles.sectionSeparator} />}
         style={styles.sectionContainer}
       />
+
+      <Pressable onPress={onAddPress} style={styles.addConnection}>
+        <AddConnetionSvg />
+      </Pressable>
+
+      <BottomSheetBackDrop ref={bottomSheetRef} title="Sites/Apps to Connect to">
+        <View style={styles.addConnectionContainer}></View>
+      </BottomSheetBackDrop>
     </View>
   )
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -142,5 +159,14 @@ const styles = StyleSheet.create({
   sectionSeparator: {
     height: 12,
     width: "100%",
+  },
+  addConnection: {
+    position: "absolute",
+    bottom: 16,
+    right: 16,
+  },
+  addConnectionContainer: {
+    flex: 1,
+    flexDirection: "column",
   },
 })

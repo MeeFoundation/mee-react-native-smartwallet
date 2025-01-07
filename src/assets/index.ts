@@ -1,3 +1,4 @@
+import AddConnetionSvg from "./images/add-connection.svg"
 import BellSvg from "./images/bell.svg"
 import CheckSvg from "./images/check.svg"
 import CloseSvg from "./images/close.svg"
@@ -14,4 +15,14 @@ export const IconSources = {
   times: require("./images/connection/times.png"),
 }
 
-export { BellSvg, CheckSvg, CloseSvg, DatabaseSvg, UserSvg, LinkSvg, MailSvg, KeySvg }
+export {
+  BellSvg,
+  CheckSvg,
+  CloseSvg,
+  DatabaseSvg,
+  UserSvg,
+  LinkSvg,
+  MailSvg,
+  KeySvg,
+  AddConnetionSvg,
+}
