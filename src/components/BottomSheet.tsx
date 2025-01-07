@@ -19,7 +19,6 @@ const BackDrop = (props: BottomSheetBackdropProps) => {
       {..._props}
       disappearsOnIndex={-1}
       style={StyleSheet.compose(style, { zIndex: 101 })}
-      // style={style}
     />
   )
 }
