@@ -13,7 +13,7 @@ import { Typography } from "./Typography"
 
 const BackDrop = (props: BottomSheetBackdropProps) => {
   const { style, ..._props } = props
-  console.log(style)
+
   return (
     <BottomSheetBackdrop
       {..._props}
