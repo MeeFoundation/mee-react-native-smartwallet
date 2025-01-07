@@ -1,11 +1,11 @@
 import { hexAlphaColor } from "@utils/color"
 import { colors } from "@utils/theme"
 import { ComponentPropsWithoutRef, ElementRef, Fragment, forwardRef } from "react"
-import { Animated, GestureResponderEvent, Pressable, StyleSheet } from "react-native"
+import { Animated, GestureResponderEvent, Pressable, StyleSheet, TextStyle } from "react-native"
 import { SvgProps } from "react-native-svg"
 import { Typography } from "./Typography"
 
-type Variant = "primary" | "danger" | "tertiary"
+type Variant = "primary" | "danger" | "tertiary" | "link"
 
 type Size = "md" | "sm"
 
@@ -17,15 +17,17 @@ const bgColorMap: Record<Variant, [string, string]> = {
   primary: [colors.primary, colors.primaryActive],
   danger: [colors.white, colors.transparentActive],
   tertiary: [colors.transparent, hexAlphaColor(colors.transparentActive, 20)],
+  link: [colors.transparent, colors.transparent],
 }
 
 const textColorMap: Record<Variant, string> = {
   primary: colors.white,
   danger: colors.danger,
   tertiary: colors.secondary,
+  link: colors.link,
 }
 
-const sizeMap = {
+const paddingsMap = {
   md: {
     paddingVertical: 16,
     paddingHorizontal: 32,
@@ -65,7 +67,8 @@ export const AppButton = forwardRef<AppButtonRef, AppButtonProps>((props, ref) =
     outputRange: bgColorMap[variant],
   })
   const textColor = textColorMap[variant]
-  const sizes = sizeMap[size]
+  const paddings = variant === "link" ? { paddings: 0 } : paddingsMap[size]
+  const textStyles: TextStyle = { fontWeight: variant !== "link" ? "700" : "400", color: textColor }
 
   const borderRef = new Animated.Value(0)
   const borderColor = borderRef.interpolate({
@@ -122,7 +125,7 @@ export const AppButton = forwardRef<AppButtonRef, AppButtonProps>((props, ref) =
         style={{
           justifyContent: justifyStart ? "space-between" : "center",
           alignItems: "center",
-          ...sizes,
+          ...paddings,
           ...styles.container,
           backgroundColor,
           ...conditionalStyles,
@@ -133,7 +136,7 @@ export const AppButton = forwardRef<AppButtonRef, AppButtonProps>((props, ref) =
         ) : (
           <Fragment>
             {IconLeft && <IconLeft color={textColor} />}
-            <Typography style={{ color: textColor, ...styles.text }}>{text}</Typography>
+            <Typography style={textStyles}>{text}</Typography>
             {IconRight && <IconRight color={textColor} />}
           </Fragment>
         )}

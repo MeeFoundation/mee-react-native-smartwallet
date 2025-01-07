@@ -1,13 +1,15 @@
 import { AddConnetionSvg } from "@assets/index"
 import { Avatar } from "@components/Avatar"
+import { BottomSheetBackDrop } from "@components/BottomSheet"
 import { FilterTags } from "@components/FilterTags"
 import { Separator } from "@components/Separator"
+import BottomSheet from "@gorhom/bottom-sheet"
 import { Link } from "@react-navigation/native"
 import { Connection } from "@services/core.service"
 import { ConnectionsStore, TagsStore } from "@store/index"
 import { colors } from "@utils/theme"
 import { useAtomValue } from "jotai"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import {
   Image,
   Pressable,
@@ -64,6 +66,11 @@ export function Categories() {
   const allTags = useAtomValue(TagsStore)
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const filteredData = sortByTags(selectedTags, connections)
+  const bottomSheetRef = useRef<BottomSheet>(null)
+
+  const onAddPress = () => {
+    bottomSheetRef.current?.expand()
+  }
 
   return (
     <View style={styles.container}>
@@ -91,9 +98,13 @@ export function Categories() {
         style={styles.sectionContainer}
       />
 
-      <Pressable style={styles.addConnection}>
+      <Pressable onPress={onAddPress} style={styles.addConnection}>
         <AddConnetionSvg />
       </Pressable>
+
+      <BottomSheetBackDrop ref={bottomSheetRef} title="Sites/Apps to Connect to">
+        <View style={styles.addConnectionContainer}></View>
+      </BottomSheetBackDrop>
     </View>
   )
 }
@@ -165,5 +176,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 16,
     right: 16,
+  },
+  addConnectionContainer: {
+    flex: 1,
+    flexDirection: "column",
   },
 })
