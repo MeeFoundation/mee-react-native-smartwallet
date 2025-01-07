@@ -2,10 +2,9 @@ import CheckIcon from "@assets/images/check.svg"
 import CloseIcon from "@assets/images/close.svg"
 import { hexAlphaColor } from "@utils/color"
 import { colors } from "@utils/theme"
-import { FC, PropsWithChildren, useEffect, useLayoutEffect, useRef, useState } from "react"
+import { FC, PropsWithChildren, useEffect, useRef, useState } from "react"
 import {
   Animated,
-  Dimensions,
   Easing,
   Keyboard,
   PlatformColor,
@@ -14,10 +13,10 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from "react-native"
 import { Accordion } from "./Accordion"
+import { Backdrop } from "./Backdrop"
 import { TextField } from "./TextField"
 
 type SelectListProps = {
@@ -43,82 +42,38 @@ export const SelectList: FC<SelectListProps> = ({
   showCounter = false,
   onCreate,
 }) => {
-  const mainRef = useRef<View>(null)
   const [_firstRender, _setFirstRender] = useState<boolean>(true)
   const [dropdown, setDropdown] = useState<boolean>(showDropdown)
   const [height, setHeight] = useState<number>(350)
   const dropdownHeight = useRef(new Animated.Value(0)).current
-  const contentHeight = useRef(new Animated.Value(350)).current
-  const backdropOpacity = useRef(new Animated.Value(0)).current
   const [filteredData, setFilteredData] = useState(data)
   const [search, setSearch] = useState<string>("")
-  const [collapsed, setCollapsed] = useState<boolean>(false)
-  const backdropPos = useRef({ x: 0, y: 0 }).current
-
-  const windowWidth = Dimensions.get("window").width
-  const windowHeight = Dimensions.get("window").height
 
   const expandDropdown = () => {
     setDropdown(true)
 
-    Animated.timing(backdropOpacity, {
-      toValue: 0.6,
-      duration: 300,
-      easing: Easing.linear,
-      useNativeDriver: false,
-    }).start()
-
     Animated.timing(dropdownHeight, {
       toValue: height,
       duration: 300,
+      easing: Easing.linear,
       useNativeDriver: false,
     }).start()
   }
   const collapseDropdown = () => {
     Keyboard.dismiss()
 
-    Animated.timing(backdropOpacity, {
+    Animated.timing(dropdownHeight, {
       toValue: 0,
       duration: 300,
       easing: Easing.linear,
       useNativeDriver: false,
-    }).start()
-
-    Animated.timing(dropdownHeight, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: false,
     }).start(() => setDropdown(false))
-  }
-
-  const collapseContent = () => {
-    setCollapsed(true)
-    Animated.timing(contentHeight, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: false,
-    }).start(() => collapseDropdown())
-  }
-
-  const expandContent = () => {
-    Animated.timing(contentHeight, {
-      toValue: height,
-      duration: 300,
-      useNativeDriver: false,
-    }).start(() => setCollapsed(false))
-  }
-
-  const toggleContent = () => {
-    if (collapsed) {
-      expandContent()
-    } else {
-      collapseContent()
-    }
   }
 
   const addOption = (value: string) => {
     if (onCreate) {
       onCreate(value)
+      setSearch("")
     }
   }
 
@@ -148,15 +103,8 @@ export const SelectList: FC<SelectListProps> = ({
     }
   }, [showDropdown])
 
-  useLayoutEffect(() => {
-    mainRef.current?.measure((x, y, width, height, pageX, pageY) => {
-      backdropPos.x = pageX
-      backdropPos.y = pageY
-    })
-  }, [])
-
   return (
-    <View ref={mainRef}>
+    <View>
       <Accordion
         head={
           <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
@@ -226,21 +174,8 @@ export const SelectList: FC<SelectListProps> = ({
             </ScrollView>
           </Animated.View>
         )}
+        {dropdown && <Backdrop onClick={collapseDropdown} />}
       </Accordion>
-      <TouchableWithoutFeedback onPress={collapseDropdown}>
-        <Animated.View
-          style={[
-            styles.backdrop,
-            {
-              opacity: backdropOpacity,
-              width: windowWidth,
-              height: windowHeight,
-              top: -backdropPos.y,
-              left: -backdropPos.x,
-            },
-          ]}
-        ></Animated.View>
-      </TouchableWithoutFeedback>
     </View>
   )
 }
@@ -274,11 +209,6 @@ export const styles = StyleSheet.create({
     overflow: "hidden",
     boxShadow: "0px 10px 10px -5px #0000000A, 0px 20px 25px -5px #0000001A",
     zIndex: 999,
-  },
-  backdrop: {
-    position: "absolute",
-    backgroundColor: colors.secondary,
-    zIndex: 98,
   },
   option: {
     paddingHorizontal: 16,
@@ -333,9 +263,6 @@ export const styles = StyleSheet.create({
     fontWeight: "500",
     lineHeight: 24,
     color: colors.secondary,
-  },
-  collapsedContent: {
-    overflow: "hidden",
   },
   counterWrapper: {
     paddingHorizontal: 3,
