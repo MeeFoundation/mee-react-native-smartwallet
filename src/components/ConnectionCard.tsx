@@ -10,10 +10,11 @@ type Props = {
   name: string
   border?: boolean
   onOpenPress?: () => void
+  showActionMenu?: boolean
 }
 
 export const ConnectionCard = (props: Props) => {
-  const { logo, name, border, onOpenPress } = props
+  const { logo, name, border, onOpenPress, showActionMenu } = props
 
   return (
     <View style={StyleSheet.compose(styles.contaner, border && styles.border)}>
@@ -24,9 +25,11 @@ export const ConnectionCard = (props: Props) => {
 
       {onOpenPress && <AppButton text="Open" variant="link" size="xs" onPress={onOpenPress} />}
 
-      <AppButton size="sm" variant="tertiary" onPress={() => false}>
-        <Dots />
-      </AppButton>
+      {showActionMenu && (
+        <AppButton size="sm" variant="tertiary" onPress={() => false}>
+          <Dots />
+        </AppButton>
+      )}
     </View>
   )
 }

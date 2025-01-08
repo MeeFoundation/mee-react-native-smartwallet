@@ -1,40 +1,17 @@
 import { AddConnetionSvg } from "@assets/index"
 import { Avatar } from "@components/Avatar"
 import { BottomSheetBackDrop } from "@components/BottomSheet"
+import { ConnectionCard } from "@components/ConnectionCard"
 import { FilterTags } from "@components/FilterTags"
 import { Separator } from "@components/Separator"
 import BottomSheet from "@gorhom/bottom-sheet"
-import { Link } from "@react-navigation/native"
+import { useNavigation } from "@react-navigation/native"
 import { Connection } from "@services/core.service"
 import { ConnectionsStore, TagsStore } from "@store/index"
 import { colors } from "@utils/theme"
 import { useAtomValue } from "jotai"
 import { useRef, useState } from "react"
-import {
-  Image,
-  Pressable,
-  SectionList,
-  SectionListData,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native"
-
-const CategoryItem = ({ item }: { item: Connection }) => {
-  return (
-    <View style={styles.item}>
-      <View style={styles.contentBlock}>
-        {item.iconSrc && <Image source={item.iconSrc} style={styles.itemIcon} />}
-        <Text style={styles.title}>{item.name}</Text>
-      </View>
-      <View style={StyleSheet.compose(styles.contentBlock, styles.contentBlockRight)}>
-        <Link screen="Manage Connection" params={{ id: item.id }}>
-          Open
-        </Link>
-      </View>
-    </View>
-  )
-}
+import { Pressable, SectionList, SectionListData, StyleSheet, Text, View } from "react-native"
 
 const sortByTags = (selectedTags: string[], connections: Connection[]) => {
   if (selectedTags.length === 0) {
@@ -67,9 +44,14 @@ export function Categories() {
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const filteredData = sortByTags(selectedTags, connections)
   const bottomSheetRef = useRef<BottomSheet>(null)
+  const navigation = useNavigation()
 
   const onAddPress = () => {
     bottomSheetRef.current?.expand()
+  }
+
+  const handlePressOpen = (id: string) => {
+    navigation.navigate("Manage Connection", { id })
   }
 
   return (
@@ -77,9 +59,16 @@ export function Categories() {
       <FilterTags tags={allTags} selectedTags={selectedTags} onSelectTags={setSelectedTags} />
       <Separator style={styles.separator} />
       <SectionList
+        contentContainerStyle={{ gap: 8 }}
         sections={filteredData}
         keyExtractor={(item, index) => item.id + index}
-        renderItem={({ item }) => <CategoryItem item={item} />}
+        renderItem={({ item }) => (
+          <ConnectionCard
+            name={item.name}
+            onOpenPress={() => handlePressOpen(item.id)}
+            logo={item.iconSrc}
+          />
+        )}
         stickySectionHeadersEnabled
         renderSectionHeader={({ section: { title } }) => (
           <View style={styles.sectionHeader}>
