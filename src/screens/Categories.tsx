@@ -65,7 +65,7 @@ export function Categories() {
         renderItem={({ item }) => (
           <ConnectionCard
             name={item.name}
-            onOpenPress={() => handlePressOpen(item.id)}
+            onPress={() => handlePressOpen(item.id)}
             logo={item.iconSrc}
           />
         )}
@@ -92,7 +92,15 @@ export function Categories() {
       </Pressable>
 
       <BottomSheetBackDrop ref={bottomSheetRef} title="Sites/Apps to Connect to">
-        <View style={styles.addConnectionContainer}></View>
+        <View style={styles.addConnectionContainer}>
+          <ConnectionCard name="Google" onPress={() => false} noBackground buttonLabel="Connect" />
+          <ConnectionCard
+            name="Old York"
+            onPress={() => false}
+            noBackground
+            buttonLabel="Connect"
+          />
+        </View>
       </BottomSheetBackDrop>
     </View>
   )
@@ -171,5 +179,8 @@ const styles = StyleSheet.create({
   addConnectionContainer: {
     flex: 1,
     flexDirection: "column",
+    width: "100%",
+    paddingHorizontal: 16,
+    gap: 16,
   },
 })
