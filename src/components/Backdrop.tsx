@@ -41,7 +41,6 @@ export const Backdrop: FC<BackdropProps> = ({ onClick, color = "transparent" }) 
 
   useLayoutEffect(() => {
     mainRef.current?.measureInWindow((x, y, width, height) => {
-      console.log("In window: ", x, y, width, height)
       setPos({ x: x > 1 ? -x : pos.x, y: y > 0 ? -y : pos.y })
     })
   }, [])
