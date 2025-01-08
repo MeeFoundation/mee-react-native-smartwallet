@@ -65,7 +65,6 @@ export function Connections() {
               name={item.name}
               onOpenPress={() => handlePressOpen(item.id)}
               logo={item.iconSrc}
-              showActionMenu
             />
           </TouchableOpacity>
         )}

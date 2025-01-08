@@ -1,6 +1,7 @@
 import AddConnectionSvg from "./images/add-connection.svg"
 import BellSvg from "./images/bell.svg"
 import CheckSvg from "./images/check.svg"
+import ChevronDownSvg from "./images/chevron-down.svg"
 import CloseSvg from "./images/close.svg"
 import DatabaseSvg from "./images/database.svg"
 import KeySvg from "./images/key.svg"
@@ -19,6 +20,7 @@ export {
   AddConnectionSvg,
   BellSvg,
   CheckSvg,
+  ChevronDownSvg,
   CloseSvg,
   DatabaseSvg,
   KeySvg,

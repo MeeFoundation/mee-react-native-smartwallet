@@ -1,4 +1,5 @@
 import Dots from "@assets/images/dots-vertical.svg"
+import { ChevronDownSvg } from "@assets/index"
 import { colors } from "@utils/theme"
 import { ImageSourcePropType, StyleSheet, View } from "react-native"
 import { AppButton } from "./AppButton"
@@ -23,7 +24,12 @@ export const ConnectionCard = (props: Props) => {
         {name}
       </Typography>
 
-      {onOpenPress && <AppButton text="Open" variant="link" size="xs" onPress={onOpenPress} />}
+      {onOpenPress && (
+        <ChevronDownSvg
+          style={{ transform: [{ rotate: "270deg" }], opacity: 0.7 }}
+          onPress={onOpenPress}
+        />
+      )}
 
       {showActionMenu && (
         <AppButton size="sm" variant="tertiary" onPress={() => false}>
