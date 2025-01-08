@@ -13,29 +13,27 @@ import { useAtomValue } from "jotai"
 import { useRef, useState } from "react"
 import { Pressable, SectionList, SectionListData, StyleSheet, Text, View } from "react-native"
 
+
 const sortByTags = (selectedTags: string[], connections: Connection[]) => {
   if (selectedTags.length === 0) {
     return [{ title: "All", data: connections }]
   }
 
-  const result: SectionListData<Connection>[] = []
-  const map: Record<string, { title: string; data: Connection[] }> = {}
-
-  for (const tag of selectedTags) map[tag] = { title: tag, data: [] }
-
-  for (const connection of connections) {
-    for (const tag of connection.tags) {
-      if (tag in map) {
-        map[tag].data.push(connection)
-      }
-    }
-  }
+  const map = new Map<string, { title: string; data: Connection[] }>()
 
   for (const tag of selectedTags) {
-    result.push(map[tag])
+    map.set(tag, { title: tag, data: [] })
   }
 
-  return result
+  connections.forEach((connection) => {
+    connection.tags.forEach((tag) => {
+      if (map.has(tag)) {
+        map.get(tag)!.data.push(connection)
+      }
+    })
+  })
+
+  return Array.from(map.values())
 }
 
 export function Categories() {
@@ -111,8 +109,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "flex-start",
-    paddingTop: 16,
-    paddingHorizontal: 16,
+    padding: 16,
     backgroundColor: colors.white,
   },
   separator: {
