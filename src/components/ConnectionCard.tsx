@@ -1,9 +1,16 @@
 import Dots from "@assets/images/dots-vertical.svg"
+import TrashSvg from "@assets/images/trash.svg"
 import { ChevronDownSvg } from "@assets/index"
 import { colors } from "@utils/theme"
 import { ImageSourcePropType, StyleSheet, View } from "react-native"
 import { AppButton } from "./AppButton"
 import { Avatar } from "./Avatar"
+import {
+  DropdownMenu,
+  DropdownMenuIcon,
+  DropdownMenuItem,
+  DropdownMenuItemTitle,
+} from "./DropdownMenu"
 import { Typography } from "./Typography"
 
 type Props = {
@@ -32,9 +39,23 @@ export const ConnectionCard = (props: Props) => {
       )}
 
       {showActionMenu && (
-        <AppButton size="sm" variant="tertiary" onPress={() => false}>
-          <Dots />
-        </AppButton>
+        <DropdownMenu
+          trigger={
+            <AppButton size="sm" variant="tertiary" onPress={() => false}>
+              <Dots />
+            </AppButton>
+          }
+        >
+          <DropdownMenuItem key="delete-connection" textValue="Delete connection">
+            <DropdownMenuItemTitle>Delete connection</DropdownMenuItemTitle>
+            <DropdownMenuIcon
+              androidIconName="trash"
+              ios={{ hierarchicalColor: colors.danger, name: "trash" }}
+            >
+              <TrashSvg color={colors.danger} />
+            </DropdownMenuIcon>
+          </DropdownMenuItem>
+        </DropdownMenu>
       )}
     </View>
   )

@@ -1,16 +1,39 @@
-import * as DropdownMenu from "zeego/dropdown-menu"
-import { MenuItemProps, MenuItemTitleProps, MenuTriggerProps } from "zeego/lib/typescript/menu"
+import * as Dropdown from "zeego/dropdown-menu"
 
-export const DropdownMenuRoot = DropdownMenu.Root
-export const DropdownMenuTrigger = DropdownMenu.create((props: MenuTriggerProps) => {
-  return <DropdownMenu.Trigger {...props} />
-}, "Trigger")
-export const DropdownMenuContent = DropdownMenu.Content
+//  const DropdownMenuRoot = DropdownMenu.create((props: MenuRootProps) => {
+//   return <DropdownMenu.Root {...props} />
+// },"Root")
+//  const DropdownMenuContent = DropdownMenu.Content
 
-export const DropdownMenuItem = DropdownMenu.create((props: MenuItemProps) => {
-  return <DropdownMenu.Item {...props} />
+export const DropdownMenuIcon = Dropdown.create((props: MenuItemIconProps) => {
+  return <Dropdown.ItemIcon {...props} />
+}, "ItemIcon")
+
+export const DropdownMenuItemTitle = Dropdown.create((props: MenuItemTitleProps) => {
+  return <Dropdown.ItemTitle {...props} />
+}, "ItemTitle")
+
+type DropdownMenuItemProps = {
+  icon?: ReactNode
+} & MenuItemProps
+
+export const DropdownMenuItem = Dropdown.create(({ ...props }: MenuItemProps) => {
+  return <Dropdown.Item {...props} />
 }, "Item")
 
-export const DropdownMenuItemTitle = DropdownMenu.create((props: MenuItemTitleProps) => {
-  return <DropdownMenu.ItemTitle {...props} />
-}, "ItemTitle")
+import { FC, ReactNode } from "react"
+import { MenuItemIconProps, MenuItemProps, MenuItemTitleProps } from "zeego/lib/typescript/menu"
+
+type DropdownMenuProps = {
+  trigger: ReactNode
+  children: ReactNode
+}
+
+export const DropdownMenu: FC<DropdownMenuProps> = ({ trigger, children }) => {
+  return (
+    <Dropdown.Root>
+      <Dropdown.Trigger>{trigger}</Dropdown.Trigger>
+      <Dropdown.Content>{children}</Dropdown.Content>
+    </Dropdown.Root>
+  )
+}
