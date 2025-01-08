@@ -1,9 +1,7 @@
-import DatabaseIcon from "@assets/images/database.svg"
 import LinkIcon from "@assets/images/link.svg"
 import { HeaderLeft, HeaderRight } from "@components/Header"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { Categories } from "@screens/Categories"
 import { Connections } from "@screens/Connections"
 import { ManageConnection } from "@screens/ManageConnection"
 import { colors, fonts } from "@utils/theme"
@@ -35,7 +33,7 @@ const screenOptions = {
 export const rootNavigationLinks = {
   home: "Home",
   connections: "Connections",
-  categories: "Categories",
+  // categories: "Categories",
   manageConnection: "Manage Connection",
 }
 
@@ -70,13 +68,13 @@ const TabsStack = () => {
           tabBarIcon: ({ focused }) => <LinkIcon opacity={focused ? 0.5 : 1} />,
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name={rootNavigationLinks.categories}
         component={Categories}
         options={{
           tabBarIcon: ({ focused }) => <DatabaseIcon opacity={focused ? 0.5 : 1} />,
         }}
-      />
+      /> */}
     </Tab.Navigator>
   )
 }
@@ -90,7 +88,7 @@ const ConnectionsStack = () => {
 
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name={rootNavigationLinks.connections} component={Categories} />
+      <Stack.Screen name={rootNavigationLinks.connections} component={Connections} />
     </Stack.Navigator>
   )
 }
