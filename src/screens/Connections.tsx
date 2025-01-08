@@ -11,7 +11,7 @@ import { ConnectionsStore, TagsStore } from "@store/index"
 import { colors } from "@utils/theme"
 import { useAtomValue } from "jotai"
 import { useRef, useState } from "react"
-import { Pressable, SectionList, StyleSheet, Text, View } from "react-native"
+import { Pressable, SectionList, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 
 const sortByTags = (selectedTags: string[], connections: Connection[]) => {
   if (selectedTags.length === 0) {
@@ -60,11 +60,14 @@ export function Connections() {
         sections={filteredData}
         keyExtractor={(item, index) => item.id + index}
         renderItem={({ item }) => (
-          <ConnectionCard
-            name={item.name}
-            onOpenPress={() => handlePressOpen(item.id)}
-            logo={item.iconSrc}
-          />
+          <TouchableOpacity onPress={() => handlePressOpen(item.id)}>
+            <ConnectionCard
+              name={item.name}
+              onOpenPress={() => handlePressOpen(item.id)}
+              logo={item.iconSrc}
+              showActionMenu
+            />
+          </TouchableOpacity>
         )}
         stickySectionHeadersEnabled
         renderSectionHeader={({ section: { title } }) => (
