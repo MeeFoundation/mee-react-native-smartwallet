@@ -1,4 +1,4 @@
-import AddConnetionSvg from "./images/add-connection.svg"
+import AddConnectionSvg from "./images/add-connection.svg"
 import BellSvg from "./images/bell.svg"
 import CheckSvg from "./images/check.svg"
 import CloseSvg from "./images/close.svg"
@@ -16,13 +16,13 @@ export const IconSources = {
 }
 
 export {
+  AddConnectionSvg,
   BellSvg,
   CheckSvg,
   CloseSvg,
   DatabaseSvg,
-  UserSvg,
+  KeySvg,
   LinkSvg,
   MailSvg,
-  KeySvg,
-  AddConnetionSvg,
+  UserSvg,
 }

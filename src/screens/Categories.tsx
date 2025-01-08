@@ -1,4 +1,4 @@
-import { AddConnetionSvg } from "@assets/index"
+import { AddConnectionSvg } from "@assets/index"
 import { Avatar } from "@components/Avatar"
 import { BottomSheetBackDrop } from "@components/BottomSheet"
 import { ConnectionCard } from "@components/ConnectionCard"
@@ -11,8 +11,7 @@ import { ConnectionsStore, TagsStore } from "@store/index"
 import { colors } from "@utils/theme"
 import { useAtomValue } from "jotai"
 import { useRef, useState } from "react"
-import { Pressable, SectionList, SectionListData, StyleSheet, Text, View } from "react-native"
-
+import { Pressable, SectionList, StyleSheet, Text, View } from "react-native"
 
 const sortByTags = (selectedTags: string[], connections: Connection[]) => {
   if (selectedTags.length === 0) {
@@ -86,7 +85,7 @@ export function Categories() {
       />
 
       <Pressable onPress={onAddPress} style={styles.addConnection}>
-        <AddConnetionSvg />
+        <AddConnectionSvg />
       </Pressable>
 
       <BottomSheetBackDrop ref={bottomSheetRef} title="Sites/Apps to Connect to">
