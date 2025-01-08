@@ -7,7 +7,7 @@ import { Typography } from "./Typography"
 
 type Variant = "primary" | "danger" | "tertiary" | "link"
 
-type Size = "md" | "sm"
+type Size = "md" | "sm" | "xs"
 
 type AppButtonRef = ElementRef<typeof Pressable>
 
@@ -35,6 +35,15 @@ const paddingsMap = {
   sm: {
     padding: 10,
   },
+  xs: {
+    padding: 6,
+  },
+}
+
+const fontSizeMap = {
+  md: 16,
+  sm: 16,
+  xs: 12,
 }
 
 type AppButtonProps = {
@@ -68,7 +77,11 @@ export const AppButton = forwardRef<AppButtonRef, AppButtonProps>((props, ref) =
   })
   const textColor = textColorMap[variant]
   const paddings = variant === "link" ? { paddings: 0 } : paddingsMap[size]
-  const textStyles: TextStyle = { fontWeight: variant !== "link" ? "700" : "400", color: textColor }
+  const textStyles: TextStyle = {
+    fontWeight: variant !== "link" ? "700" : "400",
+    color: textColor,
+    fontSize: fontSizeMap[size],
+  }
 
   const borderRef = new Animated.Value(0)
   const borderColor = borderRef.interpolate({

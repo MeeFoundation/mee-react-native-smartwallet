@@ -89,7 +89,7 @@ export const ManageConnection = () => {
     <View style={styles.page}>
       {connection && (
         <>
-          <ConnectionCard border name={connection.name} logo={connection.iconSrc} />
+          <ConnectionCard border showActionMenu name={connection.name} logo={connection.iconSrc} />
           <Tabs />
           <SelectTags
             tags={allTags}
