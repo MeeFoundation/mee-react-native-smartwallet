@@ -118,7 +118,7 @@ export const SelectList: FC<SelectListProps> = ({
         }
         collapsed={false}
         onCollapse={collapseDropdown}
-        style={{ zIndex: 999 }}
+        style={dropdown ? { zIndex: 999 } : {}}
       >
         <TextField
           placeholder={searchPlaceholder}
@@ -126,6 +126,7 @@ export const SelectList: FC<SelectListProps> = ({
           value={search}
           onFocus={expandDropdown}
           onBlur={collapseDropdown}
+          style={dropdown && { zIndex: 99 }}
         />
         {selected.length > 0 && (
           <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 8 }}>
@@ -174,7 +175,7 @@ export const SelectList: FC<SelectListProps> = ({
             </ScrollView>
           </Animated.View>
         )}
-        {dropdown && <Backdrop onClick={collapseDropdown} />}
+        {dropdown && <Backdrop color="red" onClick={collapseDropdown} />}
       </Accordion>
     </View>
   )
