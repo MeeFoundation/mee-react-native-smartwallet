@@ -1,10 +1,5 @@
 import * as Dropdown from "zeego/dropdown-menu"
 
-//  const DropdownMenuRoot = DropdownMenu.create((props: MenuRootProps) => {
-//   return <DropdownMenu.Root {...props} />
-// },"Root")
-//  const DropdownMenuContent = DropdownMenu.Content
-
 export const DropdownMenuIcon = Dropdown.create((props: MenuItemIconProps) => {
   return <Dropdown.ItemIcon {...props} />
 }, "ItemIcon")
@@ -12,10 +7,6 @@ export const DropdownMenuIcon = Dropdown.create((props: MenuItemIconProps) => {
 export const DropdownMenuItemTitle = Dropdown.create((props: MenuItemTitleProps) => {
   return <Dropdown.ItemTitle {...props} />
 }, "ItemTitle")
-
-type DropdownMenuItemProps = {
-  icon?: ReactNode
-} & MenuItemProps
 
 export const DropdownMenuItem = Dropdown.create(({ ...props }: MenuItemProps) => {
   return <Dropdown.Item {...props} />
