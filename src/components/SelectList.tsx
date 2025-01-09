@@ -7,7 +7,6 @@ import {
   Animated,
   Easing,
   Keyboard,
-  PlatformColor,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -143,9 +142,9 @@ export const SelectList: FC<SelectListProps> = ({
               {search.length > 0 && !data.includes(search) && (
                 <View style={styles.option}>
                   <Text style={styles.optionText}>#{search}</Text>
-                  <TouchableOpacity onPress={() => addOption(search)}>
-                    <Text style={{ fontSize: 12, color: PlatformColor("systemBlue") }}>Create</Text>
-                  </TouchableOpacity>
+                  <Pressable onPress={() => addOption(search)}>
+                    <Text style={{ fontSize: 12, color: colors.link }}>Create</Text>
+                  </Pressable>
                 </View>
               )}
               {filteredData.length >= 1 ? (
@@ -175,7 +174,7 @@ export const SelectList: FC<SelectListProps> = ({
             </ScrollView>
           </Animated.View>
         )}
-        {dropdown && <Backdrop color="red" onClick={collapseDropdown} />}
+        {dropdown && <Backdrop onClick={collapseDropdown} />}
       </Accordion>
     </View>
   )

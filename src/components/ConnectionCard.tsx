@@ -19,14 +19,13 @@ type Props = {
   name: string
   border?: boolean
   onPress?: () => void
-  buttonLabel?: string
   showActionMenu?: boolean
   noBackground?: boolean
 }
 
 export const ConnectionCard = (props: Props) => {
   const { logo, name, border, onPress, showActionMenu } = props
-  const { buttonLabel = "Open", noBackground } = props
+  const { noBackground } = props
   const containerStyles = StyleSheet.flatten(
     filterNullable([
       styles.contaner,
@@ -42,10 +41,10 @@ export const ConnectionCard = (props: Props) => {
         {name}
       </Typography>
 
-      {onOpenPress && (
+      {onPress && (
         <ChevronDownSvg
           style={{ transform: [{ rotate: "270deg" }], opacity: 0.7 }}
-          onPress={onOpenPress}
+          onPress={onPress}
         />
       )}
 
@@ -59,10 +58,7 @@ export const ConnectionCard = (props: Props) => {
         >
           <DropdownMenuItem key="delete-connection" textValue="Delete connection">
             <DropdownMenuItemTitle>Delete connection</DropdownMenuItemTitle>
-            <DropdownMenuIcon
-              androidIconName="trash"
-              ios={{ hierarchicalColor: colors.danger, name: "trash" }}
-            >
+            <DropdownMenuIcon ios={{ hierarchicalColor: colors.danger, name: "trash" }}>
               <TrashSvg color={colors.danger} />
             </DropdownMenuIcon>
           </DropdownMenuItem>

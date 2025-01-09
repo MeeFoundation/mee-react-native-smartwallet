@@ -63,7 +63,7 @@ export function Connections() {
           <TouchableOpacity onPress={() => handlePressOpen(item.id)}>
             <ConnectionCard
               name={item.name}
-              onOpenPress={() => handlePressOpen(item.id)}
+              onPress={() => handlePressOpen(item.id)}
               logo={item.iconSrc}
             />
           </TouchableOpacity>
