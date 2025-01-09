@@ -7,7 +7,9 @@ import DatabaseSvg from "./images/database.svg"
 import KeySvg from "./images/key.svg"
 import LinkSvg from "./images/link.svg"
 import MailSvg from "./images/mail.svg"
+import PaperPlaneSvg from "./images/paper-plane.svg"
 import UserSvg from "./images/user.svg"
+import VehicleSvg from "./images/vehicle.svg"
 
 export const IconSources = {
   disney: require("./images/connection/disney-icon.png"),
@@ -27,4 +29,6 @@ export {
   KeySvg,
   AddConnetionSvg,
   ChevronLeftSvg,
+  VehicleSvg,
+  PaperPlaneSvg,
 }

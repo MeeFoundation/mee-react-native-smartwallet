@@ -1,10 +1,31 @@
-import { createContext, PropsWithChildren, useCallback, useContext, useRef } from "react"
-import { Dimensions, View } from "react-native"
+import { PaperPlaneSvg, VehicleSvg } from "@assets/index"
+import { useNavigation } from "@react-navigation/native"
+import { colors } from "@utils/theme"
+import { PropsWithChildren, ReactNode, createContext, useCallback, useContext, useRef } from "react"
+import { Dimensions, Pressable, StyleSheet, View } from "react-native"
 import ReanimatedDrawerLayout, {
   DrawerLayoutMethods,
   DrawerPosition,
   DrawerType,
 } from "react-native-gesture-handler/ReanimatedDrawerLayout"
+import { Typography } from "./Typography"
+
+type ItemProps = {
+  label: string
+  icon: ReactNode
+  onPress: () => void
+}
+
+const Item = (props: ItemProps) => {
+  const { label, icon, onPress } = props
+
+  return (
+    <Pressable onPress={onPress} style={styles.item}>
+      {icon}
+      <Typography>{label}</Typography>
+    </Pressable>
+  )
+}
 
 const DrawerCtx = createContext({
   openDrawer: () => {},
@@ -14,6 +35,27 @@ const DrawerCtx = createContext({
 const Drawer = ({ children }: PropsWithChildren) => {
   const ref = useRef<DrawerLayoutMethods | null>(null)
   const windowWidth = Dimensions.get("window").width
+  const navigation = useNavigation()
+
+  const onItemPress = (cb: () => void) => {
+    return () => {
+      cb()
+      ref.current?.closeDrawer()
+    }
+  }
+
+  const items: ItemProps[] = [
+    {
+      label: "Settings",
+      icon: <VehicleSvg />,
+      onPress: onItemPress(() => navigation.navigate("Settings")),
+    },
+    {
+      label: "Send Feedback",
+      icon: <PaperPlaneSvg />,
+      onPress: onItemPress(() => false),
+    },
+  ]
 
   return (
     <DrawerCtx.Provider
@@ -28,7 +70,11 @@ const Drawer = ({ children }: PropsWithChildren) => {
         drawerPosition={DrawerPosition.LEFT}
         drawerType={DrawerType.FRONT}
         renderNavigationView={() => (
-          <View style={{ flex: 1, backgroundColor: "white", padding: 16, paddingTop: 64 }}></View>
+          <View style={styles.container}>
+            {items.map((item, index) => (
+              <Item key={index} onPress={item.onPress} label={item.label} icon={item.icon} />
+            ))}
+          </View>
         )}
       >
         {children}
@@ -45,5 +91,18 @@ const useDrawer = () => {
 
   return { open, close }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.white,
+    paddingTop: 64,
+  },
+  item: {
+    padding: 16,
+    flexDirection: "row",
+    gap: 16,
+  },
+})
 
 export { Drawer, useDrawer }
