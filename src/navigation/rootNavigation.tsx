@@ -1,20 +1,42 @@
 import LinkIcon from "@assets/images/link.svg"
+import { ChevronLeftSvg } from "@assets/index"
+import { AppButton } from "@components/AppButton"
 import { HeaderLeft, HeaderRight } from "@components/Header"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import { useNavigation } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { Connections } from "@screens/Connections"
+import { Login } from "@screens/Login"
 import { ManageConnection } from "@screens/ManageConnection"
+import { Settings } from "@screens/Settings"
 import { colors, fonts } from "@utils/theme"
 import { useEffect } from "react"
 import { Platform, StatusBar } from "react-native"
+
+export const rootNavigationLinks = {
+  home: "Home",
+  connections: "Connections",
+  categories: "Categories",
+  manageConnection: "Manage Connection",
+  settings: "Settings",
+  login: "Login",
+} as const
+
+type RootNavigationLinks = typeof rootNavigationLinks
+
+export type RootNavigationLink = RootNavigationLinks[keyof RootNavigationLinks]
+
+export type RootNavigationLinkObject = { [key in RootNavigationLink]: any }
 
 export type RootStackParamList = {
   "Manage Connection": { id: string }
 }
 
+export type RootStackParamListWithLinks = RootStackParamList & RootNavigationLinkObject
+
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList {}
+    interface RootParamList extends RootStackParamListWithLinks {}
   }
 }
 
@@ -28,13 +50,6 @@ const screenOptions = {
   headerLeft: HeaderLeft,
   headerRight: HeaderRight,
   headerTitle: "",
-}
-
-export const rootNavigationLinks = {
-  home: "Home",
-  connections: "Connections",
-  // categories: "Categories",
-  manageConnection: "Manage Connection",
 }
 
 const Stack = createNativeStackNavigator()
@@ -79,6 +94,19 @@ const TabsStack = () => {
   )
 }
 
+const BackButton = () => {
+  const navigation = useNavigation()
+  return (
+    <AppButton
+      variant="link"
+      onPress={navigation.goBack}
+      text="Back"
+      textStyles={{ fontSize: 17 }}
+      IconLeft={ChevronLeftSvg}
+    />
+  )
+}
+
 const ConnectionsStack = () => {
   useEffect(() => {
     if (Platform.OS === "android") {
@@ -108,7 +136,23 @@ export function RootStack() {
         component={TabsStack}
       /> */}
 
-      <Stack.Screen name={rootNavigationLinks.manageConnection} component={ManageConnection} />
+      <Stack.Screen
+        options={{ headerLeft: () => <BackButton /> }}
+        name={rootNavigationLinks.manageConnection}
+        component={ManageConnection}
+      />
+
+      <Stack.Screen
+        options={{ headerLeft: () => <BackButton /> }}
+        name={rootNavigationLinks.login}
+        component={Login}
+      />
+
+      <Stack.Screen
+        options={{ headerLeft: () => <BackButton /> }}
+        name={rootNavigationLinks.settings}
+        component={Settings}
+      />
     </Stack.Navigator>
   )
 }

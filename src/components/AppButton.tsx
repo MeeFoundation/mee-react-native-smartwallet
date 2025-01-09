@@ -55,6 +55,7 @@ type AppButtonProps = {
   fullWidth?: boolean
   children?: React.ReactNode
   size?: Size
+  textStyles?: TextStyle
 } & Omit<ComponentPropsWithoutRef<typeof Pressable>, "children">
 
 export const AppButton = forwardRef<AppButtonRef, AppButtonProps>((props, ref) => {
@@ -68,6 +69,7 @@ export const AppButton = forwardRef<AppButtonRef, AppButtonProps>((props, ref) =
     onPress,
     onPressOut,
     size = "md",
+    textStyles: tStyles = {},
     ...rest
   } = props
   const backgroundColorRef = new Animated.Value(0)
@@ -81,6 +83,7 @@ export const AppButton = forwardRef<AppButtonRef, AppButtonProps>((props, ref) =
     fontWeight: variant !== "link" ? "700" : "400",
     color: textColor,
     fontSize: fontSizeMap[size],
+    ...tStyles,
   }
 
   const borderRef = new Animated.Value(0)
