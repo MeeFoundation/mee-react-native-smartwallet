@@ -3,15 +3,20 @@ import MenuIcon from "@assets/images/menu.svg"
 import SearchIcon from "@assets/images/search.svg"
 import { useRoute } from "@react-navigation/native"
 import { colors } from "@utils/theme"
-import { StyleSheet, View } from "react-native"
+import { Pressable, StyleSheet, View } from "react-native"
+import { useDrawer } from "./Drawer"
 import { Typography } from "./Typography"
 
 export const HeaderRight = () => {
+  const { open } = useDrawer()
+
   return (
     <View style={{ ...styles.horizontalGaps, ...styles.menu }}>
       <SearchIcon />
       <BellIcon />
-      <MenuIcon />
+      <Pressable onPress={open}>
+        <MenuIcon />
+      </Pressable>
     </View>
   )
 }

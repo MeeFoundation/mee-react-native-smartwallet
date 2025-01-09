@@ -1,7 +1,10 @@
 import DatabaseIcon from "@assets/images/database.svg"
 import LinkIcon from "@assets/images/link.svg"
+import { ChevronLeftSvg } from "@assets/index"
+import { AppButton } from "@components/AppButton"
 import { HeaderLeft, HeaderRight } from "@components/Header"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import { useNavigation } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { Categories } from "@screens/Categories"
 import { Connections } from "@screens/Connections"
@@ -81,6 +84,19 @@ const TabsStack = () => {
   )
 }
 
+const BackButton = () => {
+  const navigation = useNavigation()
+  return (
+    <AppButton
+      variant="link"
+      onPress={navigation.goBack}
+      text="Back"
+      textStyles={{ fontSize: 17 }}
+      IconLeft={ChevronLeftSvg}
+    />
+  )
+}
+
 const ConnectionsStack = () => {
   useEffect(() => {
     if (Platform.OS === "android") {
@@ -110,7 +126,11 @@ export function RootStack() {
         component={TabsStack}
       /> */}
 
-      <Stack.Screen name={rootNavigationLinks.manageConnection} component={ManageConnection} />
+      <Stack.Screen
+        options={{ headerLeft: () => <BackButton /> }}
+        name={rootNavigationLinks.manageConnection}
+        component={ManageConnection}
+      />
     </Stack.Navigator>
   )
 }

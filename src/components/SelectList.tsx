@@ -175,7 +175,7 @@ export const SelectList: FC<SelectListProps> = ({
             </ScrollView>
           </Animated.View>
         )}
-        {dropdown && <Backdrop color="red" onClick={collapseDropdown} />}
+        {dropdown && <Backdrop onClick={collapseDropdown} />}
       </Accordion>
     </View>
   )
