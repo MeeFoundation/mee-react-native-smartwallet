@@ -7,8 +7,11 @@ import CloseSvg from "./images/close.svg"
 import DatabaseSvg from "./images/database.svg"
 import KeySvg from "./images/key.svg"
 import LinkSvg from "./images/link.svg"
+import LogoSvg from "./images/logo.svg"
 import MailSvg from "./images/mail.svg"
+import MenuIconSvg from "./images/menu.svg"
 import PaperPlaneSvg from "./images/paper-plane.svg"
+import SearchSvg from "./images/search.svg"
 import UserSvg from "./images/user.svg"
 import VehicleSvg from "./images/vehicle.svg"
 
@@ -33,4 +36,7 @@ export {
   PaperPlaneSvg,
   UserSvg,
   VehicleSvg,
+  LogoSvg,
+  MenuIconSvg,
+  SearchSvg,
 }

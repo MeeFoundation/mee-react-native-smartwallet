@@ -1,9 +1,8 @@
-import BellIcon from "@assets/images/bell.svg"
-import MenuIcon from "@assets/images/menu.svg"
-import SearchIcon from "@assets/images/search.svg"
+import { BellSvg, MenuIconSvg, SearchSvg } from "@assets/index"
 import { useRoute } from "@react-navigation/native"
 import { colors } from "@utils/theme"
-import { Pressable, StyleSheet, View } from "react-native"
+import { StyleSheet, View } from "react-native"
+import { TouchableOpacity } from "react-native-gesture-handler"
 import { useDrawer } from "./Drawer"
 import { Typography } from "./Typography"
 
@@ -12,11 +11,11 @@ export const HeaderRight = () => {
 
   return (
     <View style={{ ...styles.horizontalGaps, ...styles.menu }}>
-      <SearchIcon />
-      <BellIcon />
-      <Pressable onPress={open}>
-        <MenuIcon />
-      </Pressable>
+      <SearchSvg />
+      <BellSvg />
+      <TouchableOpacity onPress={open}>
+        <MenuIconSvg />
+      </TouchableOpacity>
     </View>
   )
 }
