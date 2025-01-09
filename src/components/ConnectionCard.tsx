@@ -1,9 +1,17 @@
 import Dots from "@assets/images/dots-vertical.svg"
+import TrashSvg from "@assets/images/trash.svg"
+import { ChevronDownSvg } from "@assets/index"
 import { colors } from "@utils/theme"
 import { filterNullable } from "@utils/ts-utils"
 import { ImageSourcePropType, StyleSheet, View } from "react-native"
 import { AppButton } from "./AppButton"
 import { Avatar } from "./Avatar"
+import {
+  DropdownMenu,
+  DropdownMenuIcon,
+  DropdownMenuItem,
+  DropdownMenuItemTitle,
+} from "./DropdownMenu"
 import { Typography } from "./Typography"
 
 type Props = {
@@ -11,14 +19,13 @@ type Props = {
   name: string
   border?: boolean
   onPress?: () => void
-  buttonLabel?: string
   showActionMenu?: boolean
   noBackground?: boolean
 }
 
 export const ConnectionCard = (props: Props) => {
   const { logo, name, border, onPress, showActionMenu } = props
-  const { buttonLabel = "Open", noBackground } = props
+  const { noBackground } = props
   const containerStyles = StyleSheet.flatten(
     filterNullable([
       styles.contaner,
@@ -34,12 +41,28 @@ export const ConnectionCard = (props: Props) => {
         {name}
       </Typography>
 
-      {onPress && <AppButton text={buttonLabel} variant="link" size="xs" onPress={onPress} />}
+      {onPress && (
+        <ChevronDownSvg
+          style={{ transform: [{ rotate: "270deg" }], opacity: 0.7 }}
+          onPress={onPress}
+        />
+      )}
 
       {showActionMenu && (
-        <AppButton size="sm" variant="tertiary" onPress={() => false}>
-          <Dots />
-        </AppButton>
+        <DropdownMenu
+          trigger={
+            <AppButton size="sm" variant="tertiary" onPress={() => false}>
+              <Dots />
+            </AppButton>
+          }
+        >
+          <DropdownMenuItem key="delete-connection" textValue="Delete connection">
+            <DropdownMenuItemTitle>Delete connection</DropdownMenuItemTitle>
+            <DropdownMenuIcon ios={{ hierarchicalColor: colors.danger, name: "trash" }}>
+              <TrashSvg color={colors.danger} />
+            </DropdownMenuIcon>
+          </DropdownMenuItem>
+        </DropdownMenu>
       )}
     </View>
   )

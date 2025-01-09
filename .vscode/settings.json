@@ -1,3 +1,14 @@
 {
-  "cSpell.words": ["Pressable"]
+  "cSpell.words": ["Pressable"],
+  "search.exclude": {
+    "node_modules/": true,
+    "vendor/": true,
+    ".bundle/": true,
+    "ios/": true,
+    "android/": true,
+    "__tests__/": true,
+    "package*.json": true,
+    "*.lock": true,
+    ".*": true
+  }
 }

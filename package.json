@@ -3,12 +3,21 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
+    "android": "react-native run-android --active-arch-only",
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
+    "start-rc": "npx react-native start --reset-cache",
     "test": "jest",
-    "manifest": "react-native-asset"
+    "manifest": "react-native-asset",
+    "postinstall": "cd ios && pod install --repo-update",
+    "android-release-aab": "cd android && ./gradlew bundleRelease",
+    "android-release-test": "react-native run-android --variant release",
+    "clean": "rm -rf ~/Library/Developer/Xcode/DerivedData && rm -rf node_modules/ /tmp/metro-*  && watchman watch-del-all && watchman shutdown-server && yarn cache clean",
+    "clean-android": "cd android && ./gradlew clean && cd ..",
+    "deep-clean": "rm -rf ~/Library/Developer/Xcode/DerivedData ios/build ios/Pods && cd android && ./gradlew clean && cd .. && rm -rf node_modules/ /tmp/metro-* && watchman watch-del-all && watchman shutdown-server && yarn cache clean && rm -rf yarn.lock",
+    "reset": "yarn clean && yarn install",
+    "deep-reset": "yarn deep-clean && yarn install"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^5",
