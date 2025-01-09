@@ -134,6 +134,7 @@ export const AppButton = forwardRef<AppButtonRef, AppButtonProps>((props, ref) =
       role="button"
       style={{ width: props.fullWidth ? "100%" : "auto" }}
       onPress={handlePress}
+      onPressIn={handlePress}
       onPressOut={onRelease}
       {...rest}
     >

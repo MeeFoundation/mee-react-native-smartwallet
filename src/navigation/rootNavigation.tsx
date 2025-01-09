@@ -103,7 +103,7 @@ const BackButton = () => {
       variant="link"
       onPress={navigation.goBack}
       text="Back"
-      textStyles={{ fontSize: 17 }}
+      textStyles={{ fontSize: 17, marginRight: 16 }}
       IconLeft={ChevronLeftSvg}
     />
   )
@@ -117,7 +117,7 @@ const ConnectionsStack = () => {
   }, [])
 
   return (
-    <Stack.Navigator screenOptions={screenOptions}>
+    <Stack.Navigator screenOptions={{ ...screenOptions, headerTransparent: false }}>
       <Stack.Screen name={rootNavigationLinks.connections} component={Categories} />
     </Stack.Navigator>
   )
@@ -125,7 +125,10 @@ const ConnectionsStack = () => {
 
 export function RootStack() {
   return (
-    <Stack.Navigator initialRouteName={rootNavigationLinks.connections}>
+    <Stack.Navigator
+      initialRouteName={rootNavigationLinks.connections}
+      screenOptions={{ gestureEnabled: true }}
+    >
       <Stack.Screen
         options={{ headerShown: false }}
         name={rootNavigationLinks.connections}
