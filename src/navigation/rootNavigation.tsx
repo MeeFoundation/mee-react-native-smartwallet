@@ -33,6 +33,7 @@ export type RootNavigationLinkObject = { [key in RootNavigationLink]: any }
 export type RootStackParamList = {
   "Manage Connection": { id: string }
 }
+
 export type RootStackParamListWithLinks = RootStackParamList & RootNavigationLinkObject
 
 declare global {
@@ -145,13 +146,13 @@ export function RootStack() {
 
       <Stack.Screen
         options={{ headerLeft: () => <BackButton /> }}
-        name={rootNavigationLinks.settings}
+        name={rootNavigationLinks.login}
         component={Login}
       />
 
       <Stack.Screen
         options={{ headerLeft: () => <BackButton /> }}
-        name={rootNavigationLinks.login}
+        name={rootNavigationLinks.settings}
         component={Settings}
       />
     </Stack.Navigator>

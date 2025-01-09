@@ -1,4 +1,4 @@
-import { PaperPlaneSvg, VehicleSvg } from "@assets/index"
+import { PaperPlaneSvg, UserSvg, VehicleSvg } from "@assets/index"
 import { useNavigation } from "@react-navigation/native"
 import { colors } from "@utils/theme"
 import { PropsWithChildren, ReactNode, createContext, useCallback, useContext, useRef } from "react"
@@ -49,6 +49,12 @@ const Drawer = ({ children }: PropsWithChildren) => {
       label: "Settings",
       icon: <VehicleSvg />,
       onPress: onItemPress(() => navigation.navigate("Settings")),
+    },
+
+    {
+      label: "Login",
+      icon: <UserSvg />,
+      onPress: onItemPress(() => navigation.navigate("Login")),
     },
     {
       label: "Send Feedback",
@@ -102,6 +108,7 @@ const styles = StyleSheet.create({
     padding: 16,
     flexDirection: "row",
     gap: 16,
+    alignItems: "center",
   },
 })
 
