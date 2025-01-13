@@ -9,12 +9,15 @@ import { Connections } from "@screens/Connections"
 import { Login } from "@screens/Login"
 import { ManageConnection } from "@screens/ManageConnection"
 import { Settings } from "@screens/Settings"
+import { Welcome } from "@screens/Welcome"
 import { colors, fonts } from "@utils/theme"
 import { useEffect } from "react"
 import { Platform, StatusBar } from "react-native"
 
 export const rootNavigationLinks = {
   home: "Home",
+  welcome: "Welcome",
+  getStarted: "Get Started",
   connections: "Connections",
   categories: "Categories",
   manageConnection: "Manage Connection",
@@ -121,12 +124,35 @@ const ConnectionsStack = () => {
   )
 }
 
+const WelcomeStack = () => {
+  useEffect(() => {
+    if (Platform.OS === "android") {
+      StatusBar.setBackgroundColor(colors.warning)
+    }
+  }, [])
+
+  return (
+    <Stack.Navigator screenOptions={{ ...screenOptions }}>
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name={rootNavigationLinks.welcome}
+        component={Welcome}
+      />
+    </Stack.Navigator>
+  )
+}
+
 export function RootStack() {
   return (
     <Stack.Navigator
-      initialRouteName={rootNavigationLinks.connections}
+      initialRouteName={rootNavigationLinks.welcome}
       screenOptions={{ gestureEnabled: true }}
     >
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name={rootNavigationLinks.welcome}
+        component={WelcomeStack}
+      />
       <Stack.Screen
         options={{ headerShown: false }}
         name={rootNavigationLinks.connections}
