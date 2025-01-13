@@ -17,6 +17,7 @@ import { Platform, StatusBar } from "react-native"
 export const rootNavigationLinks = {
   home: "Home",
   welcome: "Welcome",
+  welcome2: "Welcome2",
   getStarted: "Get Started",
   connections: "Connections",
   categories: "Categories",

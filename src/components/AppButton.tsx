@@ -11,7 +11,7 @@ type Size = "md" | "sm" | "xs"
 
 type AppButtonRef = ElementRef<typeof Pressable>
 
-const ANUMATION_DURATION = 100
+const ANIMATION_DURATION = 100
 
 const bgColorMap: Record<Variant, [string, string]> = {
   primary: [colors.primary, colors.primaryActive],
@@ -101,12 +101,12 @@ export const AppButton = forwardRef<AppButtonRef, AppButtonProps>((props, ref) =
       Animated.timing(backgroundColorRef, {
         toValue: 1,
         useNativeDriver: true,
-        duration: ANUMATION_DURATION,
+        duration: ANIMATION_DURATION,
       }),
       Animated.timing(borderRef, {
         toValue: 1,
         useNativeDriver: true,
-        duration: ANUMATION_DURATION,
+        duration: ANIMATION_DURATION,
       }),
     ]).start()
 
@@ -118,12 +118,12 @@ export const AppButton = forwardRef<AppButtonRef, AppButtonProps>((props, ref) =
       Animated.timing(backgroundColorRef, {
         toValue: 0,
         useNativeDriver: true,
-        duration: ANUMATION_DURATION,
+        duration: ANIMATION_DURATION,
       }),
       Animated.timing(borderRef, {
         toValue: 0,
         useNativeDriver: true,
-        duration: ANUMATION_DURATION,
+        duration: ANIMATION_DURATION,
       }),
     ]).start()
 
