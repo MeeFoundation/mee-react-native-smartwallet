@@ -2,16 +2,28 @@
   "migIndex": 1,
   "data": [
     {
-      "path": "src/assets/fonts/PublicSansBold.ttf",
-      "sha1": "4506835afb7503686705d8b88490024addc0de58"
+      "path": "src/assets/fonts/PublicSans-Bold.ttf",
+      "sha1": "4d4ebfd1623f183b793217349b3c6877c2ddfc65"
     },
     {
-      "path": "src/assets/fonts/PublicSansMedium.ttf",
-      "sha1": "fdada24130ca900e0b6858bfe20d9bdb627536ba"
+      "path": "src/assets/fonts/PublicSans-BoldItalic.ttf",
+      "sha1": "f683f6cd4a69957ad94d5e77fa93b2a8c73be4ac"
     },
     {
-      "path": "src/assets/fonts/PublicSansRegular.ttf",
-      "sha1": "51af805f40c4d8ced34b9eea4e96de3dc5106846"
+      "path": "src/assets/fonts/PublicSans-Italic.ttf",
+      "sha1": "2db9504951b00a08cc32b9838586ef7660e0defb"
+    },
+    {
+      "path": "src/assets/fonts/PublicSans-Light.ttf",
+      "sha1": "c6cf46723ae8429b6fe006a4e2fc26c1e9f798e1"
+    },
+    {
+      "path": "src/assets/fonts/PublicSans-Medium.ttf",
+      "sha1": "6cb093f7f53db1ed4ea6e6993873c6c61384977d"
+    },
+    {
+      "path": "src/assets/fonts/PublicSans-Regular.ttf",
+      "sha1": "cafbee7866861023b7ff5af3f17f54e505e8fb86"
     }
   ]
 }
