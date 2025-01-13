@@ -12,15 +12,15 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		520464496F7848BC9C7C1323 /* PublicSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 96023B3BF51C48CEB93E85E9 /* PublicSans-Bold.ttf */; };
+		62FBA82365F5434D894B76AB /* PublicSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 94FD054DADC2481FA9B1D7A0 /* PublicSans-Light.ttf */; };
 		642E97B16E5A4FDCBD2A34F8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 		7699B88040F8A987B510C191 /* libPods-mee_react_native_smartwallet-mee_react_native_smartwalletTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-mee_react_native_smartwallet-mee_react_native_smartwalletTests.a */; };
-		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		CF263944CDBD4308814A04D3 /* PublicSans-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F4EA27C82FC449DB85D0A063 /* PublicSans-BoldItalic.ttf */; };
 		788704D4D3DC44FAA671D418 /* PublicSans-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 89B671B3189B42628E3E45DA /* PublicSans-Italic.ttf */; };
-		520464496F7848BC9C7C1323 /* PublicSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 96023B3BF51C48CEB93E85E9 /* PublicSans-Bold.ttf */; };
-		EBB116D51A854E5EB043CC04 /* PublicSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 11DA678F727E49C5A97BF6FF /* PublicSans-Medium.ttf */; };
+		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		C552033FCAE244358CB76E37 /* PublicSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C0E69FA9A0AB44D2BF836568 /* PublicSans-Regular.ttf */; };
-		62FBA82365F5434D894B76AB /* PublicSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 94FD054DADC2481FA9B1D7A0 /* PublicSans-Light.ttf */; };
+		CF263944CDBD4308814A04D3 /* PublicSans-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F4EA27C82FC449DB85D0A063 /* PublicSans-BoldItalic.ttf */; };
+		EBB116D51A854E5EB043CC04 /* PublicSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 11DA678F727E49C5A97BF6FF /* PublicSans-Medium.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +37,7 @@
 		00E356EE1AD99517003FC87E /* mee_react_native_smartwalletTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = mee_react_native_smartwalletTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* mee_react_native_smartwalletTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = mee_react_native_smartwalletTests.m; sourceTree = "<group>"; };
+		11DA678F727E49C5A97BF6FF /* PublicSans-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "PublicSans-Medium.ttf"; path = "../src/assets/fonts/PublicSans-Medium.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* mee_react_native_smartwallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mee_react_native_smartwallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = mee_react_native_smartwallet/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = mee_react_native_smartwallet/AppDelegate.mm; sourceTree = "<group>"; };
@@ -50,14 +51,13 @@
 		5B7EB9410499542E8C5724F5 /* Pods-mee_react_native_smartwallet-mee_react_native_smartwalletTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mee_react_native_smartwallet-mee_react_native_smartwalletTests.debug.xcconfig"; path = "Target Support Files/Pods-mee_react_native_smartwallet-mee_react_native_smartwalletTests/Pods-mee_react_native_smartwallet-mee_react_native_smartwalletTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-mee_react_native_smartwallet.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-mee_react_native_smartwallet.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = mee_react_native_smartwallet/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		89B671B3189B42628E3E45DA /* PublicSans-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "PublicSans-Italic.ttf"; path = "../src/assets/fonts/PublicSans-Italic.ttf"; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-mee_react_native_smartwallet-mee_react_native_smartwalletTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mee_react_native_smartwallet-mee_react_native_smartwalletTests.release.xcconfig"; path = "Target Support Files/Pods-mee_react_native_smartwallet-mee_react_native_smartwalletTests/Pods-mee_react_native_smartwallet-mee_react_native_smartwalletTests.release.xcconfig"; sourceTree = "<group>"; };
+		94FD054DADC2481FA9B1D7A0 /* PublicSans-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "PublicSans-Light.ttf"; path = "../src/assets/fonts/PublicSans-Light.ttf"; sourceTree = "<group>"; };
+		96023B3BF51C48CEB93E85E9 /* PublicSans-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "PublicSans-Bold.ttf"; path = "../src/assets/fonts/PublicSans-Bold.ttf"; sourceTree = "<group>"; };
+		C0E69FA9A0AB44D2BF836568 /* PublicSans-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "PublicSans-Regular.ttf"; path = "../src/assets/fonts/PublicSans-Regular.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F4EA27C82FC449DB85D0A063 /* PublicSans-BoldItalic.ttf */ = {isa = PBXFileReference; name = "PublicSans-BoldItalic.ttf"; path = "../src/assets/fonts/PublicSans-BoldItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		89B671B3189B42628E3E45DA /* PublicSans-Italic.ttf */ = {isa = PBXFileReference; name = "PublicSans-Italic.ttf"; path = "../src/assets/fonts/PublicSans-Italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		96023B3BF51C48CEB93E85E9 /* PublicSans-Bold.ttf */ = {isa = PBXFileReference; name = "PublicSans-Bold.ttf"; path = "../src/assets/fonts/PublicSans-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		11DA678F727E49C5A97BF6FF /* PublicSans-Medium.ttf */ = {isa = PBXFileReference; name = "PublicSans-Medium.ttf"; path = "../src/assets/fonts/PublicSans-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		C0E69FA9A0AB44D2BF836568 /* PublicSans-Regular.ttf */ = {isa = PBXFileReference; name = "PublicSans-Regular.ttf"; path = "../src/assets/fonts/PublicSans-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		94FD054DADC2481FA9B1D7A0 /* PublicSans-Light.ttf */ = {isa = PBXFileReference; name = "PublicSans-Light.ttf"; path = "../src/assets/fonts/PublicSans-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F4EA27C82FC449DB85D0A063 /* PublicSans-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "PublicSans-BoldItalic.ttf"; path = "../src/assets/fonts/PublicSans-BoldItalic.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */

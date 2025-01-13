@@ -1,6 +1,7 @@
 import { BubblesSvg, WelcomeSources } from "@assets/index"
 import { AppButton } from "@components/AppButton"
 import { Typography } from "@components/Typography"
+import { useNavigation } from "@react-navigation/native"
 import { colors } from "@utils/theme"
 import { ReactNode } from "react"
 import { Dimensions, Image, ImageBackground, StyleSheet, View } from "react-native"
@@ -12,8 +13,9 @@ export type WelcomeSlide = {
 }
 
 export const WelcomeItem = ({ title, text, btn = false }: WelcomeSlide) => {
+  const navigation = useNavigation()
   const handlePress = () => {
-    console.log("press")
+    navigation.navigate("Login")
   }
 
   return (
