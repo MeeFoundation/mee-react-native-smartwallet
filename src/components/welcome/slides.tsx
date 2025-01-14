@@ -30,9 +30,8 @@ export const welcomeSlides: WelcomeSlide[] = [
     btn: false,
   },
   {
-    title: "Let’s set up your first ConnectionCard",
     text: [
-      "I need to check your browser's local store to see if you have interacted with any sites/apps using Mee.",
+      "I need to check your browser's local storage to see if you have interacted with any sites/apps using Mee.",
       'Click "Get Started" to continue.',
     ],
     btn: true,

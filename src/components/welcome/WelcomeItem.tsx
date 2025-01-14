@@ -7,7 +7,7 @@ import { ReactNode } from "react"
 import { Dimensions, Image, ImageBackground, StyleSheet, View } from "react-native"
 
 export type WelcomeSlide = {
-  title: ReactNode
+  title?: ReactNode
   text: string | string[]
   btn?: boolean
 }
@@ -36,9 +36,11 @@ export const WelcomeItem = ({ title, text, btn = false }: WelcomeSlide) => {
             paddingBottom: 39,
           }}
         >
-          <Typography style={styles.title} fontFamily="publicSans.italic">
-            {title}
-          </Typography>
+          {title && (
+            <Typography style={styles.title} fontFamily="publicSans.italic">
+              {title}
+            </Typography>
+          )}
           <View>
             {typeof text === "string" ? (
               <Typography style={styles.text} fontFamily="publicSans.light" weight="300">
@@ -114,5 +116,6 @@ const styles = StyleSheet.create({
   button: {
     width: "100%",
     paddingHorizontal: 16,
+    marginTop: -1,
   },
 })
