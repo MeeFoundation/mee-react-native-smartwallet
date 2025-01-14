@@ -9,9 +9,15 @@ type SwiperProps<T> = {
   data: T[]
   renderItem: ListRenderItem<T>
   showPaginator?: boolean
+  bounces?: boolean
 }
 
-export const Swiper = <T,>({ data, renderItem, showPaginator = true }: SwiperProps<T>) => {
+export const Swiper = <T,>({
+  data,
+  renderItem,
+  showPaginator = true,
+  bounces = true,
+}: SwiperProps<T>) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const sliderPos = useRef(new Animated.Value(0)).current
   const slidesRef = useRef<FlatList>(null)
@@ -37,10 +43,10 @@ export const Swiper = <T,>({ data, renderItem, showPaginator = true }: SwiperPro
         horizontal
         showsHorizontalScrollIndicator={false}
         pagingEnabled
-        bounces={false}
         onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: sliderPos } } }], {
           useNativeDriver: false,
         })}
+        bounces={bounces}
         scrollEventThrottle={16}
         onViewableItemsChanged={({ viewableItems }) => setCurrentIndex(viewableItems[0].index ?? 0)}
         viewabilityConfig={{ viewAreaCoveragePercentThreshold: 50 }}

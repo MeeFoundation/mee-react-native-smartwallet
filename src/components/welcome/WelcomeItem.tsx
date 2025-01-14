@@ -69,7 +69,7 @@ export const WelcomeItem = ({ title, text, btn = false }: WelcomeSlide) => {
             <AppButton
               onPress={handlePress}
               variant="secondary"
-              text="Continue"
+              text="Get Started"
               style={styles.button}
             />
           )}

@@ -31,7 +31,7 @@ const textColorMap: Record<Variant, string> = {
 
 const paddingsMap = {
   md: {
-    paddingVertical: 16,
+    paddingVertical: 12,
     paddingHorizontal: 32,
   },
   sm: {
@@ -147,6 +147,7 @@ export const AppButton = forwardRef<AppButtonRef, AppButtonProps>((props, ref) =
           ...paddings,
           ...styles.container,
           backgroundColor,
+          ...styles[variant],
           ...conditionalStyles,
         }}
       >
@@ -171,4 +172,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   text: { fontWeight: 700 },
+  primary: {},
+  secondary: {
+    backgroundColor: colors.white,
+    borderColor: colors.primary,
+    borderWidth: 3,
+  },
+  danger: {},
+  tertiary: {},
+  link: {},
 })
