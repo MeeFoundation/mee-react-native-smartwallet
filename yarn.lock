@@ -6461,6 +6461,11 @@ react-native-ios-utilities@5.x:
   resolved "https://registry.yarnpkg.com/react-native-ios-utilities/-/react-native-ios-utilities-5.0.0.tgz#1fa6b87ad375666548f7d7e0660847a2e45a9972"
   integrity sha512-mULGluwqSmLs5RrpwfkX3lt7l4atlJn/UKToxgXysg1Vshw6gGWNEaDafh+kEAlfhyF09gwnVoO8BIgyHoAmNA==
 
+react-native-mmkv@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-3.2.0.tgz#460723eb23b9cc92c65b0416eae9874a6ddf5b82"
+  integrity sha512-9y7K//1MaU46TFrXkyU0wT5VGk9Y2FDLFV6NPl+z3jTbm2G7SC1UIxneF6CfhSmBX5CfKze9SO7kwDuRx7flpQ==
+
 react-native-reanimated@^3.16.6:
   version "3.16.6"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.16.6.tgz#fa1eda23b740c893e81a024712346c79f1bbdf36"

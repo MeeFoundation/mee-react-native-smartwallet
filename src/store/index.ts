@@ -1,6 +1,7 @@
 import { Connection, coreService } from "@services/core.service"
 import { atom } from "jotai"
 import { atomFamily, atomWithDefault } from "jotai/utils"
+import { atomWithMMKV } from "./atomWithMMKV"
 
 export const ConnectionsStore = atomWithDefault<Connection[] | Promise<Connection[]>>(
   async () => await coreService.getConnections(),
@@ -32,3 +33,5 @@ export const ConnectionDetails = atomFamily((id: string) =>
     },
   ),
 )
+
+export const isWelcomeViewedAtom = atomWithMMKV("isWelcomeViewed", false)
