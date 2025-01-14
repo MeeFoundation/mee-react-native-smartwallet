@@ -20,11 +20,11 @@ export const welcomeSlides: WelcomeSlide[] = [
         <Typography style={styles.titleHello} fontFamily="publicSans.bold" weight="700">
           Hello.
         </Typography>{" "}
-        It’s Mee.
+        It's Mee, your digital twin
       </>
     ),
     text: [
-      "I give you more control over your personal information as you interact with websites and mobile apps. For example, I can help you to sign in/up without a password and without surveillance.",
+      "I represent you on the internet. I put you in control of your personal information as you interact with Mee-compatible websites and mobile apps. I help you to sign in/up without a password and without surveillance.",
       "Let’s start!",
     ],
     btn: false,
@@ -32,8 +32,8 @@ export const welcomeSlides: WelcomeSlide[] = [
   {
     title: "Let’s set up your first ConnectionCard",
     text: [
-      "By creating a connection I mean establishing a way for Mee to talk to apps/sites you would like to sign in/up.",
-      "Choose who you want me to talk with.",
+      "I need to check your browser's local store to see if you have interacted with any sites/apps using Mee.",
+      'Click "Get Started" to continue.',
     ],
     btn: true,
   },
