@@ -5,16 +5,17 @@ import { Animated, GestureResponderEvent, Pressable, StyleSheet, TextStyle } fro
 import { SvgProps } from "react-native-svg"
 import { Typography } from "./Typography"
 
-type Variant = "primary" | "danger" | "tertiary" | "link"
+type Variant = "primary" | "secondary" | "danger" | "tertiary" | "link"
 
 type Size = "md" | "sm" | "xs"
 
 type AppButtonRef = ElementRef<typeof Pressable>
 
-const ANUMATION_DURATION = 100
+const ANIMATION_DURATION = 100
 
 const bgColorMap: Record<Variant, [string, string]> = {
   primary: [colors.primary, colors.primaryActive],
+  secondary: [colors.white, colors.transparentActive],
   danger: [colors.white, colors.transparentActive],
   tertiary: [colors.transparent, hexAlphaColor(colors.transparentActive, 20)],
   link: [colors.transparent, colors.transparent],
@@ -22,6 +23,7 @@ const bgColorMap: Record<Variant, [string, string]> = {
 
 const textColorMap: Record<Variant, string> = {
   primary: colors.white,
+  secondary: colors.primary,
   danger: colors.danger,
   tertiary: colors.secondary,
   link: colors.link,
@@ -29,7 +31,7 @@ const textColorMap: Record<Variant, string> = {
 
 const paddingsMap = {
   md: {
-    paddingVertical: 16,
+    paddingVertical: 12,
     paddingHorizontal: 32,
   },
   sm: {
@@ -99,12 +101,12 @@ export const AppButton = forwardRef<AppButtonRef, AppButtonProps>((props, ref) =
       Animated.timing(backgroundColorRef, {
         toValue: 1,
         useNativeDriver: true,
-        duration: ANUMATION_DURATION,
+        duration: ANIMATION_DURATION,
       }),
       Animated.timing(borderRef, {
         toValue: 1,
         useNativeDriver: true,
-        duration: ANUMATION_DURATION,
+        duration: ANIMATION_DURATION,
       }),
     ]).start()
 
@@ -116,12 +118,12 @@ export const AppButton = forwardRef<AppButtonRef, AppButtonProps>((props, ref) =
       Animated.timing(backgroundColorRef, {
         toValue: 0,
         useNativeDriver: true,
-        duration: ANUMATION_DURATION,
+        duration: ANIMATION_DURATION,
       }),
       Animated.timing(borderRef, {
         toValue: 0,
         useNativeDriver: true,
-        duration: ANUMATION_DURATION,
+        duration: ANIMATION_DURATION,
       }),
     ]).start()
 
@@ -132,7 +134,7 @@ export const AppButton = forwardRef<AppButtonRef, AppButtonProps>((props, ref) =
     <Pressable
       ref={ref}
       role="button"
-      style={{ width: props.fullWidth ? "100%" : "auto" }}
+      style={[{ width: props.fullWidth ? "100%" : "auto" }]}
       onPress={handlePress}
       onPressIn={handlePress}
       onPressOut={onRelease}
@@ -145,6 +147,7 @@ export const AppButton = forwardRef<AppButtonRef, AppButtonProps>((props, ref) =
           ...paddings,
           ...styles.container,
           backgroundColor,
+          ...styles[variant],
           ...conditionalStyles,
         }}
       >
@@ -169,4 +172,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   text: { fontWeight: 700 },
+  primary: {},
+  secondary: {
+    backgroundColor: colors.white,
+    borderColor: colors.primary,
+    borderWidth: 3,
+  },
+  danger: {},
+  tertiary: {},
+  link: {},
 })

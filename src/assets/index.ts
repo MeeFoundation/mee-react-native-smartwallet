@@ -1,5 +1,6 @@
 import AddConnectionSvg from "./images/add-connection.svg"
 import BellSvg from "./images/bell.svg"
+import BubblesSvg from "./images/bubbles.svg"
 import CheckSvg from "./images/check.svg"
 import ChevronDownSvg from "./images/chevron-down.svg"
 import ChevronLeftSvg from "./images/chevron-left.svg"
@@ -22,9 +23,15 @@ export const IconSources = {
   times: require("./images/connection/times.png"),
 }
 
+export const WelcomeSources = {
+  cloud: require("./images/cloud-bg.webp"),
+  mascot: require("./images/mee-mascot.webp"),
+}
+
 export {
   AddConnectionSvg,
   BellSvg,
+  BubblesSvg,
   CheckSvg,
   ChevronDownSvg,
   ChevronLeftSvg,
@@ -32,11 +39,11 @@ export {
   DatabaseSvg,
   KeySvg,
   LinkSvg,
+  LogoSvg,
   MailSvg,
+  MenuIconSvg,
   PaperPlaneSvg,
+  SearchSvg,
   UserSvg,
   VehicleSvg,
-  LogoSvg,
-  MenuIconSvg,
-  SearchSvg,
 }

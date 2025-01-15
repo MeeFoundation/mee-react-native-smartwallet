@@ -2,9 +2,12 @@ import { Appearance } from "react-native"
 
 export const fonts = {
   publicSans: {
-    regular: "PublicSansRegular",
-    medium: "PublicSansMedium",
-    bold: "PublicSansBold",
+    light: "PublicSans-Light",
+    regular: "PublicSans-Regular",
+    italic: "PublicSans-Italic",
+    medium: "PublicSans-Medium",
+    bold: "PublicSans-Bold",
+    boldItalic: "PublicSans-BoldItalic",
   },
 } as const
 
@@ -25,6 +28,11 @@ const lightColors = {
   transparentActive: "#606264",
   danger: "#EF4444",
   dangerActive: "#F87171",
+  /**
+   * Mee/Yellow - #007AFF
+   */
+  warning: "#F9DF89",
+  // yellow: "#F9DF89",
   /**
    * Default/SystemBlue/Light - #007AFF
    */

@@ -9,12 +9,18 @@ import { Connections } from "@screens/Connections"
 import { Login } from "@screens/Login"
 import { ManageConnection } from "@screens/ManageConnection"
 import { Settings } from "@screens/Settings"
+import { Welcome } from "@screens/Welcome"
+import { isWelcomeViewedAtom } from "@store/index"
 import { colors, fonts } from "@utils/theme"
-import { useEffect } from "react"
+import { useAtomValue } from "jotai"
+import { Fragment, useEffect } from "react"
 import { Platform, StatusBar } from "react-native"
 
 export const rootNavigationLinks = {
   home: "Home",
+  welcome: "Welcome",
+  welcome2: "Welcome2",
+  getStarted: "Get Started",
   connections: "Connections",
   categories: "Categories",
   manageConnection: "Manage Connection",
@@ -121,36 +127,64 @@ const ConnectionsStack = () => {
   )
 }
 
-export function RootStack() {
+const WelcomeStack = () => {
+  useEffect(() => {
+    if (Platform.OS === "android") {
+      StatusBar.setBackgroundColor(colors.warning)
+    }
+  }, [])
+
   return (
-    <Stack.Navigator
-      initialRouteName={rootNavigationLinks.connections}
-      screenOptions={{ gestureEnabled: true }}
-    >
+    <Stack.Navigator screenOptions={{ ...screenOptions }}>
       <Stack.Screen
         options={{ headerShown: false }}
-        name={rootNavigationLinks.connections}
-        component={ConnectionsStack}
+        name={rootNavigationLinks.welcome}
+        component={Welcome}
       />
-      {/* 
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name={rootNavigationLinks.home}
-        component={TabsStack}
-      /> */}
+    </Stack.Navigator>
+  )
+}
 
-      <Stack.Screen
-        options={{ headerLeft: () => <BackButton /> }}
-        name={rootNavigationLinks.manageConnection}
-        component={ManageConnection}
-      />
+export function RootStack() {
+  const isWelcomeViewed = useAtomValue(isWelcomeViewedAtom)
 
+  // const initialRoute = useMemo(
+  //   () => (isWelcomeViewed ? rootNavigationLinks.connections : rootNavigationLinks.welcome),
+  //   [isWelcomeViewed],
+  // )
+
+  return (
+    <Stack.Navigator screenOptions={{ gestureEnabled: true }}>
+      {!isWelcomeViewed ? (
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name={rootNavigationLinks.welcome}
+          component={WelcomeStack}
+        />
+      ) : (
+        <Fragment>
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name={rootNavigationLinks.connections}
+            component={ConnectionsStack}
+          />
+          {/* <Stack.Screen
+            options={{ headerShown: false }}
+            name={rootNavigationLinks.home}
+            component={TabsStack}
+          /> */}
+          <Stack.Screen
+            options={{ headerLeft: () => <BackButton /> }}
+            name={rootNavigationLinks.manageConnection}
+            component={ManageConnection}
+          />
+        </Fragment>
+      )}
       <Stack.Screen
         options={{ headerLeft: () => <BackButton /> }}
         name={rootNavigationLinks.login}
         component={Login}
       />
-
       <Stack.Screen
         options={{ headerLeft: () => <BackButton /> }}
         name={rootNavigationLinks.settings}

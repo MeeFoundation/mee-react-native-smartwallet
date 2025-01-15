@@ -51,9 +51,12 @@
 	<false/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>PublicSansBold.ttf</string>
-		<string>PublicSansMedium.ttf</string>
-		<string>PublicSansRegular.ttf</string>
+		<string>PublicSans-BoldItalic.ttf</string>
+		<string>PublicSans-Italic.ttf</string>
+		<string>PublicSans-Bold.ttf</string>
+		<string>PublicSans-Medium.ttf</string>
+		<string>PublicSans-Regular.ttf</string>
+		<string>PublicSans-Light.ttf</string>
 	</array>
 </dict>
 </plist>
