@@ -35,7 +35,7 @@ export const WelcomeItem = ({ title, text, btn = false }: WelcomeSlide) => {
       >
         <View
           style={{
-            paddingHorizontal: 31,
+            paddingHorizontal: 40,
             paddingTop: 54,
             paddingBottom: 39,
           }}
@@ -88,8 +88,7 @@ export const WelcomeItem = ({ title, text, btn = false }: WelcomeSlide) => {
 const styles = StyleSheet.create({
   container: {
     width: Dimensions.get("screen").width,
-    height: Dimensions.get("screen").height,
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: colors.warning,
     gap: 9,

@@ -35,9 +35,16 @@ export const Swiper = <T,>({
   }
 
   return (
-    <View style={{ flex: data.length }}>
+    <View
+      style={{
+        position: "relative",
+        flex: data.length,
+        backgroundColor: colors.warning,
+        paddingBottom: 90,
+        paddingTop: 20,
+      }}
+    >
       <FlatList
-        style={{ backgroundColor: colors.warning }}
         data={data}
         renderItem={renderItem}
         horizontal
