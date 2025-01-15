@@ -148,12 +148,13 @@ const WelcomeStack = () => {
 export function RootStack() {
   const isWelcomeViewed = useAtomValue(isWelcomeViewedAtom)
 
-  const initialRoute = isWelcomeViewed
-    ? rootNavigationLinks.connections
-    : rootNavigationLinks.welcome
+  // const initialRoute = useMemo(
+  //   () => (isWelcomeViewed ? rootNavigationLinks.connections : rootNavigationLinks.welcome),
+  //   [isWelcomeViewed],
+  // )
 
   return (
-    <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ gestureEnabled: true }}>
+    <Stack.Navigator screenOptions={{ gestureEnabled: true }}>
       {!isWelcomeViewed ? (
         <Stack.Screen
           options={{ headerShown: false }}
@@ -177,20 +178,18 @@ export function RootStack() {
             name={rootNavigationLinks.manageConnection}
             component={ManageConnection}
           />
-
-          <Stack.Screen
-            options={{ headerLeft: () => <BackButton /> }}
-            name={rootNavigationLinks.login}
-            component={Login}
-          />
-
-          <Stack.Screen
-            options={{ headerLeft: () => <BackButton /> }}
-            name={rootNavigationLinks.settings}
-            component={Settings}
-          />
         </Fragment>
       )}
+      <Stack.Screen
+        options={{ headerLeft: () => <BackButton /> }}
+        name={rootNavigationLinks.login}
+        component={Login}
+      />
+      <Stack.Screen
+        options={{ headerLeft: () => <BackButton /> }}
+        name={rootNavigationLinks.settings}
+        component={Settings}
+      />
     </Stack.Navigator>
   )
 }

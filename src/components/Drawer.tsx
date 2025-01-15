@@ -1,6 +1,8 @@
-import { PaperPlaneSvg, UserSvg, VehicleSvg } from "@assets/index"
+import { BellSvg, PaperPlaneSvg, UserSvg, VehicleSvg } from "@assets/index"
 import { useNavigation } from "@react-navigation/native"
+import { isWelcomeViewedAtom } from "@store/index"
 import { colors } from "@utils/theme"
+import { useSetAtom } from "jotai"
 import { PropsWithChildren, ReactNode, createContext, useCallback, useContext, useRef } from "react"
 import { Dimensions, Pressable, StyleSheet, View } from "react-native"
 import ReanimatedDrawerLayout, {
@@ -36,12 +38,18 @@ const Drawer = ({ children }: PropsWithChildren) => {
   const ref = useRef<DrawerLayoutMethods | null>(null)
   const windowWidth = Dimensions.get("window").width
   const navigation = useNavigation()
+  const setIsWelcomeViewed = useSetAtom(isWelcomeViewedAtom)
 
   const onItemPress = (cb: () => void) => {
     return () => {
       cb()
       ref.current?.closeDrawer()
     }
+  }
+
+  const showWelcomeScreenHandler = () => {
+    setIsWelcomeViewed(false)
+    navigation.navigate("Welcome")
   }
 
   const items: ItemProps[] = [
@@ -60,6 +68,11 @@ const Drawer = ({ children }: PropsWithChildren) => {
       label: "Send Feedback",
       icon: <PaperPlaneSvg />,
       onPress: onItemPress(() => false),
+    },
+    {
+      label: "Show Welcome again",
+      icon: <BellSvg />,
+      onPress: onItemPress(showWelcomeScreenHandler),
     },
   ]
 
