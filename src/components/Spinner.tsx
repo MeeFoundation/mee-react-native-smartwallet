@@ -46,7 +46,7 @@ export const Spinner = () => {
             r={radius - 3}
             fill="transparent"
             stroke="white"
-            strokeWidth="6"
+            strokeWidth="3"
             strokeDasharray={circleCircumference} // Total length of the stroke
             strokeDashoffset={strokeDashoffset} // Animated offset for progress
             strokeLinecap="round" // Smooth edges
