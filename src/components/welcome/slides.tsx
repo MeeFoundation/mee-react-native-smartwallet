@@ -7,7 +7,7 @@ import { WelcomeSlide } from "./WelcomeItem"
 const styles = StyleSheet.create({
   titleHello: {
     color: colors.warning,
-    fontSize: 30,
+    fontSize: 24,
     fontStyle: "normal",
     lineHeight: 36,
   },

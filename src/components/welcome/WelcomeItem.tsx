@@ -6,7 +6,7 @@ import { isWelcomeViewedAtom } from "@store/index"
 import { colors } from "@utils/theme"
 import { useSetAtom } from "jotai"
 import { ReactNode } from "react"
-import { Dimensions, Image, ImageBackground, StyleSheet, View } from "react-native"
+import { Dimensions, Image, ImageBackground, PixelRatio, StyleSheet, View } from "react-native"
 
 export type WelcomeSlide = {
   title?: ReactNode
@@ -21,6 +21,8 @@ export const WelcomeItem = ({ title, text, btn = false }: WelcomeSlide) => {
     setIsWelcomeViewedAtom(true)
     navigation.navigate("Login")
   }
+
+  console.log(PixelRatio.getFontScale())
 
   return (
     <View style={styles.container}>
@@ -60,16 +62,17 @@ export const WelcomeItem = ({ title, text, btn = false }: WelcomeSlide) => {
           </View>
         </View>
       </ImageBackground>
-      <BubblesSvg style={{ color: colors.white }} />
       <View
         style={{
+          flex: 1,
           width: "100%",
-          justifyContent: "center",
+          justifyContent: "flex-end",
           alignItems: "center",
           paddingHorizontal: 16,
         }}
       >
-        <Image source={WelcomeSources.mascot} />
+        <BubblesSvg style={{ color: colors.white }} height={40} />
+        <Image source={WelcomeSources.mascot} style={{ height: 180, resizeMode: "contain" }} />
         <View style={{ width: "100%", height: 51 }}>
           {btn && (
             <AppButton
@@ -102,7 +105,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: colors.primary,
-    fontSize: 30,
+    fontSize: 24,
     lineHeight: 36,
     fontStyle: "italic",
     marginBottom: 8,
@@ -112,7 +115,7 @@ const styles = StyleSheet.create({
   text: {
     color: colors.primary,
     fontWeight: "light",
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: 24,
     textAlign: "center",
   },
