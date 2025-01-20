@@ -1247,6 +1247,27 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - react-native-bcrypt-cpp (0.2.3):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - react-native-biometrics (3.0.1):
     - React-Core
   - react-native-ios-context-menu (3.0.0):
@@ -1910,6 +1931,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
+  - react-native-bcrypt-cpp (from `../node_modules/react-native-bcrypt-cpp`)
   - react-native-biometrics (from `../node_modules/react-native-biometrics`)
   - react-native-ios-context-menu (from `../node_modules/react-native-ios-context-menu`)
   - react-native-ios-utilities (from `../node_modules/react-native-ios-utilities`)
@@ -2028,6 +2050,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   React-microtasksnativemodule:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/microtasks"
+  react-native-bcrypt-cpp:
+    :path: "../node_modules/react-native-bcrypt-cpp"
   react-native-biometrics:
     :path: "../node_modules/react-native-biometrics"
   react-native-ios-context-menu:
@@ -2144,6 +2168,7 @@ SPEC CHECKSUMS:
   React-logger: 697873f06b8ba436e3cddf28018ab4741e8071b6
   React-Mapbuffer: c174e11bdea12dce07df8669d6c0dc97eb0c7706
   React-microtasksnativemodule: 8a80099ad7391f4e13a48b12796d96680f120dc6
+  react-native-bcrypt-cpp: a022ca34a79a096386daabb82625b79c6a65f434
   react-native-biometrics: 352e5a794bfffc46a0c86725ea7dc62deb085bdc
   react-native-ios-context-menu: e763ce967cac7e2f3fef3b49e5cf60a15e5ac521
   react-native-ios-utilities: db3fdc53b80a4fcb1503148f5093813abae54bea

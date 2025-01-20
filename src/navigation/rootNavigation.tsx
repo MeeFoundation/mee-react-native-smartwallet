@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { useNavigation } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { Connections } from "@screens/Connections"
+import { DataGenerating } from "@screens/DataGenerating"
 import { Login } from "@screens/Login"
 import { ManageConnection } from "@screens/ManageConnection"
 import { Settings } from "@screens/Settings"
@@ -19,7 +20,7 @@ import { Platform, StatusBar } from "react-native"
 export const rootNavigationLinks = {
   home: "Home",
   welcome: "Welcome",
-  welcome2: "Welcome2",
+  dataGenerating: "DataGenerating",
   getStarted: "Get Started",
   connections: "Connections",
   categories: "Categories",
@@ -155,6 +156,11 @@ export function RootStack() {
 
   return (
     <Stack.Navigator screenOptions={{ gestureEnabled: true }}>
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name={rootNavigationLinks.dataGenerating}
+        component={DataGenerating}
+      />
       {!isWelcomeViewed ? (
         <Stack.Screen
           options={{ headerShown: false }}
