@@ -8,6 +8,7 @@ import CloseSvg from "./images/close.svg"
 import DatabaseSvg from "./images/database.svg"
 import KeySvg from "./images/key.svg"
 import LinkSvg from "./images/link.svg"
+import LogoCharSvg from "./images/logo-char.svg"
 import LogoSvg from "./images/logo.svg"
 import MailSvg from "./images/mail.svg"
 import MenuIconSvg from "./images/menu.svg"
@@ -39,6 +40,7 @@ export {
   DatabaseSvg,
   KeySvg,
   LinkSvg,
+  LogoCharSvg,
   LogoSvg,
   MailSvg,
   MenuIconSvg,

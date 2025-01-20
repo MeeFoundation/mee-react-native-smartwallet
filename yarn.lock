@@ -6434,6 +6434,11 @@ react-native-asset@^2.1.1:
     sha1-file "^1.0.4"
     xcode "^2.0.0"
 
+react-native-bcrypt-cpp@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/react-native-bcrypt-cpp/-/react-native-bcrypt-cpp-0.2.3.tgz#3e1e105b94b8637224d8b649047184842f1a1be7"
+  integrity sha512-0J2Oml0dhACmehwPBuY1eNYYQRBzerhIRUsqtUpCGTbLlpKmJPazbHTHVoKodyOMTkX1GfxyApyDHMqACWeCxw==
+
 react-native-biometrics@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/react-native-biometrics/-/react-native-biometrics-3.0.1.tgz#23c5a0bdbae1fcb1e08b22936223fe0fc4af846e"
