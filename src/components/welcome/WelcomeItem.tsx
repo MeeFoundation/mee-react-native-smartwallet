@@ -6,7 +6,7 @@ import { isWelcomeViewedAtom } from "@store/index"
 import { colors } from "@utils/theme"
 import { useSetAtom } from "jotai"
 import { ReactNode } from "react"
-import { Dimensions, Image, ImageBackground, PixelRatio, StyleSheet, View } from "react-native"
+import { Dimensions, Image, ImageBackground, StyleSheet, View } from "react-native"
 
 export type WelcomeSlide = {
   title?: ReactNode
@@ -21,8 +21,6 @@ export const WelcomeItem = ({ title, text, btn = false }: WelcomeSlide) => {
     setIsWelcomeViewedAtom(true)
     navigation.navigate("Login")
   }
-
-  console.log(PixelRatio.getFontScale())
 
   return (
     <View style={styles.container}>
@@ -62,17 +60,12 @@ export const WelcomeItem = ({ title, text, btn = false }: WelcomeSlide) => {
           </View>
         </View>
       </ImageBackground>
-      <View
-        style={{
-          flex: 1,
-          width: "100%",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          paddingHorizontal: 16,
-        }}
-      >
-        <BubblesSvg style={{ color: colors.white }} height={40} />
-        <Image source={WelcomeSources.mascot} style={{ height: 180, resizeMode: "contain" }} />
+      <View style={styles.mascotContainer}>
+        <BubblesSvg
+          height="15%"
+          style={{ color: colors.white, height: "15%", maxHeight: 57, marginBottom: 8 }}
+        />
+        <Image source={WelcomeSources.mascot} style={styles.mascotImage} />
         <View style={{ width: "100%", height: 51 }}>
           {btn && (
             <AppButton
@@ -91,17 +84,30 @@ export const WelcomeItem = ({ title, text, btn = false }: WelcomeSlide) => {
 const styles = StyleSheet.create({
   container: {
     width: Dimensions.get("screen").width,
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     alignItems: "center",
     backgroundColor: colors.warning,
     gap: 9,
     paddingHorizontal: 6,
+    marginTop: 40,
   },
   cloudContainer: {
     justifyContent: "center",
     alignItems: "center",
-    width: "100%",
     aspectRatio: 1.3,
+    width: "100%",
+  },
+  mascotContainer: {
+    position: "relative",
+    flex: 1,
+    width: "100%",
+    alignItems: "center",
+    paddingHorizontal: 16,
+  },
+  mascotImage: {
+    flex: 1,
+    resizeMode: "contain",
+    width: "100%",
   },
   title: {
     color: colors.primary,
