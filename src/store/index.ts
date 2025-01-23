@@ -35,3 +35,7 @@ export const ConnectionDetails = atomFamily((id: string) =>
 )
 
 export const isWelcomeViewedAtom = atomWithMMKV("isWelcomeViewed", false)
+
+export const isFirstTimeAuthState = atomWithMMKV("firstTimeAuth", true)
+
+export const isAuthenticatedState = atom(false)

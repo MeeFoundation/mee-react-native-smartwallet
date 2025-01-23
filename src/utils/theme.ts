@@ -36,6 +36,7 @@ const lightColors = {
   /**
    * Default/SystemBlue/Light - #007AFF
    */
+  systemBackground: "#FAFAFA",
   link: "#007AFF",
   gray: "#AEAEB2",
   "gray-100": "#F5F6F6",

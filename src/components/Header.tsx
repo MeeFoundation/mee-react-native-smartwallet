@@ -11,9 +11,13 @@ export const HeaderRight = () => {
 
   return (
     <View style={{ ...styles.horizontalGaps, ...styles.menu }}>
-      <SearchSvg />
-      <BellSvg />
-      <TouchableOpacity onPress={open}>
+      <TouchableOpacity style={styles.pressable}>
+        <SearchSvg />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.pressable}>
+        <BellSvg />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.pressable} onPress={open}>
         <MenuIconSvg />
       </TouchableOpacity>
     </View>
@@ -40,8 +44,6 @@ const styles = StyleSheet.create({
   horizontalGaps: {
     paddingHorizontal: 0,
   },
-  menu: {
-    flexDirection: "row",
-    gap: 8,
-  },
+  menu: { flexDirection: "row" },
+  pressable: { padding: 8 },
 })

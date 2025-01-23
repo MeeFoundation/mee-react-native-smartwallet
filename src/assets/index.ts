@@ -4,8 +4,10 @@ import BubblesSvg from "./images/bubbles.svg"
 import CheckSvg from "./images/check.svg"
 import ChevronDownSvg from "./images/chevron-down.svg"
 import ChevronLeftSvg from "./images/chevron-left.svg"
+import CircleCheckSvg from "./images/circle-check.svg"
 import CloseSvg from "./images/close.svg"
 import DatabaseSvg from "./images/database.svg"
+import FaceIdSvg from "./images/faceid.svg"
 import KeySvg from "./images/key.svg"
 import LinkSvg from "./images/link.svg"
 import LogoSvg from "./images/logo.svg"
@@ -46,4 +48,6 @@ export {
   SearchSvg,
   UserSvg,
   VehicleSvg,
+  FaceIdSvg,
+  CircleCheckSvg,
 }
