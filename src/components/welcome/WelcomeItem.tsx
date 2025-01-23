@@ -60,16 +60,12 @@ export const WelcomeItem = ({ title, text, btn = false }: WelcomeSlide) => {
           </View>
         </View>
       </ImageBackground>
-      <BubblesSvg style={{ color: colors.white }} />
-      <View
-        style={{
-          width: "100%",
-          justifyContent: "center",
-          alignItems: "center",
-          paddingHorizontal: 16,
-        }}
-      >
-        <Image source={WelcomeSources.mascot} />
+      <View style={styles.mascotContainer}>
+        <BubblesSvg
+          height="15%"
+          style={{ color: colors.white, height: "15%", maxHeight: 57, marginBottom: 8 }}
+        />
+        <Image source={WelcomeSources.mascot} style={styles.mascotImage} />
         <View style={{ width: "100%", height: 51 }}>
           {btn && (
             <AppButton
@@ -88,21 +84,34 @@ export const WelcomeItem = ({ title, text, btn = false }: WelcomeSlide) => {
 const styles = StyleSheet.create({
   container: {
     width: Dimensions.get("screen").width,
-    justifyContent: "space-between",
+    justifyContent: "flex-end",
     alignItems: "center",
     backgroundColor: colors.warning,
     gap: 9,
     paddingHorizontal: 6,
+    marginTop: 40,
   },
   cloudContainer: {
     justifyContent: "center",
     alignItems: "center",
-    width: "100%",
     aspectRatio: 1.3,
+    width: "100%",
+  },
+  mascotContainer: {
+    position: "relative",
+    flex: 1,
+    width: "100%",
+    alignItems: "center",
+    paddingHorizontal: 16,
+  },
+  mascotImage: {
+    flex: 1,
+    resizeMode: "contain",
+    width: "100%",
   },
   title: {
     color: colors.primary,
-    fontSize: 30,
+    fontSize: 24,
     lineHeight: 36,
     fontStyle: "italic",
     marginBottom: 8,
@@ -112,7 +121,7 @@ const styles = StyleSheet.create({
   text: {
     color: colors.primary,
     fontWeight: "light",
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: 24,
     textAlign: "center",
   },
