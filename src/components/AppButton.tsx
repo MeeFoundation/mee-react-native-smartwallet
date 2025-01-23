@@ -1,13 +1,20 @@
 import { hexAlphaColor } from "@utils/color"
 import { colors } from "@utils/theme"
 import { ComponentPropsWithoutRef, ElementRef, Fragment, forwardRef } from "react"
-import { Animated, GestureResponderEvent, Pressable, StyleSheet, TextStyle } from "react-native"
+import {
+  Animated,
+  GestureResponderEvent,
+  Pressable,
+  StyleSheet,
+  TextStyle,
+  View,
+} from "react-native"
 import { SvgProps } from "react-native-svg"
 import { Typography } from "./Typography"
 
 type Variant = "primary" | "secondary" | "danger" | "tertiary" | "link"
 
-type Size = "md" | "sm" | "xs"
+type Size = "md" | "sm" | "xs" | "lg"
 
 type AppButtonRef = ElementRef<typeof Pressable>
 
@@ -40,9 +47,14 @@ const paddingsMap = {
   xs: {
     padding: 6,
   },
+  lg: {
+    paddingVertical: 18,
+    paddingHorizontal: 16,
+  },
 }
 
 const fontSizeMap = {
+  lg: 20,
   md: 16,
   sm: 16,
   xs: 12,
@@ -131,37 +143,39 @@ export const AppButton = forwardRef<AppButtonRef, AppButtonProps>((props, ref) =
   }
 
   return (
-    <Pressable
-      ref={ref}
-      role="button"
-      style={[{ width: props.fullWidth ? "100%" : "auto" }]}
-      onPress={handlePress}
-      onPressIn={handlePress}
-      onPressOut={onRelease}
-      {...rest}
-    >
-      <Animated.View
-        style={{
-          justifyContent: justifyStart ? "space-between" : "center",
-          alignItems: "center",
-          ...paddings,
-          ...styles.container,
-          backgroundColor,
-          ...styles[variant],
-          ...conditionalStyles,
-        }}
+    <View style={StyleSheet.flatten(props.fullWidth && { width: "100%", flexDirection: "row" })}>
+      <Pressable
+        ref={ref}
+        role="button"
+        style={[{ width: props.fullWidth ? "100%" : "auto" }]}
+        onPress={handlePress}
+        onPressIn={handlePress}
+        onPressOut={onRelease}
+        {...rest}
       >
-        {children ? (
-          children
-        ) : (
-          <Fragment>
-            {IconLeft && <IconLeft color={textColor} />}
-            <Typography style={textStyles}>{text}</Typography>
-            {IconRight && <IconRight color={textColor} />}
-          </Fragment>
-        )}
-      </Animated.View>
-    </Pressable>
+        <Animated.View
+          style={{
+            justifyContent: justifyStart ? "space-between" : "center",
+            alignItems: "center",
+            ...paddings,
+            ...styles.container,
+            backgroundColor,
+            ...styles[variant],
+            ...conditionalStyles,
+          }}
+        >
+          {children ? (
+            children
+          ) : (
+            <Fragment>
+              {IconLeft && <IconLeft color={textColor} />}
+              <Typography style={textStyles}>{text}</Typography>
+              {IconRight && <IconRight color={textColor} />}
+            </Fragment>
+          )}
+        </Animated.View>
+      </Pressable>
+    </View>
   )
 })
 

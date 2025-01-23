@@ -1,6 +1,6 @@
 import { BellSvg, PaperPlaneSvg, UserSvg, VehicleSvg } from "@assets/index"
 import { useNavigation } from "@react-navigation/native"
-import { isWelcomeViewedAtom } from "@store/index"
+import { isAuthenticatedState, isFirstTimeAuthState, isWelcomeViewedAtom } from "@store/index"
 import { colors } from "@utils/theme"
 import { useSetAtom } from "jotai"
 import { PropsWithChildren, ReactNode, createContext, useCallback, useContext, useRef } from "react"
@@ -39,6 +39,15 @@ const Drawer = ({ children }: PropsWithChildren) => {
   const windowWidth = Dimensions.get("window").width
   const navigation = useNavigation()
   const setIsWelcomeViewed = useSetAtom(isWelcomeViewedAtom)
+  const setFirstTimeAuth = useSetAtom(isFirstTimeAuthState)
+  const setAuthenticated = useSetAtom(isAuthenticatedState)
+
+  const onFirstTimeAuth = () => {
+    setFirstTimeAuth(true)
+    setAuthenticated(false)
+    // todo remove
+    navigation.navigate("Login")
+  }
 
   const onItemPress = (cb: () => void) => {
     return () => {
@@ -73,6 +82,11 @@ const Drawer = ({ children }: PropsWithChildren) => {
       label: "Show Welcome again",
       icon: <BellSvg />,
       onPress: onItemPress(showWelcomeScreenHandler),
+    },
+    {
+      label: "Set First Time Auth",
+      icon: <BellSvg />,
+      onPress: onItemPress(onFirstTimeAuth),
     },
   ]
 
