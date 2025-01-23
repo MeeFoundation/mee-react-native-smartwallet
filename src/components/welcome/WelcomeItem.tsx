@@ -41,18 +41,33 @@ export const WelcomeItem = ({ title, text, btn = false }: WelcomeSlide) => {
           }}
         >
           {title && (
-            <Typography style={styles.title} fontFamily="publicSans.italic">
+            <Typography
+              style={styles.title}
+              fontFamily="publicSans.italic"
+              allowFontScaling={false}
+            >
               {title}
             </Typography>
           )}
           <View>
             {typeof text === "string" ? (
-              <Typography style={styles.text} fontFamily="publicSans.light" weight="300">
+              <Typography
+                style={styles.text}
+                fontFamily="publicSans.light"
+                weight="300"
+                allowFontScaling={false}
+              >
                 {text}
               </Typography>
             ) : (
               text.map((t, i) => (
-                <Typography key={i} style={styles.text} fontFamily="publicSans.light" weight="300">
+                <Typography
+                  key={i}
+                  style={styles.text}
+                  fontFamily="publicSans.light"
+                  weight="300"
+                  allowFontScaling={false}
+                >
                   {t}
                 </Typography>
               ))
