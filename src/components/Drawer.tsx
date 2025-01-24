@@ -42,6 +42,10 @@ const Drawer = ({ children }: PropsWithChildren) => {
   const setFirstTimeAuth = useSetAtom(isFirstTimeAuthState)
   const setAuthenticated = useSetAtom(isAuthenticatedState)
 
+  const navigateLogin = () => {
+    setAuthenticated(false)
+  }
+
   const onFirstTimeAuth = () => {
     setFirstTimeAuth(true)
     setAuthenticated(false)
@@ -71,7 +75,7 @@ const Drawer = ({ children }: PropsWithChildren) => {
     {
       label: "Login",
       icon: <UserSvg />,
-      onPress: onItemPress(() => navigation.navigate("Login")),
+      onPress: onItemPress(navigateLogin),
     },
     {
       label: "Send Feedback",
@@ -80,12 +84,12 @@ const Drawer = ({ children }: PropsWithChildren) => {
     },
     {
       label: "Show Welcome again",
-      icon: <BellSvg />,
+      icon: <BellSvg color={colors.secondary} />,
       onPress: onItemPress(showWelcomeScreenHandler),
     },
     {
       label: "Set First Time Auth",
-      icon: <BellSvg />,
+      icon: <BellSvg color={colors.secondary} />,
       onPress: onItemPress(onFirstTimeAuth),
     },
   ]

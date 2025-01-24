@@ -1,8 +1,7 @@
 import { BellSvg, MenuIconSvg, SearchSvg } from "@assets/index"
 import { useRoute } from "@react-navigation/native"
 import { colors } from "@utils/theme"
-import { StyleSheet, View } from "react-native"
-import { TouchableOpacity } from "react-native-gesture-handler"
+import { StyleSheet, TouchableOpacity, View } from "react-native"
 import { useDrawer } from "./Drawer"
 import { Typography } from "./Typography"
 
@@ -15,7 +14,7 @@ export const HeaderRight = () => {
         <SearchSvg />
       </TouchableOpacity>
       <TouchableOpacity style={styles.pressable}>
-        <BellSvg />
+        <BellSvg style={{ color: colors.white }} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.pressable} onPress={open}>
         <MenuIconSvg />

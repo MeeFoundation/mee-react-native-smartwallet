@@ -11,7 +11,7 @@ import { Login } from "@screens/Login"
 import { ManageConnection } from "@screens/ManageConnection"
 import { Settings } from "@screens/Settings"
 import { Welcome } from "@screens/Welcome"
-import { isWelcomeViewedAtom } from "@store/index"
+import { isAuthenticatedState, isWelcomeViewedAtom } from "@store/index"
 import { colors, fonts } from "@utils/theme"
 import { useAtomValue } from "jotai"
 import { Fragment, useEffect } from "react"
@@ -103,10 +103,15 @@ const TabsStack = () => {
 
 const BackButton = () => {
   const navigation = useNavigation()
+
+  const handleBack = () => {
+    navigation.goBack()
+  }
+
   return (
     <AppButton
       variant="link"
-      onPress={navigation.goBack}
+      onPress={handleBack}
       text="Back"
       textStyles={{ fontSize: 17, marginRight: 16 }}
       IconLeft={ChevronLeftSvg}
@@ -148,6 +153,7 @@ const WelcomeStack = () => {
 
 export function RootStack() {
   const isWelcomeViewed = useAtomValue(isWelcomeViewedAtom)
+  const isAuthenticated = useAtomValue(isAuthenticatedState)
 
   // const initialRoute = useMemo(
   //   () => (isWelcomeViewed ? rootNavigationLinks.connections : rootNavigationLinks.welcome),
@@ -156,19 +162,27 @@ export function RootStack() {
 
   return (
     <Stack.Navigator screenOptions={{ gestureEnabled: true }}>
-      <Stack.Screen
-        options={{ headerShown: false }}
-        name={rootNavigationLinks.dataGenerating}
-        component={DataGenerating}
-      />
-      {!isWelcomeViewed ? (
+      {!isAuthenticated && (
         <Stack.Screen
           options={{ headerShown: false }}
-          name={rootNavigationLinks.welcome}
-          component={WelcomeStack}
+          name={rootNavigationLinks.login}
+          component={Login}
         />
-      ) : (
+      )}
+      {isAuthenticated && (
         <Fragment>
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name={rootNavigationLinks.dataGenerating}
+            component={DataGenerating}
+          />
+
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name={rootNavigationLinks.welcome}
+            component={WelcomeStack}
+          />
+
           <Stack.Screen
             options={{ headerShown: false }}
             name={rootNavigationLinks.connections}
@@ -184,18 +198,13 @@ export function RootStack() {
             name={rootNavigationLinks.manageConnection}
             component={ManageConnection}
           />
+          <Stack.Screen
+            options={{ headerLeft: () => <BackButton /> }}
+            name={rootNavigationLinks.settings}
+            component={Settings}
+          />
         </Fragment>
       )}
-      <Stack.Screen
-        options={{ headerLeft: () => <BackButton /> }}
-        name={rootNavigationLinks.login}
-        component={Login}
-      />
-      <Stack.Screen
-        options={{ headerLeft: () => <BackButton /> }}
-        name={rootNavigationLinks.settings}
-        component={Settings}
-      />
     </Stack.Navigator>
   )
 }

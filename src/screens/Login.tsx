@@ -74,7 +74,6 @@ export const Login = () => {
       handleOpenSettings()
       return
     }
-
     handleAuth()
   }
 

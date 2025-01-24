@@ -19,7 +19,7 @@ export const WelcomeItem = ({ title, text, btn = false }: WelcomeSlide) => {
   const setIsWelcomeViewedAtom = useSetAtom(isWelcomeViewedAtom)
   const handlePress = () => {
     setIsWelcomeViewedAtom(true)
-    navigation.navigate("Login")
+    navigation.navigate("Connections")
   }
 
   return (
