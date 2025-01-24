@@ -90,6 +90,7 @@ export const Login = () => {
         enableContentPanningGesture={false}
         snapPoints={setupPrivacy ? [450] : [342]}
         ref={bottomSheetRef}
+        backDropProps={{ pressBehavior: "none" }}
       >
         <View style={styles.sheetContaier}>
           {setupPrivacy ? <FaceIdSvg /> : <CircleCheckSvg color={colors.primary} />}

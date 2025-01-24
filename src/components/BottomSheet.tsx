@@ -5,6 +5,7 @@ import {
   BottomSheetProps,
   BottomSheetView,
 } from "@gorhom/bottom-sheet"
+import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types"
 import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types"
 import { forwardRef, useRef } from "react"
 import { StyleSheet, View } from "react-native"
@@ -26,6 +27,7 @@ const BackDrop = (props: BottomSheetBackdropProps) => {
 type Props = BottomSheetProps & {
   title?: string
   ref?: React.Ref<BottomSheetMethods>
+  backDropProps?: Partial<BottomSheetDefaultBackdropProps>
 }
 
 export const BottomSheetBackDrop = forwardRef<BottomSheetMethods, Props>((props: Props, ref) => {
@@ -36,6 +38,7 @@ export const BottomSheetBackDrop = forwardRef<BottomSheetMethods, Props>((props:
     enableDynamicSizing = false,
     title,
     children,
+    backDropProps,
     ...rest
   } = props
 
@@ -57,7 +60,7 @@ export const BottomSheetBackDrop = forwardRef<BottomSheetMethods, Props>((props:
       ref={createRef}
       index={index}
       snapPoints={snapPoints}
-      backdropComponent={backdropComponent}
+      backdropComponent={(props) => backdropComponent?.({ ...props, ...backDropProps })}
       enableDynamicSizing={enableDynamicSizing}
       containerStyle={{ zIndex: 102 }}
       {...rest}
