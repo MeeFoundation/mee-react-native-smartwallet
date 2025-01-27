@@ -88,6 +88,7 @@ export const WelcomeItem = ({ title, text, btn = false }: WelcomeSlide) => {
               variant="secondary"
               text="Get Started"
               style={styles.button}
+              hitSlop={12}
             />
           )}
         </View>

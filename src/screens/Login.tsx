@@ -109,6 +109,7 @@ export const Login = () => {
             variant="tertiary"
             size="lg"
             textStyles={{ color: colors.link }}
+            hitSlop={12}
             onPress={onPressContinue}
           />
         </View>

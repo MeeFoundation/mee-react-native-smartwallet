@@ -86,7 +86,7 @@ export function Connections() {
         style={styles.sectionContainer}
       />
 
-      <Pressable onPress={onAddPress} style={styles.addConnection}>
+      <Pressable onPress={onAddPress} style={styles.addConnection} hitSlop={8}>
         <AddConnectionSvg />
       </Pressable>
 

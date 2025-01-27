@@ -188,7 +188,7 @@ const SelectedLabel: FC<SelectedLabelProps> = ({ children, onPress }) => {
   return (
     <View style={styles.selectedItem}>
       <Text style={styles.selectedText}>{children}</Text>
-      <Pressable onPress={onPress}>
+      <Pressable onPress={onPress} hitSlop={8}>
         <CloseIcon width={18} height={18} color={colors.primary} />
       </Pressable>
     </View>
