@@ -1,13 +1,16 @@
-import { generateHash } from "react-native-bcrypt-cpp"
+import Aes from "react-native-aes-crypto"
+
+const generateKey = (password: string, salt: string, cost: number, length: number) =>
+  Aes.pbkdf2(password, salt, cost, length, "sha256")
 
 export const generateUniqueDeviceKeys = async () => {
   return new Promise((resolve) => {
     const timestamp = Date.now() // Current timestamp
-    const randomBytes = generateHash("16", 12)
+    const randomBytes = Aes.randomKey(12)
 
     const rawData = `${timestamp}-${randomBytes}`
 
-    const deviceKey = generateHash(rawData, 12)
+    const deviceKey = generateKey(rawData, "test", 12, 12)
 
     setTimeout(() => {
       resolve(deviceKey)
@@ -18,13 +21,11 @@ export const generateUniqueDeviceKeys = async () => {
 export const generateEncryptionKey = async () => {
   return new Promise((resolve) => {
     const timestamp = Date.now() // Current timestamp
-    const randomNumber = Math.floor(Math.random() * 1000000).toString()
-    const randomBytes = generateHash(randomNumber, 12)
+
+    const randomBytes = Aes.randomKey(12)
 
     const rawData = `${timestamp}-${randomBytes}`
-
-    const encryptionKey = generateHash(rawData, 12)
-
+    const encryptionKey = generateKey(rawData, "test", 12, 12)
     setTimeout(() => {
       resolve(encryptionKey)
     }, 1000)
@@ -35,12 +36,11 @@ export const generateUserIdentifier = async () => {
   return new Promise((resolve) => {
     const timestamp = Date.now() // Current timestamp
     const randomNumber = Math.floor(Math.random() * 1000000).toString()
-    const randomBytes = generateHash(randomNumber, 12)
+    const randomBytes = Aes.randomKey(12)
 
     const rawData = `${timestamp}-${randomBytes}`
 
-    const userIdentifier = generateHash(rawData, 12)
-
+    const userIdentifier = generateKey(rawData, "test", 12, 12)
     setTimeout(() => {
       resolve(userIdentifier)
     }, 1000)

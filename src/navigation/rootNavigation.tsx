@@ -152,7 +152,7 @@ const WelcomeStack = () => {
 }
 
 export function RootStack() {
-  const isWelcomeViewed = useAtomValue(isWelcomeViewedAtom)
+  // const isWelcomeViewed = useAtomValue(isWelcomeViewedAtom)
   const isAuthenticated = useAtomValue(isAuthenticatedState)
 
   // const initialRoute = useMemo(
