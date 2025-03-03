@@ -28,6 +28,7 @@
     "@react-navigation/native-stack": "^7.1.14",
     "jotai": "^2.11.0",
     "lodash-es": "^4.17.21",
+    "mee-rust": "https://github.com/MeeFoundation/react-native-rust-ffi-example.git#main",
     "react": "18.3.1",
     "react-native": "0.76.5",
     "react-native-aes-crypto": "^3.2.1",

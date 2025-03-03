@@ -1363,6 +1363,28 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - react-native-my-rust-lib (0.1.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - uniffi-bindgen-react-native (= 0.28.3-2)
+    - Yoga
   - react-native-safe-area-context (5.1.0):
     - DoubleConversion
     - glog
@@ -1893,6 +1915,8 @@ PODS:
     - ReactCommon/turbomodule/core
     - Yoga
   - SocketRocket (0.7.1)
+  - uniffi-bindgen-react-native (0.28.3-2):
+    - React-Core
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -1940,6 +1964,7 @@ DEPENDENCIES:
   - react-native-ios-utilities (from `../node_modules/react-native-ios-utilities`)
   - "react-native-menu (from `../node_modules/@react-native-menu/menu`)"
   - react-native-mmkv (from `../node_modules/react-native-mmkv`)
+  - react-native-my-rust-lib (from `../node_modules/mee-rust`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
@@ -1980,6 +2005,7 @@ SPEC REPOS:
     - ContextMenuAuxiliaryPreview
     - DGSwiftUtilities
     - SocketRocket
+    - uniffi-bindgen-react-native
 
 EXTERNAL SOURCES:
   boost:
@@ -2067,6 +2093,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-menu/menu"
   react-native-mmkv:
     :path: "../node_modules/react-native-mmkv"
+  react-native-my-rust-lib:
+    :path: "../node_modules/mee-rust"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   React-nativeconfig:
@@ -2180,6 +2208,7 @@ SPEC CHECKSUMS:
   react-native-ios-utilities: e143a68105e72df81761c611c94186e908bbbc6b
   react-native-menu: 1039ef23d86a766c890a1353e506d60ad0bb76f1
   react-native-mmkv: b4af3744580f08e1ffc7761103b408d313b2f772
+  react-native-my-rust-lib: 3f5262c3ffacfe6d3ca1a7bd75710079d55aa980
   react-native-safe-area-context: 0d8827b2420dfb4c8a8e27639585e61b912261be
   React-nativeconfig: f7ab6c152e780b99a8c17448f2d99cf5f69a2311
   React-NativeModulesApple: 9aeb901b9bfcc9235e912445fb3cf4780a99baf4
@@ -2213,6 +2242,7 @@ SPEC CHECKSUMS:
   RNScreens: 4c7d5710e955dcf72c14a546e29744f9e591370b
   RNSVG: c50d29abf38abbf48ebfc50b6258f81099aeabae
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
+  uniffi-bindgen-react-native: fe61f9324cf6b3af2021c8b5f544c542ced1a2c3
   Yoga: fcc198acd4a55599b3468cfb6ebc526baff5f06e
 
 PODFILE CHECKSUM: aab2c389eeb7e48802e5371eaa7297a3d3f3d8c0

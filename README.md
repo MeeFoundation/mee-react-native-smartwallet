@@ -32,3 +32,12 @@
    ```sh
    yarn android
    
+### To download generated ts/native RUST library from company's github:
+1. Create and configure .npmrc like in the .npmrc.example
+2. Get your token from your github account where you have access to the repo
+3. Set the following permissions for this token: 
+   ✅ repo (for private repositories)
+   ✅ read:packages (if it's a GitHub Package)
+4. As advice, do not create token that lives forever
+5. Add it to .npmrc
+6. yarn upgrade mee-rust

@@ -9,6 +9,7 @@ import { useAtom, useSetAtom } from "jotai"
 import { useLayoutEffect, useRef, useState } from "react"
 import { Linking, Platform, StyleSheet, View } from "react-native"
 import ReactNativeBiometrics, { BiometryType } from "react-native-biometrics"
+import { getIdentityContextById } from "mee-rust"
 
 const handleOpenSettings = () => {
   if (Platform.OS === "ios") {
@@ -26,6 +27,11 @@ const getSetupPrivacyText = (type: BiometryType | null) => {
 }
 
 export const Login = () => {
+  // test that uniffi RUST function does not crush the app
+  console.log('test uniffi RUST function, next log should be `Dummy Identity`:')
+  console.log(getIdentityContextById('49').name)
+  // delete code above after test at Testflight
+
   const rnBiometrics = new ReactNativeBiometrics({ allowDeviceCredentials: true })
   const [firstTimeAuth, setFirstTimeAuth] = useAtom(isFirstTimeAuthState)
   const bottomSheetRef = useRef<BottomSheet>(null)
