@@ -10,7 +10,7 @@
     "start-rc": "npx react-native start --reset-cache",
     "test": "jest",
     "manifest": "react-native-asset",
-    "postinstall": "cd ios && pod install --repo-update",
+    "postinstall": "yarn upgrade mee-rust && cd ios && pod install --repo-update",
     "android-release-aab": "cd android && ./gradlew bundleRelease",
     "android-release-test": "react-native run-android --variant release",
     "clean": "rm -rf ~/Library/Developer/Xcode/DerivedData && rm -rf node_modules/ /tmp/metro-*  && watchman watch-del-all && watchman shutdown-server && yarn cache clean",

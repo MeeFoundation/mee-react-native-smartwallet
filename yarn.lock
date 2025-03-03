@@ -5595,7 +5595,7 @@ mdn-data@2.0.30:
 
 "mee-rust@https://github.com/MeeFoundation/react-native-rust-ffi-example.git#main":
   version "0.1.0"
-  resolved "https://github.com/MeeFoundation/react-native-rust-ffi-example.git#169fbc634bfa11921036ed1f9624c0196586e66d"
+  resolved "https://github.com/MeeFoundation/react-native-rust-ffi-example.git#07a57f8748811101fa0f1df3a8b4b3413521b554"
   dependencies:
     uniffi-bindgen-react-native "^0.28.3-2"
 
@@ -7620,9 +7620,9 @@ unicode-property-aliases-ecmascript@^2.0.0:
   integrity sha512-6t3foTQI9qne+OZoVQB/8x8rk2k1eVy1gRXhV3oFQ5T6R1dqQ1xtin3XqSlx3+ATBkliTaR/hHyJBm+LVPNM8w==
 
 uniffi-bindgen-react-native@^0.28.3-2:
-  version "0.28.3-2"
-  resolved "https://registry.yarnpkg.com/uniffi-bindgen-react-native/-/uniffi-bindgen-react-native-0.28.3-2.tgz#8483112949cefd7367bb82a86f634fd522c463c7"
-  integrity sha512-7kq3CSlMsuyg5oG79hBfZMEOD+CXTpPHsOsH5Mw1PwxJA7Wornc9zD4SF4Kht91JBDFx6u+0Ib3cEBZPUmBHjA==
+  version "0.28.3-3"
+  resolved "https://registry.yarnpkg.com/uniffi-bindgen-react-native/-/uniffi-bindgen-react-native-0.28.3-3.tgz#1ea7ef000f748f3c85badc14ab0eff3ec1aeb98c"
+  integrity sha512-ia0VzmG0KIgd5MnW0Ls5iy/GDr56OAH5NULdLcoKFfwcftEIwmInUCxT9rAoEx7rUtSTHCu5eXwtOqnVO8lCfQ==
 
 universalify@^0.1.0:
   version "0.1.2"
