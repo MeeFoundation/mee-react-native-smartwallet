@@ -1,4 +1,3 @@
-import { BellSvg, PaperPlaneSvg, UserSvg, VehicleSvg } from "@assets/index"
 import { useNavigation } from "@react-navigation/native"
 import { isAuthenticatedState, isFirstTimeAuthState, isWelcomeViewedAtom } from "@store/index"
 import { colors } from "@utils/theme"
@@ -10,6 +9,12 @@ import ReanimatedDrawerLayout, {
   DrawerPosition,
   DrawerType,
 } from "react-native-gesture-handler/ReanimatedDrawerLayout"
+import {
+  BellIcon,
+  Cog8ToothIcon,
+  PaperAirplaneIcon,
+  UserIcon,
+} from "react-native-heroicons/outline"
 import { Typography } from "./Typography"
 
 type ItemProps = {
@@ -68,28 +73,28 @@ const Drawer = ({ children }: PropsWithChildren) => {
   const items: ItemProps[] = [
     {
       label: "Settings",
-      icon: <VehicleSvg />,
+      icon: <Cog8ToothIcon color="black" />,
       onPress: onItemPress(() => navigation.navigate("Settings")),
     },
 
     {
       label: "Login",
-      icon: <UserSvg />,
+      icon: <UserIcon />,
       onPress: onItemPress(navigateLogin),
     },
     {
       label: "Send Feedback",
-      icon: <PaperPlaneSvg />,
+      icon: <PaperAirplaneIcon transform={[{ rotate: "270deg" }]} />,
       onPress: onItemPress(() => false),
     },
     {
       label: "Show Welcome again",
-      icon: <BellSvg color={colors.secondary} />,
+      icon: <BellIcon color={colors.secondary} />,
       onPress: onItemPress(showWelcomeScreenHandler),
     },
     {
       label: "Set First Time Auth",
-      icon: <BellSvg color={colors.secondary} />,
+      icon: <BellIcon color={colors.secondary} />,
       onPress: onItemPress(onFirstTimeAuth),
     },
   ]

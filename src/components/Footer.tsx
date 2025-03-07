@@ -1,10 +1,11 @@
-import { Link45DegSvg, PlusCircleSvg, ShareSvg } from "@assets/bootstrap-icons"
 import { BottomSheetBackDrop } from "@components/BottomSheet"
 import BottomSheet from "@gorhom/bottom-sheet"
 import { useNavigation } from "@react-navigation/native"
 import { colors } from "@utils/theme"
 import { FC, useRef } from "react"
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { StyleSheet, TouchableOpacity, View } from "react-native"
+import { Typography } from "./Typography"
+import { LinkIcon, PlusCircleIcon, ShareIcon } from "react-native-heroicons/outline"
 
 type FooterProps = {
   isConnectionsPage?: boolean
@@ -29,25 +30,23 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
           backgroundColor: "white",
           width: "100%",
           padding: 16,
-          paddingBottom: 28
+          paddingBottom: 28,
+          zIndex: 1,
         }}
       >
         <TouchableOpacity onPress={ConnectionsPress} style={styles.footerItem} hitSlop={8}>
-          <Link45DegSvg
-            style={{ color: isConnectionsPage ? colors.primary : "black" }}
-            height={18}
-            width={18}
-          />
-
-          <Text style={{ color: isConnectionsPage ? colors.primary : "black" }}>Connections</Text>
+          <LinkIcon size={20} color={isConnectionsPage ? colors.primary : "black"} />
+          <Typography style={{ color: isConnectionsPage ? colors.primary : "black" }}>
+            Connections
+          </Typography>
         </TouchableOpacity>
         <TouchableOpacity onPress={onAddPress} style={styles.footerItem} hitSlop={8}>
-          <PlusCircleSvg height={18} width={18} />
-          <Text>Connect</Text>
+          <PlusCircleIcon size={20} />
+          <Typography>Connect</Typography>
         </TouchableOpacity>
         <TouchableOpacity onPress={onAddPress} style={styles.footerItem} hitSlop={8}>
-          <ShareSvg height={18} width={18} />
-          <Text>Share</Text>
+          <ShareIcon size={20} />
+          <Typography>Share</Typography>
         </TouchableOpacity>
       </View>
 

@@ -1,7 +1,7 @@
-import { BellSvg, MenuIconSvg, SearchSvg } from "@assets/index"
 import { useRoute } from "@react-navigation/native"
 import { colors } from "@utils/theme"
 import { StyleSheet, TouchableOpacity, View } from "react-native"
+import { Bars3Icon, BellIcon, MagnifyingGlassIcon } from "react-native-heroicons/outline"
 import { useDrawer } from "./Drawer"
 import { Typography } from "./Typography"
 
@@ -11,13 +11,13 @@ export const HeaderRight = () => {
   return (
     <View style={{ ...styles.horizontalGaps, ...styles.menu }}>
       <TouchableOpacity style={styles.pressable}>
-        <SearchSvg />
+        <MagnifyingGlassIcon color={colors.white} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.pressable}>
-        <BellSvg style={{ color: colors.white }} />
+        <BellIcon color={colors.white} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.pressable} onPress={open}>
-        <MenuIconSvg />
+        <Bars3Icon color={colors.white} />
       </TouchableOpacity>
     </View>
   )

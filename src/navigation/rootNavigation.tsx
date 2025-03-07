@@ -1,5 +1,3 @@
-import LinkIcon from "@assets/images/link.svg"
-import { ChevronLeftSvg } from "@assets/index"
 import { AppButton } from "@components/AppButton"
 import { HeaderLeft, HeaderRight } from "@components/Header"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
@@ -11,11 +9,12 @@ import { Login } from "@screens/Login"
 import { ManageConnection } from "@screens/ManageConnection"
 import { Settings } from "@screens/Settings"
 import { Welcome } from "@screens/Welcome"
-import { isAuthenticatedState, isWelcomeViewedAtom } from "@store/index"
+import { isAuthenticatedState } from "@store/index"
 import { colors, fonts } from "@utils/theme"
 import { useAtomValue } from "jotai"
 import { Fragment, useEffect } from "react"
 import { Platform, StatusBar } from "react-native"
+import { ChevronLeftIcon, LinkIcon } from "react-native-heroicons/outline"
 
 export const rootNavigationLinks = {
   home: "Home",
@@ -114,7 +113,7 @@ const BackButton = () => {
       onPress={handleBack}
       text="Back"
       textStyles={{ fontSize: 17, marginRight: 16 }}
-      IconLeft={ChevronLeftSvg}
+      IconLeft={ChevronLeftIcon}
     />
   )
 }

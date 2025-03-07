@@ -1,7 +1,7 @@
-import { ChevronLeftSvg } from "@assets/index"
 import { colors } from "@utils/theme"
 import { useRef, useState } from "react"
 import { Animated, FlatList, ListRenderItem, StyleSheet, View } from "react-native"
+import { ChevronLeftIcon } from "react-native-heroicons/outline"
 import { AnimatedTouchable } from "./AnimatedTouchable"
 import { Paginator } from "./swiper/Paginator"
 
@@ -66,7 +66,7 @@ export const Swiper = <T,>({
             onPress={scrollPrev}
             disabled={currentIndex === 0}
           >
-            <ChevronLeftSvg color={colors.primary} />
+            <ChevronLeftIcon color={colors.primary} size={24} />
           </AnimatedTouchable>
           <Paginator data={data} scrollX={sliderPos} />
           <AnimatedTouchable
@@ -74,7 +74,11 @@ export const Swiper = <T,>({
             onPress={scrollNext}
             disabled={currentIndex >= data.length - 1}
           >
-            <ChevronLeftSvg color={colors.primary} style={{ transform: [{ rotate: "180deg" }] }} />
+            <ChevronLeftIcon
+              color={colors.primary}
+              style={{ transform: [{ rotate: "180deg" }] }}
+              size={24}
+            />
           </AnimatedTouchable>
         </View>
       )}

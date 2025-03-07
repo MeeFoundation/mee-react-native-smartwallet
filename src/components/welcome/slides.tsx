@@ -24,7 +24,7 @@ export const welcomeSlides: WelcomeSlide[] = [
       </>
     ),
     text: [
-      "I represent you on the internet. I put you in control of your personal information as you interact with Mee-compatible websites and mobile apps. I help you to sign in/up without a password and without surveillance.",
+      "I represent you on the internet. I put you in control of your profilel information as you interact with Mee-compatible websites and mobile apps. I help you to sign in/up without a password and without surveillance.",
       "Let’s start!",
     ],
     btn: false,

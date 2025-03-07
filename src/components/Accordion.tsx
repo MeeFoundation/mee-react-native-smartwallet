@@ -1,6 +1,6 @@
-import ChevronDownIcon from "@assets/images/chevron-down.svg"
 import { FC, PropsWithChildren, useRef, useState } from "react"
 import { Animated, Easing, Keyboard, Pressable, StyleSheet, View, ViewStyle } from "react-native"
+import { ChevronDownIcon } from "react-native-heroicons/outline"
 
 type AccordionProps = {
   head: React.ReactNode
@@ -78,7 +78,7 @@ export const Accordion: FC<PropsWithChildren<AccordionProps>> = ({
       <Pressable onPress={toggleContent} style={styles.head}>
         {head}
         <Animated.View style={{ transform: [{ rotateX: spin }] }}>
-          <ChevronDownIcon width={24} height={24} />
+          <ChevronDownIcon size={24} />
         </Animated.View>
       </Pressable>
       <Animated.View

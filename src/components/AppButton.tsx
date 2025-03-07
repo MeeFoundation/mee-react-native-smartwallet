@@ -12,7 +12,7 @@ import {
 import { SvgProps } from "react-native-svg"
 import { Typography } from "./Typography"
 
-type Variant = "primary" | "secondary" | "danger" | "tertiary" | "link"
+export type ButtonVariant = "primary" | "secondary" | "danger" | "tertiary" | "link" | "link_danger"
 
 type Size = "md" | "sm" | "xs" | "lg"
 
@@ -20,20 +20,22 @@ type AppButtonRef = ElementRef<typeof Pressable>
 
 const ANIMATION_DURATION = 100
 
-const bgColorMap: Record<Variant, [string, string]> = {
+const bgColorMap: Record<ButtonVariant, [string, string]> = {
   primary: [colors.primary, colors.primaryActive],
   secondary: [colors.white, colors.transparentActive],
   danger: [colors.white, colors.transparentActive],
   tertiary: [colors.transparent, hexAlphaColor(colors.transparentActive, 20)],
   link: [colors.transparent, colors.transparent],
+  link_danger: [colors.transparent, colors.transparent],
 }
 
-const textColorMap: Record<Variant, string> = {
+const textColorMap: Record<ButtonVariant, string> = {
   primary: colors.white,
   secondary: colors.primary,
   danger: colors.danger,
   tertiary: colors.secondary,
   link: colors.link,
+  link_danger: colors.danger,
 }
 
 const paddingsMap = {
@@ -64,7 +66,7 @@ type AppButtonProps = {
   text?: string
   IconLeft?: React.FunctionComponent<SvgProps>
   IconRight?: React.FunctionComponent<SvgProps>
-  variant?: Variant
+  variant?: ButtonVariant
   justifyStart?: boolean
   fullWidth?: boolean
   children?: React.ReactNode
@@ -92,9 +94,9 @@ export const AppButton = forwardRef<AppButtonRef, AppButtonProps>((props, ref) =
     outputRange: bgColorMap[variant],
   })
   const textColor = textColorMap[variant]
-  const paddings = variant === "link" ? { paddings: 0 } : paddingsMap[size]
+  const paddings = ["link", "link_danger"].includes(variant) ? { paddings: 0 } : paddingsMap[size]
   const textStyles: TextStyle = {
-    fontWeight: variant !== "link" ? "700" : "400",
+    fontWeight: !["link", "link_danger"].includes(variant) ? "700" : "400",
     color: textColor,
     fontSize: fontSizeMap[size],
     ...tStyles,
@@ -194,4 +196,5 @@ const styles = StyleSheet.create({
   danger: {},
   tertiary: {},
   link: {},
+  link_danger: {},
 })

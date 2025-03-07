@@ -1,10 +1,8 @@
-import Dots from "@assets/images/dots-vertical.svg"
-import TrashSvg from "@assets/images/trash.svg"
-import { ChevronDownSvg } from "@assets/index"
 import { BlurView } from "@react-native-community/blur"
 import { colors } from "@utils/theme"
 import { filterNullable } from "@utils/ts-utils"
 import { ImageSourcePropType, StyleSheet, View } from "react-native"
+import { EllipsisVerticalIcon, PencilSquareIcon, TrashIcon } from "react-native-heroicons/outline"
 import { AppButton } from "./AppButton"
 import { Avatar } from "./Avatar"
 import {
@@ -36,37 +34,39 @@ export const ConnectionCard = (props: Props) => {
   )
 
   return (
-    <View >
-      <BlurView
-        blurType="xlight"
-        blurAmount={5}
-        style={{ position: "absolute", width: "100%", height: "100%", borderRadius: 8 }}
-      ></BlurView>
+    <View>
       <View style={containerStyles}>
         <Avatar src={logo} text={name} size={48} />
         <Typography style={styles.name} fontFamily="publicSans.bold" weight="500">
           {name}
         </Typography>
 
-        {onPress && (
-          <ChevronDownSvg
-            style={{ transform: [{ rotate: "270deg" }], opacity: 0.7 }}
-            onPress={onPress}
-          />
-        )}
+        {/* {onPress && <ChevronRightIcon opacity={0.7} onPress={onPress} color="black" />} */}
 
         {showActionMenu && (
           <DropdownMenu
             trigger={
               <AppButton size="sm" variant="tertiary" onPress={() => false}>
-                <Dots />
+                <EllipsisVerticalIcon color="black" />
               </AppButton>
             }
           >
+            <DropdownMenuItem key="manage-connection" textValue="Manage connection">
+              <DropdownMenuItemTitle>Manage connection</DropdownMenuItemTitle>
+              <DropdownMenuIcon ios={{ hierarchicalColor: "black", name: "square.and.pencil" }}>
+                <PencilSquareIcon color="black" />
+              </DropdownMenuIcon>
+            </DropdownMenuItem>
+            <DropdownMenuItem key="link-connection" textValue="Link connection">
+              <DropdownMenuItemTitle>Link connection</DropdownMenuItemTitle>
+              <DropdownMenuIcon ios={{ hierarchicalColor: "black", name: "square.and.pencil" }}>
+                <PencilSquareIcon color="black" />
+              </DropdownMenuIcon>
+            </DropdownMenuItem>
             <DropdownMenuItem key="delete-connection" textValue="Delete connection">
               <DropdownMenuItemTitle>Delete connection</DropdownMenuItemTitle>
               <DropdownMenuIcon ios={{ hierarchicalColor: colors.danger, name: "trash" }}>
-                <TrashSvg color={colors.danger} />
+                <TrashIcon color={colors.danger} />
               </DropdownMenuIcon>
             </DropdownMenuItem>
           </DropdownMenu>
@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     borderRadius: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
   },
   image: { width: 48, height: 48, borderRadius: 9999 },
   open: { color: colors.link, fontSize: 12 },

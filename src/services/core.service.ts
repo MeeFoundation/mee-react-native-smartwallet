@@ -16,6 +16,7 @@ type BasicInfo = {
   email: string
   firstName: string
   lastName: string
+  phone?: string
 }
 
 type SharedInfo = BasicInfo
@@ -26,12 +27,7 @@ export type Connection = {
   sharedInfo: SharedInfo
   tags: string[]
   iconSrc?: ImageRequireSource
-}
-
-const exampleInfo: BasicInfo = {
-  email: "test@gmail.com",
-  firstName: "John",
-  lastName: "Doe",
+  profile?: string
 }
 
 const tags = {
@@ -50,14 +46,24 @@ const connections: Connection[] = [
     iconSrc: IconSources.disney,
     name: "Disneydasdas",
     tags: [tags.entertainment, tags.group],
-    sharedInfo: exampleInfo,
+    sharedInfo: {
+      email: "test1@gmail.com",
+      firstName: "John",
+      lastName: "Doe",
+    },
+    profile: "Family",
   },
   {
     id: newConnectionId(),
     iconSrc: IconSources.disney,
     name: "Disney Plus",
     tags: [tags.entertainment],
-    sharedInfo: exampleInfo,
+    sharedInfo: {
+      email: "test2@gmail.com",
+      firstName: "John",
+      lastName: "Doe",
+    },
+    profile: "Family",
   },
 
   // Google tags
@@ -66,14 +72,24 @@ const connections: Connection[] = [
     iconSrc: IconSources.google,
     name: "Google connection",
     tags: [tags.google],
-    sharedInfo: exampleInfo,
+    sharedInfo: {
+      email: "test3@gmail.com",
+      firstName: "John",
+      lastName: "Doe",
+    },
+    profile: "Work",
   },
   {
     id: newConnectionId(),
     iconSrc: IconSources.google,
     name: "Google connection",
     tags: [tags.google],
-    sharedInfo: exampleInfo,
+    sharedInfo: {
+      email: "test4@gmail.com",
+      firstName: "John",
+      lastName: "Doe",
+    },
+    profile: "Work",
   },
 
   // Entertainments tags
@@ -82,14 +98,25 @@ const connections: Connection[] = [
     iconSrc: IconSources.disney,
     name: "Disney",
     tags: [tags.entertainments],
-    sharedInfo: exampleInfo,
+    sharedInfo: {
+      email: "test5@gmail.com",
+      firstName: "John",
+      lastName: "Doe",
+      phone: "+1 054 545 4544"
+    },
+    profile: "Private",
   },
   {
     id: newConnectionId(),
     iconSrc: IconSources.disneyPlus,
     name: "Disney Plus",
     tags: [tags.entertainments],
-    sharedInfo: exampleInfo,
+    sharedInfo: {
+      email: "test6@gmail.com",
+      firstName: "John",
+      lastName: "Doe",
+    },
+    profile: "Private",
   },
 
   // Social tags
@@ -98,14 +125,24 @@ const connections: Connection[] = [
     iconSrc: IconSources.google,
     name: "Google connection",
     tags: [tags.social],
-    sharedInfo: exampleInfo,
+    sharedInfo: {
+      email: "test7@gmail.com",
+      firstName: "John",
+      lastName: "Doe",
+    },
+    profile: "Private",
   },
   {
     id: newConnectionId(),
     iconSrc: IconSources.google,
     name: "Google connection",
     tags: [tags.social],
-    sharedInfo: exampleInfo,
+    sharedInfo: {
+      email: "test8@gmail.com",
+      firstName: "John",
+      lastName: "Doe",
+    },
+    profile: "Private",
   },
 
   // Smths tags
@@ -114,14 +151,22 @@ const connections: Connection[] = [
     iconSrc: IconSources.disney,
     name: "Disney",
     tags: [tags.smths],
-    sharedInfo: exampleInfo,
+    sharedInfo: {
+      email: "test9@gmail.com",
+      firstName: "John",
+      lastName: "Doe",
+    },
   },
   {
     id: newConnectionId(),
     iconSrc: IconSources.disneyPlus,
     name: "Disney Plus",
     tags: [tags.smths],
-    sharedInfo: exampleInfo,
+    sharedInfo: {
+      email: "test10@gmail.com",
+      firstName: "John",
+      lastName: "Doe",
+    },
   },
 ]
 

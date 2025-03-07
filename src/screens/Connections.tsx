@@ -1,76 +1,110 @@
-import { ChevronDownSvg, SlidersSvg } from "@assets/bootstrap-icons"
-import { Avatar } from "@components/Avatar"
 import { BackgroundLayout } from "@components/BackgroundLayout"
 import { BottomSheetBackDrop } from "@components/BottomSheet"
 import { ConnectionCard } from "@components/ConnectionCard"
+import { FilterConnections, FilterValue } from "@components/FilterConnections"
 import { Footer } from "@components/Footer"
+import { RadioList } from "@components/RadioList"
+import { Typography } from "@components/Typography"
 import BottomSheet from "@gorhom/bottom-sheet"
 import { useNavigation } from "@react-navigation/native"
 import { Connection } from "@services/core.service"
-import { ConnectionsStore, TagsStore } from "@store/index"
+import { ConnectionsStore, ProfileStore } from "@store/index"
 import { colors } from "@utils/theme"
 import { useAtomValue } from "jotai"
 import { useRef, useState } from "react"
-import { SectionList, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { SectionList, StyleSheet, TouchableOpacity, View } from "react-native"
+import { AdjustmentsVerticalIcon, ChevronDownIcon } from "react-native-heroicons/outline"
 
-const sortByTags = (selectedTags: string[], connections: Connection[]) => {
-  if (selectedTags.length === 0) {
-    return [{ title: "All", data: connections }]
+const filterByProfile = (connections: Connection[], profile: string) => {
+  if (profile === "All profiles") {
+    return [{ title: "All profiles", data: connections }]
   }
 
   const map = new Map<string, { title: string; data: Connection[] }>()
+  map.set(profile, { title: profile, data: [] })
 
-  for (const tag of selectedTags) {
-    map.set(tag, { title: tag, data: [] })
-  }
-
-  connections.forEach((connection) => {
-    connection.tags.forEach((tag) => {
-      if (map.has(tag)) {
-        map.get(tag)!.data.push(connection)
+  if (profile === "Unspecified") {
+    connections.forEach((connection) => {
+      if (!connection.profile) {
+        map.get("Unspecified")!.data.push(connection)
       }
     })
-  })
-
+  } else {
+    connections.forEach((connection) => {
+      if (connection.profile === profile) {
+        map.get(profile)!.data.push(connection)
+      }
+    })
+  }
   return Array.from(map.values())
+}
+
+const filterConnections = (connections: Connection[], filter: FilterValue, profile: string) => {
+  let filteredConnections = connections
+  if (filter.email) {
+    const email = filter.email
+    filteredConnections = filteredConnections.filter((connection) =>
+      connection.sharedInfo.email.toLowerCase().includes(email.toLowerCase()),
+    )
+  }
+  if (filter.phone) {
+    filteredConnections = filteredConnections.filter((connection) => !!connection.sharedInfo.phone)
+  }
+
+  return filterByProfile(filteredConnections, profile)
 }
 
 export function Connections() {
   const connections = useAtomValue(ConnectionsStore)
-  const allTags = useAtomValue(TagsStore)
+  const allProfiles = useAtomValue(ProfileStore)
   const bottomSheetRef = useRef<BottomSheet>(null)
-  const [selectedTags, setSelectedTags] = useState<string[]>([])
-  const filteredData = sortByTags(selectedTags, connections)
+  const filterSheetRef = useRef<BottomSheet>(null)
+  const [filter, setFilter] = useState<FilterValue>({})
+  const [selectedProfile, setSelectedProfile] = useState<string>("All profiles")
+  const [temporarySelectedProfile, setTemporarySelectedProfile] = useState<string>("All profiles")
+  const filteredData = filterConnections(connections, filter, selectedProfile)
   const navigation = useNavigation()
 
   const handlePressOpen = (id: string) => {
     navigation.navigate("Manage Connection", { id })
   }
 
-  const onPersonasPress = () => {
+  const applyProfileFilter = () => {
+    setSelectedProfile(temporarySelectedProfile)
+  }
+  const onProfilesPress = () => {
+    setTemporarySelectedProfile(selectedProfile)
     bottomSheetRef.current?.expand()
+  }
+  const onFilterPress = () => {
+    setTemporarySelectedProfile(selectedProfile)
+    filterSheetRef.current?.expand()
+  }
+
+  const clearFilters = () => {
+    setFilter({})
+  }
+
+  const applyFilters = (filter: FilterValue) => {
+    setFilter(filter)
+    filterSheetRef.current?.close()
   }
 
   return (
     <>
       <BackgroundLayout />
       <View style={styles.container}>
-        {/* <FilterTags tags={allTags} selectedTags={selectedTags} onSelectTags={setSelectedTags} /> */}
         <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 8 }}>
-          <TouchableOpacity style={styles.filterButtons} onPress={onPersonasPress}>
-            <Text style={styles.filterButtonsText}>All personas</Text>
-            <View>
-              <ChevronDownSvg height={20} width={20} />
-            </View>
+          <TouchableOpacity style={styles.filterButtons} onPress={onProfilesPress}>
+            <Typography style={styles.filterButtonsText}>{selectedProfile}</Typography>
+            <ChevronDownIcon size={20} color="black" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.filterButtons}>
-            <Text style={styles.filterButtonsText}>Filters</Text>
-            <View style={{ transform: "rotate(90deg)" }}>
-              <SlidersSvg height={20} width={20} />
-            </View>
+          <TouchableOpacity style={styles.filterButtons} onPress={onFilterPress}>
+            <Typography style={styles.filterButtonsText}>Filters</Typography>
+            <AdjustmentsVerticalIcon size={20} color="black"/>
           </TouchableOpacity>
         </View>
-        {/* <Separator style={styles.separator} /> */}
+
         <SectionList
           contentContainerStyle={{ gap: 8 }}
           sections={filteredData}
@@ -80,32 +114,41 @@ export function Connections() {
               <ConnectionCard
                 name={item.name}
                 onPress={() => handlePressOpen(item.id)}
+                showActionMenu
                 logo={item.iconSrc}
               />
             </TouchableOpacity>
-          )}
-          stickySectionHeadersEnabled
-          renderSectionHeader={({ section: { title } }) => (
-            <View style={styles.sectionHeader}>
-              <Avatar
-                text={title}
-                size={22}
-                style={{
-                  boxShadow: "0px 1px 2px 0px #0000000F, 0px 1px 3px 0px #0000001A",
-                }}
-              />
-              <Text style={styles.header}>#{title}</Text>
-            </View>
           )}
           renderSectionFooter={() => <View style={{ height: 8 }} />}
           SectionSeparatorComponent={() => <View style={styles.sectionSeparator} />}
           style={styles.sectionContainer}
         />
-
-        <BottomSheetBackDrop ref={bottomSheetRef} title="Select persona">
-          <View style={styles.addConnectionContainer}></View>
-        </BottomSheetBackDrop>
       </View>
+      <BottomSheetBackDrop
+        ref={bottomSheetRef}
+        title="Select profile"
+        rightButtonAction={applyProfileFilter}
+      >
+        <View style={styles.addConnectionContainer}>
+          <RadioList
+            data={allProfiles}
+            onSelect={setTemporarySelectedProfile}
+            selected={temporarySelectedProfile}
+          />
+        </View>
+      </BottomSheetBackDrop>
+      
+      <BottomSheetBackDrop
+        ref={filterSheetRef}
+        title="Filters"
+        rightButtonAction={clearFilters}
+        rightButtonVariant="link_danger"
+        rightButtonText="Clear All"
+      >
+        <View style={styles.addConnectionContainer}>
+          <FilterConnections filter={filter} onChangeFilter={applyFilters} />
+        </View>
+      </BottomSheetBackDrop>
       <Footer isConnectionsPage />
     </>
   )
@@ -120,6 +163,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, 0.95)",
     flexDirection: "row",
     justifyContent: "space-between",
+    height: 44,
+    alignItems: "center",
   },
   filterButtonsText: {
     fontWeight: 500,
@@ -193,6 +238,7 @@ const styles = StyleSheet.create({
   },
   addConnectionContainer: {
     flex: 1,
+    padding: 16,
     flexDirection: "column",
   },
 })

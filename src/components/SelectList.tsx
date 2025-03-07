@@ -16,7 +16,7 @@ import {
 } from "react-native"
 import { Accordion } from "./Accordion"
 import { Backdrop } from "./Backdrop"
-import { TextField } from "./TextField"
+import { SearchTextField } from "./SearchTextField"
 
 type SelectListProps = {
   data: string[]
@@ -119,7 +119,7 @@ export const SelectList: FC<SelectListProps> = ({
         onCollapse={collapseDropdown}
         style={dropdown ? { zIndex: 999 } : {}}
       >
-        <TextField
+        <SearchTextField
           placeholder={searchPlaceholder}
           onChangeText={setSearch}
           value={search}

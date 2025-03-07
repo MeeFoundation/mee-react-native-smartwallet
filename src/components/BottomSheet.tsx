@@ -9,7 +9,8 @@ import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typesc
 import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types"
 import { forwardRef, useRef } from "react"
 import { StyleSheet, View } from "react-native"
-import { AppButton } from "./AppButton"
+import { AppButton, ButtonVariant } from "./AppButton"
+import { Separator } from "./Separator"
 import { Typography } from "./Typography"
 
 const BackDrop = (props: BottomSheetBackdropProps) => {
@@ -28,6 +29,9 @@ type Props = BottomSheetProps & {
   title?: string
   ref?: React.Ref<BottomSheetMethods>
   backDropProps?: Partial<BottomSheetDefaultBackdropProps>
+  rightButtonAction?: () => void
+  rightButtonVariant?: ButtonVariant
+  rightButtonText?: string
 }
 
 export const BottomSheetBackDrop = forwardRef<BottomSheetMethods, Props>((props: Props, ref) => {
@@ -39,6 +43,9 @@ export const BottomSheetBackDrop = forwardRef<BottomSheetMethods, Props>((props:
     title,
     children,
     backDropProps,
+    rightButtonAction,
+    rightButtonVariant = "link",
+    rightButtonText = "Done",
     ...rest
   } = props
 
@@ -46,6 +53,10 @@ export const BottomSheetBackDrop = forwardRef<BottomSheetMethods, Props>((props:
 
   const handleClose = () => {
     methodsRef.current?.close()
+  }
+  const handleDone = () => {
+    methodsRef.current?.close()
+    rightButtonAction && rightButtonAction()
   }
 
   const createRef = (instanse: BottomSheetMethods) => {
@@ -68,13 +79,32 @@ export const BottomSheetBackDrop = forwardRef<BottomSheetMethods, Props>((props:
       <BottomSheetView style={styles.contentContainer}>
         {title && (
           <View style={styles.headerContainer}>
-            <AppButton onPress={handleClose} text="Cancel" variant="link" />
-            <Typography style={{ fontSize: 17 }} weight="700">
+            <View style={{ flex: 1, position: "absolute", left: 16, zIndex: 10 }}>
+              <AppButton onPress={handleClose} text="Cancel" variant="link" />
+            </View>
+            <Typography
+              style={{
+                fontSize: 17,
+                flex: 1,
+                textAlign: "center",
+              }}
+              weight="700"
+            >
               {title}
             </Typography>
+            {rightButtonAction && (
+              <View style={{ flex: 1, position: "absolute", right: 16, zIndex: 10  }}>
+                <AppButton
+                  onPress={handleDone}
+                  text={rightButtonText}
+                  variant={rightButtonVariant}
+                  style={{ flex: 1 }}
+                />
+              </View>
+            )}
           </View>
         )}
-
+        {title && <Separator style={styles.separator} />}
         {children}
       </BottomSheetView>
     </BottomSheetOrigin>
@@ -90,7 +120,12 @@ const styles = StyleSheet.create({
     padding: 16,
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
     width: "100%",
     gap: 20,
+  },
+  separator: {
+    height: 1,
+    marginVertical: 1,
   },
 })

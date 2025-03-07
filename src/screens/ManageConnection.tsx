@@ -1,4 +1,3 @@
-import { MailSvg, UserSvg } from "@assets/index"
 import { Accordion } from "@components/Accordion"
 import { ConnectionCard } from "@components/ConnectionCard"
 import { SelectTags } from "@components/SelectTags"
@@ -10,6 +9,7 @@ import { colors } from "@utils/theme"
 import { useAtom } from "jotai"
 import React, { useState } from "react"
 import { DimensionValue, Pressable, StyleSheet, View } from "react-native"
+import { EnvelopeIcon, UserIcon } from "react-native-heroicons/outline"
 
 type TabItem = {
   label: string
@@ -102,15 +102,15 @@ export const ManageConnection = () => {
           >
             <View style={styles.infoContainer}>
               <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
-                <MailSvg style={styles.infoSvg} />
+                <EnvelopeIcon color={colors.primary} />
                 <Typography style={styles.infoText}>{connection.sharedInfo.email}</Typography>
               </View>
               <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
-                <UserSvg style={styles.infoSvg} />
+                <UserIcon color={colors.primary} />
                 <Typography style={styles.infoText}>{connection.sharedInfo.firstName}</Typography>
               </View>
               <View style={styles.infoRow}>
-                <UserSvg style={styles.infoSvg} />
+                <UserIcon color={colors.primary} />
                 <Typography style={styles.infoText}>{connection.sharedInfo.lastName}</Typography>
               </View>
             </View>
