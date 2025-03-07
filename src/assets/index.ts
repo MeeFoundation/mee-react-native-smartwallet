@@ -14,11 +14,11 @@ import LogoCharSvg from "./images/logo-char.svg"
 import LogoSvg from "./images/logo.svg"
 import MailSvg from "./images/mail.svg"
 import MenuIconSvg from "./images/menu.svg"
+import NoHaveConnections from "./images/no-have-connections.svg"
 import PaperPlaneSvg from "./images/paper-plane.svg"
 import SearchSvg from "./images/search.svg"
 import UserSvg from "./images/user.svg"
 import VehicleSvg from "./images/vehicle.svg"
-
 
 export const IconSources = {
   disney: require("./images/connection/disney-icon.png"),
@@ -53,4 +53,5 @@ export {
   VehicleSvg,
   FaceIdSvg,
   CircleCheckSvg,
+  NoHaveConnections,
 }

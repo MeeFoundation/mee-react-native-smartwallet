@@ -1,3 +1,4 @@
+import { NoHaveConnections } from "@assets/index"
 import { BackgroundLayout } from "@components/BackgroundLayout"
 import { BottomSheetBackDrop } from "@components/BottomSheet"
 import { ConnectionCard } from "@components/ConnectionCard"
@@ -89,6 +90,16 @@ export function Connections() {
     setFilter(filter)
     filterSheetRef.current?.close()
   }
+  if (connections.length === 0) {
+    return (
+      <>
+        <View style={styles.emptyContainer}>
+          <NoHaveConnections style={{ flex: 1 }} height="100%" width="100%" />
+        </View>
+        <Footer isConnectionsPage />
+      </>
+    )
+  }
 
   return (
     <>
@@ -101,7 +112,7 @@ export function Connections() {
           </TouchableOpacity>
           <TouchableOpacity style={styles.filterButtons} onPress={onFilterPress}>
             <Typography style={styles.filterButtonsText}>Filters</Typography>
-            <AdjustmentsVerticalIcon size={20} color="black"/>
+            <AdjustmentsVerticalIcon size={20} color="black" />
           </TouchableOpacity>
         </View>
 
@@ -137,7 +148,7 @@ export function Connections() {
           />
         </View>
       </BottomSheetBackDrop>
-      
+
       <BottomSheetBackDrop
         ref={filterSheetRef}
         title="Filters"
@@ -174,6 +185,13 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     padding: 16,
+  },
+  emptyContainer: {
+    backgroundColor: "#FDE68A",
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
   separator: {
     height: 1,

@@ -4,8 +4,8 @@ import { useNavigation } from "@react-navigation/native"
 import { colors } from "@utils/theme"
 import { FC, useRef } from "react"
 import { StyleSheet, TouchableOpacity, View } from "react-native"
-import { Typography } from "./Typography"
 import { LinkIcon, PlusCircleIcon, ShareIcon } from "react-native-heroicons/outline"
+import { Typography } from "./Typography"
 
 type FooterProps = {
   isConnectionsPage?: boolean
@@ -27,6 +27,7 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
+          alignItems: "center",
           backgroundColor: "white",
           width: "100%",
           padding: 16,
@@ -41,16 +42,16 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
           </Typography>
         </TouchableOpacity>
         <TouchableOpacity onPress={onAddPress} style={styles.footerItem} hitSlop={8}>
-          <PlusCircleIcon size={20} />
+          <PlusCircleIcon size={20} color={"black"} />
           <Typography>Connect</Typography>
         </TouchableOpacity>
         <TouchableOpacity onPress={onAddPress} style={styles.footerItem} hitSlop={8}>
-          <ShareIcon size={20} />
+          <ShareIcon size={20} color={"black"} />
           <Typography>Share</Typography>
         </TouchableOpacity>
       </View>
 
-      <BottomSheetBackDrop ref={bottomSheetRef} title="Sites/Apps to Connect to">
+      <BottomSheetBackDrop ref={bottomSheetRef} title="Connect to">
         <View style={styles.addConnectionContainer}></View>
       </BottomSheetBackDrop>
     </>

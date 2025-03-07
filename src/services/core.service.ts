@@ -38,7 +38,7 @@ const tags = {
   smths: "Smths",
   group: "Group",
 }
-
+// const connections: Connection[] = []
 const connections: Connection[] = [
   // Entertainment tags
   {
@@ -102,7 +102,7 @@ const connections: Connection[] = [
       email: "test5@gmail.com",
       firstName: "John",
       lastName: "Doe",
-      phone: "+1 054 545 4544"
+      phone: "+1 054 545 4544",
     },
     profile: "Private",
   },

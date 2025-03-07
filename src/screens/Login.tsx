@@ -6,10 +6,10 @@ import BottomSheet from "@gorhom/bottom-sheet"
 import { isAuthenticatedState, isFirstTimeAuthState } from "@store/index"
 import { colors } from "@utils/theme"
 import { useAtom, useSetAtom } from "jotai"
+import { getIdentityContextById } from "mee-rust"
 import { useLayoutEffect, useRef, useState } from "react"
 import { Linking, Platform, StyleSheet, View } from "react-native"
 import ReactNativeBiometrics, { BiometryType } from "react-native-biometrics"
-import { getIdentityContextById } from "mee-rust"
 
 const handleOpenSettings = () => {
   if (Platform.OS === "ios") {
@@ -28,8 +28,8 @@ const getSetupPrivacyText = (type: BiometryType | null) => {
 
 export const Login = () => {
   // test that uniffi RUST function does not crush the app
-  console.log('test uniffi RUST function, next log should be `Dummy Identity`:')
-  console.log(getIdentityContextById('49').name)
+  console.log("test uniffi RUST function, next log should be `Dummy Identity`:")
+  console.log(getIdentityContextById("49").name)
   // delete code above after test at Testflight
 
   const rnBiometrics = new ReactNativeBiometrics({ allowDeviceCredentials: true })
@@ -58,7 +58,7 @@ export const Login = () => {
     if (success) setAuthenticated(true)
   }
 
-  const checkAvailibleBiometricAuth = async () => {
+  const checkAvailableBiometricAuth = async () => {
     const { available, biometryType } = await rnBiometrics.isSensorAvailable()
 
     setBiometryType(biometryType ?? null)
@@ -84,7 +84,7 @@ export const Login = () => {
   }
 
   useLayoutEffect(() => {
-    checkAvailibleBiometricAuth()
+    checkAvailableBiometricAuth()
   }, [])
 
   return (
@@ -98,16 +98,18 @@ export const Login = () => {
         ref={bottomSheetRef}
         backDropProps={{ pressBehavior: "none" }}
       >
-        <View style={styles.sheetContaier}>
-          {setupPrivacy ? <FaceIdSvg /> : <CircleCheckSvg color={colors.primary} />}
-          <Typography style={styles.sheetTitle} weight="700">
-            {setupPrivacy ? "Set up your Privacy Agent" : "All Set!"}
-          </Typography>
-          <Typography style={styles.sheetText}>
-            {setupPrivacy
-              ? getSetupPrivacyText(biometryType)
-              : `Please use ${biometryType} next time you sign-in`}
-          </Typography>
+        <View style={styles.sheetContainer}>
+          <View style={styles.infoContainer}>
+            {setupPrivacy ? <FaceIdSvg /> : <CircleCheckSvg color={colors.primary} />}
+            <Typography style={styles.sheetTitle} weight="700">
+              {setupPrivacy ? "Set up your Privacy Agent" : "All Set!"}
+            </Typography>
+            <Typography style={styles.sheetText}>
+              {setupPrivacy
+                ? getSetupPrivacyText(biometryType)
+                : `Please use ${biometryType} next time you sign-in`}
+            </Typography>
+          </View>
 
           <AppButton
             text="Continue"
@@ -134,11 +136,18 @@ const styles = StyleSheet.create({
     paddingTop: 128,
     marginHorizontal: "auto",
   },
-  sheetContaier: {
+  sheetContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 16,
+    padding: 16,
+  },
+  infoContainer: {
     flexDirection: "column",
     alignItems: "center",
     gap: 16,
-    padding: 16,
+    flex: 1,
   },
   sheetText: { textAlign: "center", marginBottom: 48 },
   sheetTitle: {

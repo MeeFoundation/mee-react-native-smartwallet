@@ -29,6 +29,7 @@ export const WelcomeItem = ({ title, text, btn = false }: WelcomeSlide) => {
         style={styles.cloudContainer}
         imageStyle={{
           resizeMode: "cover",
+          flex: 1,
           width: "100%",
           height: "100%",
         }}
