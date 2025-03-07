@@ -6,12 +6,12 @@
 //   trailingComma: 'all',
 // };
 module.exports = {
-  "useTabs": false,
-  "tabWidth": 2,
-  "printWidth": 100,
-  "semi": false,
-  "trailingComma": "all",
-  "jsxSingleQuote": false,
-  "arrowParens": "always",
-  "plugins": ["prettier-plugin-organize-imports"]
-}
+  useTabs: false,
+  tabWidth: 2,
+  printWidth: 100,
+  semi: false,
+  trailingComma: "all",
+  jsxSingleQuote: false,
+  arrowParens: "always",
+  plugins: ["prettier-plugin-organize-imports"],
+};
