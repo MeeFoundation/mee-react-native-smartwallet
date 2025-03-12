@@ -1251,27 +1251,6 @@ PODS:
     - React-Core
   - react-native-biometrics (3.0.1):
     - React-Core
-  - react-native-blur (4.4.1):
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - RCT-Folly (= 2024.01.01.00)
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-ImageManager
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - Yoga
   - react-native-ios-context-menu (3.1.0):
     - ContextMenuAuxiliaryPreview (~> 0.5)
     - DGSwiftUtilities
@@ -1959,7 +1938,6 @@ DEPENDENCIES:
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
   - react-native-aes (from `../node_modules/react-native-aes-crypto`)
   - react-native-biometrics (from `../node_modules/react-native-biometrics`)
-  - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-ios-context-menu (from `../node_modules/react-native-ios-context-menu`)
   - react-native-ios-utilities (from `../node_modules/react-native-ios-utilities`)
   - "react-native-menu (from `../node_modules/@react-native-menu/menu`)"
@@ -2083,8 +2061,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-aes-crypto"
   react-native-biometrics:
     :path: "../node_modules/react-native-biometrics"
-  react-native-blur:
-    :path: "../node_modules/@react-native-community/blur"
   react-native-ios-context-menu:
     :path: "../node_modules/react-native-ios-context-menu"
   react-native-ios-utilities:
@@ -2203,7 +2179,6 @@ SPEC CHECKSUMS:
   React-microtasksnativemodule: 01dd998649ff5f8814846b7eee84c4d57f5d3671
   react-native-aes: e38d08f68d27e85d14590b7ef0b404ceebf5f891
   react-native-biometrics: 43ed5b828646a7862dbc7945556446be00798e7d
-  react-native-blur: d480b382e8ddb4d0c29cd5c4ebacd9f3eb997cc3
   react-native-ios-context-menu: 837fd07fbd55aba005e2c10994548629d506f864
   react-native-ios-utilities: e143a68105e72df81761c611c94186e908bbbc6b
   react-native-menu: 1039ef23d86a766c890a1353e506d60ad0bb76f1

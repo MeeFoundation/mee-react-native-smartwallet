@@ -1,4 +1,3 @@
-import { BlurView } from "@react-native-community/blur"
 import { colors } from "@utils/theme"
 import { filterNullable } from "@utils/ts-utils"
 import { ImageSourcePropType, StyleSheet, View } from "react-native"
@@ -83,7 +82,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     borderRadius: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    backgroundColor: "rgba(255, 255, 255, 0.5)",
   },
   image: { width: 48, height: 48, borderRadius: 9999 },
   open: { color: colors.link, fontSize: 12 },

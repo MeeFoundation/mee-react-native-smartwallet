@@ -6,6 +6,8 @@ import ChevronDownSvg from "./images/chevron-down.svg"
 import ChevronLeftSvg from "./images/chevron-left.svg"
 import CircleCheckSvg from "./images/circle-check.svg"
 import CloseSvg from "./images/close.svg"
+import Cloud1Svg from "./images/cloud-1.svg"
+import Cloud2Svg from "./images/cloud-2.svg"
 import DatabaseSvg from "./images/database.svg"
 import FaceIdSvg from "./images/faceid.svg"
 import KeySvg from "./images/key.svg"
@@ -13,6 +15,7 @@ import LinkSvg from "./images/link.svg"
 import LogoCharSvg from "./images/logo-char.svg"
 import LogoSvg from "./images/logo.svg"
 import MailSvg from "./images/mail.svg"
+import MeeMascotSvg from "./images/mee-mascot.svg"
 import MenuIconSvg from "./images/menu.svg"
 import NoHaveConnections from "./images/no-have-connections.svg"
 import PaperPlaneSvg from "./images/paper-plane.svg"
@@ -54,4 +57,7 @@ export {
   FaceIdSvg,
   CircleCheckSvg,
   NoHaveConnections,
+  Cloud1Svg,
+  Cloud2Svg,
+  MeeMascotSvg,
 }
