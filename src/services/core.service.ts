@@ -28,6 +28,7 @@ export type Connection = {
   tags: string[]
   iconSrc?: ImageRequireSource
   profile?: string
+  isContact?: boolean
 }
 
 const tags = {

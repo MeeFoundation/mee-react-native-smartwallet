@@ -116,8 +116,8 @@ export const SelectList: FC<SelectListProps> = ({
           </View>
         }
         collapsed={false}
-        onCollapse={collapseDropdown}
-        style={dropdown ? { zIndex: 999 } : {}}
+        onToggle={(collapsed) => collapsed && collapseDropdown()}
+        propsStyles={{ container: dropdown ? { zIndex: 999 } : {} }}
       >
         <SearchTextField
           placeholder={searchPlaceholder}

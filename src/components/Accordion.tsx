@@ -6,8 +6,8 @@ type AccordionProps = {
   head: React.ReactNode
   collapsed?: boolean
   contentMaxHeight?: number
-  onCollapse?: () => void
-  style?: ViewStyle
+  onToggle?: (collapsed: boolean) => void
+  propsStyles?: { container?: ViewStyle; head?: ViewStyle; body?: ViewStyle }
 }
 
 const animationDuration = 300
@@ -17,12 +17,12 @@ export const Accordion: FC<PropsWithChildren<AccordionProps>> = ({
   collapsed = true,
   contentMaxHeight = 350,
   children,
-  onCollapse,
-  style,
+  onToggle,
+  propsStyles,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(collapsed)
-  const contentHeight = useRef(new Animated.Value(contentMaxHeight)).current
-  const spinValue = useRef(new Animated.Value(0)).current
+  const contentHeight = useRef(new Animated.Value(collapsed ? 0 : contentMaxHeight)).current
+  const spinValue = useRef(new Animated.Value(collapsed ? 1 : 0)).current
 
   const spin = spinValue.interpolate({
     inputRange: [0, 1],
@@ -31,6 +31,7 @@ export const Accordion: FC<PropsWithChildren<AccordionProps>> = ({
 
   const collapseContent = () => {
     setIsCollapsed(true)
+    onToggle?.(true)
 
     Keyboard.dismiss()
 
@@ -46,10 +47,12 @@ export const Accordion: FC<PropsWithChildren<AccordionProps>> = ({
         duration: animationDuration,
         useNativeDriver: false,
       }),
-    ]).start(() => onCollapse && onCollapse())
+    ]).start()
   }
 
   const expandContent = () => {
+    onToggle?.(false)
+
     Animated.parallel([
       Animated.timing(spinValue, {
         toValue: 0,
@@ -62,7 +65,9 @@ export const Accordion: FC<PropsWithChildren<AccordionProps>> = ({
         duration: animationDuration,
         useNativeDriver: false,
       }),
-    ]).start(() => setIsCollapsed(false))
+    ]).start(() => {
+      setIsCollapsed(false)
+    })
   }
 
   const toggleContent = () => {
@@ -74,8 +79,8 @@ export const Accordion: FC<PropsWithChildren<AccordionProps>> = ({
   }
 
   return (
-    <View style={style}>
-      <Pressable onPress={toggleContent} style={styles.head}>
+    <View style={propsStyles?.container}>
+      <Pressable onPress={toggleContent} style={[styles.head, propsStyles?.head]}>
         {head}
         <Animated.View style={{ transform: [{ rotateX: spin }] }}>
           <ChevronDownIcon size={24} />
@@ -87,7 +92,7 @@ export const Accordion: FC<PropsWithChildren<AccordionProps>> = ({
           isCollapsed ? styles.collapsedContent : null,
         ]}
       >
-        <View style={{ height: "auto", zIndex: 10 }}>{children}</View>
+        <View style={[{ height: "auto", zIndex: 10 }, propsStyles?.body]}>{children}</View>
       </Animated.View>
     </View>
   )

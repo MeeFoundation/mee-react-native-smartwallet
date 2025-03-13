@@ -1,6 +1,6 @@
 import { colors } from "@utils/theme"
 import { filterNullable } from "@utils/ts-utils"
-import { ImageSourcePropType, StyleSheet, View } from "react-native"
+import { ImageSourcePropType, StyleSheet, View, ViewStyle } from "react-native"
 import { EllipsisVerticalIcon, PencilSquareIcon, TrashIcon } from "react-native-heroicons/outline"
 import { AppButton } from "./AppButton"
 import { Avatar } from "./Avatar"
@@ -18,18 +18,13 @@ type Props = {
   border?: boolean
   onPress?: () => void
   showActionMenu?: boolean
-  noBackground?: boolean
+  style?: ViewStyle
 }
 
 export const ConnectionCard = (props: Props) => {
-  const { logo, name, border, onPress, showActionMenu } = props
-  const { noBackground } = props
+  const { logo, name, border, onPress, showActionMenu, style } = props
   const containerStyles = StyleSheet.flatten(
-    filterNullable([
-      styles.contaner,
-      border && styles.border,
-      // !noBackground && { backgroundColor: colors.surface },
-    ]),
+    filterNullable([styles.contaner, border && styles.border, style]),
   )
 
   return (
