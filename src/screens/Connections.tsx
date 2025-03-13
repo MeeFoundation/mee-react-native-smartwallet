@@ -109,8 +109,8 @@ export function Connections() {
     setFilter({})
   }
 
-  const applyFilters = (filter: FilterValue) => {
-    setFilter(filter)
+  const applyFilters = (filt: FilterValue) => {
+    setFilter(filt)
     filterSheetRef.current?.close()
   }
 
@@ -159,7 +159,7 @@ export function Connections() {
                 id: "Android",
                 title: "Android Contacts",
                 data: filteredAndroidContactsData[idx].data,
-                iconSrc: IconSources.google,
+                iconSrc: IconSources.android,
                 isContactsList: true,
               },
               ...d.data,

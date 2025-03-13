@@ -98,6 +98,7 @@ export const Accordion: FC<PropsWithChildren<AccordionProps>> = ({
         </View>
       </Pressable>
       <Animated.ScrollView
+        nestedScrollEnabled={true}
         style={[
           { height: "auto", maxHeight: contentHeight },
           isCollapsed ? styles.collapsedContent : null,

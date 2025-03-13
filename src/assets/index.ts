@@ -28,6 +28,7 @@ export const IconSources = {
   disneyPlus: require("./images/connection/disney-plus-icon.png"),
   google: require("./images/connection/google-icon.png"),
   apple: require("./images/connection/apple-icon.png"),
+  android: require("./images/connection/android-icon.png"),
   times: require("./images/connection/times.png"),
 }
 

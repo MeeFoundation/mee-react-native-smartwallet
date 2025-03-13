@@ -143,12 +143,14 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
             )}
             {Platform.OS === "android" && (
               <View style={styles.contaner}>
-                <Avatar src={IconSources.google} text={"Android contacts"} size={48} />
+                <Avatar src={IconSources.android} text={"Android contacts"} size={48} />
                 <Typography style={styles.name} fontFamily="publicSans.bold" weight="500">
                   Android contacts
                 </Typography>
 
                 <Pressable
+                  // some bug on the android, last block stretching beyond the parent and even screen
+                  style={{ maxWidth: 50 }}
                   onPress={async () => {
                     const contacts = await getAndroidContacts()
                     setContacts(contacts)
@@ -203,7 +205,6 @@ const styles = StyleSheet.create({
 
     borderWidth: 1,
     borderColor: "rgba(255, 255, 255, 0.80)",
-    // filter: "blur(5px)",
   },
   image: { width: 48, height: 48, borderRadius: 9999 },
   name: { flexGrow: 1 },
