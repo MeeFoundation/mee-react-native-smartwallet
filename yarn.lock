@@ -6551,6 +6551,11 @@ react-native-biometrics@^3.0.1:
   resolved "https://registry.yarnpkg.com/react-native-biometrics/-/react-native-biometrics-3.0.1.tgz#23c5a0bdbae1fcb1e08b22936223fe0fc4af846e"
   integrity sha512-Ru80gXRa9KG04sl5AB9HyjLjVbduhqZVjA+AiOSGqr+fNqCDmCu9y5WEksnjbnniNLmq1yGcw+qcLXmR1ddLDQ==
 
+react-native-contacts@^8.0.4:
+  version "8.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-8.0.4.tgz#3bc791497a8442321cbc4bc1a93ac51622d8e8d1"
+  integrity sha512-uBwYlavWS1KjULKk7xLCZcLr6vQcmqLIeHzWY+MEKGtT28YjAlWG87N0bCaRKZSXvz/o/09tVqzU0ZOpkkJC1w==
+
 react-native-gesture-handler@^2.21.2:
   version "2.22.0"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.22.0.tgz#d90dad3e4d7fe149e3d1d445f697b487f717ac8e"

@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native"
 import { colors } from "@utils/theme"
 import { useState } from "react"
-import { ImageSourcePropType, StyleSheet, TouchableOpacity } from "react-native"
+import { ImageSourcePropType, StyleSheet, Text, View } from "react-native"
 import { Connection } from "../services/core.service"
 import { Accordion } from "./Accordion"
 import { ConnectionCard } from "./ConnectionCard"
@@ -28,9 +28,14 @@ export const AccordionCard = (props: Props) => {
   return (
     <Accordion
       propsStyles={{
-        container: { ...styles.contaner, ...(collapsed ? {} : styles.border) },
+        container: { ...styles.container, ...(collapsed ? {} : styles.border) },
         body: styles.body,
-        head: { ...styles.head, ...(collapsed ? {} : styles.headNotCollapsed) },
+        head: {
+          ...styles.head,
+          ...(collapsed ? {} : styles.headNotCollapsed),
+          ...(!collapsed && innerConnections.length === 0 ? { borderRadius: 8 } : {}),
+        },
+        arrow: styles.arrow,
       }}
       head={
         <ConnectionCard
@@ -41,22 +46,28 @@ export const AccordionCard = (props: Props) => {
       }
       collapsed={INITIAL_COLLAPSED}
       onToggle={setCollapsed}
+      contentMaxHeight={400}
+      rightHeadLabel={<Text style={styles.rightHeadLabel}>({innerConnections.length})</Text>}
     >
-      {innerConnections.map((connection) => (
-        <TouchableOpacity onPress={() => handlePressOpen(connection.id)}>
+      <View style={styles.contactsWrapper}>
+        {innerConnections.map((connection) => (
+          // <TouchableOpacity key={connection.id} onPress={() => handlePressOpen(connection.id)}>
           <ConnectionCard
+            key={connection.id}
             name={connection.name}
             onPress={() => handlePressOpen(connection.id)}
             logo={connection.iconSrc}
+            showActionMenu
           />
-        </TouchableOpacity>
-      ))}
+          // </TouchableOpacity>
+        ))}
+      </View>
     </Accordion>
   )
 }
 
 const styles = StyleSheet.create({
-  contaner: {
+  container: {
     borderRadius: 8,
     backgroundColor: "rgba(255, 255, 255, 0.5)",
   },
@@ -70,17 +81,11 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
   },
-  image: {
-    width: 48,
-    height: 48,
-    borderRadius: 9999,
+  arrow: {
+    padding: 4,
   },
-  open: {
-    color: colors.link,
-    fontSize: 12,
-  },
-  name: {
-    flexGrow: 1,
+  contactsWrapper: {
+    gap: 8,
   },
   border: {
     borderColor: colors.primary,
@@ -88,5 +93,10 @@ const styles = StyleSheet.create({
   },
   headNotCollapsed: {
     backgroundColor: "rgba(255, 255, 255, 0.9)",
+  },
+  rightHeadLabel: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: colors["gray-600"],
   },
 })

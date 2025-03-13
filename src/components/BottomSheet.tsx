@@ -8,7 +8,7 @@ import {
 import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types"
 import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types"
 import { forwardRef, useRef } from "react"
-import { StyleSheet, View } from "react-native"
+import { StyleSheet, View, ViewStyle } from "react-native"
 import { AppButton, ButtonVariant } from "./AppButton"
 import { Separator } from "./Separator"
 import { Typography } from "./Typography"
@@ -32,6 +32,7 @@ type Props = BottomSheetProps & {
   rightButtonAction?: () => void
   rightButtonVariant?: ButtonVariant
   rightButtonText?: string
+  propsStyles?: { contentContainer?: ViewStyle }
 }
 
 export const BottomSheetBackDrop = forwardRef<BottomSheetMethods, Props>((props: Props, ref) => {
@@ -46,6 +47,7 @@ export const BottomSheetBackDrop = forwardRef<BottomSheetMethods, Props>((props:
     rightButtonAction,
     rightButtonVariant = "link",
     rightButtonText = "Done",
+    propsStyles,
     ...rest
   } = props
 
@@ -76,7 +78,7 @@ export const BottomSheetBackDrop = forwardRef<BottomSheetMethods, Props>((props:
       containerStyle={{ zIndex: 102 }}
       {...rest}
     >
-      <BottomSheetView style={styles.contentContainer}>
+      <BottomSheetView style={[styles.contentContainer, propsStyles?.contentContainer]}>
         {title && (
           <View style={styles.headerContainer}>
             <View style={{ flex: 1, position: "absolute", left: 16, zIndex: 10 }}>
@@ -93,7 +95,7 @@ export const BottomSheetBackDrop = forwardRef<BottomSheetMethods, Props>((props:
               {title}
             </Typography>
             {rightButtonAction && (
-              <View style={{ flex: 1, position: "absolute", right: 16, zIndex: 10  }}>
+              <View style={{ flex: 1, position: "absolute", right: 16, zIndex: 10 }}>
                 <AppButton
                   onPress={handleDone}
                   text={rightButtonText}
@@ -126,6 +128,9 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 1,
+    width: "100%",
     marginVertical: 1,
+    backgroundColor: "rgba(60, 60, 67, 0.36)",
+    opacity: 0.3,
   },
 })

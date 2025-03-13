@@ -9,12 +9,16 @@ import { Typography } from "@components/Typography"
 import BottomSheet from "@gorhom/bottom-sheet"
 import { useNavigation } from "@react-navigation/native"
 import { Connection } from "@services/core.service"
-import { ConnectionsStore, ProfileStore } from "@store/index"
+import { ConnectionsStore, ContactsStore, ProfileStore } from "@store/index"
 import { colors } from "@utils/theme"
 import { useAtomValue } from "jotai"
-import { useRef, useState } from "react"
+import { sortBy } from "lodash-es"
+import { useMemo, useRef, useState } from "react"
 import { SectionList, StyleSheet, TouchableOpacity, View } from "react-native"
 import { AdjustmentsVerticalIcon, ChevronDownIcon } from "react-native-heroicons/outline"
+import { IconSources } from "../assets"
+import { AccordionCard } from "../components/AccordionCard"
+import { filterNullable } from "../utils/ts-utils"
 
 const filterByProfile = (connections: Connection[], profile: string) => {
   if (profile === "All profiles") {
@@ -45,7 +49,7 @@ const filterConnections = (connections: Connection[], filter: FilterValue, profi
   if (filter.email) {
     const email = filter.email
     filteredConnections = filteredConnections.filter((connection) =>
-      connection.sharedInfo.email.toLowerCase().includes(email.toLowerCase()),
+      connection.sharedInfo.email?.toLowerCase().includes(email.toLowerCase()),
     )
   }
   if (filter.phone) {
@@ -57,13 +61,32 @@ const filterConnections = (connections: Connection[], filter: FilterValue, profi
 
 export function Connections() {
   const connections = useAtomValue(ConnectionsStore)
+  const contacts = useAtomValue(ContactsStore)
   const allProfiles = useAtomValue(ProfileStore)
   const bottomSheetRef = useRef<BottomSheet>(null)
   const filterSheetRef = useRef<BottomSheet>(null)
   const [filter, setFilter] = useState<FilterValue>({})
   const [selectedProfile, setSelectedProfile] = useState<string>("All profiles")
   const [temporarySelectedProfile, setTemporarySelectedProfile] = useState<string>("All profiles")
-  const filteredData = filterConnections(connections, filter, selectedProfile)
+
+  const filteredIosContactsData = useMemo(
+    () =>
+      !contacts.data?.ios
+        ? []
+        : sortBy(filterConnections(contacts.data.ios, filter, selectedProfile), "title"),
+    [contacts, filter, selectedProfile],
+  )
+  const filteredAndroidContactsData = useMemo(
+    () =>
+      !contacts.data?.android
+        ? []
+        : sortBy(filterConnections(contacts.data.android, filter, selectedProfile), "title"),
+    [contacts, filter, selectedProfile],
+  )
+  const filteredData = useMemo(
+    () => sortBy(filterConnections(connections, filter, selectedProfile), "title"),
+    [connections, filter, selectedProfile],
+  )
   const navigation = useNavigation()
 
   const handlePressOpen = (id: string) => {
@@ -90,7 +113,11 @@ export function Connections() {
     setFilter(filter)
     filterSheetRef.current?.close()
   }
-  if (connections.length === 0) {
+
+  if (
+    (!contacts.data || (contacts.data.ios?.length === 0 && contacts.data.android?.length === 0)) &&
+    connections.length === 0
+  ) {
     return (
       <>
         <View style={styles.emptyContainer}>
@@ -118,18 +145,45 @@ export function Connections() {
 
         <SectionList
           contentContainerStyle={{ gap: 8 }}
-          sections={filteredData}
+          sections={filteredData.map((d, idx) => ({
+            ...d,
+            data: filterNullable([
+              contacts.data?.ios && {
+                id: "Apple",
+                title: "Apple Contacts",
+                data: filteredIosContactsData[idx].data,
+                iconSrc: IconSources.apple,
+                isContactsList: true,
+              },
+              contacts.data?.android && {
+                id: "Android",
+                title: "Android Contacts",
+                data: filteredAndroidContactsData[idx].data,
+                iconSrc: IconSources.google,
+                isContactsList: true,
+              },
+              ...d.data,
+            ]),
+          }))}
           keyExtractor={(item, index) => item.id + index}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => handlePressOpen(item.id)}>
-              <ConnectionCard
-                name={item.name}
-                onPress={() => handlePressOpen(item.id)}
-                showActionMenu
-                logo={item.iconSrc}
+          renderItem={({ item }) =>
+            "isContactsList" in item ? (
+              <AccordionCard
+                innerConnections={item.data}
+                title={item.title}
+                iconSrc={item.iconSrc}
               />
-            </TouchableOpacity>
-          )}
+            ) : (
+              <TouchableOpacity onPress={() => handlePressOpen(item.id)}>
+                <ConnectionCard
+                  name={item.name}
+                  onPress={() => handlePressOpen(item.id)}
+                  showActionMenu
+                  logo={item.iconSrc}
+                />
+              </TouchableOpacity>
+            )
+          }
           renderSectionFooter={() => <View style={{ height: 8 }} />}
           SectionSeparatorComponent={() => <View style={styles.sectionSeparator} />}
           style={styles.sectionContainer}

@@ -7,7 +7,8 @@ type AccordionProps = {
   collapsed?: boolean
   contentMaxHeight?: number
   onToggle?: (collapsed: boolean) => void
-  propsStyles?: { container?: ViewStyle; head?: ViewStyle; body?: ViewStyle }
+  propsStyles?: { container?: ViewStyle; head?: ViewStyle; body?: ViewStyle; arrow?: ViewStyle }
+  rightHeadLabel?: React.ReactNode
 }
 
 const animationDuration = 300
@@ -19,6 +20,7 @@ export const Accordion: FC<PropsWithChildren<AccordionProps>> = ({
   children,
   onToggle,
   propsStyles,
+  rightHeadLabel,
 }) => {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(collapsed)
   const contentHeight = useRef(new Animated.Value(collapsed ? 0 : contentMaxHeight)).current
@@ -82,18 +84,27 @@ export const Accordion: FC<PropsWithChildren<AccordionProps>> = ({
     <View style={propsStyles?.container}>
       <Pressable onPress={toggleContent} style={[styles.head, propsStyles?.head]}>
         {head}
-        <Animated.View style={{ transform: [{ rotateX: spin }] }}>
-          <ChevronDownIcon size={24} />
-        </Animated.View>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 10,
+          }}
+        >
+          {rightHeadLabel}
+          <Animated.View style={[propsStyles?.arrow, { transform: [{ rotateX: spin }] }]}>
+            <ChevronDownIcon size={24} />
+          </Animated.View>
+        </View>
       </Pressable>
-      <Animated.View
+      <Animated.ScrollView
         style={[
           { height: "auto", maxHeight: contentHeight },
           isCollapsed ? styles.collapsedContent : null,
         ]}
       >
         <View style={[{ height: "auto", zIndex: 10 }, propsStyles?.body]}>{children}</View>
-      </Animated.View>
+      </Animated.ScrollView>
     </View>
   )
 }

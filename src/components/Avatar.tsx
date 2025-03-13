@@ -2,10 +2,11 @@ import { generateColorHsl } from "@utils/color"
 import { colors } from "@utils/theme"
 import { FC } from "react"
 import { Image, ImageSourcePropType, StyleSheet, Text, View, ViewStyle } from "react-native"
+import { getImageSource } from "../utils/getImageSource"
 
 type AvatarProps = {
   text: string
-  src?: ImageSourcePropType
+  src?: ImageSourcePropType | string
   size?: number
   style?: ViewStyle
 }
@@ -22,7 +23,7 @@ export const Avatar: FC<AvatarProps> = ({ text, src, size = 24, style }) => {
         style,
       ]}
     >
-      {src && <Image source={src} style={styles.avatarImg} />}
+      {src && <Image source={getImageSource(src)} style={styles.avatarImg} />}
       {!src && <Text style={styles.avatarText}>{text.charAt(0).toUpperCase()}</Text>}
     </View>
   )

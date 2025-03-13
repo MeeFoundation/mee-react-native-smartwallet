@@ -13,7 +13,7 @@ const idGenerator = () => {
 const newConnectionId = idGenerator()
 
 type BasicInfo = {
-  email: string
+  email?: string
   firstName: string
   lastName: string
   phone?: string
@@ -26,7 +26,7 @@ export type Connection = {
   name: string
   sharedInfo: SharedInfo
   tags: string[]
-  iconSrc?: ImageRequireSource
+  iconSrc?: ImageRequireSource | string
   profile?: string
   isContact?: boolean
 }

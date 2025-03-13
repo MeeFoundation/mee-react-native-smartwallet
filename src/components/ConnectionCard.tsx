@@ -13,7 +13,7 @@ import {
 import { Typography } from "./Typography"
 
 type Props = {
-  logo?: ImageSourcePropType
+  logo?: ImageSourcePropType | string
   name: string
   border?: boolean
   onPress?: () => void
