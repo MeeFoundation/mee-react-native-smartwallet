@@ -8,8 +8,10 @@ module.exports = {
   },
   rules: {
     quotes: ["warn", "double"],
-    semi: "never",
+    semi: "off",
     // was warn by default
+    "react-native/no-inline-styles": "off",
+    "react/react-in-jsx-scope": "off",
     "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-explicit-any": "off",
