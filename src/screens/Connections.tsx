@@ -172,6 +172,7 @@ export function Connections() {
                 innerConnections={item.data}
                 title={item.title}
                 iconSrc={item.iconSrc}
+                innerElHeight={64}
               />
             ) : (
               <TouchableOpacity onPress={() => handlePressOpen(item.id)}>

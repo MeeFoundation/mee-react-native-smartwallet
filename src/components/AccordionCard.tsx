@@ -10,11 +10,12 @@ type Props = {
   innerConnections: Connection[]
   title: string
   iconSrc: ImageSourcePropType
+  innerElHeight: number
 }
 
 const INITIAL_COLLAPSED = true
 export const AccordionCard = (props: Props) => {
-  const { innerConnections, title, iconSrc } = props
+  const { innerConnections, title, iconSrc, innerElHeight } = props
 
   const navigation = useNavigation()
   const [collapsed, setCollapsed] = useState(INITIAL_COLLAPSED)
@@ -46,7 +47,11 @@ export const AccordionCard = (props: Props) => {
       }
       collapsed={INITIAL_COLLAPSED}
       onToggle={setCollapsed}
-      contentMaxHeight={400}
+      contentMaxHeight={
+        innerConnections.length * (innerElHeight + 8) + 8 > 400
+          ? 400
+          : innerConnections.length * (innerElHeight + 8) + 8
+      }
       rightHeadLabel={<Text style={styles.rightHeadLabel}>({innerConnections.length})</Text>}
     >
       <View style={styles.contactsWrapper}>

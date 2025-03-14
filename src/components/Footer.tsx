@@ -52,7 +52,7 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
       }
     } catch (err) {
       console.error("Error fetching contacts: ", err)
-      return { data: [], error: "Error fetching contacts: " + err }
+      return { error: "Error fetching contacts: " + err }
     }
   }
 
