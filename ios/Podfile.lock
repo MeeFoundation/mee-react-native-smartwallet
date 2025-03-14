@@ -48,6 +48,7 @@ PODS:
     - React-RCTText (= 0.76.5)
     - React-RCTVibration (= 0.76.5)
   - React-callinvoker (0.76.5)
+  - React-Codegen (0.1.0)
   - React-Core (0.76.5):
     - glog
     - hermes-engine
@@ -1251,6 +1252,28 @@ PODS:
     - React-Core
   - react-native-biometrics (3.0.1):
     - React-Core
+  - react-native-contacts (8.0.4):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - react-native-ios-context-menu (3.1.0):
     - ContextMenuAuxiliaryPreview (~> 0.5)
     - DGSwiftUtilities
@@ -1938,6 +1961,7 @@ DEPENDENCIES:
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
   - react-native-aes (from `../node_modules/react-native-aes-crypto`)
   - react-native-biometrics (from `../node_modules/react-native-biometrics`)
+  - react-native-contacts (from `../node_modules/react-native-contacts`)
   - react-native-ios-context-menu (from `../node_modules/react-native-ios-context-menu`)
   - react-native-ios-utilities (from `../node_modules/react-native-ios-utilities`)
   - "react-native-menu (from `../node_modules/@react-native-menu/menu`)"
@@ -1982,6 +2006,7 @@ SPEC REPOS:
     - ComputableLayout
     - ContextMenuAuxiliaryPreview
     - DGSwiftUtilities
+    - React-Codegen
     - SocketRocket
     - uniffi-bindgen-react-native
 
@@ -2061,6 +2086,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-aes-crypto"
   react-native-biometrics:
     :path: "../node_modules/react-native-biometrics"
+  react-native-contacts:
+    :path: "../node_modules/react-native-contacts"
   react-native-ios-context-menu:
     :path: "../node_modules/react-native-ios-context-menu"
   react-native-ios-utilities:
@@ -2154,6 +2181,7 @@ SPEC CHECKSUMS:
   RCTTypeSafety: e9a6e7d48184646eb0610295b74c0dd02768cbb2
   React: fffb3cf1b0d7aee03c4eb4952b2d58783615e9fa
   React-callinvoker: 3c6ecc0315d42924e01b3ddc25cf2e49d33da169
+  React-Codegen: 4b8b4817cea7a54b83851d4c1f91f79aa73de30a
   React-Core: 1a5ddefb00dd72644171dd39bb4bbcd7849c70f0
   React-CoreModules: 8de64f712fe272ed08f37aaf64633ddf793e70d3
   React-cxxreact: e204185e1da1c843fec2bbb10bcc5b5800355dfa
@@ -2179,6 +2207,7 @@ SPEC CHECKSUMS:
   React-microtasksnativemodule: 01dd998649ff5f8814846b7eee84c4d57f5d3671
   react-native-aes: e38d08f68d27e85d14590b7ef0b404ceebf5f891
   react-native-biometrics: 43ed5b828646a7862dbc7945556446be00798e7d
+  react-native-contacts: ae9a133e44dbf7934a2aadb331c022817c0c6ba3
   react-native-ios-context-menu: 837fd07fbd55aba005e2c10994548629d506f864
   react-native-ios-utilities: e143a68105e72df81761c611c94186e908bbbc6b
   react-native-menu: 1039ef23d86a766c890a1353e506d60ad0bb76f1

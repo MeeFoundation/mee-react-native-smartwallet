@@ -2,9 +2,22 @@ import { BottomSheetBackDrop } from "@components/BottomSheet"
 import BottomSheet from "@gorhom/bottom-sheet"
 import { useNavigation } from "@react-navigation/native"
 import { colors } from "@utils/theme"
+import { useSetAtom } from "jotai"
 import { FC, useRef } from "react"
-import { StyleSheet, TouchableOpacity, View } from "react-native"
+import {
+  PermissionsAndroid,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native"
+import Contacts from "react-native-contacts"
 import { LinkIcon, PlusCircleIcon, ShareIcon } from "react-native-heroicons/outline"
+import { IconSources } from "../assets"
+import { ContactsStore } from "../store"
+import { Avatar } from "./Avatar"
 import { Typography } from "./Typography"
 
 type FooterProps = {
@@ -14,6 +27,53 @@ type FooterProps = {
 export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
   const bottomSheetRef = useRef<BottomSheet>(null)
   const navigation = useNavigation()
+
+  const setContacts = useSetAtom(ContactsStore)
+
+  const getContacts = async () => {
+    try {
+      const nativeContacts = await Contacts.getAll()
+      return {
+        data: nativeContacts.map((nativeContact) => ({
+          id: nativeContact.recordID,
+          name:
+            nativeContact.displayName || `${nativeContact.familyName} ${nativeContact.givenName}`,
+          sharedInfo: {
+            email: nativeContact.emailAddresses[0]?.email as string | undefined,
+            firstName: nativeContact.givenName,
+            lastName: nativeContact.familyName,
+            phone: nativeContact.phoneNumbers[0]?.number as string | undefined,
+          },
+          tags: [],
+          iconSrc: nativeContact.thumbnailPath,
+          // profile?: string
+          isContact: true,
+        })),
+      }
+    } catch (err) {
+      console.error("Error fetching contacts: ", err)
+      return { error: "Error fetching contacts: " + err }
+    }
+  }
+
+  const getIosContacts = async () => {
+    const contacts = await getContacts()
+    return { error: contacts.error, data: { ios: contacts.data } }
+  }
+
+  const getAndroidContacts = async () => {
+    const permission = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+    )
+    if (permission !== PermissionsAndroid.RESULTS.GRANTED) {
+      console.error("Permission denied")
+      return { error: "Permission denied" }
+    }
+
+    const contacts = await getContacts()
+    return { error: contacts.error, data: { android: contacts.data } }
+  }
+
   const onAddPress = () => {
     bottomSheetRef.current?.expand()
   }
@@ -51,8 +111,58 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
         </TouchableOpacity>
       </View>
 
-      <BottomSheetBackDrop ref={bottomSheetRef} title="Connect to">
-        <View style={styles.addConnectionContainer}></View>
+      <BottomSheetBackDrop
+        ref={bottomSheetRef}
+        title="Connect to"
+        propsStyles={{
+          contentContainer: {
+            backgroundColor: "rgba(242, 242, 242, 0.93)",
+          },
+        }}
+      >
+        <View style={styles.addConnectionContainer}>
+          <View style={styles.addConnectionItem}>
+            <Text style={styles.title}>Your contacts</Text>
+            {Platform.OS === "ios" && (
+              <View style={styles.contaner}>
+                <Avatar src={IconSources.apple} text={"Apple contacts"} size={48} />
+                <Typography style={styles.name} fontFamily="publicSans.bold" weight="500">
+                  Apple contacts
+                </Typography>
+
+                <Pressable
+                  onPress={async () => {
+                    const contacts = await getIosContacts()
+                    setContacts(contacts)
+                    bottomSheetRef.current?.close()
+                  }}
+                >
+                  <Typography style={styles.connectText}>Connect</Typography>
+                </Pressable>
+              </View>
+            )}
+            {Platform.OS === "android" && (
+              <View style={styles.contaner}>
+                <Avatar src={IconSources.android} text={"Android contacts"} size={48} />
+                <Typography style={styles.name} fontFamily="publicSans.bold" weight="500">
+                  Android contacts
+                </Typography>
+
+                <Pressable
+                  // some bug on the android, last block stretching beyond the parent and even screen
+                  style={{ maxWidth: 50 }}
+                  onPress={async () => {
+                    const contacts = await getAndroidContacts()
+                    setContacts(contacts)
+                    bottomSheetRef.current?.close()
+                  }}
+                >
+                  <Typography style={styles.connectText}>Connect</Typography>
+                </Pressable>
+              </View>
+            )}
+          </View>
+        </View>
       </BottomSheetBackDrop>
     </>
   )
@@ -62,6 +172,13 @@ const styles = StyleSheet.create({
   addConnectionContainer: {
     flex: 1,
     flexDirection: "column",
+    width: "100%",
+    padding: 16,
+  },
+  addConnectionItem: {
+    alignItems: "flex-start",
+    width: "100%",
+    gap: 8,
   },
   footerItem: {
     flex: 1,
@@ -70,4 +187,27 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+
+  title: {
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: 500,
+  },
+  contaner: {
+    padding: 8,
+    paddingRight: 24,
+    gap: 8,
+    alignItems: "center",
+    flexDirection: "row",
+    borderRadius: 8,
+    width: "100%",
+    backgroundColor: "rgba(255, 255, 255, 0.6)",
+
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.80)",
+  },
+  image: { width: 48, height: 48, borderRadius: 9999 },
+  name: { flexGrow: 1 },
+  border: { borderColor: colors.primary, borderWidth: 2 },
+  connectText: { color: colors.link, fontSize: 12, lineHeight: 16 },
 })
