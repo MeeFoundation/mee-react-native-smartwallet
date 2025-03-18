@@ -201,11 +201,6 @@ export function RootStack() {
           />
           <Stack.Screen
             options={{ headerLeft: backButton }}
-            name={rootNavigationLinks.test}
-            component={Test}
-          />
-          <Stack.Screen
-            options={{ headerLeft: backButton }}
             name={rootNavigationLinks.settings}
             component={Settings}
           />
