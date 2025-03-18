@@ -96,7 +96,11 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
         }}
       >
         <TouchableOpacity onPress={ConnectionsPress} style={styles.footerItem} hitSlop={8}>
-          <LinkIcon size={20} color={isConnectionsPage ? colors.primary : "black"} />
+          <LinkIcon
+            size={20}
+            color={isConnectionsPage ? colors.primary : "black"}
+            strokeWidth={isConnectionsPage ? 2 : 1}
+          />
           <Typography style={{ color: isConnectionsPage ? colors.primary : "black" }}>
             Connections
           </Typography>

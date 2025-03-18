@@ -6,9 +6,12 @@ import { AppButton } from "./AppButton"
 import { Avatar } from "./Avatar"
 import {
   DropdownMenu,
+  DropdownMenuContent,
   DropdownMenuIcon,
   DropdownMenuItem,
   DropdownMenuItemTitle,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "./DropdownMenu"
 import { Typography } from "./Typography"
 
@@ -38,31 +41,39 @@ export const ConnectionCard = (props: Props) => {
         {/* {onPress && <ChevronRightIcon opacity={0.7} onPress={onPress} color="black" />} */}
 
         {showActionMenu && (
-          <DropdownMenu
-            trigger={
+          <DropdownMenu>
+            <DropdownMenuTrigger>
               <AppButton size="sm" variant="tertiary" onPress={() => false}>
                 <EllipsisVerticalIcon color="black" />
               </AppButton>
-            }
-          >
-            <DropdownMenuItem key="manage-connection" textValue="Manage connection">
-              <DropdownMenuItemTitle>Manage connection</DropdownMenuItemTitle>
-              <DropdownMenuIcon ios={{ hierarchicalColor: "black", name: "square.and.pencil" }}>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem key="manage-connection" textValue="Manage connection">
+                <DropdownMenuItemTitle>Manage connection</DropdownMenuItemTitle>
+                <DropdownMenuIcon ios={{ hierarchicalColor: "black", name: "square.and.pencil" }}>
+                  <PencilSquareIcon color="black" />
+                </DropdownMenuIcon>
+              </DropdownMenuItem>
+              <DropdownMenuItem key="link-connection" textValue="Link connection">
+                <DropdownMenuItemTitle>Link connection</DropdownMenuItemTitle>
+                <DropdownMenuIcon ios={{ hierarchicalColor: "black", name: "square.and.pencil" }}>
+                  <PencilSquareIcon color="black" />
+                </DropdownMenuIcon>
                 <PencilSquareIcon color="black" />
-              </DropdownMenuIcon>
-            </DropdownMenuItem>
-            <DropdownMenuItem key="link-connection" textValue="Link connection">
-              <DropdownMenuItemTitle>Link connection</DropdownMenuItemTitle>
-              <DropdownMenuIcon ios={{ hierarchicalColor: "black", name: "square.and.pencil" }}>
-                <PencilSquareIcon color="black" />
-              </DropdownMenuIcon>
-            </DropdownMenuItem>
-            <DropdownMenuItem key="delete-connection" textValue="Delete connection">
-              <DropdownMenuItemTitle>Delete connection</DropdownMenuItemTitle>
-              <DropdownMenuIcon ios={{ hierarchicalColor: colors.danger, name: "trash" }}>
-                <TrashIcon color={colors.danger} />
-              </DropdownMenuIcon>
-            </DropdownMenuItem>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem key="delete-connection" textValue="Delete connection">
+                <DropdownMenuItemTitle color={colors.danger}>
+                  Delete connection
+                </DropdownMenuItemTitle>
+                <DropdownMenuIcon
+                  ios={{ hierarchicalColor: colors.danger, name: "trash" }}
+                  androidIconName="ic_menu_delete"
+                >
+                  <TrashIcon color={colors.danger} />
+                </DropdownMenuIcon>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
           </DropdownMenu>
         )}
       </View>

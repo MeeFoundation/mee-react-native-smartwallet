@@ -11,13 +11,13 @@ export const HeaderRight = () => {
   return (
     <View style={{ ...styles.horizontalGaps, ...styles.menu }}>
       <TouchableOpacity style={styles.pressable}>
-        <MagnifyingGlassIcon color={colors.white} />
+        <MagnifyingGlassIcon color={colors.white} strokeWidth={2} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.pressable}>
-        <BellIcon color={colors.white} />
+        <BellIcon color={colors.white} strokeWidth={2} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.pressable} onPress={open}>
-        <Bars3Icon color={colors.white} />
+        <Bars3Icon color={colors.white} strokeWidth={2} />
       </TouchableOpacity>
     </View>
   )

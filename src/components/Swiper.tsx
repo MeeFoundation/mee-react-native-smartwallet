@@ -66,7 +66,7 @@ export const Swiper = <T,>({
             onPress={scrollPrev}
             disabled={currentIndex === 0}
           >
-            <ChevronLeftIcon color={colors.primary} size={24} />
+            <ChevronLeftIcon color={colors.primary} size={24} strokeWidth={2} />
           </AnimatedTouchable>
           <Paginator data={data} scrollX={sliderPos} />
           <AnimatedTouchable
@@ -78,6 +78,7 @@ export const Swiper = <T,>({
               color={colors.primary}
               style={{ transform: [{ rotate: "180deg" }] }}
               size={24}
+              strokeWidth={2}
             />
           </AnimatedTouchable>
         </View>

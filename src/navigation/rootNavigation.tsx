@@ -1,6 +1,5 @@
 import { AppButton } from "@components/AppButton"
 import { HeaderLeft, HeaderRight } from "@components/Header"
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { useNavigation } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { Connections } from "@screens/Connections"
@@ -8,22 +7,26 @@ import { DataGenerating } from "@screens/DataGenerating"
 import { Login } from "@screens/Login"
 import { ManageConnection } from "@screens/ManageConnection"
 import { Settings } from "@screens/Settings"
+import { Test } from "@screens/Test"
 import { Welcome } from "@screens/Welcome"
 import { isAuthenticatedState } from "@store/index"
 import { colors, fonts } from "@utils/theme"
 import { useAtomValue } from "jotai"
 import { Fragment, useEffect } from "react"
 import { Platform, StatusBar } from "react-native"
-import { ChevronLeftIcon, LinkIcon } from "react-native-heroicons/outline"
+import { ChevronLeftIcon } from "react-native-heroicons/outline"
 
 export const rootNavigationLinks = {
   home: "Home",
   welcome: "Welcome",
+  welcomeItem: "Welcome Item",
   dataGenerating: "DataGenerating",
   getStarted: "Get Started",
   connections: "Connections",
+  connectionsItem: "Connections Item",
   categories: "Categories",
   manageConnection: "Manage Connection",
+  test: "Test",
   settings: "Settings",
   login: "Login",
 } as const
@@ -59,46 +62,46 @@ const screenOptions = {
 }
 
 const Stack = createNativeStackNavigator()
-const Tab = createBottomTabNavigator()
+// const Tab = createBottomTabNavigator()
 
-const TabsStack = () => {
-  useEffect(() => {
-    if (Platform.OS === "android") {
-      StatusBar.setBackgroundColor(colors.primary)
-    }
-  }, [])
+// const TabsStack = () => {
+//   useEffect(() => {
+//     if (Platform.OS === "android") {
+//       StatusBar.setBackgroundColor(colors.primary)
+//     }
+//   }, [])
 
-  return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarActiveTintColor: colors.tabBarActiveColor,
-        tabBarInactiveTintColor: colors.primary,
-        tabBarLabelStyle: {
-          fontFamily: fonts.publicSans.regular,
-        },
-        headerStyle: { backgroundColor: colors.primary },
-        headerLeft: HeaderLeft,
-        headerRight: HeaderRight,
-        headerTitle: "",
-      }}
-    >
-      <Tab.Screen
-        name={rootNavigationLinks.connections}
-        component={Connections}
-        options={{
-          tabBarIcon: ({ focused }) => <LinkIcon opacity={focused ? 0.5 : 1} />,
-        }}
-      />
-      {/* <Tab.Screen
-        name={rootNavigationLinks.categories}
-        component={Categories}
-        options={{
-          tabBarIcon: ({ focused }) => <DatabaseIcon opacity={focused ? 0.5 : 1} />,
-        }}
-      /> */}
-    </Tab.Navigator>
-  )
-}
+//   return (
+//     <Tab.Navigator
+//       screenOptions={{
+//         tabBarActiveTintColor: colors.tabBarActiveColor,
+//         tabBarInactiveTintColor: colors.primary,
+//         tabBarLabelStyle: {
+//           fontFamily: fonts.publicSans.regular,
+//         },
+//         headerStyle: { backgroundColor: colors.primary },
+//         headerLeft: HeaderLeft,
+//         headerRight: HeaderRight,
+//         headerTitle: "",
+//       }}
+//     >
+//       <Tab.Screen
+//         name={rootNavigationLinks.connections}
+//         component={Connections}
+//         options={{
+//           tabBarIcon: ({ focused }) => <LinkIcon opacity={focused ? 0.5 : 1} />,
+//         }}
+//       />
+//       {/* <Tab.Screen
+//         name={rootNavigationLinks.categories}
+//         component={Categories}
+//         options={{
+//           tabBarIcon: ({ focused }) => <DatabaseIcon opacity={focused ? 0.5 : 1} />,
+//         }}
+//       /> */}
+//     </Tab.Navigator>
+//   )
+// }
 
 const BackButton = () => {
   const navigation = useNavigation()
@@ -127,7 +130,7 @@ const ConnectionsStack = () => {
 
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name={rootNavigationLinks.connections} component={Connections} />
+      <Stack.Screen name={rootNavigationLinks.connectionsItem} component={Connections} />
     </Stack.Navigator>
   )
 }
@@ -143,7 +146,7 @@ const WelcomeStack = () => {
     <Stack.Navigator screenOptions={{ ...screenOptions }}>
       <Stack.Screen
         options={{ headerShown: false }}
-        name={rootNavigationLinks.welcome}
+        name={rootNavigationLinks.welcomeItem}
         component={Welcome}
       />
     </Stack.Navigator>
@@ -158,7 +161,7 @@ export function RootStack() {
   //   () => (isWelcomeViewed ? rootNavigationLinks.connections : rootNavigationLinks.welcome),
   //   [isWelcomeViewed],
   // )
-
+  const backButton = () => <BackButton />
   return (
     <Stack.Navigator screenOptions={{ gestureEnabled: true }}>
       {!isAuthenticated && (
@@ -193,12 +196,17 @@ export function RootStack() {
             component={TabsStack}
           /> */}
           <Stack.Screen
-            options={{ headerLeft: () => <BackButton /> }}
+            options={{ headerLeft: backButton }}
             name={rootNavigationLinks.manageConnection}
             component={ManageConnection}
           />
           <Stack.Screen
-            options={{ headerLeft: () => <BackButton /> }}
+            options={{ headerLeft: backButton }}
+            name={rootNavigationLinks.test}
+            component={Test}
+          />
+          <Stack.Screen
+            options={{ headerLeft: backButton }}
             name={rootNavigationLinks.settings}
             component={Settings}
           />

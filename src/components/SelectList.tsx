@@ -78,7 +78,9 @@ export const SelectList: FC<SelectListProps> = ({
 
   // Set initial height and filtered data
   useEffect(() => {
-    if (maxHeight) setHeight(maxHeight)
+    if (maxHeight) {
+      setHeight(maxHeight)
+    }
   }, [maxHeight])
 
   useEffect(() => {
@@ -100,6 +102,7 @@ export const SelectList: FC<SelectListProps> = ({
         collapseDropdown()
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showDropdown])
 
   return (
@@ -150,13 +153,13 @@ export const SelectList: FC<SelectListProps> = ({
               {filteredData.length >= 1 ? (
                 filteredData.map((item, index: number) => {
                   let value = item
-                  const isSelected = selected?.indexOf(value) != -1
+                  const isSelected = selected?.indexOf(value) !== -1
                   return (
                     <TouchableOpacity
                       style={[
                         styles.option,
                         isSelected ? styles.optionSelected : {},
-                        index != filteredData.length - 1 ? styles.optionBordered : {},
+                        index !== filteredData.length - 1 ? styles.optionBordered : {},
                       ]}
                       key={index}
                       onPress={() => onSelect(item)}

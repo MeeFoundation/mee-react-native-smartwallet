@@ -2,13 +2,16 @@ import { useNavigation } from "@react-navigation/native"
 import { isAuthenticatedState, isFirstTimeAuthState, isWelcomeViewedAtom } from "@store/index"
 import { colors } from "@utils/theme"
 import { useSetAtom } from "jotai"
-import { PropsWithChildren, ReactNode, createContext, useCallback, useContext, useRef } from "react"
-import { Dimensions, Pressable, StyleSheet, View } from "react-native"
-import ReanimatedDrawerLayout, {
-  DrawerLayoutMethods,
-  DrawerPosition,
-  DrawerType,
-} from "react-native-gesture-handler/ReanimatedDrawerLayout"
+import {
+  PropsWithChildren,
+  ReactNode,
+  createContext,
+  useCallback,
+  useContext,
+  useState,
+} from "react"
+import { Pressable, StyleSheet, View } from "react-native"
+import { Drawer as ReactNativeDrawer } from "react-native-drawer-layout"
 import {
   BellIcon,
   Cog8ToothIcon,
@@ -40,8 +43,7 @@ const DrawerCtx = createContext({
 })
 
 const Drawer = ({ children }: PropsWithChildren) => {
-  const ref = useRef<DrawerLayoutMethods | null>(null)
-  const windowWidth = Dimensions.get("window").width
+  const [open, setOpen] = useState(false)
   const navigation = useNavigation()
   const setIsWelcomeViewed = useSetAtom(isWelcomeViewedAtom)
   const setFirstTimeAuth = useSetAtom(isFirstTimeAuthState)
@@ -54,14 +56,12 @@ const Drawer = ({ children }: PropsWithChildren) => {
   const onFirstTimeAuth = () => {
     setFirstTimeAuth(true)
     setAuthenticated(false)
-    // todo remove
-    navigation.navigate("Login")
   }
 
   const onItemPress = (cb: () => void) => {
     return () => {
       cb()
-      ref.current?.closeDrawer()
+      setOpen(false)
     }
   }
 
@@ -102,25 +102,26 @@ const Drawer = ({ children }: PropsWithChildren) => {
   return (
     <DrawerCtx.Provider
       value={{
-        openDrawer: () => ref.current?.openDrawer(),
-        closeDrawer: () => ref.current?.closeDrawer(),
+        openDrawer: () => setOpen(true),
+        closeDrawer: () => setOpen(false),
       }}
     >
-      <ReanimatedDrawerLayout
-        ref={ref}
-        drawerWidth={windowWidth * 0.8}
-        drawerPosition={DrawerPosition.LEFT}
-        drawerType={DrawerType.FRONT}
-        renderNavigationView={() => (
-          <View style={styles.container}>
-            {items.map((item, index) => (
-              <Item key={index} onPress={item.onPress} label={item.label} icon={item.icon} />
-            ))}
-          </View>
-        )}
+      <ReactNativeDrawer
+        open={open}
+        onOpen={() => setOpen(true)}
+        onClose={() => setOpen(false)}
+        renderDrawerContent={() => {
+          return (
+            <View style={styles.container}>
+              {items.map((item, index) => (
+                <Item key={index} onPress={item.onPress} label={item.label} icon={item.icon} />
+              ))}
+            </View>
+          )
+        }}
       >
         {children}
-      </ReanimatedDrawerLayout>
+      </ReactNativeDrawer>
     </DrawerCtx.Provider>
   )
 }
@@ -128,8 +129,8 @@ const Drawer = ({ children }: PropsWithChildren) => {
 const useDrawer = () => {
   const ctx = useContext(DrawerCtx)
 
-  const open = useCallback(() => ctx?.openDrawer(), [])
-  const close = useCallback(() => ctx?.closeDrawer(), [])
+  const open = useCallback(() => ctx?.openDrawer(), [ctx])
+  const close = useCallback(() => ctx?.closeDrawer(), [ctx])
 
   return { open, close }
 }
