@@ -17,6 +17,7 @@ import Contacts from "react-native-contacts"
 import { LinkIcon, PlusCircleIcon, ShareIcon } from "react-native-heroicons/outline"
 import { IconSources } from "../assets"
 import { ContactsStore } from "../store"
+import { alertContactsNoPermissionAlert } from "../utils/alerts"
 import { Avatar } from "./Avatar"
 import { Typography } from "./Typography"
 
@@ -51,6 +52,7 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
         })),
       }
     } catch (err) {
+      alertContactsNoPermissionAlert()
       console.error("Error fetching contacts: ", err)
       return { error: "Error fetching contacts: " + err }
     }
@@ -66,6 +68,7 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
       PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
     )
     if (permission !== PermissionsAndroid.RESULTS.GRANTED) {
+      alertContactsNoPermissionAlert()
       console.error("Permission denied")
       return { error: "Permission denied" }
     }
