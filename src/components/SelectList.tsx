@@ -145,9 +145,11 @@ export const SelectList: FC<SelectListProps> = ({
               {search.length > 0 && !data.includes(search) && (
                 <View style={styles.option}>
                   <Text style={styles.optionText}>#{search}</Text>
-                  <Pressable onPress={() => addOption(search)}>
-                    <Text style={{ fontSize: 12, color: colors.link }}>Create</Text>
-                  </Pressable>
+                  {onCreate && (
+                    <Pressable onPress={() => addOption(search)}>
+                      <Text style={{ fontSize: 12, color: colors.link }}>Create</Text>
+                    </Pressable>
+                  )}
                 </View>
               )}
               {filteredData.length >= 1 ? (
@@ -201,9 +203,7 @@ const SelectedLabel: FC<SelectedLabelProps> = ({ children, onPress }) => {
 export const styles = StyleSheet.create({
   dropdown: {
     flex: 1,
-    position: "absolute",
-    top: 58,
-    left: 0,
+    marginTop: 8,
     width: "100%",
     backgroundColor: colors.white,
     borderWidth: 1,

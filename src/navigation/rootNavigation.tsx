@@ -6,6 +6,7 @@ import { Connections } from "@screens/Connections"
 import { DataGenerating } from "@screens/DataGenerating"
 import { Login } from "@screens/Login"
 import { ManageConnection } from "@screens/ManageConnection"
+import { ManageContact } from "@screens/ManageContact"
 import { Settings } from "@screens/Settings"
 import { Welcome } from "@screens/Welcome"
 import { isAuthenticatedState } from "@store/index"
@@ -25,7 +26,7 @@ export const rootNavigationLinks = {
   connectionsItem: "Connections Item",
   categories: "Categories",
   manageConnection: "Manage Connection",
-  test: "Test",
+  manageContact: "Manage Contact",
   settings: "Settings",
   login: "Login",
 } as const
@@ -38,6 +39,7 @@ export type RootNavigationLinkObject = { [key in RootNavigationLink]: any }
 
 export type RootStackParamList = {
   "Manage Connection": { id: string }
+  "Manage Contact": { id: string }
 }
 
 export type RootStackParamListWithLinks = RootStackParamList & RootNavigationLinkObject
@@ -198,6 +200,11 @@ export function RootStack() {
             options={{ headerLeft: backButton }}
             name={rootNavigationLinks.manageConnection}
             component={ManageConnection}
+          />
+          <Stack.Screen
+            options={{ headerLeft: backButton }}
+            name={rootNavigationLinks.manageContact}
+            component={ManageContact}
           />
           <Stack.Screen
             options={{ headerLeft: backButton }}

@@ -9,7 +9,8 @@ import { Typography } from "@components/Typography"
 import BottomSheet from "@gorhom/bottom-sheet"
 import { useNavigation } from "@react-navigation/native"
 import { Connection } from "@services/core.service"
-import { ConnectionsStore, ContactsStore, ProfileStore } from "@store/index"
+import { ContactsStore } from "@store/contacts"
+import { ConnectionsStore, ProfileStore } from "@store/index"
 import { colors } from "@utils/theme"
 import { useAtomValue } from "jotai"
 import { sortBy } from "lodash-es"
@@ -71,16 +72,16 @@ export function Connections() {
 
   const filteredIosContactsData = useMemo(
     () =>
-      !contacts.data?.ios
+      !contacts?.ios
         ? []
-        : sortBy(filterConnections(contacts.data.ios, filter, selectedProfile), "title"),
+        : sortBy(filterConnections(contacts.ios, filter, selectedProfile), "title"),
     [contacts, filter, selectedProfile],
   )
   const filteredAndroidContactsData = useMemo(
     () =>
-      !contacts.data?.android
+      !contacts?.android
         ? []
-        : sortBy(filterConnections(contacts.data.android, filter, selectedProfile), "title"),
+        : sortBy(filterConnections(contacts.android, filter, selectedProfile), "title"),
     [contacts, filter, selectedProfile],
   )
   const filteredData = useMemo(
@@ -115,7 +116,7 @@ export function Connections() {
   }
 
   if (
-    (!contacts.data || (contacts.data.ios?.length === 0 && contacts.data.android?.length === 0)) &&
+    (!contacts || (contacts.ios?.length === 0 && contacts.android?.length === 0)) &&
     connections.length === 0
   ) {
     return (
@@ -148,14 +149,14 @@ export function Connections() {
           sections={filteredData.map((d, idx) => ({
             ...d,
             data: filterNullable([
-              contacts.data?.ios && {
+              contacts?.ios && {
                 id: "Apple",
                 title: "Apple Contacts",
                 data: filteredIosContactsData[idx].data,
                 iconSrc: IconSources.apple,
                 isContactsList: true,
               },
-              contacts.data?.android && {
+              contacts?.android && {
                 id: "Android",
                 title: "Android Contacts",
                 data: filteredAndroidContactsData[idx].data,
@@ -178,9 +179,22 @@ export function Connections() {
               <TouchableOpacity onPress={() => handlePressOpen(item.id)}>
                 <ConnectionCard
                   name={item.name}
-                  onPress={() => handlePressOpen(item.id)}
-                  showActionMenu
                   logo={item.iconSrc}
+                  menuActions={[
+                    {
+                      name: "Delete connection",
+                      key: "delete",
+                      onPress: () => {},
+                      icon: "trash",
+                    },
+                    {
+                      name: "Manage connection",
+                      key: "edit",
+                      onPress: () => {},
+                      icon: "pencil",
+                    },
+                    { name: "Link connection", key: "link", onPress: () => {}, icon: "pencil" },
+                  ]}
                 />
               </TouchableOpacity>
             )

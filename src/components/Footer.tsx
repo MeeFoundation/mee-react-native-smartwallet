@@ -16,7 +16,8 @@ import {
 import Contacts from "react-native-contacts"
 import { LinkIcon, PlusCircleIcon, ShareIcon } from "react-native-heroicons/outline"
 import { IconSources } from "../assets"
-import { ContactsStore } from "../store"
+import { contactService } from "../services/contact.service"
+import { ContactsStore } from "../store/contacts"
 import { alertContactsNoPermissionAlert } from "../utils/alerts"
 import { Avatar } from "./Avatar"
 import { Typography } from "./Typography"
@@ -31,36 +32,18 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
 
   const setContacts = useSetAtom(ContactsStore)
 
-  const getContacts = async () => {
+  const getIosContacts = async () => {
+    let contacts
     try {
-      const nativeContacts = await Contacts.getAll()
-      return {
-        data: nativeContacts.map((nativeContact) => ({
-          id: nativeContact.recordID,
-          name:
-            nativeContact.displayName || `${nativeContact.familyName} ${nativeContact.givenName}`,
-          sharedInfo: {
-            email: nativeContact.emailAddresses[0]?.email as string | undefined,
-            firstName: nativeContact.givenName,
-            lastName: nativeContact.familyName,
-            phone: nativeContact.phoneNumbers[0]?.number as string | undefined,
-          },
-          tags: [],
-          iconSrc: nativeContact.thumbnailPath,
-          // profile?: string
-          isContact: true,
-        })),
-      }
+      contacts = await Contacts.getAll()
     } catch (err) {
       alertContactsNoPermissionAlert()
       console.error("Error fetching contacts: ", err)
-      return { error: "Error fetching contacts: " + err }
+      return undefined
     }
-  }
 
-  const getIosContacts = async () => {
-    const contacts = await getContacts()
-    return { error: contacts.error, data: { ios: contacts.data } }
+    const result = await contactService.rewriteContactsByPlatform(contacts, "ios")
+    return result
   }
 
   const getAndroidContacts = async () => {
@@ -70,11 +53,12 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
     if (permission !== PermissionsAndroid.RESULTS.GRANTED) {
       alertContactsNoPermissionAlert()
       console.error("Permission denied")
-      return { error: "Permission denied" }
+      return undefined
     }
+    const contacts = await Contacts.getAll()
 
-    const contacts = await getContacts()
-    return { error: contacts.error, data: { android: contacts.data } }
+    const result = await contactService.rewriteContactsByPlatform(contacts, "android")
+    return result
   }
 
   const onAddPress = () => {
@@ -131,7 +115,7 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
           <View style={styles.addConnectionItem}>
             <Text style={styles.title}>Your contacts</Text>
             {Platform.OS === "ios" && (
-              <View style={styles.contaner}>
+              <View style={styles.container}>
                 <Avatar src={IconSources.apple} text={"Apple contacts"} size={48} />
                 <Typography style={styles.name} fontFamily="publicSans.bold" weight="500">
                   Apple contacts
@@ -140,8 +124,10 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
                 <Pressable
                   onPress={async () => {
                     const contacts = await getIosContacts()
-                    setContacts(contacts)
-                    bottomSheetRef.current?.close()
+                    if (contacts) {
+                      setContacts(contacts)
+                      bottomSheetRef.current?.close()
+                    }
                   }}
                 >
                   <Typography style={styles.connectText}>Connect</Typography>
@@ -149,7 +135,7 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
               </View>
             )}
             {Platform.OS === "android" && (
-              <View style={styles.contaner}>
+              <View style={styles.container}>
                 <Avatar src={IconSources.android} text={"Android contacts"} size={48} />
                 <Typography style={styles.name} fontFamily="publicSans.bold" weight="500">
                   Android contacts
@@ -160,8 +146,10 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
                   style={{ maxWidth: 50 }}
                   onPress={async () => {
                     const contacts = await getAndroidContacts()
-                    setContacts(contacts)
-                    bottomSheetRef.current?.close()
+                    if (contacts) {
+                      setContacts(contacts)
+                      bottomSheetRef.current?.close()
+                    }
                   }}
                 >
                   <Typography style={styles.connectText}>Connect</Typography>
@@ -200,7 +188,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     fontWeight: 500,
   },
-  contaner: {
+  container: {
     padding: 8,
     paddingRight: 24,
     gap: 8,

@@ -1,8 +1,18 @@
 import { useNavigation } from "@react-navigation/native"
 import { colors } from "@utils/theme"
+import { useSetAtom } from "jotai"
+import { compact } from "lodash-es"
 import { useState } from "react"
-import { ImageSourcePropType, StyleSheet, Text, View } from "react-native"
+import {
+  ImageSourcePropType,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native"
 import { Connection } from "../services/core.service"
+import { deleteContactAtom } from "../store/contacts"
 import { Accordion } from "./Accordion"
 import { ConnectionCard } from "./ConnectionCard"
 
@@ -13,6 +23,7 @@ type Props = {
   innerElHeight: number
 }
 
+const GAP_SIZE = 8
 const INITIAL_COLLAPSED = true
 export const AccordionCard = (props: Props) => {
   const { innerConnections, title, iconSrc, innerElHeight } = props
@@ -20,8 +31,10 @@ export const AccordionCard = (props: Props) => {
   const navigation = useNavigation()
   const [collapsed, setCollapsed] = useState(INITIAL_COLLAPSED)
 
+  const deleteContact = useSetAtom(deleteContactAtom)
+
   const handlePressOpen = (id: string) => {
-    navigation.navigate("Manage Connection", {
+    navigation.navigate("Manage Contact", {
       id,
     })
   }
@@ -48,23 +61,38 @@ export const AccordionCard = (props: Props) => {
       collapsed={INITIAL_COLLAPSED}
       onToggle={setCollapsed}
       contentMaxHeight={
-        innerConnections.length * (innerElHeight + 8) + 8 > 400
+        innerConnections.length * (innerElHeight + GAP_SIZE) + GAP_SIZE > 400
           ? 400
-          : innerConnections.length * (innerElHeight + 8) + 8
+          : innerConnections.length * (innerElHeight + GAP_SIZE) + GAP_SIZE
       }
       rightHeadLabel={<Text style={styles.rightHeadLabel}>({innerConnections.length})</Text>}
     >
       <View style={styles.contactsWrapper}>
         {innerConnections.map((connection) => (
-          // <TouchableOpacity key={connection.id} onPress={() => handlePressOpen(connection.id)}>
-          <ConnectionCard
-            key={connection.id}
-            name={connection.name}
-            onPress={() => handlePressOpen(connection.id)}
-            logo={connection.iconSrc}
-            showActionMenu
-          />
-          // </TouchableOpacity>
+          <TouchableOpacity key={connection.id} onPress={() => handlePressOpen(connection.id)}>
+            <ConnectionCard
+              name={connection.name}
+              logo={connection.iconSrc}
+              menuActions={compact([
+                Platform.OS === connection.contactInfo?.platform && {
+                  name: "Delete contact",
+                  key: "delete",
+                  onPress: async () => {
+                    if (connection.contactInfo?.recordID) {
+                      deleteContact({ contact: connection })
+                    }
+                  },
+                  icon: "trash",
+                },
+                {
+                  name: "Manage contact",
+                  key: "edit",
+                  onPress: () => handlePressOpen(connection.id),
+                  icon: "pencil",
+                },
+              ])}
+            />
+          </TouchableOpacity>
         ))}
       </View>
     </Accordion>

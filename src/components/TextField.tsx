@@ -5,7 +5,7 @@ import { SvgProps } from "react-native-svg"
 type InputSize = "md" | "lg"
 
 export type TextFieldProps = {
-  value: string
+  value: string | undefined
   onChangeText: (text: string) => void
   label?: string
   size?: InputSize
@@ -14,6 +14,8 @@ export type TextFieldProps = {
   onBlur?: () => void
   RightIcon?: React.FunctionComponent<SvgProps>
   RightIconActive?: React.FunctionComponent<SvgProps>
+  errorText?: string
+  disabled?: boolean
 } & ComponentProps<typeof TextInput>
 
 export const TextField: FC<TextFieldProps> = ({
@@ -27,6 +29,8 @@ export const TextField: FC<TextFieldProps> = ({
   RightIcon,
   RightIconActive,
   size = "lg",
+  errorText,
+  disabled,
 }) => {
   const inputRef = useRef<TextInput>(null)
 
@@ -72,13 +76,15 @@ export const TextField: FC<TextFieldProps> = ({
       <TextInput
         ref={inputRef}
         value={value}
+        editable={!disabled}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        style={inputStyle}
+        style={[inputStyle, errorText && styles.errorBorder]}
         placeholderTextColor={colors["gray-400"]}
         onFocus={focusHandler}
         onSubmitEditing={blurHandler}
       />
+      {errorText && <Text style={styles.errorText}>{errorText}</Text>}
 
       {RightIconActive && inputRef.current?.isFocused() && (
         <TouchableOpacity onPress={clearHandler}>
@@ -118,11 +124,21 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   label: {
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: "500",
-    lineHeight: 24,
+    lineHeight: 16,
     color: colors.secondary,
-    marginBottom: 8,
+    marginBottom: 2,
+  },
+  errorBorder: {
+    borderColor: colors.danger,
+  },
+  errorText: {
+    color: colors.danger,
+    marginTop: 2,
+    fontSize: 12,
+    fontWeight: "500",
+    lineHeight: 16,
   },
   input: {
     paddingVertical: 11,

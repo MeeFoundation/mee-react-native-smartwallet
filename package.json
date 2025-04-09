@@ -14,8 +14,8 @@
     "android-release-aab": "cd android && ./gradlew bundleRelease",
     "android-release-test": "react-native run-android --variant release",
     "clean": "rm -rf ~/Library/Developer/Xcode/DerivedData && rm -rf node_modules/ /tmp/metro-*  && watchman watch-del-all && watchman shutdown-server && yarn cache clean",
-    "clean-android": "cd android && ./gradlew clean && cd ..",
-    "deep-clean": "rm -rf ~/Library/Developer/Xcode/DerivedData ios/build ios/Pods && cd android && ./gradlew clean && cd .. && rm -rf node_modules/ /tmp/metro-* && watchman watch-del-all && watchman shutdown-server && yarn cache clean && rm -rf yarn.lock",
+    "clean-android": "rm -rf android/build android/app/.cxx android/app/build || true && cd android && ./gradlew clean && cd ..",
+    "deep-clean": "rm -rf ~/Library/Developer/Xcode/DerivedData ios/build ios/Pods && yarn clean-android && rm -rf node_modules/ /tmp/metro-* && watchman watch-del-all && watchman shutdown-server && yarn cache clean && rm -rf yarn.lock",
     "reset": "yarn clean && yarn install",
     "deep-reset": "yarn deep-clean && yarn install"
   },
@@ -45,6 +45,7 @@
     "react-native-screens": "^4.3.0",
     "react-native-svg": "^15.10.1",
     "react-native-svg-transformer": "^1.5.0",
+    "superstruct": "^2.0.2",
     "zeego": "^3.0.5"
   },
   "devDependencies": {

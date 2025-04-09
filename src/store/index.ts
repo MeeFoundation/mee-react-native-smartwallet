@@ -7,11 +7,6 @@ export const ConnectionsStore = atomWithDefault<Connection[] | Promise<Connectio
   async () => await coreService.getConnections(),
 )
 
-export const ContactsStore = atom<
-  | { data?: { ios?: Connection[]; android?: Connection[] }; error?: string }
-  | Promise<{ data?: { ios?: Connection[]; android?: Connection[] }; error?: string }>
->({ data: undefined, error: undefined })
-
 export const TagsStore = atom(async (get) => {
   const tags: string[] = []
   const connections = await get(ConnectionsStore)
