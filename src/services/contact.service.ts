@@ -1,10 +1,10 @@
 import { Platform } from "react-native"
 import { Contact as NativeContact } from "react-native-contacts/type"
+import { CONTACTS_STORAGE_KEY } from "../constants/contacts"
 import { getObjectItem, setObjectItem } from "../store/storage"
 import { generateUserIdentifier } from "../utils/data"
 import { Connection } from "./core.service"
-
-export const STORAGE_KEY = "contacts_storage_key"
+import "./mockData/contacts"
 
 export interface ContactsState {
   ios?: Connection[]
@@ -12,7 +12,7 @@ export interface ContactsState {
 }
 class ContactService {
   async getContacts() {
-    const contacts = getObjectItem<ContactsState>(STORAGE_KEY)
+    const contacts = getObjectItem<ContactsState>(CONTACTS_STORAGE_KEY)
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
     return contacts
@@ -22,7 +22,7 @@ class ContactService {
     const currentContacts = getObjectItem<{
       ios: Connection[]
       android: Connection[]
-    }>(STORAGE_KEY)
+    }>(CONTACTS_STORAGE_KEY)
 
     const newContactsByPlatform = await Promise.all(
       newContacts.map((nativeCon) =>
@@ -40,7 +40,7 @@ class ContactService {
       [platform]: newContactsByPlatform,
     }
 
-    setObjectItem(STORAGE_KEY, updContacts)
+    setObjectItem(CONTACTS_STORAGE_KEY, updContacts)
 
     return updContacts
   }
@@ -76,7 +76,7 @@ class ContactService {
     const currentContacts = getObjectItem<{
       ios: Connection[]
       android: Connection[]
-    }>(STORAGE_KEY)
+    }>(CONTACTS_STORAGE_KEY)
 
     const updContacts = {
       ...currentContacts,
@@ -85,7 +85,7 @@ class ContactService {
       ),
     }
 
-    setObjectItem(STORAGE_KEY, updContacts)
+    setObjectItem(CONTACTS_STORAGE_KEY, updContacts)
 
     return updContacts
   }
@@ -94,14 +94,14 @@ class ContactService {
     const currentContacts = getObjectItem<{
       ios: Connection[]
       android: Connection[]
-    }>(STORAGE_KEY)
+    }>(CONTACTS_STORAGE_KEY)
 
     const updContacts = {
       ...currentContacts,
       [platform]: currentContacts?.[platform]?.filter((con) => con.id !== id),
     }
 
-    setObjectItem(STORAGE_KEY, updContacts)
+    setObjectItem(CONTACTS_STORAGE_KEY, updContacts)
 
     return updContacts
   }
