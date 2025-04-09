@@ -11,13 +11,25 @@ import { useAtom } from "jotai"
 import React, { useMemo, useState } from "react"
 import { StyleSheet, TouchableOpacity, View } from "react-native"
 import { TrashIcon } from "react-native-heroicons/outline"
+import { object, optional, string } from "superstruct"
 import { TextField } from "../components/TextField"
+import { customValidate, emailStruct, requiredStringMoreThanStruct } from "../utils/validation"
+
+const ContactInfoValidationObject = object({
+  email: optional(emailStruct),
+  firstName: requiredStringMoreThanStruct(1),
+  lastName: requiredStringMoreThanStruct(1),
+  phone: optional(string()),
+})
 
 export const ManageContact = () => {
   const route = useRoute<RouteProp<RootStackParamList, "Manage Contact">>()
   const [contact, setContact] = useAtom(ContactsDetails(route.params.id))
   const [isEditing, setIsEditing] = useState({ sharedWithYou: false })
   const [fields, setFields] = useState({ sharedWithYou: contact.sharedInfo })
+  const [validationErrors, setValidationErrors] = useState<{
+    sharedWithYou: Partial<typeof contact.sharedInfo>
+  }>({ sharedWithYou: {} })
 
   const contactCardActions = useMemo(
     () => [
@@ -50,6 +62,23 @@ export const ManageContact = () => {
                 rightHeadLabel={
                   <TouchableOpacity
                     onPress={() => {
+                      const validationInfo = customValidate(
+                        fields.sharedWithYou,
+                        ContactInfoValidationObject,
+                      )
+
+                      if (!validationInfo.valid) {
+                        setValidationErrors((state) => ({
+                          ...state,
+                          sharedWithYou: validationInfo.errors,
+                        }))
+                        return
+                      }
+
+                      setValidationErrors((state) => ({
+                        ...state,
+                        sharedWithYou: {},
+                      }))
                       setIsEditing((state) => ({ ...state, sharedWithYou: !state.sharedWithYou }))
                       setContact({ ...contact, sharedInfo: fields.sharedWithYou })
                     }}
@@ -76,6 +105,7 @@ export const ManageContact = () => {
                         label="Email"
                         style={styles.infoInput}
                         value={fields.sharedWithYou.email}
+                        errorText={validationErrors.sharedWithYou.email}
                         onChangeText={(text) => {
                           setFields((state) => ({
                             ...state,
@@ -97,6 +127,7 @@ export const ManageContact = () => {
                         label="First Name"
                         style={styles.infoInput}
                         value={fields.sharedWithYou.firstName}
+                        errorText={validationErrors.sharedWithYou.firstName}
                         onChangeText={(text) => {
                           setFields((state) => ({
                             ...state,
@@ -118,6 +149,7 @@ export const ManageContact = () => {
                         label="Last Name"
                         style={styles.infoInput}
                         value={fields.sharedWithYou.lastName}
+                        errorText={validationErrors.sharedWithYou.lastName}
                         onChangeText={(text) => {
                           setFields((state) => ({
                             ...state,
@@ -139,6 +171,7 @@ export const ManageContact = () => {
                         label="Phone number"
                         style={styles.infoInput}
                         value={fields.sharedWithYou.phone}
+                        errorText={validationErrors.sharedWithYou.phone}
                         onChangeText={(text) => {
                           setFields((state) => ({
                             ...state,
@@ -208,9 +241,10 @@ const styles = StyleSheet.create({
   },
   infoText: { color: colors.secondary, fontSize: 18, lineHeight: 28 },
 
-  infoInputRow: { paddingVertical: 8, flexDirection: "row", gap: 8, alignItems: "flex-end" },
+  infoInputRow: { paddingVertical: 8, flexDirection: "row", gap: 8 },
   infoInput: { flexGrow: 1 },
   trashIconContainer: {
+    marginTop: 18,
     padding: 12,
     borderWidth: 1,
     borderColor: "rgba(0, 0, 0, 0.10)",

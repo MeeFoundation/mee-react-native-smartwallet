@@ -14,6 +14,7 @@ export type TextFieldProps = {
   onBlur?: () => void
   RightIcon?: React.FunctionComponent<SvgProps>
   RightIconActive?: React.FunctionComponent<SvgProps>
+  errorText?: string
 } & ComponentProps<typeof TextInput>
 
 export const TextField: FC<TextFieldProps> = ({
@@ -27,6 +28,7 @@ export const TextField: FC<TextFieldProps> = ({
   RightIcon,
   RightIconActive,
   size = "lg",
+  errorText,
 }) => {
   const inputRef = useRef<TextInput>(null)
 
@@ -74,11 +76,12 @@ export const TextField: FC<TextFieldProps> = ({
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        style={inputStyle}
+        style={[inputStyle, errorText && styles.errorBorder]}
         placeholderTextColor={colors["gray-400"]}
         onFocus={focusHandler}
         onSubmitEditing={blurHandler}
       />
+      {errorText && <Text style={styles.errorText}>{errorText}</Text>}
 
       {RightIconActive && inputRef.current?.isFocused() && (
         <TouchableOpacity onPress={clearHandler}>
@@ -123,6 +126,16 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     color: colors.secondary,
     marginBottom: 2,
+  },
+  errorBorder: {
+    borderColor: colors.danger,
+  },
+  errorText: {
+    color: colors.danger,
+    marginTop: 2,
+    fontSize: 12,
+    fontWeight: "500",
+    lineHeight: 16,
   },
   input: {
     paddingVertical: 11,

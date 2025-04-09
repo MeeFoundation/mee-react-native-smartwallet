@@ -45,6 +45,7 @@
     "react-native-screens": "^4.3.0",
     "react-native-svg": "^15.10.1",
     "react-native-svg-transformer": "^1.5.0",
+    "superstruct": "^2.0.2",
     "zeego": "^3.0.5"
   },
   "devDependencies": {
