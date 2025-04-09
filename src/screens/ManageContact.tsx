@@ -42,14 +42,14 @@ export const ManageContact = () => {
         key: "delete" as const,
         onPress: async () => {
           if (contact.contactInfo?.recordID) {
-            await deleteContact({ recordID: contact.contactInfo.recordID })
+            await deleteContact({ contact })
             navigate("Connections")
           }
         },
         icon: "trash" as const,
       },
     ],
-    [contact?.contactInfo?.recordID, deleteContact, navigate],
+    [contact, deleteContact, navigate],
   )
 
   const [selectedFieldToAdd, setSelectedFieldToAdd] = useState<string>()
@@ -63,7 +63,9 @@ export const ManageContact = () => {
             <ConnectionCard
               name={contact.name}
               logo={contact.iconSrc}
-              menuActions={contactCardActions}
+              menuActions={
+                Platform.OS === contact.contactInfo?.platform ? contactCardActions : undefined
+              }
               style={styles.card}
             />
             <View style={styles.accordionsContainer}>
@@ -110,7 +112,7 @@ export const ManageContact = () => {
                             updateContact({
                               recordID: contact.contactInfo?.recordID,
                               newContactInfo: fields.sharedWithYou,
-                              oldContactInfo: contact.sharedInfo,
+                              oldContact: contact,
                             })
                         }
                         setIsEditing((state) => ({ ...state, sharedWithYou: !state.sharedWithYou }))

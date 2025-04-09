@@ -18,3 +18,12 @@ export const removeItem = (key: string): void => {
 export const clearAll = (): void => {
   storage.clearAll()
 }
+
+export const getObjectItem = <T>(key: string): T | null => {
+  const value = storage.getString(key)
+  return value ? JSON.parse(value) : null
+}
+
+export const setObjectItem = (key: string, value: Record<string, unknown>): void => {
+  storage.set(key, JSON.stringify(value))
+}

@@ -4,47 +4,36 @@ const generateKey = (password: string, salt: string, cost: number, length: numbe
   Aes.pbkdf2(password, salt, cost, length, "sha256")
 
 export const generateUniqueDeviceKeys = async () => {
-  return new Promise((resolve) => {
-    const timestamp = Date.now() // Current timestamp
-    const randomBytes = Aes.randomKey(12)
+  const timestamp = Date.now() // Current timestamp
+  const randomBytes = await Aes.randomKey(12)
 
-    const rawData = `${timestamp}-${randomBytes}`
+  const rawData = `${timestamp}-${randomBytes}`
 
-    const deviceKey = generateKey(rawData, "test", 12, 12)
+  const deviceKey = await generateKey(rawData, "test", 12, 12)
 
-    setTimeout(() => {
-      resolve(deviceKey)
-    }, 1000)
-  })
+  return deviceKey
 }
 
 export const generateEncryptionKey = async () => {
-  return new Promise((resolve) => {
-    const timestamp = Date.now() // Current timestamp
+  const timestamp = Date.now() // Current timestamp
 
-    const randomBytes = Aes.randomKey(12)
+  const randomBytes = await Aes.randomKey(12)
 
-    const rawData = `${timestamp}-${randomBytes}`
-    const encryptionKey = generateKey(rawData, "test", 12, 12)
-    setTimeout(() => {
-      resolve(encryptionKey)
-    }, 1000)
-  })
+  const rawData = `${timestamp}-${randomBytes}`
+  const encryptionKey = await generateKey(rawData, "test", 12, 12)
+
+  return encryptionKey
 }
 
 export const generateUserIdentifier = async () => {
-  return new Promise((resolve) => {
-    const timestamp = Date.now() // Current timestamp
-    const randomNumber = Math.floor(Math.random() * 1000000).toString()
-    const randomBytes = Aes.randomKey(12)
+  const timestamp = Date.now() // Current timestamp
+  // const randomNumber = Math.floor(Math.random() * 1000000).toString()
+  const randomBytes = await Aes.randomKey(12)
+  const rawData = `${timestamp}-${randomBytes}`
 
-    const rawData = `${timestamp}-${randomBytes}`
+  const userIdentifier = await generateKey(rawData, "test", 12, 12)
 
-    const userIdentifier = generateKey(rawData, "test", 12, 12)
-    setTimeout(() => {
-      resolve(userIdentifier)
-    }, 1000)
-  })
+  return userIdentifier
 }
 
 export const createSelfInMee = async () => {

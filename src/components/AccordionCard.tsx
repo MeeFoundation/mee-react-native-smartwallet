@@ -1,8 +1,16 @@
 import { useNavigation } from "@react-navigation/native"
 import { colors } from "@utils/theme"
 import { useSetAtom } from "jotai"
+import { compact } from "lodash-es"
 import { useState } from "react"
-import { ImageSourcePropType, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import {
+  ImageSourcePropType,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native"
 import { Connection } from "../services/core.service"
 import { deleteContactAtom } from "../store/contacts"
 import { Accordion } from "./Accordion"
@@ -65,13 +73,13 @@ export const AccordionCard = (props: Props) => {
             <ConnectionCard
               name={connection.name}
               logo={connection.iconSrc}
-              menuActions={[
-                {
+              menuActions={compact([
+                Platform.OS === connection.contactInfo?.platform && {
                   name: "Delete contact",
                   key: "delete",
                   onPress: async () => {
                     if (connection.contactInfo?.recordID) {
-                      deleteContact({ recordID: connection.contactInfo.recordID })
+                      deleteContact({ contact: connection })
                     }
                   },
                   icon: "trash",
@@ -82,7 +90,7 @@ export const AccordionCard = (props: Props) => {
                   onPress: () => handlePressOpen(connection.id),
                   icon: "pencil",
                 },
-              ]}
+              ])}
             />
           </TouchableOpacity>
         ))}

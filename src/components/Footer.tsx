@@ -16,6 +16,7 @@ import {
 import Contacts from "react-native-contacts"
 import { LinkIcon, PlusCircleIcon, ShareIcon } from "react-native-heroicons/outline"
 import { IconSources } from "../assets"
+import { contactService } from "../services/contact.service"
 import { ContactsStore } from "../store/contacts"
 import { alertContactsNoPermissionAlert } from "../utils/alerts"
 import { Avatar } from "./Avatar"
@@ -31,40 +32,18 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
 
   const setContacts = useSetAtom(ContactsStore)
 
-  const getContacts = async () => {
+  const getIosContacts = async () => {
+    let contacts
     try {
-      const nativeContacts = await Contacts.getAll()
-
-      return {
-        data: nativeContacts.map((nativeContact) => ({
-          id: nativeContact.recordID,
-          name:
-            nativeContact.displayName || `${nativeContact.familyName} ${nativeContact.givenName}`,
-          sharedInfo: {
-            email: nativeContact.emailAddresses[0]?.email as string | undefined,
-            firstName: nativeContact.givenName,
-            lastName: nativeContact.familyName,
-            phone: nativeContact.phoneNumbers[0]?.number as string | undefined,
-          },
-          tags: [],
-          iconSrc: nativeContact.thumbnailPath,
-          // profile?: string
-          contactInfo: {
-            recordID: nativeContact.recordID,
-            platform: Platform.OS === "android" || Platform.OS === "ios" ? Platform.OS : undefined,
-          },
-        })),
-      }
+      contacts = await Contacts.getAll()
     } catch (err) {
       alertContactsNoPermissionAlert()
       console.error("Error fetching contacts: ", err)
-      return { error: "Error fetching contacts: " + err }
+      return undefined
     }
-  }
 
-  const getIosContacts = async () => {
-    const contacts = await getContacts()
-    return { error: contacts.error, data: { ios: contacts.data } }
+    const result = await contactService.rewriteContactsByPlatform(contacts, "ios")
+    return result
   }
 
   const getAndroidContacts = async () => {
@@ -74,11 +53,12 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
     if (permission !== PermissionsAndroid.RESULTS.GRANTED) {
       alertContactsNoPermissionAlert()
       console.error("Permission denied")
-      return { error: "Permission denied" }
+      return undefined
     }
+    const contacts = await Contacts.getAll()
 
-    const contacts = await getContacts()
-    return { error: contacts.error, data: { android: contacts.data } }
+    const result = await contactService.rewriteContactsByPlatform(contacts, "ios")
+    return result
   }
 
   const onAddPress = () => {
@@ -144,8 +124,10 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
                 <Pressable
                   onPress={async () => {
                     const contacts = await getIosContacts()
-                    setContacts(contacts)
-                    bottomSheetRef.current?.close()
+                    if (contacts) {
+                      setContacts(contacts)
+                      bottomSheetRef.current?.close()
+                    }
                   }}
                 >
                   <Typography style={styles.connectText}>Connect</Typography>
@@ -164,8 +146,10 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
                   style={{ maxWidth: 50 }}
                   onPress={async () => {
                     const contacts = await getAndroidContacts()
-                    setContacts(contacts)
-                    bottomSheetRef.current?.close()
+                    if (contacts) {
+                      setContacts(contacts)
+                      bottomSheetRef.current?.close()
+                    }
                   }}
                 >
                   <Typography style={styles.connectText}>Connect</Typography>
