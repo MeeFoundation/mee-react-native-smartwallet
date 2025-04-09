@@ -15,6 +15,7 @@ export type TextFieldProps = {
   RightIcon?: React.FunctionComponent<SvgProps>
   RightIconActive?: React.FunctionComponent<SvgProps>
   errorText?: string
+  disabled?: boolean
 } & ComponentProps<typeof TextInput>
 
 export const TextField: FC<TextFieldProps> = ({
@@ -29,6 +30,7 @@ export const TextField: FC<TextFieldProps> = ({
   RightIconActive,
   size = "lg",
   errorText,
+  disabled,
 }) => {
   const inputRef = useRef<TextInput>(null)
 
@@ -74,6 +76,7 @@ export const TextField: FC<TextFieldProps> = ({
       <TextInput
         ref={inputRef}
         value={value}
+        editable={!disabled}
         onChangeText={onChangeText}
         placeholder={placeholder}
         style={[inputStyle, errorText && styles.errorBorder]}

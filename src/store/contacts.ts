@@ -13,13 +13,18 @@ export const ContactsDetails = atomFamily((id: string) =>
   atom(
     (get) => {
       const contacts = get(ContactsStore)
-      const contact = [...(contacts.data?.ios ?? []), ...(contacts.data?.android ?? [])].find(
-        (c) => c.id === id,
-      )
-      if (!contact) {
+
+      const contactFromIos = contacts.data?.ios?.find((c) => c.id === id)
+      const contactFromAndroid = contactFromIos
+        ? undefined
+        : contacts.data?.android?.find((c) => c.id === id)
+      if (!contactFromIos && !contactFromAndroid) {
         console.error(`Contact with id ${id} not found`)
       }
-      return contact!
+      return {
+        contact: (contactFromIos ?? contactFromAndroid)!,
+        platform: contactFromIos ? "ios" : "android",
+      }
     },
     async (get, set, contact: Connection) => {
       const contacts = await get(ContactsStore)

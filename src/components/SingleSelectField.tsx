@@ -24,7 +24,7 @@ export const SingleSelectField: FC<SingleSelectFieldProps> = ({
     <View>
       <Accordion
         collapsed={!showDropdown}
-        contentMaxHeight={data.length * 50 + 8}
+        contentMaxHeight={data.length ? data.length * 50 + 8 : 58}
         head={
           <View style={{ flexGrow: 1 }}>
             <TextField placeholder={placeholder} value={selected} onChangeText={() => {}} />

@@ -7,10 +7,10 @@ import { RootStackParamList } from "@navigation/rootNavigation"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { ContactsDetails, deleteContactAtom, updateContactAtom } from "@store/contacts"
 import { colors } from "@utils/theme"
-import { useAtom, useSetAtom } from "jotai"
+import { useAtomValue, useSetAtom } from "jotai"
 import { mapValues, pick, pickBy } from "lodash-es"
 import React, { useMemo, useState } from "react"
-import { StyleSheet, TouchableOpacity, View } from "react-native"
+import { Platform, StyleSheet, TouchableOpacity, View } from "react-native"
 import { TrashIcon } from "react-native-heroicons/outline"
 import { object } from "superstruct"
 import { AppButton } from "../components/AppButton"
@@ -22,7 +22,7 @@ const Fields_Keys = ["email", "firstName", "lastName", "phone"] as const
 export const ManageContact = () => {
   const { navigate } = useNavigation()
   const route = useRoute<RouteProp<RootStackParamList, "Manage Contact">>()
-  const [contact, setContact] = useAtom(ContactsDetails(route.params.id))
+  const { contact, platform: contactPlatform } = useAtomValue(ContactsDetails(route.params.id))
   const deleteContact = useSetAtom(deleteContactAtom)
   const updateContact = useSetAtom(updateContactAtom)
 
@@ -71,60 +71,62 @@ export const ManageContact = () => {
                 head={<Typography weight="500">Shared with you</Typography>}
                 collapsed={false}
                 rightHeadLabel={
-                  <TouchableOpacity
-                    onPress={() => {
-                      if (isEditing.sharedWithYou) {
-                        const visibleKeys = Object.keys(
-                          pickBy(fieldsVisibility.sharedWithYou, (val) => val),
-                        )
-                        const ContactInfoValidationObject = object(
-                          pick(
-                            {
-                              email: emailStruct,
-                              firstName: requiredStringMoreThanStruct(1),
-                              lastName: requiredStringMoreThanStruct(1),
-                              phone: requiredStringMoreThanStruct(1),
-                            },
-                            visibleKeys,
-                          ),
-                        )
-                        const validationInfo = customValidate(
-                          pick(fields.sharedWithYou, visibleKeys),
-                          ContactInfoValidationObject,
-                        )
+                  contactPlatform === Platform.OS && (
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (isEditing.sharedWithYou) {
+                          const visibleKeys = Object.keys(
+                            pickBy(fieldsVisibility.sharedWithYou, (val) => val),
+                          )
+                          const ContactInfoValidationObject = object(
+                            pick(
+                              {
+                                email: emailStruct,
+                                firstName: requiredStringMoreThanStruct(1),
+                                lastName: requiredStringMoreThanStruct(1),
+                                phone: requiredStringMoreThanStruct(1),
+                              },
+                              visibleKeys,
+                            ),
+                          )
+                          const validationInfo = customValidate(
+                            pick(fields.sharedWithYou, visibleKeys),
+                            ContactInfoValidationObject,
+                          )
 
-                        if (!validationInfo.valid) {
+                          if (!validationInfo.valid) {
+                            setValidationErrors((state) => ({
+                              ...state,
+                              sharedWithYou: validationInfo.errors,
+                            }))
+                            return
+                          }
+
                           setValidationErrors((state) => ({
                             ...state,
-                            sharedWithYou: validationInfo.errors,
+                            sharedWithYou: {},
                           }))
-                          return
+                          contact.contactInfo?.recordID &&
+                            updateContact({
+                              recordID: contact.contactInfo?.recordID,
+                              newContactInfo: fields.sharedWithYou,
+                              oldContactInfo: contact.sharedInfo,
+                            })
                         }
-
-                        setValidationErrors((state) => ({
-                          ...state,
-                          sharedWithYou: {},
-                        }))
-                        contact.contactInfo?.recordID &&
-                          updateContact({
-                            recordID: contact.contactInfo?.recordID,
-                            newContactInfo: fields.sharedWithYou,
-                            oldContactInfo: contact.sharedInfo,
-                          })
-                      }
-                      setIsEditing((state) => ({ ...state, sharedWithYou: !state.sharedWithYou }))
-                    }}
-                  >
-                    <Typography
-                      style={{
-                        fontSize: 14,
-                        lineHeight: 20,
-                        color: isEditing.sharedWithYou ? colors.dangerLight : colors.blue,
+                        setIsEditing((state) => ({ ...state, sharedWithYou: !state.sharedWithYou }))
                       }}
                     >
-                      {isEditing.sharedWithYou ? "Save" : "Edit"}
-                    </Typography>
-                  </TouchableOpacity>
+                      <Typography
+                        style={{
+                          fontSize: 14,
+                          lineHeight: 20,
+                          color: isEditing.sharedWithYou ? colors.dangerLight : colors.blue,
+                        }}
+                      >
+                        {isEditing.sharedWithYou ? "Save" : "Edit"}
+                      </Typography>
+                    </TouchableOpacity>
+                  )
                 }
                 propsStyles={{
                   container: styles.infoContainer,
@@ -139,6 +141,7 @@ export const ManageContact = () => {
                           <TextField
                             label="Email"
                             style={styles.infoInput}
+                            disabled={contactPlatform !== Platform.OS}
                             value={fields.sharedWithYou.email}
                             errorText={validationErrors.sharedWithYou.email}
                             onChangeText={(text) => {
@@ -179,6 +182,7 @@ export const ManageContact = () => {
                         <TextField
                           label="First Name"
                           style={styles.infoInput}
+                          disabled={contactPlatform !== Platform.OS}
                           value={fields.sharedWithYou.firstName}
                           errorText={validationErrors.sharedWithYou.firstName}
                           onChangeText={(text) => {
@@ -196,6 +200,7 @@ export const ManageContact = () => {
                         <TextField
                           label="Last Name"
                           style={styles.infoInput}
+                          disabled={contactPlatform !== Platform.OS}
                           value={fields.sharedWithYou.lastName}
                           errorText={validationErrors.sharedWithYou.lastName}
                           onChangeText={(text) => {
@@ -214,6 +219,7 @@ export const ManageContact = () => {
                           <TextField
                             label="Phone number"
                             style={styles.infoInput}
+                            disabled={contactPlatform !== Platform.OS}
                             value={fields.sharedWithYou.phone}
                             errorText={validationErrors.sharedWithYou.phone}
                             onChangeText={(text) => {
