@@ -24,21 +24,6 @@ class ContactService {
       android: Connection[]
     }>(STORAGE_KEY)
 
-    // const intersectedNewContacts = newContacts.filter((con) =>
-    //   currentContacts?.[platform]?.find(
-    //     (currentCon) => currentCon.contactInfo?.recordID === con.recordID,
-    //   ),
-    // )
-    // const currentContactsToRemove = currentContacts?.[platform]?.filter(
-    //   (currentCon) =>
-    //     !intersectedNewContacts.find(
-    //       (interCon) => interCon.recordID === currentCon.contactInfo?.recordID,
-    //     ),
-    // )
-    // const newContactsToAdd = newContacts.filter(
-    //   (newCon) => !intersectedNewContacts.find((interCon) => interCon.recordID === newCon.recordID),
-    // )
-
     const newContactsByPlatform = await Promise.all(
       newContacts.map((nativeCon) =>
         this.transformNativeContactToConnection(
