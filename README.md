@@ -57,3 +57,8 @@
 If you run into android build problem with MainActivity class or cleaning cache and builds didn't help you,
 you can try "wipe data" in your Android emulator.
 ![alt text](src/assets/images/readMe//wipe-data-info.png)
+
+### Ios build problems:
+
+If you run into ios build problem, check if you downloaded the last ios simulator version.
+Xcode can be buggy and hide some functions without it.
