@@ -71,8 +71,7 @@ export const updateContactAtom = atom(
             return
           }
         }
-        // it is possible to pass only recordID, not the whole contact
-        // @ts-ignore
+
         const nativeContact = await Contacts.getContactById(recordID)
         if (nativeContact) {
           const getEmailAddresses = () => {
