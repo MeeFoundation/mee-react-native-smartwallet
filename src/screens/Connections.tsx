@@ -178,9 +178,22 @@ export function Connections() {
               <TouchableOpacity onPress={() => handlePressOpen(item.id)}>
                 <ConnectionCard
                   name={item.name}
-                  onPress={() => handlePressOpen(item.id)}
-                  showActionMenu
                   logo={item.iconSrc}
+                  menuActions={[
+                    {
+                      name: "Delete connection",
+                      key: "delete",
+                      onPress: () => {},
+                      icon: "trash",
+                    },
+                    {
+                      name: "Manage connection",
+                      key: "edit",
+                      onPress: () => {},
+                      icon: "pencil",
+                    },
+                    { name: "Link connection", key: "link", onPress: () => {}, icon: "pencil" },
+                  ]}
                 />
               </TouchableOpacity>
             )

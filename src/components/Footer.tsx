@@ -131,7 +131,7 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
           <View style={styles.addConnectionItem}>
             <Text style={styles.title}>Your contacts</Text>
             {Platform.OS === "ios" && (
-              <View style={styles.contaner}>
+              <View style={styles.container}>
                 <Avatar src={IconSources.apple} text={"Apple contacts"} size={48} />
                 <Typography style={styles.name} fontFamily="publicSans.bold" weight="500">
                   Apple contacts
@@ -149,7 +149,7 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
               </View>
             )}
             {Platform.OS === "android" && (
-              <View style={styles.contaner}>
+              <View style={styles.container}>
                 <Avatar src={IconSources.android} text={"Android contacts"} size={48} />
                 <Typography style={styles.name} fontFamily="publicSans.bold" weight="500">
                   Android contacts
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     fontWeight: 500,
   },
-  contaner: {
+  container: {
     padding: 8,
     paddingRight: 24,
     gap: 8,

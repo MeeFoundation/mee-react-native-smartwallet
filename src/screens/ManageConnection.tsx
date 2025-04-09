@@ -7,7 +7,7 @@ import { RouteProp, useRoute } from "@react-navigation/native"
 import { ConnectionDetails, TagsStore } from "@store/index"
 import { colors } from "@utils/theme"
 import { useAtom } from "jotai"
-import React, { useState } from "react"
+import React, { useMemo, useState } from "react"
 import { DimensionValue, Pressable, StyleSheet, View } from "react-native"
 import { EnvelopeIcon, UserIcon } from "react-native-heroicons/outline"
 
@@ -31,7 +31,7 @@ const Tabs = () => {
   const menus: TabItem[] = [
     {
       label: "Profile",
-      component: <Typography></Typography>,
+      component: <Typography />,
     },
   ]
   const [activeTab, setActiveTab] = useState(menus?.[0].label)
@@ -39,7 +39,9 @@ const Tabs = () => {
   const rows = splitIntoRows(menus, 3)
 
   const setActive = (tabLabel: string) => {
-    if (tabLabel === activeTab) return
+    if (tabLabel === activeTab) {
+      return
+    }
     setActiveTab(tabLabel)
   }
 
@@ -79,17 +81,43 @@ export const ManageConnection = () => {
   const [allTags] = useAtom(TagsStore)
 
   const setSelectedTags = async (tags: string[]) => {
-    if (!connection) return
+    if (!connection) {
+      return
+    }
     const updatedConnection = { ...connection, tags }
 
     setConnection(updatedConnection)
   }
 
+  const connectionCardActions = useMemo(
+    () => [
+      {
+        name: "Delete connection",
+        key: "delete" as const,
+        onPress: () => {},
+        icon: "trash" as const,
+      },
+      {
+        name: "Manage connection",
+        key: "edit" as const,
+        onPress: () => {},
+        icon: "pencil" as const,
+      },
+      { name: "Link connection", key: "link" as const, onPress: () => {}, icon: "pencil" as const },
+    ],
+    [],
+  )
+
   return (
     <View style={styles.page}>
       {connection && (
         <>
-          <ConnectionCard border showActionMenu name={connection.name} logo={connection.iconSrc} />
+          <ConnectionCard
+            border
+            name={connection.name}
+            logo={connection.iconSrc}
+            menuActions={connectionCardActions}
+          />
           <Tabs />
           <SelectTags
             tags={allTags}

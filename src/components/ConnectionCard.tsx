@@ -10,7 +10,6 @@ import {
   DropdownMenuIcon,
   DropdownMenuItem,
   DropdownMenuItemTitle,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./DropdownMenu"
 import { Typography } from "./Typography"
@@ -19,15 +18,35 @@ type Props = {
   logo?: ImageSourcePropType | string
   name: string
   border?: boolean
-  onPress?: () => void
-  showActionMenu?: boolean
   style?: ViewStyle
+  menuActions?: {
+    name: string
+    key: "edit" | "link" | "delete"
+    icon: "pencil" | "trash"
+    onPress: () => void
+  }[]
+}
+
+const IconTextToComponentMap: Record<"pencil" | "trash", JSX.Element> = {
+  trash: (
+    <DropdownMenuIcon ios={{ hierarchicalColor: colors.danger, name: "trash" }}>
+      <TrashIcon color={colors.danger} />
+    </DropdownMenuIcon>
+  ),
+  pencil: (
+    <DropdownMenuIcon
+      ios={{ hierarchicalColor: "black", name: "pencil" }}
+      androidIconName="ic_menu_delete"
+    >
+      <PencilSquareIcon color="black" />
+    </DropdownMenuIcon>
+  ),
 }
 
 export const ConnectionCard = (props: Props) => {
-  const { logo, name, border, onPress, showActionMenu, style } = props
+  const { logo, name, border, style, menuActions } = props
   const containerStyles = StyleSheet.flatten(
-    filterNullable([styles.contaner, border && styles.border, style]),
+    filterNullable([styles.container, border && styles.border, style]),
   )
 
   return (
@@ -38,9 +57,7 @@ export const ConnectionCard = (props: Props) => {
           {name}
         </Typography>
 
-        {/* {onPress && <ChevronRightIcon opacity={0.7} onPress={onPress} color="black" />} */}
-
-        {showActionMenu && (
+        {menuActions && (
           <DropdownMenu>
             <DropdownMenuTrigger>
               <AppButton size="sm" variant="tertiary" onPress={() => false}>
@@ -48,31 +65,12 @@ export const ConnectionCard = (props: Props) => {
               </AppButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem key="manage-connection" textValue="Manage connection">
-                <DropdownMenuItemTitle>Manage connection</DropdownMenuItemTitle>
-                <DropdownMenuIcon ios={{ hierarchicalColor: "black", name: "square.and.pencil" }}>
-                  <PencilSquareIcon color="black" />
-                </DropdownMenuIcon>
-              </DropdownMenuItem>
-              <DropdownMenuItem key="link-connection" textValue="Link connection">
-                <DropdownMenuItemTitle>Link connection</DropdownMenuItemTitle>
-                <DropdownMenuIcon ios={{ hierarchicalColor: "black", name: "square.and.pencil" }}>
-                  <PencilSquareIcon color="black" />
-                </DropdownMenuIcon>
-                <PencilSquareIcon color="black" />
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem key="delete-connection" textValue="Delete connection">
-                <DropdownMenuItemTitle color={colors.danger}>
-                  Delete connection
-                </DropdownMenuItemTitle>
-                <DropdownMenuIcon
-                  ios={{ hierarchicalColor: colors.danger, name: "trash" }}
-                  androidIconName="ic_menu_delete"
-                >
-                  <TrashIcon color={colors.danger} />
-                </DropdownMenuIcon>
-              </DropdownMenuItem>
+              {menuActions.map((action) => (
+                <DropdownMenuItem key={action.key} onClick={action.onPress} textValue={action.name}>
+                  <DropdownMenuItemTitle>{action.name}</DropdownMenuItemTitle>
+                  {IconTextToComponentMap[action.icon]}
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
         )}
@@ -82,7 +80,7 @@ export const ConnectionCard = (props: Props) => {
 }
 
 const styles = StyleSheet.create({
-  contaner: {
+  container: {
     padding: 8,
     gap: 8,
     alignItems: "center",

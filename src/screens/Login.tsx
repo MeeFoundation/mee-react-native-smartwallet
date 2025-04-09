@@ -26,11 +26,13 @@ const getSetupPrivacyText = (type: BiometryType | null) => {
   return `To store your data, Mee contains a secure data vault, which is protected by ${type}. Please set up ${type}.`
 }
 
+const testingRustIntegration = () => {
+  getIdentityContextById("49").name
+}
+
 export const Login = () => {
   // test that uniffi RUST function does not crush the app
-  console.log("test uniffi RUST function, next log should be `Dummy Identity`:")
-  console.log(getIdentityContextById("49").name)
-  // delete code above after test at Testflight
+  testingRustIntegration()
 
   const rnBiometrics = new ReactNativeBiometrics({ allowDeviceCredentials: true })
   const [firstTimeAuth, setFirstTimeAuth] = useAtom(isFirstTimeAuthState)
@@ -55,7 +57,9 @@ export const Login = () => {
       return
     }
 
-    if (success) setAuthenticated(true)
+    if (success) {
+      setAuthenticated(true)
+    }
   }
 
   const checkAvailableBiometricAuth = async () => {

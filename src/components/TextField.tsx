@@ -5,7 +5,7 @@ import { SvgProps } from "react-native-svg"
 type InputSize = "md" | "lg"
 
 export type TextFieldProps = {
-  value: string
+  value: string | undefined
   onChangeText: (text: string) => void
   label?: string
   size?: InputSize
@@ -118,11 +118,11 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   label: {
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: "500",
-    lineHeight: 24,
+    lineHeight: 16,
     color: colors.secondary,
-    marginBottom: 8,
+    marginBottom: 2,
   },
   input: {
     paddingVertical: 11,
