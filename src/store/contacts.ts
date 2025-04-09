@@ -1,10 +1,11 @@
 import { Connection, SharedInfo } from "@services/core.service"
 import { atom } from "jotai"
 import { atomFamily } from "jotai/utils"
-import { Platform } from "react-native"
+import { PermissionsAndroid, Platform } from "react-native"
 import Contacts from "react-native-contacts"
 import { PromiseOrType } from "../../@types/utils"
 import { ContactsState, contactService } from "../services/contact.service"
+import { alertContactsNoPermissionAlert } from "../utils/alerts"
 
 const ContactsDefaultStore = atom<PromiseOrType<ContactsState | null>>(() =>
   contactService.getContacts(),
@@ -59,6 +60,17 @@ export const updateContactAtom = atom(
   ) => {
     if (Platform.OS === oldContact.contactInfo?.platform) {
       try {
+        if (Platform.OS === "android") {
+          const permission = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.WRITE_CONTACTS,
+          )
+
+          if (permission !== PermissionsAndroid.RESULTS.GRANTED) {
+            alertContactsNoPermissionAlert()
+            console.error("Write permission denied")
+            return
+          }
+        }
         // it is possible to pass only recordID, not the whole contact
         // @ts-ignore
         const nativeContact = await Contacts.getContactById(recordID)
@@ -162,6 +174,17 @@ export const deleteContactAtom = atom(
       const contacts = await get(ContactsStore)
 
       try {
+        if (Platform.OS === "android") {
+          const permission = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.WRITE_CONTACTS,
+          )
+
+          if (permission !== PermissionsAndroid.RESULTS.GRANTED) {
+            alertContactsNoPermissionAlert()
+            console.error("Write permission denied")
+            return
+          }
+        }
         // it is possible to pass only recordID, not the whole contact
         // @ts-ignore
         await Contacts.deleteContact({
@@ -184,6 +207,8 @@ export const deleteContactAtom = atom(
                 )
               : contacts?.android,
         })
+
+        return true
       } catch (err) {
         console.error(err)
       }

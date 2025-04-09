@@ -57,7 +57,7 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
     }
     const contacts = await Contacts.getAll()
 
-    const result = await contactService.rewriteContactsByPlatform(contacts, "ios")
+    const result = await contactService.rewriteContactsByPlatform(contacts, "android")
     return result
   }
 

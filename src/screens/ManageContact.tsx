@@ -42,8 +42,8 @@ export const ManageContact = () => {
         key: "delete" as const,
         onPress: async () => {
           if (contact.contactInfo?.recordID) {
-            await deleteContact({ contact })
-            navigate("Connections")
+            const isDeleted = await deleteContact({ contact })
+            isDeleted && navigate("Connections")
           }
         },
         icon: "trash" as const,
