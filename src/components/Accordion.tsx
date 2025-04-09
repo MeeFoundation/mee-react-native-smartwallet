@@ -93,7 +93,7 @@ export const Accordion: FC<PropsWithChildren<AccordionProps>> = ({
         >
           {rightHeadLabel}
           <Animated.View style={[propsStyles?.arrow, { transform: [{ rotateX: spin }] }]}>
-            <ChevronDownIcon size={24} />
+            <ChevronDownIcon size={24} stroke="black" />
           </Animated.View>
         </View>
       </Pressable>

@@ -14,9 +14,11 @@ import { StyleSheet, TouchableOpacity, View } from "react-native"
 import { TrashIcon } from "react-native-heroicons/outline"
 import { object } from "superstruct"
 import { AppButton } from "../components/AppButton"
+import { SingleSelectField } from "../components/SingleSelectField"
 import { TextField } from "../components/TextField"
 import { customValidate, emailStruct, requiredStringMoreThanStruct } from "../utils/validation"
 
+const Fields_Keys = ["email", "firstName", "lastName", "phone"] as const
 export const ManageContact = () => {
   const { navigate } = useNavigation()
   const route = useRoute<RouteProp<RootStackParamList, "Manage Contact">>()
@@ -49,6 +51,8 @@ export const ManageContact = () => {
     ],
     [contact?.contactInfo?.recordID, deleteContact, navigate],
   )
+
+  const [selectedFieldToAdd, setSelectedFieldToAdd] = useState<string>()
 
   return (
     <>
@@ -124,147 +128,175 @@ export const ManageContact = () => {
                 }
                 propsStyles={{
                   container: styles.infoContainer,
+                  head: styles.accordionHead,
                 }}
               >
                 {isEditing.sharedWithYou ? (
                   <View>
-                    {fieldsVisibility.sharedWithYou?.email && (
-                      <View style={styles.infoInputRow}>
-                        <TextField
-                          label="Email"
-                          style={styles.infoInput}
-                          value={fields.sharedWithYou.email}
-                          errorText={validationErrors.sharedWithYou.email}
-                          onChangeText={(text) => {
-                            setFields((state) => ({
-                              ...state,
-                              sharedWithYou: {
-                                ...state.sharedWithYou,
-                                email: text,
-                              },
-                            }))
-                          }}
-                        />
-                        <TouchableOpacity
-                          onPress={() => {
-                            setFields({
-                              ...fields,
-                              sharedWithYou: {
-                                ...fields.sharedWithYou,
-                                email: undefined,
-                              },
-                            })
-                            setFieldsVisibility({
-                              ...fieldsVisibility,
-                              sharedWithYou: {
-                                ...fieldsVisibility.sharedWithYou,
-                                email: false,
-                              },
-                            })
-                          }}
-                        >
-                          <View style={styles.trashIconContainer}>
-                            <TrashIcon color={colors.dangerLight} width={24} height={24} />
-                          </View>
-                        </TouchableOpacity>
-                      </View>
-                    )}
-                    <View style={StyleSheet.compose(styles.infoInputRow, styles.infoBorder)}>
-                      <TextField
-                        label="First Name"
-                        style={styles.infoInput}
-                        value={fields.sharedWithYou.firstName}
-                        errorText={validationErrors.sharedWithYou.firstName}
-                        onChangeText={(text) => {
-                          setFields((state) => ({
-                            ...state,
-                            sharedWithYou: {
-                              ...state.sharedWithYou,
-                              firstName: text,
-                            },
-                          }))
-                        }}
-                      />
-                    </View>
-                    <View style={StyleSheet.compose(styles.infoInputRow, styles.infoBorder)}>
-                      <TextField
-                        label="Last Name"
-                        style={styles.infoInput}
-                        value={fields.sharedWithYou.lastName}
-                        errorText={validationErrors.sharedWithYou.lastName}
-                        onChangeText={(text) => {
-                          setFields((state) => ({
-                            ...state,
-                            sharedWithYou: {
-                              ...state.sharedWithYou,
-                              lastName: text,
-                            },
-                          }))
-                        }}
-                      />
-                    </View>
-                    {fieldsVisibility.sharedWithYou?.phone && (
+                    <View style={styles.infoPaddingContainer}>
+                      {fieldsVisibility.sharedWithYou?.email && (
+                        <View style={styles.infoInputRow}>
+                          <TextField
+                            label="Email"
+                            style={styles.infoInput}
+                            value={fields.sharedWithYou.email}
+                            errorText={validationErrors.sharedWithYou.email}
+                            onChangeText={(text) => {
+                              setFields((state) => ({
+                                ...state,
+                                sharedWithYou: {
+                                  ...state.sharedWithYou,
+                                  email: text,
+                                },
+                              }))
+                            }}
+                          />
+                          <TouchableOpacity
+                            onPress={() => {
+                              setFields({
+                                ...fields,
+                                sharedWithYou: {
+                                  ...fields.sharedWithYou,
+                                  email: undefined,
+                                },
+                              })
+                              setFieldsVisibility({
+                                ...fieldsVisibility,
+                                sharedWithYou: {
+                                  ...fieldsVisibility.sharedWithYou,
+                                  email: false,
+                                },
+                              })
+                            }}
+                          >
+                            <View style={styles.trashIconContainer}>
+                              <TrashIcon color={colors.dangerLight} width={24} height={24} />
+                            </View>
+                          </TouchableOpacity>
+                        </View>
+                      )}
                       <View style={StyleSheet.compose(styles.infoInputRow, styles.infoBorder)}>
                         <TextField
-                          label="Phone number"
+                          label="First Name"
                           style={styles.infoInput}
-                          value={fields.sharedWithYou.phone}
-                          errorText={validationErrors.sharedWithYou.phone}
+                          value={fields.sharedWithYou.firstName}
+                          errorText={validationErrors.sharedWithYou.firstName}
                           onChangeText={(text) => {
                             setFields((state) => ({
                               ...state,
                               sharedWithYou: {
                                 ...state.sharedWithYou,
-                                phone: text,
+                                firstName: text,
                               },
                             }))
                           }}
                         />
-                        <TouchableOpacity
-                          onPress={() => {
-                            setFields({
-                              ...fields,
-                              sharedWithYou: {
-                                ...fields.sharedWithYou,
-                                phone: undefined,
-                              },
-                            })
-                            setFieldsVisibility({
-                              ...fieldsVisibility,
-                              sharedWithYou: {
-                                ...fieldsVisibility.sharedWithYou,
-                                phone: false,
-                              },
-                            })
-                          }}
-                        >
-                          <View style={styles.trashIconContainer}>
-                            <TrashIcon color={colors.dangerLight} width={24} height={24} />
-                          </View>
-                        </TouchableOpacity>
                       </View>
-                    )}
+                      <View style={StyleSheet.compose(styles.infoInputRow, styles.infoBorder)}>
+                        <TextField
+                          label="Last Name"
+                          style={styles.infoInput}
+                          value={fields.sharedWithYou.lastName}
+                          errorText={validationErrors.sharedWithYou.lastName}
+                          onChangeText={(text) => {
+                            setFields((state) => ({
+                              ...state,
+                              sharedWithYou: {
+                                ...state.sharedWithYou,
+                                lastName: text,
+                              },
+                            }))
+                          }}
+                        />
+                      </View>
+                      {fieldsVisibility.sharedWithYou?.phone && (
+                        <View style={StyleSheet.compose(styles.infoInputRow, styles.infoBorder)}>
+                          <TextField
+                            label="Phone number"
+                            style={styles.infoInput}
+                            value={fields.sharedWithYou.phone}
+                            errorText={validationErrors.sharedWithYou.phone}
+                            onChangeText={(text) => {
+                              setFields((state) => ({
+                                ...state,
+                                sharedWithYou: {
+                                  ...state.sharedWithYou,
+                                  phone: text,
+                                },
+                              }))
+                            }}
+                          />
+                          <TouchableOpacity
+                            onPress={() => {
+                              setFields({
+                                ...fields,
+                                sharedWithYou: {
+                                  ...fields.sharedWithYou,
+                                  phone: undefined,
+                                },
+                              })
+                              setFieldsVisibility({
+                                ...fieldsVisibility,
+                                sharedWithYou: {
+                                  ...fieldsVisibility.sharedWithYou,
+                                  phone: false,
+                                },
+                              })
+                            }}
+                          >
+                            <View style={styles.trashIconContainer}>
+                              <TrashIcon color={colors.dangerLight} width={24} height={24} />
+                            </View>
+                          </TouchableOpacity>
+                        </View>
+                      )}
+                    </View>
+                    <View style={styles.newFieldsSelectContainer}>
+                      <View style={styles.newFieldsSelect}>
+                        <SingleSelectField
+                          data={Fields_Keys.filter((key) => !fieldsVisibility.sharedWithYou[key])}
+                          selected={selectedFieldToAdd}
+                          onSelect={(data) => {
+                            setSelectedFieldToAdd(data)
+                          }}
+                          placeholder="New field title"
+                        />
+                      </View>
+                      <AppButton
+                        text="Add"
+                        variant="secondary"
+                        disabled={!selectedFieldToAdd}
+                        onPress={() => {
+                          if (selectedFieldToAdd) {
+                            setFieldsVisibility((state) => ({
+                              sharedWithYou: {
+                                ...state.sharedWithYou,
+                                [selectedFieldToAdd]: true,
+                              },
+                            }))
+                          }
+                        }}
+                      />
+                    </View>
                   </View>
                 ) : (
-                  <View>
+                  <View style={styles.infoPaddingContainer}>
                     {fieldsVisibility.sharedWithYou?.email && (
                       <View style={styles.infoRow}>
                         <Typography style={styles.infoLabel}>Email</Typography>
                         <Typography style={styles.infoText}>{contact.sharedInfo.email}</Typography>
                       </View>
                     )}
-                      <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
-                        <Typography style={styles.infoLabel}>First Name</Typography>
-                        <Typography style={styles.infoText}>
-                          {contact.sharedInfo.firstName}
-                        </Typography>
-                      </View>
-                      <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
-                        <Typography style={styles.infoLabel}>Last Name</Typography>
-                        <Typography style={styles.infoText}>
-                          {contact.sharedInfo.lastName}
-                        </Typography>
-                      </View>
+                    <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
+                      <Typography style={styles.infoLabel}>First Name</Typography>
+                      <Typography style={styles.infoText}>
+                        {contact.sharedInfo.firstName}
+                      </Typography>
+                    </View>
+                    <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
+                      <Typography style={styles.infoLabel}>Last Name</Typography>
+                      <Typography style={styles.infoText}>{contact.sharedInfo.lastName}</Typography>
+                    </View>
                     {fieldsVisibility.sharedWithYou?.phone && (
                       <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
                         <Typography style={styles.infoLabel}>Phone number</Typography>
@@ -277,14 +309,6 @@ export const ManageContact = () => {
             </View>
           </View>
         )}
-        <AppButton
-          onPress={() => {
-            setFieldsVisibility((state) => ({
-              sharedWithYou: { ...state.sharedWithYou, phone: true },
-            }))
-          }}
-          text="Add Phone"
-        />
       </View>
     </>
   )
@@ -310,7 +334,6 @@ const styles = StyleSheet.create({
     marginBottom: -2,
   },
   infoText: { color: colors.secondary, fontSize: 18, lineHeight: 28 },
-
   infoInputRow: { paddingVertical: 8, flexDirection: "row", gap: 8 },
   infoInput: { flexGrow: 1 },
   trashIconContainer: {
@@ -321,21 +344,37 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, 0.60)",
     borderRadius: 8,
   },
+  newFieldsSelectContainer: {
+    flexDirection: "row",
+    gap: 8,
+    backgroundColor: "rgba(255, 255, 255, 0.90)",
+    paddingHorizontal: 12,
+    paddingTop: 12,
+    paddingBottom: 4,
+    borderRadius: 8,
+  },
+  newFieldsSelect: {
+    flexGrow: 1,
+  },
 
   infoContainer: {
     borderRadius: 8,
     borderColor: "rgba(255, 255, 255, 0.80)",
     borderWidth: 1,
     backgroundColor: "rgba(255, 255, 255, 0.60)",
+  },
+  infoPaddingContainer: {
     paddingHorizontal: 12,
-    paddingTop: 8,
     paddingBottom: 4,
+  },
+  accordionHead: {
+    paddingTop: 8,
+    paddingHorizontal: 12,
   },
   accordionsContainer: {
     paddingHorizontal: 8,
     paddingBottom: 8,
     gap: 8,
-    // backgroundColor: "rgba(255, 255, 255, 0)",
   },
   container: {
     borderRadius: 12,
