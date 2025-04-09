@@ -32,6 +32,8 @@ export const customValidate = <T, V, S>(
     const errorsMap = errors.reduce((acc, error) => {
       return { ...acc, [error.key]: error.message }
     }, {} as Record<string, string>)
+
+    console.error("Validation failed with errors: ", errors)
     return { valid: false as const, errors: errorsMap }
   }
 

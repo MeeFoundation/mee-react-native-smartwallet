@@ -7,37 +7,6 @@ export const ConnectionsStore = atomWithDefault<Connection[] | Promise<Connectio
   async () => await coreService.getConnections(),
 )
 
-export const ContactsStore = atom<
-  | { data?: { ios?: Connection[]; android?: Connection[] }; error?: string }
-  | Promise<{ data?: { ios?: Connection[]; android?: Connection[] }; error?: string }>
->({ data: undefined, error: undefined })
-
-export const ContactsDetails = atomFamily((id: string) =>
-  atom(
-    async (get) => {
-      const contacts = await get(ContactsStore)
-      const contact = [...(contacts.data?.ios ?? []), ...(contacts.data?.android ?? [])].find(
-        (c) => c.id === id,
-      )
-      if (!contact) {
-        console.error(`Contact with id ${id} not found`)
-      }
-      return contact!
-    },
-    async (get, set, contact: Connection) => {
-      const contacts = await get(ContactsStore)
-      const updatedContacts = {
-        ...contacts,
-        data: {
-          android: contacts.data?.android?.map((c) => (c.id === contact.id ? contact : c)),
-          ios: contacts.data?.ios?.map((c) => (c.id === contact.id ? contact : c)),
-        },
-      }
-      set(ContactsStore, updatedContacts)
-    },
-  ),
-)
-
 export const TagsStore = atom(async (get) => {
   const tags: string[] = []
   const connections = await get(ConnectionsStore)

@@ -19,7 +19,7 @@ type BasicInfo = {
   phone?: string
 }
 
-type SharedInfo = BasicInfo
+export type SharedInfo = BasicInfo
 
 export type Connection = {
   id: string
@@ -28,7 +28,10 @@ export type Connection = {
   tags: string[]
   iconSrc?: ImageRequireSource | string
   profile?: string
-  isContact?: boolean
+  contactInfo?: {
+    recordID: string
+    platform?: "ios" | "android"
+  }
 }
 
 const tags = {

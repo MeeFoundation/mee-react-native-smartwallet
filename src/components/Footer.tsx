@@ -16,7 +16,7 @@ import {
 import Contacts from "react-native-contacts"
 import { LinkIcon, PlusCircleIcon, ShareIcon } from "react-native-heroicons/outline"
 import { IconSources } from "../assets"
-import { ContactsStore } from "../store"
+import { ContactsStore } from "../store/contacts"
 import { alertContactsNoPermissionAlert } from "../utils/alerts"
 import { Avatar } from "./Avatar"
 import { Typography } from "./Typography"
@@ -34,6 +34,7 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
   const getContacts = async () => {
     try {
       const nativeContacts = await Contacts.getAll()
+
       return {
         data: nativeContacts.map((nativeContact) => ({
           id: nativeContact.recordID,
@@ -48,7 +49,10 @@ export const Footer: FC<FooterProps> = ({ isConnectionsPage = false }) => {
           tags: [],
           iconSrc: nativeContact.thumbnailPath,
           // profile?: string
-          isContact: true,
+          contactInfo: {
+            recordID: nativeContact.recordID,
+            platform: Platform.OS === "android" || Platform.OS === "ios" ? Platform.OS : undefined,
+          },
         })),
       }
     } catch (err) {

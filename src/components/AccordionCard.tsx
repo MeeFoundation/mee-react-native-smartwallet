@@ -1,8 +1,10 @@
 import { useNavigation } from "@react-navigation/native"
 import { colors } from "@utils/theme"
+import { useSetAtom } from "jotai"
 import { useState } from "react"
 import { ImageSourcePropType, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { Connection } from "../services/core.service"
+import { deleteContactAtom } from "../store/contacts"
 import { Accordion } from "./Accordion"
 import { ConnectionCard } from "./ConnectionCard"
 
@@ -20,6 +22,8 @@ export const AccordionCard = (props: Props) => {
 
   const navigation = useNavigation()
   const [collapsed, setCollapsed] = useState(INITIAL_COLLAPSED)
+
+  const deleteContact = useSetAtom(deleteContactAtom)
 
   const handlePressOpen = (id: string) => {
     navigation.navigate("Manage Contact", {
@@ -65,7 +69,11 @@ export const AccordionCard = (props: Props) => {
                 {
                   name: "Delete contact",
                   key: "delete",
-                  onPress: () => {},
+                  onPress: async () => {
+                    if (connection.contactInfo?.recordID) {
+                      deleteContact({ recordID: connection.contactInfo.recordID })
+                    }
+                  },
                   icon: "trash",
                 },
                 {

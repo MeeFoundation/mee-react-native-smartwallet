@@ -4,29 +4,31 @@ import { BackgroundLayout } from "@components/BackgroundLayout"
 import { ConnectionCard } from "@components/ConnectionCard"
 import { Typography } from "@components/Typography"
 import { RootStackParamList } from "@navigation/rootNavigation"
-import { RouteProp, useRoute } from "@react-navigation/native"
-import { ContactsDetails } from "@store/index"
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
+import { ContactsDetails, deleteContactAtom, updateContactAtom } from "@store/contacts"
 import { colors } from "@utils/theme"
-import { useAtom } from "jotai"
+import { useAtom, useSetAtom } from "jotai"
+import { mapValues, pick, pickBy } from "lodash-es"
 import React, { useMemo, useState } from "react"
 import { StyleSheet, TouchableOpacity, View } from "react-native"
 import { TrashIcon } from "react-native-heroicons/outline"
-import { object, optional, string } from "superstruct"
+import { object } from "superstruct"
+import { AppButton } from "../components/AppButton"
 import { TextField } from "../components/TextField"
 import { customValidate, emailStruct, requiredStringMoreThanStruct } from "../utils/validation"
 
-const ContactInfoValidationObject = object({
-  email: optional(emailStruct),
-  firstName: requiredStringMoreThanStruct(1),
-  lastName: requiredStringMoreThanStruct(1),
-  phone: optional(string()),
-})
-
 export const ManageContact = () => {
+  const { navigate } = useNavigation()
   const route = useRoute<RouteProp<RootStackParamList, "Manage Contact">>()
   const [contact, setContact] = useAtom(ContactsDetails(route.params.id))
+  const deleteContact = useSetAtom(deleteContactAtom)
+  const updateContact = useSetAtom(updateContactAtom)
+
   const [isEditing, setIsEditing] = useState({ sharedWithYou: false })
-  const [fields, setFields] = useState({ sharedWithYou: contact.sharedInfo })
+  const [fields, setFields] = useState({ sharedWithYou: contact?.sharedInfo })
+  const [fieldsVisibility, setFieldsVisibility] = useState({
+    sharedWithYou: mapValues(contact?.sharedInfo, (val) => !!val),
+  })
   const [validationErrors, setValidationErrors] = useState<{
     sharedWithYou: Partial<typeof contact.sharedInfo>
   }>({ sharedWithYou: {} })
@@ -36,11 +38,16 @@ export const ManageContact = () => {
       {
         name: "Delete contact",
         key: "delete" as const,
-        onPress: () => {},
+        onPress: async () => {
+          if (contact.contactInfo?.recordID) {
+            await deleteContact({ recordID: contact.contactInfo.recordID })
+            navigate("Connections")
+          }
+        },
         icon: "trash" as const,
       },
     ],
-    [],
+    [contact?.contactInfo?.recordID, deleteContact, navigate],
   )
 
   return (
@@ -62,25 +69,46 @@ export const ManageContact = () => {
                 rightHeadLabel={
                   <TouchableOpacity
                     onPress={() => {
-                      const validationInfo = customValidate(
-                        fields.sharedWithYou,
-                        ContactInfoValidationObject,
-                      )
+                      if (isEditing.sharedWithYou) {
+                        const visibleKeys = Object.keys(
+                          pickBy(fieldsVisibility.sharedWithYou, (val) => val),
+                        )
+                        const ContactInfoValidationObject = object(
+                          pick(
+                            {
+                              email: emailStruct,
+                              firstName: requiredStringMoreThanStruct(1),
+                              lastName: requiredStringMoreThanStruct(1),
+                              phone: requiredStringMoreThanStruct(1),
+                            },
+                            visibleKeys,
+                          ),
+                        )
+                        const validationInfo = customValidate(
+                          pick(fields.sharedWithYou, visibleKeys),
+                          ContactInfoValidationObject,
+                        )
 
-                      if (!validationInfo.valid) {
+                        if (!validationInfo.valid) {
+                          setValidationErrors((state) => ({
+                            ...state,
+                            sharedWithYou: validationInfo.errors,
+                          }))
+                          return
+                        }
+
                         setValidationErrors((state) => ({
                           ...state,
-                          sharedWithYou: validationInfo.errors,
+                          sharedWithYou: {},
                         }))
-                        return
+                        contact.contactInfo?.recordID &&
+                          updateContact({
+                            recordID: contact.contactInfo?.recordID,
+                            newContactInfo: fields.sharedWithYou,
+                            oldContactInfo: contact.sharedInfo,
+                          })
                       }
-
-                      setValidationErrors((state) => ({
-                        ...state,
-                        sharedWithYou: {},
-                      }))
                       setIsEditing((state) => ({ ...state, sharedWithYou: !state.sharedWithYou }))
-                      setContact({ ...contact, sharedInfo: fields.sharedWithYou })
                     }}
                   >
                     <Typography
@@ -100,28 +128,47 @@ export const ManageContact = () => {
               >
                 {isEditing.sharedWithYou ? (
                   <View>
-                    <View style={StyleSheet.compose(styles.infoInputRow, styles.infoBorder)}>
-                      <TextField
-                        label="Email"
-                        style={styles.infoInput}
-                        value={fields.sharedWithYou.email}
-                        errorText={validationErrors.sharedWithYou.email}
-                        onChangeText={(text) => {
-                          setFields((state) => ({
-                            ...state,
-                            sharedWithYou: {
-                              ...state.sharedWithYou,
-                              email: text,
-                            },
-                          }))
-                        }}
-                      />
-                      <TouchableOpacity>
-                        <View style={styles.trashIconContainer}>
-                          <TrashIcon color={colors.dangerLight} width={24} height={24} />
-                        </View>
-                      </TouchableOpacity>
-                    </View>
+                    {fieldsVisibility.sharedWithYou?.email && (
+                      <View style={styles.infoInputRow}>
+                        <TextField
+                          label="Email"
+                          style={styles.infoInput}
+                          value={fields.sharedWithYou.email}
+                          errorText={validationErrors.sharedWithYou.email}
+                          onChangeText={(text) => {
+                            setFields((state) => ({
+                              ...state,
+                              sharedWithYou: {
+                                ...state.sharedWithYou,
+                                email: text,
+                              },
+                            }))
+                          }}
+                        />
+                        <TouchableOpacity
+                          onPress={() => {
+                            setFields({
+                              ...fields,
+                              sharedWithYou: {
+                                ...fields.sharedWithYou,
+                                email: undefined,
+                              },
+                            })
+                            setFieldsVisibility({
+                              ...fieldsVisibility,
+                              sharedWithYou: {
+                                ...fieldsVisibility.sharedWithYou,
+                                email: false,
+                              },
+                            })
+                          }}
+                        >
+                          <View style={styles.trashIconContainer}>
+                            <TrashIcon color={colors.dangerLight} width={24} height={24} />
+                          </View>
+                        </TouchableOpacity>
+                      </View>
+                    )}
                     <View style={StyleSheet.compose(styles.infoInputRow, styles.infoBorder)}>
                       <TextField
                         label="First Name"
@@ -138,11 +185,6 @@ export const ManageContact = () => {
                           }))
                         }}
                       />
-                      <TouchableOpacity>
-                        <View style={styles.trashIconContainer}>
-                          <TrashIcon color={colors.dangerLight} width={24} height={24} />
-                        </View>
-                      </TouchableOpacity>
                     </View>
                     <View style={StyleSheet.compose(styles.infoInputRow, styles.infoBorder)}>
                       <TextField
@@ -160,61 +202,89 @@ export const ManageContact = () => {
                           }))
                         }}
                       />
-                      <TouchableOpacity>
-                        <View style={styles.trashIconContainer}>
-                          <TrashIcon color={colors.dangerLight} width={24} height={24} />
-                        </View>
-                      </TouchableOpacity>
                     </View>
-                    <View style={styles.infoInputRow}>
-                      <TextField
-                        label="Phone number"
-                        style={styles.infoInput}
-                        value={fields.sharedWithYou.phone}
-                        errorText={validationErrors.sharedWithYou.phone}
-                        onChangeText={(text) => {
-                          setFields((state) => ({
-                            ...state,
-                            sharedWithYou: {
-                              ...state.sharedWithYou,
-                              phone: text,
-                            },
-                          }))
-                        }}
-                      />
-                      <TouchableOpacity>
-                        <View style={styles.trashIconContainer}>
-                          <TrashIcon color={colors.dangerLight} width={24} height={24} />
-                        </View>
-                      </TouchableOpacity>
-                    </View>
+                    {fieldsVisibility.sharedWithYou?.phone && (
+                      <View style={StyleSheet.compose(styles.infoInputRow, styles.infoBorder)}>
+                        <TextField
+                          label="Phone number"
+                          style={styles.infoInput}
+                          value={fields.sharedWithYou.phone}
+                          errorText={validationErrors.sharedWithYou.phone}
+                          onChangeText={(text) => {
+                            setFields((state) => ({
+                              ...state,
+                              sharedWithYou: {
+                                ...state.sharedWithYou,
+                                phone: text,
+                              },
+                            }))
+                          }}
+                        />
+                        <TouchableOpacity
+                          onPress={() => {
+                            setFields({
+                              ...fields,
+                              sharedWithYou: {
+                                ...fields.sharedWithYou,
+                                phone: undefined,
+                              },
+                            })
+                            setFieldsVisibility({
+                              ...fieldsVisibility,
+                              sharedWithYou: {
+                                ...fieldsVisibility.sharedWithYou,
+                                phone: false,
+                              },
+                            })
+                          }}
+                        >
+                          <View style={styles.trashIconContainer}>
+                            <TrashIcon color={colors.dangerLight} width={24} height={24} />
+                          </View>
+                        </TouchableOpacity>
+                      </View>
+                    )}
                   </View>
                 ) : (
                   <View>
-                    <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
-                      <Typography style={styles.infoLabel}>Email</Typography>
-                      <Typography style={styles.infoText}>{contact.sharedInfo.email}</Typography>
-                    </View>
-                    <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
-                      <Typography style={styles.infoLabel}>First Name</Typography>
-                      <Typography style={styles.infoText}>
-                        {contact.sharedInfo.firstName}
-                      </Typography>
-                    </View>
-                    <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
-                      <Typography style={styles.infoLabel}>Last Name</Typography>
-                      <Typography style={styles.infoText}>{contact.sharedInfo.lastName}</Typography>
-                    </View>
-                    <View style={styles.infoRow}>
-                      <Typography style={styles.infoLabel}>Phone number</Typography>
-                      <Typography style={styles.infoText}>{contact.sharedInfo.phone}</Typography>
-                    </View>
+                    {fieldsVisibility.sharedWithYou?.email && (
+                      <View style={styles.infoRow}>
+                        <Typography style={styles.infoLabel}>Email</Typography>
+                        <Typography style={styles.infoText}>{contact.sharedInfo.email}</Typography>
+                      </View>
+                    )}
+                      <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
+                        <Typography style={styles.infoLabel}>First Name</Typography>
+                        <Typography style={styles.infoText}>
+                          {contact.sharedInfo.firstName}
+                        </Typography>
+                      </View>
+                      <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
+                        <Typography style={styles.infoLabel}>Last Name</Typography>
+                        <Typography style={styles.infoText}>
+                          {contact.sharedInfo.lastName}
+                        </Typography>
+                      </View>
+                    {fieldsVisibility.sharedWithYou?.phone && (
+                      <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
+                        <Typography style={styles.infoLabel}>Phone number</Typography>
+                        <Typography style={styles.infoText}>{contact.sharedInfo.phone}</Typography>
+                      </View>
+                    )}
                   </View>
                 )}
               </Accordion>
             </View>
           </View>
         )}
+        <AppButton
+          onPress={() => {
+            setFieldsVisibility((state) => ({
+              sharedWithYou: { ...state.sharedWithYou, phone: true },
+            }))
+          }}
+          text="Add Phone"
+        />
       </View>
     </>
   )
@@ -231,7 +301,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, 0.90)",
   },
   infoRow: { paddingVertical: 8 },
-  infoBorder: { borderBottomWidth: 1, borderBottomColor: colors.border },
+  infoBorder: { borderTopWidth: 1, borderTopColor: colors.border },
   infoLabel: {
     color: colors.secondary,
     fontSize: 12,

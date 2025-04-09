@@ -66,7 +66,11 @@ export const ConnectionCard = (props: Props) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               {menuActions.map((action) => (
-                <DropdownMenuItem key={action.key} onClick={action.onPress} textValue={action.name}>
+                <DropdownMenuItem
+                  key={action.key}
+                  onSelect={action.onPress}
+                  textValue={action.name}
+                >
                   <DropdownMenuItemTitle>{action.name}</DropdownMenuItemTitle>
                   {IconTextToComponentMap[action.icon]}
                 </DropdownMenuItem>
