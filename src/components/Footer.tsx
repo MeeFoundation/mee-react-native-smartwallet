@@ -27,7 +27,7 @@ type FooterProps = {
   activePage?: string
 }
 
-export const Footer: FC<FooterProps> = ({ activePage = false }) => {
+export const Footer: FC<FooterProps> = ({ activePage }) => {
   const bottomSheetRef = useRef<BottomSheet>(null)
   const navigation = useNavigation()
   const isCompaniesPage = activePage === "companies"
