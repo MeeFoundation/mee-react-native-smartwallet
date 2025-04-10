@@ -21,26 +21,25 @@ import { filterNullable } from "../utils/ts-utils"
 
 const filterByProfile = (connections: Connection[], profile: string) => {
   if (profile === "All profiles") {
-    return [{ title: "All profiles", data: connections }]
+    return connections
   }
 
-  const map = new Map<string, { title: string; data: Connection[] }>()
-  map.set(profile, { title: profile, data: [] })
+  const filteredConnections: Connection[] = []
 
   if (profile === "Unspecified") {
     connections.forEach((connection) => {
       if (!connection.profile) {
-        map.get("Unspecified")!.data.push(connection)
+        filteredConnections.push(connection)
       }
     })
   } else {
     connections.forEach((connection) => {
       if (connection.profile === profile) {
-        map.get(profile)!.data.push(connection)
+        filteredConnections.push(connection)
       }
     })
   }
-  return Array.from(map.values())
+  return filteredConnections
 }
 
 const filterConnections = (connections: Connection[], filter: FilterValue, profile: string) => {
@@ -139,31 +138,9 @@ export function Connections() {
     )
   }
 
-  const getRenderData = () => {
-    if (!isPeopleView) {
-      return filteredData
-    }
-
-    if (contacts?.ios && contacts?.android) {
-      return filteredData.map((_, idx) => ({
-        data: filterNullable([
-          ...filteredIosContactsData[idx].data,
-          ...filteredAndroidContactsData[idx].data,
-        ]),
-      }))
-    } else if (contacts?.ios) {
-      return filteredData.map((_, idx) => ({
-        data: filterNullable([...filteredIosContactsData[idx].data]),
-      }))
-    } else if (contacts?.android) {
-      return filteredData.map((_, idx) => ({
-        data: filterNullable([...filteredAndroidContactsData[idx].data]),
-      }))
-    }
-    return [{ data: [] }] as [{ data: Connection[] }]
-  }
-
-  const renderData = getRenderData()
+  const renderData = !isPeopleView
+    ? filteredData
+    : filterNullable([...filteredIosContactsData, ...filteredAndroidContactsData])
 
   const sectionSeparator = () => <View style={styles.sectionSeparator} />
 
@@ -183,7 +160,7 @@ export function Connections() {
         </View>
         <SectionList
           contentContainerStyle={{ gap: 8 }}
-          sections={renderData}
+          sections={[{ data: renderData }]}
           keyExtractor={(item, index) => item.id + index}
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => handlePressOpen(item)}>
