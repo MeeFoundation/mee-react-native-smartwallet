@@ -14,17 +14,19 @@ import {
 } from "./DropdownMenu"
 import { Typography } from "./Typography"
 
+export type MenuAction = {
+  name: string
+  key: "edit" | "link" | "delete"
+  icon: "pencil" | "trash"
+  onPress: () => void
+}
+
 type Props = {
   logo?: ImageSourcePropType | string
   name: string
   border?: boolean
   style?: ViewStyle
-  menuActions?: {
-    name: string
-    key: "edit" | "link" | "delete"
-    icon: "pencil" | "trash"
-    onPress: () => void
-  }[]
+  menuActions?: MenuAction[]
 }
 
 const IconTextToComponentMap: Record<"pencil" | "trash", JSX.Element> = {
