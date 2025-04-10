@@ -1,7 +1,5 @@
-import { useRoute } from "@react-navigation/native"
-import { customHeader } from "@store/index"
+import { ParamListBase, RouteProp, useRoute } from "@react-navigation/native"
 import { colors } from "@utils/theme"
-import { useAtomValue } from "jotai"
 import { StyleSheet, TouchableOpacity, View } from "react-native"
 import { Bars3Icon, BellIcon, MagnifyingGlassIcon } from "react-native-heroicons/outline"
 import { useDrawer } from "./Drawer"
@@ -25,12 +23,20 @@ export const HeaderRight = () => {
   )
 }
 
+const getHeaderTitle = (route: RouteProp<ParamListBase>) => {
+  if (route.params && "customView" in route.params && typeof route.params.customView === "string") {
+    return route.params.customView
+  }
+
+  return route.name
+}
+
 export const HeaderLeft = () => {
   const route = useRoute()
-  const custom = useAtomValue(customHeader)
+  const title = getHeaderTitle(route)
   return (
     <View style={styles.horizontalGaps}>
-      <Typography style={styles.text}>{custom && custom.length ? custom : route.name}</Typography>
+      <Typography style={styles.text}>{title}</Typography>
     </View>
   )
 }

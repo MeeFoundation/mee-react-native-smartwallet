@@ -1,6 +1,6 @@
 import { AppButton } from "@components/AppButton"
 import { HeaderLeft, HeaderRight } from "@components/Header"
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, useRoute } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { Connections } from "@screens/Connections"
 import { DataGenerating } from "@screens/DataGenerating"
@@ -48,6 +48,10 @@ declare global {
   namespace ReactNavigation {
     interface RootParamList extends RootStackParamListWithLinks {}
   }
+}
+
+export type CustomViewRoute = {
+  Custom: { customView?: string }
 }
 
 const screenOptions = {
@@ -122,16 +126,31 @@ const BackButton = () => {
   )
 }
 
+const ConnectionsWrapper = () => {
+  return <Connections />
+}
+const PeopleWrapper = () => {
+  return <Connections isPeopleView />
+}
+
 const ConnectionsStack = () => {
   useEffect(() => {
     if (Platform.OS === "android") {
       StatusBar.setBackgroundColor(colors.primary)
     }
   }, [])
+  const route = useRoute()
 
+  if (route.params && "customView" in route.params && route.params.customView === "People") {
+    return (
+      <Stack.Navigator screenOptions={screenOptions}>
+        <Stack.Screen name={rootNavigationLinks.connectionsItem} component={PeopleWrapper} />
+      </Stack.Navigator>
+    )
+  }
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name={rootNavigationLinks.connectionsItem} component={Connections} />
+      <Stack.Screen name={rootNavigationLinks.connectionsItem} component={ConnectionsWrapper} />
     </Stack.Navigator>
   )
 }

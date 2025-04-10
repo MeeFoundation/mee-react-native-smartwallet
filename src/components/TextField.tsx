@@ -74,33 +74,25 @@ export const TextField: FC<TextFieldProps> = ({
     onChangeText("")
   }
 
+  const inputProps = {
+    ref: inputRef,
+    value: value,
+    editable: !disabled,
+    onChangeText: onChangeText,
+    placeholder: placeholder,
+    style: [inputStyle, errorText && styles.errorBorder],
+    placeholderTextColor: colors["gray-400"],
+    onFocus: focusHandler,
+    onSubmitEditing: blurHandler,
+  }
+
   return (
     <View style={StyleSheet.compose(styles.container, style)}>
       {label && <Text style={styles.label}>{label}</Text>}
       {isBottomSheetTextInput ? (
-        <BottomSheetTextInput
-          ref={inputRef}
-          value={value}
-          editable={!disabled}
-          onChangeText={onChangeText}
-          placeholder={placeholder}
-          style={[inputStyle, errorText && styles.errorBorder]}
-          placeholderTextColor={colors["gray-400"]}
-          onFocus={focusHandler}
-          onSubmitEditing={blurHandler}
-        />
+        <BottomSheetTextInput {...inputProps} />
       ) : (
-        <TextInput
-          ref={inputRef}
-          value={value}
-          editable={!disabled}
-          onChangeText={onChangeText}
-          placeholder={placeholder}
-          style={[inputStyle, errorText && styles.errorBorder]}
-          placeholderTextColor={colors["gray-400"]}
-          onFocus={focusHandler}
-          onSubmitEditing={blurHandler}
-        />
+        <TextInput {...inputProps} />
       )}
       {errorText && <Text style={styles.errorText}>{errorText}</Text>}
 

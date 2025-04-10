@@ -43,7 +43,7 @@ export const ManageContact = () => {
         onPress: async () => {
           if (contact.contactInfo?.recordID) {
             const isDeleted = await deleteContact({ contact })
-            isDeleted && navigate("Companies")
+            isDeleted && navigate("Companies", { customView: "People" })
           }
         },
         icon: "trash" as const,

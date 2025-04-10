@@ -53,7 +53,7 @@ const filterConnections = (connections: Connection[], filter: FilterValue, profi
 }
 
 interface ConnectionListProps {
-  isPeopleView?: boolean
+  isPeopleView: boolean
   filter: FilterValue
   selectedProfile: string
   onProfilesPress: () => void
@@ -211,7 +211,6 @@ const PeopleList: FC<CompaniesListProps> = ({
 }
 
 interface CollectionsContentViewProps {
-  isPeopleView?: boolean
   renderData: Connection[]
   handlePressOpen: (item: Connection) => void
   getMenuActions: (item: Connection) => MenuAction[]

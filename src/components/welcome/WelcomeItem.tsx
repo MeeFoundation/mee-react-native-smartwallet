@@ -1,7 +1,7 @@
 import { BubblesSvg, MeeMascotSvg } from "@assets/index"
 import { AppButton } from "@components/AppButton"
 import { useNavigation } from "@react-navigation/native"
-import { customHeader, isConnectionPeopleView, isWelcomeViewedAtom } from "@store/index"
+import { isWelcomeViewedAtom } from "@store/index"
 import { colors } from "@utils/theme"
 import { useSetAtom } from "jotai"
 import { Dimensions, StyleSheet, View } from "react-native"
@@ -15,13 +15,9 @@ export type WelcomeSlide = {
 export const WelcomeItem = ({ btn = false, CloudImage }: WelcomeSlide) => {
   const navigation = useNavigation()
   const setIsWelcomeViewedAtom = useSetAtom(isWelcomeViewedAtom)
-  const setConnectionPeopleView = useSetAtom(isConnectionPeopleView)
-  const setCustomHeader = useSetAtom(customHeader)
   const handlePress = () => {
     setIsWelcomeViewedAtom(true)
     navigation.navigate("Companies")
-    setConnectionPeopleView(false)
-    setCustomHeader(undefined)
   }
 
   return (

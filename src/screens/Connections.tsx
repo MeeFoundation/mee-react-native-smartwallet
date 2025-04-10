@@ -4,13 +4,16 @@ import { FilterConnections, FilterValue } from "@components/FilterConnections"
 import { Footer } from "@components/Footer"
 import { RadioList } from "@components/RadioList"
 import BottomSheet from "@gorhom/bottom-sheet"
-import { ProfileStore, isConnectionPeopleView } from "@store/index"
+import { ProfileStore } from "@store/index"
 import { useAtomValue } from "jotai"
 import { useRef, useState } from "react"
 import { StyleSheet, View } from "react-native"
 
-export function Connections() {
-  const isPeopleView = useAtomValue(isConnectionPeopleView)
+interface ConnectionsProps {
+  isPeopleView?: boolean
+}
+export function Connections(props: ConnectionsProps) {
+  const { isPeopleView = false } = props
   const allProfiles = useAtomValue(ProfileStore)
   const bottomSheetRef = useRef<BottomSheet>(null)
   const filterSheetRef = useRef<BottomSheet>(null)

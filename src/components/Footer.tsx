@@ -1,7 +1,6 @@
 import { BottomSheetBackDrop } from "@components/BottomSheet"
 import BottomSheet from "@gorhom/bottom-sheet"
 import { useNavigation } from "@react-navigation/native"
-import { customHeader, isConnectionPeopleView } from "@store/index"
 import { colors } from "@utils/theme"
 import { useSetAtom } from "jotai"
 import { FC, useRef } from "react"
@@ -25,16 +24,15 @@ import { Typography } from "./Typography"
 
 type FooterProps = {
   activePage?: string
+  setIsPeopleView?: (isPeopleView: boolean) => void
 }
 
-export const Footer: FC<FooterProps> = ({ activePage }) => {
+export const Footer: FC<FooterProps> = ({ activePage = false, setIsPeopleView }) => {
   const bottomSheetRef = useRef<BottomSheet>(null)
   const navigation = useNavigation()
   const isCompaniesPage = activePage === "companies"
   const isPeoplePage = activePage === "people"
   const setContacts = useSetAtom(ContactsStore)
-  const setConnectionPeopleView = useSetAtom(isConnectionPeopleView)
-  const setCustomHeader = useSetAtom(customHeader)
 
   const getIosContacts = async () => {
     let contacts
@@ -68,15 +66,12 @@ export const Footer: FC<FooterProps> = ({ activePage }) => {
   const onAddPress = () => {
     bottomSheetRef.current?.expand()
   }
+
   const CompaniesPress = () => {
-    setCustomHeader("Companies")
-    setConnectionPeopleView(false)
     navigation.navigate("Companies")
   }
   const PeoplePress = () => {
-    setCustomHeader("People")
-    setConnectionPeopleView(true)
-    navigation.navigate("Companies")
+    navigation.navigate("Companies", { customView: "People" })
   }
 
   return (

@@ -62,7 +62,3 @@ export const isWelcomeViewedAtom = atomWithMMKV("isWelcomeViewed", false)
 export const isFirstTimeAuthState = atomWithMMKV("firstTimeAuth", true)
 
 export const isAuthenticatedState = atom(false)
-
-export const isConnectionPeopleView = atom(false)
-
-export const customHeader = atom<string>()
