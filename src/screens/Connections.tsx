@@ -9,16 +9,14 @@ import { Typography } from "@components/Typography"
 import BottomSheet from "@gorhom/bottom-sheet"
 import { useNavigation } from "@react-navigation/native"
 import { Connection } from "@services/core.service"
-import { ContactsStore } from "@store/contacts"
-import { ConnectionsStore, ProfileStore } from "@store/index"
+import { ContactsStore, deleteContactAtom } from "@store/contacts"
+import { ConnectionsStore, ProfileStore, customHeader, isConnectionPeopleView } from "@store/index"
 import { colors } from "@utils/theme"
-import { useAtomValue } from "jotai"
-import { sortBy } from "lodash-es"
+import { useAtom, useAtomValue, useSetAtom } from "jotai"
+import { compact, sortBy } from "lodash-es"
 import { useMemo, useRef, useState } from "react"
-import { SectionList, StyleSheet, TouchableOpacity, View } from "react-native"
+import { Platform, SectionList, StyleSheet, TouchableOpacity, View } from "react-native"
 import { AdjustmentsVerticalIcon, ChevronDownIcon } from "react-native-heroicons/outline"
-import { IconSources } from "../assets"
-import { AccordionCard } from "../components/AccordionCard"
 import { filterNullable } from "../utils/ts-utils"
 
 const filterByProfile = (connections: Connection[], profile: string) => {
@@ -61,8 +59,11 @@ const filterConnections = (connections: Connection[], filter: FilterValue, profi
 }
 
 export function Connections() {
+  const [isPeopleView, setIsPeopleView] = useAtom(isConnectionPeopleView)
+  const setCustomHeader = useSetAtom(customHeader)
   const connections = useAtomValue(ConnectionsStore)
   const contacts = useAtomValue(ContactsStore)
+  const deleteContact = useSetAtom(deleteContactAtom)
   const allProfiles = useAtomValue(ProfileStore)
   const bottomSheetRef = useRef<BottomSheet>(null)
   const filterSheetRef = useRef<BottomSheet>(null)
@@ -90,8 +91,14 @@ export function Connections() {
   )
   const navigation = useNavigation()
 
-  const handlePressOpen = (id: string) => {
-    navigation.navigate("Manage Connection", { id })
+  const handlePressOpen = (item: Connection) => {
+    if (isPeopleView) {
+      navigation.navigate("Manage Contact", {
+        id: item.id,
+      })
+    } else {
+      navigation.navigate("Manage Connection", { id: item.id })
+    }
   }
 
   const applyProfileFilter = () => {
@@ -116,18 +123,49 @@ export function Connections() {
   }
 
   if (
-    (!contacts || (contacts.ios?.length === 0 && contacts.android?.length === 0)) &&
-    connections.length === 0
+    (isPeopleView &&
+      (!contacts ||
+        ((!contacts.ios || contacts.ios.length === 0) &&
+          (!contacts.android || contacts.android.length === 0)))) ||
+    (!isPeopleView && connections.length === 0)
   ) {
     return (
       <>
         <View style={styles.emptyContainer}>
           <NoHaveConnections style={{ flex: 1 }} height="100%" width="100%" />
         </View>
-        <Footer isConnectionsPage />
+        <Footer activePage={!isPeopleView ? "companies" : "people"} />
       </>
     )
   }
+
+  const getRenderData = () => {
+    if (!isPeopleView) {
+      return filteredData
+    }
+
+    if (contacts?.ios && contacts?.android) {
+      return filteredData.map((_, idx) => ({
+        data: filterNullable([
+          ...filteredIosContactsData[idx].data,
+          ...filteredAndroidContactsData[idx].data,
+        ]),
+      }))
+    } else if (contacts?.ios) {
+      return filteredData.map((_, idx) => ({
+        data: filterNullable([...filteredIosContactsData[idx].data]),
+      }))
+    } else if (contacts?.android) {
+      return filteredData.map((_, idx) => ({
+        data: filterNullable([...filteredAndroidContactsData[idx].data]),
+      }))
+    }
+    return [{ data: [] }] as [{ data: Connection[] }]
+  }
+
+  const renderData = getRenderData()
+
+  const sectionSeparator = () => <View style={styles.sectionSeparator} />
 
   return (
     <>
@@ -143,64 +181,56 @@ export function Connections() {
             <AdjustmentsVerticalIcon size={20} color="black" />
           </TouchableOpacity>
         </View>
-
         <SectionList
           contentContainerStyle={{ gap: 8 }}
-          sections={filteredData.map((d, idx) => ({
-            ...d,
-            data: filterNullable([
-              contacts?.ios && {
-                id: "Apple",
-                title: "Apple Contacts",
-                data: filteredIosContactsData[idx].data,
-                iconSrc: IconSources.apple,
-                isContactsList: true,
-              },
-              contacts?.android && {
-                id: "Android",
-                title: "Android Contacts",
-                data: filteredAndroidContactsData[idx].data,
-                iconSrc: IconSources.android,
-                isContactsList: true,
-              },
-              ...d.data,
-            ]),
-          }))}
+          sections={renderData}
           keyExtractor={(item, index) => item.id + index}
-          renderItem={({ item }) =>
-            "isContactsList" in item ? (
-              <AccordionCard
-                innerConnections={item.data}
-                title={item.title}
-                iconSrc={item.iconSrc}
-                innerElHeight={64}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => handlePressOpen(item)}>
+              <ConnectionCard
+                name={item.name}
+                logo={item.iconSrc}
+                menuActions={
+                  isPeopleView
+                    ? compact([
+                        Platform.OS === item.contactInfo?.platform && {
+                          name: "Delete contact",
+                          key: "delete",
+                          onPress: async () => {
+                            if (item.contactInfo?.recordID) {
+                              deleteContact({ contact: item })
+                            }
+                          },
+                          icon: "trash",
+                        },
+                        {
+                          name: "Manage contact",
+                          key: "edit",
+                          onPress: () => handlePressOpen(item),
+                          icon: "pencil",
+                        },
+                      ])
+                    : [
+                        {
+                          name: "Delete connection",
+                          key: "delete",
+                          onPress: () => {},
+                          icon: "trash",
+                        },
+                        {
+                          name: "Manage connection",
+                          key: "edit",
+                          onPress: () => {},
+                          icon: "pencil",
+                        },
+                        { name: "Link connection", key: "link", onPress: () => {}, icon: "pencil" },
+                      ]
+                }
               />
-            ) : (
-              <TouchableOpacity onPress={() => handlePressOpen(item.id)}>
-                <ConnectionCard
-                  name={item.name}
-                  logo={item.iconSrc}
-                  menuActions={[
-                    {
-                      name: "Delete connection",
-                      key: "delete",
-                      onPress: () => {},
-                      icon: "trash",
-                    },
-                    {
-                      name: "Manage connection",
-                      key: "edit",
-                      onPress: () => {},
-                      icon: "pencil",
-                    },
-                    { name: "Link connection", key: "link", onPress: () => {}, icon: "pencil" },
-                  ]}
-                />
-              </TouchableOpacity>
-            )
-          }
+            </TouchableOpacity>
+          )}
           renderSectionFooter={() => <View style={{ height: 8 }} />}
-          SectionSeparatorComponent={() => <View style={styles.sectionSeparator} />}
+          SectionSeparatorComponent={sectionSeparator}
           style={styles.sectionContainer}
         />
       </View>
@@ -229,7 +259,7 @@ export function Connections() {
           <FilterConnections filter={filter} onChangeFilter={applyFilters} />
         </View>
       </BottomSheetBackDrop>
-      <Footer isConnectionsPage />
+      <Footer activePage={!isPeopleView ? "companies" : "people"} />
     </>
   )
 }

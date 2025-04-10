@@ -1,5 +1,7 @@
 import { useRoute } from "@react-navigation/native"
+import { customHeader } from "@store/index"
 import { colors } from "@utils/theme"
+import { useAtomValue } from "jotai"
 import { StyleSheet, TouchableOpacity, View } from "react-native"
 import { Bars3Icon, BellIcon, MagnifyingGlassIcon } from "react-native-heroicons/outline"
 import { useDrawer } from "./Drawer"
@@ -25,10 +27,10 @@ export const HeaderRight = () => {
 
 export const HeaderLeft = () => {
   const route = useRoute()
-
+  const custom = useAtomValue(customHeader)
   return (
     <View style={styles.horizontalGaps}>
-      <Typography style={styles.text}>{route.name}</Typography>
+      <Typography style={styles.text}>{custom && custom.length ? custom : route.name}</Typography>
     </View>
   )
 }

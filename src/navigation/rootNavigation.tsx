@@ -22,8 +22,8 @@ export const rootNavigationLinks = {
   welcomeItem: "Welcome Item",
   dataGenerating: "DataGenerating",
   getStarted: "Get Started",
-  connections: "Connections",
-  connectionsItem: "Connections Item",
+  connections: "Companies",
+  connectionsItem: "Companies Item",
   categories: "Categories",
   manageConnection: "Manage Connection",
   manageContact: "Manage Contact",
@@ -144,7 +144,7 @@ const WelcomeStack = () => {
   }, [])
 
   return (
-    <Stack.Navigator screenOptions={{ ...screenOptions }}>
+    <Stack.Navigator screenOptions={screenOptions}>
       <Stack.Screen
         options={{ headerShown: false }}
         name={rootNavigationLinks.welcomeItem}

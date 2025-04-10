@@ -1,6 +1,8 @@
+import { BottomSheetTextInput } from "@gorhom/bottom-sheet"
 import { colors } from "@utils/theme"
 import { ComponentProps, FC, useRef } from "react"
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native"
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { TextInput } from "react-native-gesture-handler"
 import { SvgProps } from "react-native-svg"
 type InputSize = "md" | "lg"
 
@@ -16,6 +18,7 @@ export type TextFieldProps = {
   RightIconActive?: React.FunctionComponent<SvgProps>
   errorText?: string
   disabled?: boolean
+  isBottomSheetTextInput?: boolean
 } & ComponentProps<typeof TextInput>
 
 export const TextField: FC<TextFieldProps> = ({
@@ -31,17 +34,18 @@ export const TextField: FC<TextFieldProps> = ({
   size = "lg",
   errorText,
   disabled,
+  isBottomSheetTextInput,
 }) => {
   const inputRef = useRef<TextInput>(null)
 
-  const getInputHeight = (size: InputSize) => {
-    if (size === "md") {
+  const getInputHeight = (inputSize: InputSize) => {
+    if (inputSize === "md") {
       return { height: 44 }
     }
     return { height: 50 }
   }
-  const getInputIconSize = (size: InputSize) => {
-    if (size === "md") {
+  const getInputIconSize = (inputSize: InputSize) => {
+    if (inputSize === "md") {
       return { right: 16, bottom: 9 }
     }
     return { right: 16, bottom: 13 }
@@ -73,17 +77,31 @@ export const TextField: FC<TextFieldProps> = ({
   return (
     <View style={StyleSheet.compose(styles.container, style)}>
       {label && <Text style={styles.label}>{label}</Text>}
-      <TextInput
-        ref={inputRef}
-        value={value}
-        editable={!disabled}
-        onChangeText={onChangeText}
-        placeholder={placeholder}
-        style={[inputStyle, errorText && styles.errorBorder]}
-        placeholderTextColor={colors["gray-400"]}
-        onFocus={focusHandler}
-        onSubmitEditing={blurHandler}
-      />
+      {isBottomSheetTextInput ? (
+        <BottomSheetTextInput
+          ref={inputRef}
+          value={value}
+          editable={!disabled}
+          onChangeText={onChangeText}
+          placeholder={placeholder}
+          style={[inputStyle, errorText && styles.errorBorder]}
+          placeholderTextColor={colors["gray-400"]}
+          onFocus={focusHandler}
+          onSubmitEditing={blurHandler}
+        />
+      ) : (
+        <TextInput
+          ref={inputRef}
+          value={value}
+          editable={!disabled}
+          onChangeText={onChangeText}
+          placeholder={placeholder}
+          style={[inputStyle, errorText && styles.errorBorder]}
+          placeholderTextColor={colors["gray-400"]}
+          onFocus={focusHandler}
+          onSubmitEditing={blurHandler}
+        />
+      )}
       {errorText && <Text style={styles.errorText}>{errorText}</Text>}
 
       {RightIconActive && inputRef.current?.isFocused() && (
@@ -96,7 +114,7 @@ export const TextField: FC<TextFieldProps> = ({
           />
         </TouchableOpacity>
       )}
-      {RightIcon && ((RightIconActive && !inputRef.current?.isFocused()) || !RightIconActive) && (
+      {RightIcon && ((RightIconActive && !inputRef.current?.isFocused()) ?? !RightIconActive) && (
         <TouchableOpacity onPress={focusHandler}>
           <RightIcon
             width={24}

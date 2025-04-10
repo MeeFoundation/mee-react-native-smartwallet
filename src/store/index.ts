@@ -25,7 +25,7 @@ export const ProfileStore = atom(async (get) => {
     [key: string]: number
   } = {}
   for (const c of connections) {
-    const profile = c.profile || "Unspecified"
+    const profile = c.profile ?? "Unspecified"
     if (!profilesObject[profile]) {
       profilesObject[profile] = 0
     }
@@ -62,3 +62,7 @@ export const isWelcomeViewedAtom = atomWithMMKV("isWelcomeViewed", false)
 export const isFirstTimeAuthState = atomWithMMKV("firstTimeAuth", true)
 
 export const isAuthenticatedState = atom(false)
+
+export const isConnectionPeopleView = atom(false)
+
+export const customHeader = atom<string>()
