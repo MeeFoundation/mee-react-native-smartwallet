@@ -24,10 +24,9 @@ import { Typography } from "./Typography"
 
 type FooterProps = {
   activePage?: string
-  setIsPeopleView?: (isPeopleView: boolean) => void
 }
 
-export const Footer: FC<FooterProps> = ({ activePage = false, setIsPeopleView }) => {
+export const Footer: FC<FooterProps> = ({ activePage }) => {
   const bottomSheetRef = useRef<BottomSheet>(null)
   const navigation = useNavigation()
   const isCompaniesPage = activePage === "companies"
