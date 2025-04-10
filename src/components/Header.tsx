@@ -1,4 +1,4 @@
-import { useRoute } from "@react-navigation/native"
+import { ParamListBase, RouteProp, useRoute } from "@react-navigation/native"
 import { colors } from "@utils/theme"
 import { StyleSheet, TouchableOpacity, View } from "react-native"
 import { Bars3Icon, BellIcon, MagnifyingGlassIcon } from "react-native-heroicons/outline"
@@ -23,12 +23,20 @@ export const HeaderRight = () => {
   )
 }
 
+const getHeaderTitle = (route: RouteProp<ParamListBase>) => {
+  if (route.params && "customView" in route.params && typeof route.params.customView === "string") {
+    return route.params.customView
+  }
+
+  return route.name
+}
+
 export const HeaderLeft = () => {
   const route = useRoute()
-
+  const title = getHeaderTitle(route)
   return (
     <View style={styles.horizontalGaps}>
-      <Typography style={styles.text}>{route.name}</Typography>
+      <Typography style={styles.text}>{title}</Typography>
     </View>
   )
 }

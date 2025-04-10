@@ -8,7 +8,7 @@ import {
 import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types"
 import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types"
 import { forwardRef, useRef } from "react"
-import { StyleSheet, View, ViewStyle } from "react-native"
+import { Keyboard, StyleSheet, View, ViewStyle } from "react-native"
 import { AppButton, ButtonVariant } from "./AppButton"
 import { Separator } from "./Separator"
 import { Typography } from "./Typography"
@@ -61,11 +61,14 @@ export const BottomSheetBackDrop = forwardRef<BottomSheetMethods, Props>((props:
     rightButtonAction && rightButtonAction()
   }
 
-  const createRef = (instanse: BottomSheetMethods) => {
+  const createRef = (instance: BottomSheetMethods) => {
     if (ref && "current" in ref) {
-      ref.current = instanse
-      methodsRef.current = instanse
+      ref.current = instance
+      methodsRef.current = instance
     }
+  }
+  const onClose = () => {
+    Keyboard.dismiss()
   }
 
   return (
@@ -73,9 +76,12 @@ export const BottomSheetBackDrop = forwardRef<BottomSheetMethods, Props>((props:
       ref={createRef}
       index={index}
       snapPoints={snapPoints}
-      backdropComponent={(props) => backdropComponent?.({ ...props, ...backDropProps })}
+      backdropComponent={(bottomSheetBackdropProps) =>
+        backdropComponent?.({ ...bottomSheetBackdropProps, ...backDropProps })
+      }
       enableDynamicSizing={enableDynamicSizing}
       containerStyle={{ zIndex: 102 }}
+      onClose={onClose}
       {...rest}
     >
       <BottomSheetView style={[styles.contentContainer, propsStyles?.contentContainer]}>

@@ -90,6 +90,7 @@ export const DataGenerating: FC<DataGeneratingProps> = ({}) => {
     } else {
       onFinishAnimation()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading])
 
   return (

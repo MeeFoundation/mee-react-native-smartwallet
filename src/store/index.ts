@@ -25,7 +25,7 @@ export const ProfileStore = atom(async (get) => {
     [key: string]: number
   } = {}
   for (const c of connections) {
-    const profile = c.profile || "Unspecified"
+    const profile = c.profile ?? "Unspecified"
     if (!profilesObject[profile]) {
       profilesObject[profile] = 0
     }

@@ -17,7 +17,7 @@ export const WelcomeItem = ({ btn = false, CloudImage }: WelcomeSlide) => {
   const setIsWelcomeViewedAtom = useSetAtom(isWelcomeViewedAtom)
   const handlePress = () => {
     setIsWelcomeViewedAtom(true)
-    navigation.navigate("Connections")
+    navigation.navigate("Companies")
   }
 
   return (

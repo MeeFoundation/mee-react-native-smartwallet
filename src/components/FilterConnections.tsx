@@ -40,13 +40,14 @@ export const FilterConnections: FC<FilterConnectionsProps> = ({ filter, onChange
           onChangeText={setEmail}
           size="md"
           RightIcon={PlusIcon}
+          isBottomSheetTextInput
         />
         <AnimatedTouchable
           onPress={() => setPassword(!password)}
           style={{
             ...styles.item,
             borderWidth: password ? 2 : 1,
-            borderColor: password ? colors["primaryActive"] : colors["gray-200"],
+            borderColor: password ? colors.primaryActive : colors["gray-200"],
           }}
         >
           <View style={styles.itemRow}>
@@ -55,7 +56,7 @@ export const FilterConnections: FC<FilterConnectionsProps> = ({ filter, onChange
           <View
             style={{
               ...styles.checkItem,
-              borderColor: password ? colors["primaryActive"] : colors["gray-400"],
+              borderColor: password ? colors.primaryActive : colors["gray-400"],
             }}
           >
             {password && (
@@ -63,7 +64,7 @@ export const FilterConnections: FC<FilterConnectionsProps> = ({ filter, onChange
                 style={{
                   width: 12,
                   height: 12,
-                  backgroundColor: colors["primaryActive"],
+                  backgroundColor: colors.primaryActive,
                   borderRadius: 100,
                 }}
               />
@@ -75,7 +76,7 @@ export const FilterConnections: FC<FilterConnectionsProps> = ({ filter, onChange
           style={{
             ...styles.item,
             borderWidth: phone ? 2 : 1,
-            borderColor: phone ? colors["primaryActive"] : colors["gray-200"],
+            borderColor: phone ? colors.primaryActive : colors["gray-200"],
           }}
         >
           <View style={styles.itemRow}>
@@ -84,7 +85,7 @@ export const FilterConnections: FC<FilterConnectionsProps> = ({ filter, onChange
           <View
             style={{
               ...styles.checkItem,
-              borderColor: phone ? colors["primaryActive"] : colors["gray-400"],
+              borderColor: phone ? colors.primaryActive : colors["gray-400"],
             }}
           >
             {phone && (
@@ -92,7 +93,7 @@ export const FilterConnections: FC<FilterConnectionsProps> = ({ filter, onChange
                 style={{
                   width: 12,
                   height: 12,
-                  backgroundColor: colors["primaryActive"],
+                  backgroundColor: colors.primaryActive,
                   borderRadius: 100,
                 }}
               />
@@ -105,6 +106,7 @@ export const FilterConnections: FC<FilterConnectionsProps> = ({ filter, onChange
           onChangeText={setPaymentDetails}
           size="md"
           RightIcon={PlusIcon}
+          isBottomSheetTextInput
         />
         <AppButton
           onPress={() => onChangeFilter({ ...filter, email, paymentDetails })}
