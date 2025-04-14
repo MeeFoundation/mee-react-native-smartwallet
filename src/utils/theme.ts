@@ -46,6 +46,7 @@ const lightColors = {
   "gray-200": "#D1D2D1",
   "gray-400": "#A1A4A3",
   "gray-600": "#747776",
+  "gray-800": "#464A48",
   /**
    * Default/gray/900 - #111827
    */

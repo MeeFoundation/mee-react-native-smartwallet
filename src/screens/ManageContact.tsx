@@ -106,7 +106,7 @@ export const ManageContact = () => {
     }
     setIsEditing((state) => ({ ...state, sharedWithYou: !state.sharedWithYou }))
   }
-  console.log(fields.sharedWithYou.emails)
+
   return (
     <>
       <BackgroundLayout Svg={BackgroundDull} />
@@ -156,6 +156,8 @@ export const ManageContact = () => {
                           {fields.sharedWithYou.emails?.map((emailInfo, emailIndex) => (
                             <View key={emailIndex}>
                               <TextEditableLabelField
+                                label="Email"
+                                labelLabel="Label"
                                 labelValue={emailInfo.key}
                                 value={emailInfo.value}
                                 onChangeText={(text) => {
@@ -237,6 +239,8 @@ export const ManageContact = () => {
                           {fields.sharedWithYou.phones?.map((phoneInfo, phoneIndex) => (
                             <View key={phoneIndex}>
                               <TextEditableLabelField
+                                label="Number"
+                                labelLabel="Label"
                                 labelValue={phoneInfo.key}
                                 value={phoneInfo.value}
                                 onChangeText={(text) => {

@@ -19,6 +19,7 @@ export type TextFieldProps = {
   errorText?: string
   disabled?: boolean
   isBottomSheetTextInput?: boolean
+  isLabelInside?: boolean
   propsStyles?: { container?: ViewStyle; input?: ViewStyle }
 } & ComponentProps<typeof TextInput>
 
@@ -36,10 +37,14 @@ export const TextField: FC<TextFieldProps> = ({
   errorText,
   disabled,
   isBottomSheetTextInput,
+  isLabelInside,
 }) => {
   const inputRef = useRef<TextInput>(null)
 
   const getInputHeight = (sz: InputSize) => {
+    if (isLabelInside) {
+      return
+    }
     if (sz === "md") {
       return { height: 44 }
     }
@@ -81,7 +86,13 @@ export const TextField: FC<TextFieldProps> = ({
     editable: !disabled,
     onChangeText: onChangeText,
     placeholder: placeholder,
-    style: [inputStyle, errorText && textFieldStyles.errorBorder, propsStyles?.input],
+    style: [
+      inputStyle,
+      errorText && textFieldStyles.errorBorder,
+      propsStyles?.input,
+      isLabelInside && textFieldStyles.labelInsideInput,
+      isLabelInside && errorText && { paddingBottom: 22 },
+    ],
     placeholderTextColor: colors["gray-400"],
     onFocus: focusHandler,
     onSubmitEditing: blurHandler,
@@ -89,13 +100,23 @@ export const TextField: FC<TextFieldProps> = ({
 
   return (
     <View style={StyleSheet.compose(textFieldStyles.container, propsStyles?.container)}>
-      {label && <Text style={textFieldStyles.label}>{label}</Text>}
+      {label && (
+        <Text style={[textFieldStyles.label, isLabelInside && textFieldStyles.labelInsideLabel]}>
+          {label}
+        </Text>
+      )}
       {isBottomSheetTextInput ? (
         <BottomSheetTextInput {...inputProps} />
       ) : (
         <TextInput {...inputProps} />
       )}
-      {errorText && <Text style={textFieldStyles.errorText}>{errorText}</Text>}
+      {errorText && (
+        <Text
+          style={[textFieldStyles.errorText, isLabelInside && textFieldStyles.labelInsideError]}
+        >
+          {errorText}
+        </Text>
+      )}
 
       {RightIconActive && inputRef.current?.isFocused() && (
         <TouchableOpacity onPress={clearHandler}>
@@ -124,7 +145,7 @@ export const TextField: FC<TextFieldProps> = ({
 
 export const textFieldStyles = StyleSheet.create({
   container: {
-    // flex: 1,
+    position: "relative",
   },
   inputWrapper: {
     flex: 1,
@@ -152,13 +173,34 @@ export const textFieldStyles = StyleSheet.create({
     fontWeight: "500",
     lineHeight: 16,
   },
+  labelInsideError: {
+    position: "absolute",
+    bottom: 8,
+    left: 16,
+    zIndex: 10,
+  },
+  labelInsideLabel: {
+    position: "absolute",
+    top: 8,
+    left: 16,
+    zIndex: 10,
+    color: colors["gray-800"],
+  },
+  labelInsideInput: {
+    paddingTop: 24,
+    paddingBottom: 6,
+    zIndex: 5,
+    fontWeight: "500",
+  },
   input: {
-    paddingVertical: 11,
     paddingHorizontal: 16,
+    justifyContent: "center",
     borderWidth: 1,
     borderColor: colors["gray-200"],
     backgroundColor: colors.white,
     borderRadius: 8,
+    lineHeight: 20,
+    fontSize: 16,
   },
   inputFocus: {
     borderColor: colors.primary,
