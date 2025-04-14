@@ -13,8 +13,7 @@ import React, { useMemo, useState } from "react"
 import { Platform, StyleSheet, TouchableOpacity, View } from "react-native"
 import { TrashIcon } from "react-native-heroicons/outline"
 import { object } from "superstruct"
-import { AppButton } from "../components/AppButton"
-import { SingleSelectField } from "../components/SingleSelectField"
+import { AddConnectionAttribute } from "../components/AddConnectionAttribute"
 import { TextField } from "../components/TextField"
 import { customValidate, emailStruct, requiredStringMoreThanStruct } from "../utils/validation"
 
@@ -51,8 +50,6 @@ export const ManageContact = () => {
     ],
     [contact, deleteContact, navigate],
   )
-
-  const [selectedFieldToAdd, setSelectedFieldToAdd] = useState<string>()
 
   return (
     <>
@@ -260,30 +257,17 @@ export const ManageContact = () => {
                       )}
                     </View>
                     <View style={styles.newFieldsSelectContainer}>
-                      <View style={styles.newFieldsSelect}>
-                        <SingleSelectField
-                          data={Fields_Keys.filter((key) => !fieldsVisibility.sharedWithYou[key])}
-                          selected={selectedFieldToAdd}
-                          onSelect={(data) => {
-                            setSelectedFieldToAdd(data)
-                          }}
-                          placeholder="New field title"
-                        />
-                      </View>
-                      <AppButton
-                        text="Add"
-                        variant="secondary"
-                        disabled={!selectedFieldToAdd}
-                        onPress={() => {
-                          if (selectedFieldToAdd) {
-                            setFieldsVisibility((state) => ({
-                              sharedWithYou: {
-                                ...state.sharedWithYou,
-                                [selectedFieldToAdd]: true,
-                              },
-                            }))
-                          }
+                      <AddConnectionAttribute
+                        data={Fields_Keys.filter((key) => !fieldsVisibility.sharedWithYou[key])}
+                        onSelect={(data) => {
+                          setFieldsVisibility((state) => ({
+                            sharedWithYou: {
+                              ...state.sharedWithYou,
+                              [data]: true,
+                            },
+                          }))
                         }}
+                        label="Add field"
                       />
                     </View>
                   </View>
@@ -353,16 +337,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   newFieldsSelectContainer: {
-    flexDirection: "row",
-    gap: 8,
-    backgroundColor: "rgba(255, 255, 255, 0.90)",
-    paddingHorizontal: 12,
-    paddingTop: 12,
-    paddingBottom: 4,
-    borderRadius: 8,
-  },
-  newFieldsSelect: {
-    flexGrow: 1,
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+    overflow: "hidden",
   },
 
   infoContainer: {
