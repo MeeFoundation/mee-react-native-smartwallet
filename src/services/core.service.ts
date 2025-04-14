@@ -6,6 +6,8 @@ type BasicInfo = {
   firstName: string
   lastName: string
   phone?: string
+  emails?: { key: string; value: string }[]
+  phones?: { key: string; value: string }[]
 }
 
 export type SharedInfo = BasicInfo

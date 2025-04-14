@@ -1,3 +1,4 @@
+import { merge } from "lodash-es"
 import { Failure, Struct, StructError, define, validate as structValidate } from "superstruct"
 
 export const requiredStringMoreThanStruct = (length: number) =>
@@ -29,9 +30,26 @@ export const customValidate = <T, V, S>(
   const [err, result] = structValidate(value, struct, options)
   if (err) {
     const errors = (err as StructError).failures() as Failure[]
+    const createErrorsPath = (obj: Record<string, unknown>, path: string[], lastValue: string) => {
+      let currentIndex = 0
+
+      const addPathByKey = (lastObj: Record<string, unknown>) => {
+        let pathKeyObj = {}
+        lastObj[path[currentIndex]] = currentIndex === path.length - 1 ? lastValue : pathKeyObj
+        currentIndex++
+        if (currentIndex !== path.length) {
+          addPathByKey(pathKeyObj)
+        }
+      }
+
+      addPathByKey(obj)
+
+      return obj
+    }
     const errorsMap = errors.reduce((acc, error) => {
-      return { ...acc, [error.key]: error.message }
-    }, {} as Record<string, string>)
+      const newErrorMapping = createErrorsPath({}, error.path, error.message)
+      return merge(acc, newErrorMapping)
+    }, {} as Record<string, unknown>)
 
     console.error("Validation failed with errors: ", errors)
     return { valid: false as const, errors: errorsMap }

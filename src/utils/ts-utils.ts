@@ -12,3 +12,9 @@ export const filterNullable = <T>(items: T[]) => {
 
 export type ArrayElement<ArrayType extends readonly unknown[]> =
   ArrayType extends readonly (infer ElementType)[] ? ElementType : never
+
+export type MakeArraysValuesToObjects<T extends Record<string, unknown>> = {
+  [key in keyof T]: NonNullable<T[key]> extends Array<infer U>
+    ? { [index: number | string]: U }
+    : T[key]
+}

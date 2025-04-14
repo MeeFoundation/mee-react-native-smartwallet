@@ -137,7 +137,9 @@ export const ManageConnection = () => {
             <View style={styles.infoContainer}>
               <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
                 <EnvelopeIcon color={colors.primary} />
-                <Typography style={styles.infoText}>{connection.sharedInfo.email}</Typography>
+                <Typography style={styles.infoText}>
+                  {connection.sharedInfo.emails?.[0]?.value}
+                </Typography>
               </View>
               <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
                 <UserIcon color={colors.primary} />

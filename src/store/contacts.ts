@@ -1,11 +1,11 @@
 import { Connection, SharedInfo } from "@services/core.service"
+import { alertContactsNoPermissionAlert } from "@utils/alerts"
 import { atom } from "jotai"
 import { atomFamily } from "jotai/utils"
 import { PermissionsAndroid, Platform } from "react-native"
 import Contacts from "react-native-contacts"
 import { PromiseOrType } from "../../@types/utils"
 import { ContactsState, contactService } from "../services/contact.service"
-import { alertContactsNoPermissionAlert } from "../utils/alerts"
 
 const ContactsDefaultStore = atom<PromiseOrType<ContactsState | null>>(() =>
   contactService.getContacts(),
@@ -74,60 +74,18 @@ export const updateContactAtom = atom(
 
         const nativeContact = await Contacts.getContactById(recordID)
         if (nativeContact) {
-          const getEmailAddresses = () => {
-            if (!oldContact.sharedInfo.email && newContactInfo.email) {
-              return [
-                ...nativeContact.emailAddresses,
-                { label: "", email: newContactInfo.email as string },
-              ]
-            }
-            if (oldContact.sharedInfo.email && newContactInfo.email) {
-              if (oldContact.sharedInfo.email === newContactInfo.email) {
-                return nativeContact.emailAddresses
-              }
-              return nativeContact.emailAddresses.map((emailInfo) =>
-                oldContact.sharedInfo.email === emailInfo.email
-                  ? { ...emailInfo, email: newContactInfo.email as string }
-                  : emailInfo,
-              )
-            }
-            if (oldContact.sharedInfo.email && !newContactInfo.email) {
-              return nativeContact.emailAddresses.filter(
-                (emailInfo) => oldContact.sharedInfo.email !== emailInfo.email,
-              )
-            }
-            return nativeContact.emailAddresses
-          }
-          const getPhoneNumbers = () => {
-            if (!oldContact.sharedInfo.phone && newContactInfo.phone) {
-              return [
-                ...nativeContact.phoneNumbers,
-                { label: "", number: newContactInfo.phone as string },
-              ]
-            }
-            if (oldContact.sharedInfo.phone && newContactInfo.phone) {
-              if (oldContact.sharedInfo.phone === newContactInfo.phone) {
-                return nativeContact.phoneNumbers
-              }
-              return nativeContact.phoneNumbers.map((phoneInfo) =>
-                oldContact.sharedInfo.phone === phoneInfo.number
-                  ? { ...phoneInfo, number: newContactInfo.phone as string }
-                  : phoneInfo,
-              )
-            }
-            if (oldContact.sharedInfo.phone && !newContactInfo.phone) {
-              return nativeContact.phoneNumbers.filter(
-                (phoneInfo) => oldContact.sharedInfo.phone !== phoneInfo.number,
-              )
-            }
-            return nativeContact.phoneNumbers
-          }
           await Contacts.updateContact({
             ...nativeContact,
             givenName: newContactInfo.firstName,
             familyName: newContactInfo.lastName,
-            emailAddresses: getEmailAddresses(),
-            phoneNumbers: getPhoneNumbers(),
+            emailAddresses: newContactInfo.emails?.map((emailInfo) => ({
+              label: emailInfo.key,
+              email: emailInfo.value,
+            })),
+            phoneNumbers: newContactInfo.phones?.map((phoneInfo) => ({
+              label: phoneInfo.key,
+              number: phoneInfo.value,
+            })),
           })
         }
 

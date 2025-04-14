@@ -1,6 +1,7 @@
 import { BottomSheetBackDrop } from "@components/BottomSheet"
 import BottomSheet from "@gorhom/bottom-sheet"
 import { useNavigation } from "@react-navigation/native"
+import { alertContactsNoPermissionAlert } from "@utils/alerts"
 import { colors } from "@utils/theme"
 import { useSetAtom } from "jotai"
 import { FC, useRef } from "react"
@@ -18,7 +19,6 @@ import { LinkIcon, PlusCircleIcon, ShareIcon, UserGroupIcon } from "react-native
 import { IconSources } from "../assets"
 import { contactService } from "../services/contact.service"
 import { ContactsStore } from "../store/contacts"
-import { alertContactsNoPermissionAlert } from "../utils/alerts"
 import { Avatar } from "./Avatar"
 import { Typography } from "./Typography"
 

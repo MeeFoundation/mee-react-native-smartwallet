@@ -2,7 +2,7 @@ import { colors, fonts } from "@utils/theme"
 import { NestedKeyOf } from "@utils/ts-utils"
 import { get } from "lodash-es"
 import { ComponentProps } from "react"
-import { Text } from "react-native"
+import { StyleSheet, Text } from "react-native"
 
 type FontWeight = "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900"
 
@@ -22,7 +22,5 @@ export const Typography = (props: Props) => {
     color: colors.secondary,
   }
 
-  const styles = typeof style === "object" ? { ...defaultStyles, ...style } : defaultStyles
-
-  return <Text {...rest} style={styles} />
+  return <Text {...rest} style={StyleSheet.compose(defaultStyles, style)} />
 }

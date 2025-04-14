@@ -1,8 +1,8 @@
+import { generateUserIdentifier } from "@utils/data"
 import { Platform } from "react-native"
 import { Contact as NativeContact } from "react-native-contacts/type"
 import { CONTACTS_STORAGE_KEY } from "../constants/contacts"
 import { getObjectItem, setObjectItem } from "../store/storage"
-import { generateUserIdentifier } from "../utils/data"
 import { Connection } from "./core.service"
 import "./mockData/contacts"
 
@@ -57,10 +57,16 @@ class ContactService {
       id: alreadyCreatedConnection?.id ?? newIdentifier,
       name: nativeContact.displayName || `${nativeContact.familyName} ${nativeContact.givenName}`,
       sharedInfo: {
-        email: nativeContact.emailAddresses[0]?.email as string | undefined,
+        emails: nativeContact.emailAddresses.map((address) => ({
+          key: address.label,
+          value: address.email,
+        })),
         firstName: nativeContact.givenName,
         lastName: nativeContact.familyName,
-        phone: nativeContact.phoneNumbers[0]?.number as string | undefined,
+        phones: nativeContact.phoneNumbers.map((num) => ({
+          key: num.label,
+          value: num.number,
+        })),
       },
       tags: alreadyCreatedConnection?.tags ?? [],
       iconSrc: nativeContact.thumbnailPath,
