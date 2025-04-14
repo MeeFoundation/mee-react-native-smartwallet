@@ -14,7 +14,7 @@ setObjectItem(CONTACTS_STORAGE_KEY, {
       sharedInfo: {
         firstName: "Ivan",
         lastName: "Dron",
-        email: "ivan231@gmail.com",
+        emails: [{ key: "Home", value: "ivan231@gmail.com" }],
       },
       tags: [],
       contactInfo: {

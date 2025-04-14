@@ -1,8 +1,8 @@
 import { generateColorHsl } from "@utils/color"
+import { getImageSource } from "@utils/getImageSource"
 import { colors } from "@utils/theme"
 import { FC } from "react"
 import { Image, ImageSourcePropType, StyleSheet, Text, View, ViewStyle } from "react-native"
-import { getImageSource } from "../utils/getImageSource"
 
 type AvatarProps = {
   text: string

@@ -1,10 +1,10 @@
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet"
 import { colors } from "@utils/theme"
 import { ComponentProps, FC, useRef } from "react"
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native"
 import { TextInput } from "react-native-gesture-handler"
 import { SvgProps } from "react-native-svg"
-type InputSize = "md" | "lg"
+export type InputSize = "md" | "lg"
 
 export type TextFieldProps = {
   value: string | undefined
@@ -19,6 +19,7 @@ export type TextFieldProps = {
   errorText?: string
   disabled?: boolean
   isBottomSheetTextInput?: boolean
+  propsStyles?: { container?: ViewStyle; input?: ViewStyle }
 } & ComponentProps<typeof TextInput>
 
 export const TextField: FC<TextFieldProps> = ({
@@ -26,7 +27,7 @@ export const TextField: FC<TextFieldProps> = ({
   value,
   onChangeText,
   placeholder,
-  style,
+  propsStyles,
   onFocus,
   onBlur,
   RightIcon,
@@ -38,14 +39,14 @@ export const TextField: FC<TextFieldProps> = ({
 }) => {
   const inputRef = useRef<TextInput>(null)
 
-  const getInputHeight = (inputSize: InputSize) => {
-    if (inputSize === "md") {
+  const getInputHeight = (sz: InputSize) => {
+    if (sz === "md") {
       return { height: 44 }
     }
     return { height: 50 }
   }
-  const getInputIconSize = (inputSize: InputSize) => {
-    if (inputSize === "md") {
+  const getInputIconSize = (sz: InputSize) => {
+    if (sz === "md") {
       return { right: 16, bottom: 9 }
     }
     return { right: 16, bottom: 13 }
@@ -53,12 +54,12 @@ export const TextField: FC<TextFieldProps> = ({
 
   const inputStyle = StyleSheet.compose(
     inputRef.current?.isFocused()
-      ? StyleSheet.compose(styles.input, styles.inputFocus)
-      : styles.input,
+      ? StyleSheet.compose(textFieldStyles.input, textFieldStyles.inputFocus)
+      : textFieldStyles.input,
     getInputHeight(size),
   )
 
-  const iconStyle = StyleSheet.compose(styles.inputIcon, getInputIconSize(size))
+  const iconStyle = StyleSheet.compose(textFieldStyles.inputIcon, getInputIconSize(size))
 
   const focusHandler = () => {
     inputRef.current?.focus()
@@ -80,21 +81,21 @@ export const TextField: FC<TextFieldProps> = ({
     editable: !disabled,
     onChangeText: onChangeText,
     placeholder: placeholder,
-    style: [inputStyle, errorText && styles.errorBorder],
+    style: [inputStyle, errorText && textFieldStyles.errorBorder, propsStyles?.input],
     placeholderTextColor: colors["gray-400"],
     onFocus: focusHandler,
     onSubmitEditing: blurHandler,
   }
 
   return (
-    <View style={StyleSheet.compose(styles.container, style)}>
-      {label && <Text style={styles.label}>{label}</Text>}
+    <View style={StyleSheet.compose(textFieldStyles.container, propsStyles?.container)}>
+      {label && <Text style={textFieldStyles.label}>{label}</Text>}
       {isBottomSheetTextInput ? (
         <BottomSheetTextInput {...inputProps} />
       ) : (
         <TextInput {...inputProps} />
       )}
-      {errorText && <Text style={styles.errorText}>{errorText}</Text>}
+      {errorText && <Text style={textFieldStyles.errorText}>{errorText}</Text>}
 
       {RightIconActive && inputRef.current?.isFocused() && (
         <TouchableOpacity onPress={clearHandler}>
@@ -106,7 +107,8 @@ export const TextField: FC<TextFieldProps> = ({
           />
         </TouchableOpacity>
       )}
-      {RightIcon && ((RightIconActive && !inputRef.current?.isFocused()) ?? !RightIconActive) && (
+      {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
+      {RightIcon && ((RightIconActive && !inputRef.current?.isFocused()) || !RightIconActive) && (
         <TouchableOpacity onPress={focusHandler}>
           <RightIcon
             width={24}
@@ -120,7 +122,7 @@ export const TextField: FC<TextFieldProps> = ({
   )
 }
 
-const styles = StyleSheet.create({
+export const textFieldStyles = StyleSheet.create({
   container: {
     // flex: 1,
   },

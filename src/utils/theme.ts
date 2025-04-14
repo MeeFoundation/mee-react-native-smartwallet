@@ -30,6 +30,7 @@ const lightColors = {
   dangerActive: "#F87171",
   dangerLight: "#FF3B30",
   blue: "#0A84FF",
+  "blue-700": "#4A6CD7",
   /**
    * Mee/Yellow - #007AFF
    */
