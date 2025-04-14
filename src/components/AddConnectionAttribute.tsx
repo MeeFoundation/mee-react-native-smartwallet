@@ -1,24 +1,22 @@
 import CheckIcon from "@assets/images/check.svg"
 import { BottomSheetModal } from "@gorhom/bottom-sheet"
 import { colors } from "@utils/theme"
-import { FC, useRef } from "react"
+import { useRef } from "react"
 import { StyleSheet, TouchableOpacity, View } from "react-native"
 import { PlusSmallIcon } from "react-native-heroicons/outline"
 import { BottomSheetBackModal } from "./BottomSheetModal"
 import { Typography } from "./Typography"
 
-type AddConnectionAttributeProps = {
-  data: string[]
-  onSelect: (value: string) => void
-  selected?: string
-  label?: string
-}
-
-export const AddConnectionAttribute: FC<AddConnectionAttributeProps> = ({
+export const AddConnectionAttribute = <T extends string>({
   data,
   selected,
   onSelect,
   label,
+}: {
+  data: T[]
+  onSelect: (value: T) => void
+  selected?: T
+  label?: string
 }) => {
   const bottomSheetRef = useRef<BottomSheetModal>(null)
 

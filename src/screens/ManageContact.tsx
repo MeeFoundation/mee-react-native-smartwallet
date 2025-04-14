@@ -106,7 +106,7 @@ export const ManageContact = () => {
     }
     setIsEditing((state) => ({ ...state, sharedWithYou: !state.sharedWithYou }))
   }
-
+  console.log(fields.sharedWithYou.emails)
   return (
     <>
       <BackgroundLayout Svg={BackgroundDull} />
@@ -148,12 +148,12 @@ export const ManageContact = () => {
                 {isEditing.sharedWithYou ? (
                   <View>
                     <View style={styles.infoPaddingContainer}>
-                      <View style={styles.infoInputCol}>
-                        <Typography style={[styles.infoLabel, { marginBottom: -6 }]}>
-                          Emails
-                        </Typography>
-                        {fieldsVisibility.sharedWithYou?.emails &&
-                          fields.sharedWithYou.emails?.map((emailInfo, emailIndex) => (
+                      {fieldsVisibility.sharedWithYou?.emails && (
+                        <View style={styles.infoInputCol}>
+                          <Typography style={[styles.infoLabel, { marginBottom: -6 }]}>
+                            Emails
+                          </Typography>
+                          {fields.sharedWithYou.emails?.map((emailInfo, emailIndex) => (
                             <View key={emailIndex}>
                               <TextEditableLabelField
                                 labelValue={emailInfo.key}
@@ -191,7 +191,8 @@ export const ManageContact = () => {
                               />
                             </View>
                           ))}
-                      </View>
+                        </View>
+                      )}
                       <View style={StyleSheet.compose(styles.infoInputRow, styles.infoBorder)}>
                         <TextField
                           label="First Name"
@@ -228,12 +229,12 @@ export const ManageContact = () => {
                           }}
                         />
                       </View>
-                      <View style={StyleSheet.compose(styles.infoInputCol, styles.infoBorder)}>
-                        <Typography style={[styles.infoLabel, { marginBottom: -6 }]}>
-                          Phone Numbers
-                        </Typography>
-                        {fieldsVisibility.sharedWithYou?.phones &&
-                          fields.sharedWithYou.phones?.map((phoneInfo, phoneIndex) => (
+                      {fieldsVisibility.sharedWithYou?.phones && (
+                        <View style={StyleSheet.compose(styles.infoInputCol, styles.infoBorder)}>
+                          <Typography style={[styles.infoLabel, { marginBottom: -6 }]}>
+                            Phone Numbers
+                          </Typography>
+                          {fields.sharedWithYou.phones?.map((phoneInfo, phoneIndex) => (
                             <View key={phoneIndex}>
                               <TextEditableLabelField
                                 labelValue={phoneInfo.key}
@@ -271,12 +272,16 @@ export const ManageContact = () => {
                               />
                             </View>
                           ))}
-                      </View>
+                        </View>
+                      )}
                     </View>
                     <View style={styles.newFieldsSelectContainer}>
                       <AddConnectionAttribute
                         data={Fields_Keys.filter((key) => !fieldsVisibility.sharedWithYou[key])}
                         onSelect={(data) => {
+                          if (Array.isArray(fields.sharedWithYou[data])) {
+                            fields.sharedWithYou[data].push({ value: "", key: "" })
+                          }
                           setFieldsVisibility((state) => ({
                             sharedWithYou: {
                               ...state.sharedWithYou,
