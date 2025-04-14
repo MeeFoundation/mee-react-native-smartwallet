@@ -1,6 +1,6 @@
 import { colors } from "@utils/theme"
 import { filterNullable } from "@utils/ts-utils"
-import { ImageSourcePropType, StyleSheet, View, ViewStyle } from "react-native"
+import { ImageSourcePropType, StyleSheet, Text, View, ViewStyle } from "react-native"
 import { EllipsisVerticalIcon, PencilSquareIcon, TrashIcon } from "react-native-heroicons/outline"
 import { AppButton } from "./AppButton"
 import { Avatar } from "./Avatar"
@@ -14,10 +14,11 @@ import {
 } from "./DropdownMenu"
 import { Typography } from "./Typography"
 
+type Icons = "pencil" | "trash" | "userGroup" | "link"
 export type MenuAction = {
   name: string
-  key: "edit" | "link" | "delete"
-  icon: "pencil" | "trash"
+  key: "edit" | "link" | "delete" | "source-profile"
+  icon: Icons
   onPress: () => void
 }
 
@@ -29,17 +30,33 @@ type Props = {
   menuActions?: MenuAction[]
 }
 
-const IconTextToComponentMap: Record<"pencil" | "trash", JSX.Element> = {
+const IconTextToComponentMap: Record<Icons, JSX.Element> = {
   trash: (
-    <DropdownMenuIcon ios={{ hierarchicalColor: colors.danger, name: "trash" }}>
+    <DropdownMenuIcon
+      ios={{ hierarchicalColor: colors.danger, name: "trash" }}
+      androidIconName="ic_trash"
+    >
+      <TrashIcon color={colors.danger} />
+    </DropdownMenuIcon>
+  ),
+  userGroup: (
+    <DropdownMenuIcon
+      ios={{ hierarchicalColor: "black", name: "person.3" }}
+      androidIconName="ic_user_group"
+    >
       <TrashIcon color={colors.danger} />
     </DropdownMenuIcon>
   ),
   pencil: (
     <DropdownMenuIcon
-      ios={{ hierarchicalColor: "black", name: "pencil" }}
-      androidIconName="ic_menu_delete"
+      ios={{ hierarchicalColor: "black", name: "square.and.pencil" }}
+      androidIconName="ic_pencil_square"
     >
+      <PencilSquareIcon color="black" />
+    </DropdownMenuIcon>
+  ),
+  link: (
+    <DropdownMenuIcon ios={{ hierarchicalColor: "black", name: "link" }} androidIconName="ic_link">
       <PencilSquareIcon color="black" />
     </DropdownMenuIcon>
   ),
@@ -72,8 +89,11 @@ export const ConnectionCard = (props: Props) => {
                   key={action.key}
                   onSelect={action.onPress}
                   textValue={action.name}
+                  color={colors.danger}
                 >
-                  <DropdownMenuItemTitle>{action.name}</DropdownMenuItemTitle>
+                  <DropdownMenuItemTitle>
+                    <Text style={{ color: colors.danger }}>{action.name}</Text>
+                  </DropdownMenuItemTitle>
                   {IconTextToComponentMap[action.icon]}
                 </DropdownMenuItem>
               ))}
@@ -98,4 +118,9 @@ const styles = StyleSheet.create({
   open: { color: colors.link, fontSize: 12 },
   name: { flexGrow: 1 },
   border: { borderColor: colors.primary, borderWidth: 2 },
+  itemText: {
+    color: "#FF9800",
+    fontSize: 16,
+    marginLeft: 8,
+  },
 })

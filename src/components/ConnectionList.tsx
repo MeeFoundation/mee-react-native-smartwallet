@@ -108,10 +108,10 @@ const CompaniesList: FC<CompaniesListProps> = ({
   const getMenuActions = (item: Connection) => {
     const menuActions: MenuAction[] = [
       {
-        name: "Delete connection",
-        key: "delete",
+        name: "Source Profile",
+        key: "source-profile",
         onPress: () => {},
-        icon: "trash",
+        icon: "userGroup",
       },
       {
         name: "Manage connection",
@@ -119,7 +119,13 @@ const CompaniesList: FC<CompaniesListProps> = ({
         onPress: () => {},
         icon: "pencil",
       },
-      { name: "Link connection", key: "link", onPress: () => {}, icon: "pencil" },
+      { name: "Link connection", key: "link", onPress: () => {}, icon: "link" },
+      {
+        name: "Archive Connection",
+        key: "delete",
+        onPress: () => {},
+        icon: "trash",
+      },
     ]
     return menuActions
   }

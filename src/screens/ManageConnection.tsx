@@ -1,5 +1,5 @@
 import { Accordion } from "@components/Accordion"
-import { ConnectionCard } from "@components/ConnectionCard"
+import { ConnectionCard, MenuAction } from "@components/ConnectionCard"
 import { SelectTags } from "@components/SelectTags"
 import { Typography } from "@components/Typography"
 import { RootStackParamList } from "@navigation/rootNavigation"
@@ -89,21 +89,27 @@ export const ManageConnection = () => {
     setConnection(updatedConnection)
   }
 
-  const connectionCardActions = useMemo(
+  const connectionCardActions = useMemo<MenuAction[]>(
     () => [
       {
-        name: "Delete connection",
-        key: "delete" as const,
+        name: "Source Profile",
+        key: "source-profile",
         onPress: () => {},
-        icon: "trash" as const,
+        icon: "userGroup",
       },
       {
         name: "Manage connection",
-        key: "edit" as const,
+        key: "edit",
         onPress: () => {},
-        icon: "pencil" as const,
+        icon: "pencil",
       },
-      { name: "Link connection", key: "link" as const, onPress: () => {}, icon: "pencil" as const },
+      { name: "Link connection", key: "link", onPress: () => {}, icon: "link" },
+      {
+        name: "Archive Connection",
+        key: "delete",
+        onPress: () => {},
+        icon: "trash",
+      },
     ],
     [],
   )
