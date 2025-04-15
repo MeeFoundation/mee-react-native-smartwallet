@@ -1,7 +1,16 @@
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet"
 import { colors } from "@utils/theme"
-import { ComponentProps, FC, useRef } from "react"
-import { StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native"
+import { ComponentProps, FC, useRef, useState } from "react"
+import {
+  Animated,
+  StyleProp,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+  useAnimatedValue,
+} from "react-native"
 import { TextInput } from "react-native-gesture-handler"
 import { SvgProps } from "react-native-svg"
 export type InputSize = "md" | "lg"
@@ -20,7 +29,7 @@ export type TextFieldProps = {
   disabled?: boolean
   isBottomSheetTextInput?: boolean
   isLabelInside?: boolean
-  propsStyles?: { container?: ViewStyle; input?: ViewStyle }
+  propsStyles?: { container?: StyleProp<ViewStyle>; input?: StyleProp<ViewStyle> }
 } & ComponentProps<typeof TextInput>
 
 export const TextField: FC<TextFieldProps> = ({
@@ -40,6 +49,8 @@ export const TextField: FC<TextFieldProps> = ({
   isLabelInside,
 }) => {
   const inputRef = useRef<TextInput>(null)
+  const [isFocused, setIsFocused] = useState(false)
+  const insideLabelTranslateYValue = useAnimatedValue(value ? 0 : 9)
 
   const getInputHeight = (sz: InputSize) => {
     if (isLabelInside) {
@@ -58,7 +69,7 @@ export const TextField: FC<TextFieldProps> = ({
   }
 
   const inputStyle = StyleSheet.compose(
-    inputRef.current?.isFocused()
+    isFocused
       ? StyleSheet.compose(textFieldStyles.input, textFieldStyles.inputFocus)
       : textFieldStyles.input,
     getInputHeight(size),
@@ -67,13 +78,29 @@ export const TextField: FC<TextFieldProps> = ({
   const iconStyle = StyleSheet.compose(textFieldStyles.inputIcon, getInputIconSize(size))
 
   const focusHandler = () => {
-    inputRef.current?.focus()
     onFocus && onFocus()
+    setIsFocused(true)
+
+    if (isLabelInside && !value) {
+      Animated.timing(insideLabelTranslateYValue, {
+        toValue: 0,
+        useNativeDriver: true,
+        duration: 150,
+      }).start()
+    }
   }
 
   const blurHandler = () => {
-    inputRef.current?.blur()
     onBlur && onBlur()
+    setIsFocused(false)
+
+    if (isLabelInside && !value) {
+      Animated.timing(insideLabelTranslateYValue, {
+        toValue: 9,
+        useNativeDriver: true,
+        duration: 150,
+      }).start()
+    }
   }
 
   const clearHandler = () => {
@@ -95,15 +122,32 @@ export const TextField: FC<TextFieldProps> = ({
     ],
     placeholderTextColor: colors["gray-400"],
     onFocus: focusHandler,
+    onBlur: blurHandler,
     onSubmitEditing: blurHandler,
   }
 
   return (
     <View style={StyleSheet.compose(textFieldStyles.container, propsStyles?.container)}>
       {label && (
-        <Text style={[textFieldStyles.label, isLabelInside && textFieldStyles.labelInsideLabel]}>
+        <Animated.Text
+          style={[
+            textFieldStyles.label,
+            isLabelInside && textFieldStyles.labelInsideLabel,
+            isLabelInside && {
+              transform: [
+                {
+                  scale: insideLabelTranslateYValue.interpolate({
+                    inputRange: [0, 9],
+                    outputRange: [1, 1.25],
+                  }),
+                },
+                { translateY: insideLabelTranslateYValue },
+              ],
+            },
+          ]}
+        >
           {label}
-        </Text>
+        </Animated.Text>
       )}
       {isBottomSheetTextInput ? (
         <BottomSheetTextInput {...inputProps} />

@@ -3,7 +3,7 @@ import { Accordion } from "@components/Accordion"
 import { AddConnectionAttribute } from "@components/AddConnectionAttribute"
 import { BackgroundLayout } from "@components/BackgroundLayout"
 import { ConnectionCard } from "@components/ConnectionCard"
-import { TextEditableLabelField } from "@components/TextEditableLabelField"
+import { MultipleFieldsBlock } from "@components/MultipleFieldsBlock"
 import { TextField } from "@components/TextField"
 import { Typography } from "@components/Typography"
 import { RootStackParamList } from "@navigation/rootNavigation"
@@ -155,41 +155,47 @@ export const ManageContact = () => {
                           </Typography>
                           {fields.sharedWithYou.emails?.map((emailInfo, emailIndex) => (
                             <View key={emailIndex}>
-                              <TextEditableLabelField
-                                label="Email"
-                                labelLabel="Label"
-                                labelValue={emailInfo.key}
-                                value={emailInfo.value}
-                                onChangeText={(text) => {
-                                  setFields((state) => ({
-                                    ...state,
-                                    sharedWithYou: {
-                                      ...state.sharedWithYou,
-                                      emails: state.sharedWithYou.emails?.map((emInfo, idx) =>
-                                        emailIndex === idx ? { ...emInfo, value: text } : emInfo,
-                                      ),
+                              <MultipleFieldsBlock
+                                valuesConfig={[
+                                  {
+                                    label: "Label",
+                                    value: emailInfo.key,
+                                    onChange: (text) => {
+                                      setFields((state) => ({
+                                        ...state,
+                                        sharedWithYou: {
+                                          ...state.sharedWithYou,
+                                          emails: state.sharedWithYou.emails?.map((emInfo, idx) =>
+                                            emailIndex === idx ? { ...emInfo, key: text } : emInfo,
+                                          ),
+                                        },
+                                      }))
                                     },
-                                  }))
-                                }}
-                                onChangeLabel={(text) => {
-                                  setFields((state) => ({
-                                    ...state,
-                                    sharedWithYou: {
-                                      ...state.sharedWithYou,
-                                      emails: state.sharedWithYou.emails?.map((emInfo, idx) =>
-                                        emailIndex === idx ? { ...emInfo, key: text } : emInfo,
-                                      ),
+                                    errorText:
+                                      validationErrors.sharedWithYou.emails?.[emailIndex]?.key,
+                                  },
+                                  {
+                                    label: "Email",
+                                    value: emailInfo.value,
+                                    onChange: (text) => {
+                                      setFields((state) => ({
+                                        ...state,
+                                        sharedWithYou: {
+                                          ...state.sharedWithYou,
+                                          emails: state.sharedWithYou.emails?.map((emInfo, idx) =>
+                                            emailIndex === idx
+                                              ? { ...emInfo, value: text }
+                                              : emInfo,
+                                          ),
+                                        },
+                                      }))
                                     },
-                                  }))
-                                }}
+                                    errorText:
+                                      validationErrors.sharedWithYou.emails?.[emailIndex]?.value,
+                                  },
+                                ]}
                                 style={styles.infoInput}
                                 disabled={contactPlatform !== Platform.OS}
-                                errorText={
-                                  validationErrors.sharedWithYou.emails?.[emailIndex]?.value
-                                }
-                                labelErrorText={
-                                  validationErrors.sharedWithYou.emails?.[emailIndex]?.key
-                                }
                               />
                             </View>
                           ))}
@@ -238,41 +244,47 @@ export const ManageContact = () => {
                           </Typography>
                           {fields.sharedWithYou.phones?.map((phoneInfo, phoneIndex) => (
                             <View key={phoneIndex}>
-                              <TextEditableLabelField
-                                label="Number"
-                                labelLabel="Label"
-                                labelValue={phoneInfo.key}
-                                value={phoneInfo.value}
-                                onChangeText={(text) => {
-                                  setFields((state) => ({
-                                    ...state,
-                                    sharedWithYou: {
-                                      ...state.sharedWithYou,
-                                      phones: state.sharedWithYou.phones?.map((emInfo, idx) =>
-                                        phoneIndex === idx ? { ...emInfo, value: text } : emInfo,
-                                      ),
+                              <MultipleFieldsBlock
+                                valuesConfig={[
+                                  {
+                                    label: "Label",
+                                    value: phoneInfo.key,
+                                    onChange: (text) => {
+                                      setFields((state) => ({
+                                        ...state,
+                                        sharedWithYou: {
+                                          ...state.sharedWithYou,
+                                          phones: state.sharedWithYou.phones?.map((emInfo, idx) =>
+                                            phoneIndex === idx ? { ...emInfo, key: text } : emInfo,
+                                          ),
+                                        },
+                                      }))
                                     },
-                                  }))
-                                }}
-                                onChangeLabel={(text) => {
-                                  setFields((state) => ({
-                                    ...state,
-                                    sharedWithYou: {
-                                      ...state.sharedWithYou,
-                                      phones: state.sharedWithYou.phones?.map((emInfo, idx) =>
-                                        phoneIndex === idx ? { ...emInfo, key: text } : emInfo,
-                                      ),
+                                    errorText:
+                                      validationErrors.sharedWithYou.emails?.[phoneIndex]?.key,
+                                  },
+                                  {
+                                    label: "Number",
+                                    value: phoneInfo.value,
+                                    onChange: (text) => {
+                                      setFields((state) => ({
+                                        ...state,
+                                        sharedWithYou: {
+                                          ...state.sharedWithYou,
+                                          phones: state.sharedWithYou.phones?.map((emInfo, idx) =>
+                                            phoneIndex === idx
+                                              ? { ...emInfo, value: text }
+                                              : emInfo,
+                                          ),
+                                        },
+                                      }))
                                     },
-                                  }))
-                                }}
+                                    errorText:
+                                      validationErrors.sharedWithYou.emails?.[phoneIndex]?.value,
+                                  },
+                                ]}
                                 style={styles.infoInput}
                                 disabled={contactPlatform !== Platform.OS}
-                                errorText={
-                                  validationErrors.sharedWithYou.phones?.[phoneIndex]?.value
-                                }
-                                labelErrorText={
-                                  validationErrors.sharedWithYou.phones?.[phoneIndex]?.key
-                                }
                               />
                             </View>
                           ))}
