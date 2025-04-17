@@ -194,7 +194,6 @@ export const textFieldStyles = StyleSheet.create({
   },
   inputIcon: {
     position: "absolute",
-    zIndex: 120,
   },
   label: {
     fontSize: 12,
