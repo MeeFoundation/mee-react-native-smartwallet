@@ -8,6 +8,7 @@ type BasicInfo = {
   phone?: string
   emails?: { key: string; value: string }[]
   phones?: { key: string; value: string }[]
+  addresses?: Record<string, string>[]
 }
 
 export type SharedInfo = BasicInfo

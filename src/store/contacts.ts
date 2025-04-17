@@ -4,6 +4,7 @@ import { atom } from "jotai"
 import { atomFamily } from "jotai/utils"
 import { PermissionsAndroid, Platform } from "react-native"
 import Contacts from "react-native-contacts"
+import { PostalAddress } from "react-native-contacts/type"
 import { PromiseOrType } from "../../@types/utils"
 import { ContactsState, contactService } from "../services/contact.service"
 
@@ -86,6 +87,7 @@ export const updateContactAtom = atom(
               label: phoneInfo.key,
               number: phoneInfo.value,
             })),
+            postalAddresses: newContactInfo.addresses as unknown as PostalAddress[],
           })
         }
 

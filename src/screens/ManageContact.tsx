@@ -18,7 +18,7 @@ import React, { useMemo, useState } from "react"
 import { Platform, StyleSheet, TouchableOpacity, View } from "react-native"
 import { array, object } from "superstruct"
 
-const Fields_Keys = ["emails", "firstName", "lastName", "phones"] as const
+const Fields_Keys = ["emails", "firstName", "lastName", "phones", "addresses"] as const
 export const ManageContact = () => {
   const { navigate } = useNavigation()
   const route = useRoute<RouteProp<RootStackParamList, "Manage Contact">>()
@@ -75,6 +75,16 @@ export const ManageContact = () => {
                 value: requiredStringMoreThanStruct(1),
               }),
             ),
+            addresses:
+              (fields.sharedWithYou.addresses?.length ?? 0) > 0
+                ? array(
+                    object(
+                      mapValues(fields.sharedWithYou.addresses?.[0], () =>
+                        requiredStringMoreThanStruct(1),
+                      ),
+                    ),
+                  )
+                : undefined,
           },
           visibleKeys,
         ),
@@ -290,6 +300,41 @@ export const ManageContact = () => {
                           ))}
                         </View>
                       )}
+                      {fieldsVisibility.sharedWithYou?.addresses && (
+                        <View style={styles.infoInputCol}>
+                          <Typography style={[styles.infoLabel, { marginBottom: -6 }]}>
+                            Addresses
+                          </Typography>
+                          {fields.sharedWithYou.addresses?.map((addressInfo, addressIndex) => (
+                            <View key={addressIndex}>
+                              <MultipleFieldsBlock
+                                valuesConfig={Object.entries(addressInfo).map(([key, value]) => ({
+                                  label: key,
+                                  value: value,
+                                  onChange: (text) => {
+                                    setFields((state) => ({
+                                      ...state,
+                                      sharedWithYou: {
+                                        ...state.sharedWithYou,
+                                        addresses: state.sharedWithYou.addresses?.map(
+                                          (adInfo, idx) =>
+                                            addressIndex === idx
+                                              ? { ...adInfo, [key]: text }
+                                              : adInfo,
+                                        ),
+                                      },
+                                    }))
+                                  },
+                                  errorText:
+                                    validationErrors.sharedWithYou.addresses?.[addressIndex]?.[key],
+                                }))}
+                                style={styles.infoInput}
+                                disabled={contactPlatform !== Platform.OS}
+                              />
+                            </View>
+                          ))}
+                        </View>
+                      )}
                     </View>
                     <View style={styles.newFieldsSelectContainer}>
                       <AddConnectionAttribute
@@ -333,12 +378,34 @@ export const ManageContact = () => {
                       <Typography style={styles.infoText}>{contact.sharedInfo.lastName}</Typography>
                     </View>
                     {fieldsVisibility.sharedWithYou?.phones && (
-                      <View style={styles.infoRow}>
+                      <View style={[styles.infoRow, styles.infoBorder]}>
                         <Typography style={styles.infoLabel}>Phone numbers</Typography>
                         {contact.sharedInfo.phones?.map((phoneInfo, phoneIndex) => (
                           <View style={styles.arrayItemBlock} key={phoneIndex}>
                             <Typography style={styles.infoArrayText}>{phoneInfo.value}</Typography>
                             <Typography style={styles.infoArrayLabel}>{phoneInfo.key}</Typography>
+                          </View>
+                        ))}
+                      </View>
+                    )}
+                    {fieldsVisibility.sharedWithYou?.addresses && (
+                      <View style={[styles.infoRow, styles.infoBorder]}>
+                        <Typography style={styles.infoLabel}>Addresses</Typography>
+                        {contact.sharedInfo.addresses?.map((addressInfo, addressIndex) => (
+                          <View
+                            style={[
+                              styles.complexDataContainer,
+                              styles.infoRow,
+                              addressIndex !== 0 && styles.infoBorder,
+                            ]}
+                            key={addressIndex}
+                          >
+                            {Object.entries(addressInfo).map(([key, value], innerIndex) => (
+                              <View key={innerIndex}>
+                                <Typography style={styles.infoLabel}>{key}</Typography>
+                                <Typography style={styles.infoText}>{value}</Typography>
+                              </View>
+                            ))}
                           </View>
                         ))}
                       </View>
@@ -365,6 +432,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, 0.90)",
   },
   infoRow: { paddingVertical: 8 },
+  complexDataContainer: { gap: 4 },
   infoBorder: { borderTopWidth: 1, borderTopColor: colors.border },
   infoLabel: {
     color: colors.secondary,
@@ -403,7 +471,6 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 8,
     overflow: "hidden",
   },
-
   infoContainer: {
     borderRadius: 8,
     borderColor: "rgba(255, 255, 255, 0.80)",
@@ -428,7 +495,6 @@ const styles = StyleSheet.create({
     borderColor: colors.white,
     borderWidth: 2,
     backgroundColor: "rgba(255, 255, 255, 0)",
-    // boxShadow: "0px 0px 10px 0px rgba(0, 0, 0, 0.05)",
     gap: 8,
   },
 })
