@@ -48,6 +48,38 @@ export const ContactsDetails = atomFamily((id: string) =>
   ),
 )
 
+export const setIosContactsAtom = atom(null, async (_, set) => {
+  let contacts
+  try {
+    contacts = await Contacts.getAll()
+  } catch (err) {
+    alertContactsNoPermissionAlert()
+    console.error("Error fetching contacts: ", err)
+    return undefined
+  }
+
+  const result = await contactService.rewriteContactsByPlatform(contacts, "ios")
+
+  set(ContactsStore, result)
+
+  return result
+})
+
+export const setAndroidContactsAtom = atom(null, async (_, set) => {
+  const permission = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS)
+  if (permission !== PermissionsAndroid.RESULTS.GRANTED) {
+    alertContactsNoPermissionAlert()
+    console.error("Permission denied")
+    return undefined
+  }
+  const contacts = await Contacts.getAll()
+
+  const result = await contactService.rewriteContactsByPlatform(contacts, "android")
+
+  set(ContactsStore, result)
+
+  return result
+})
 export const updateContactAtom = atom(
   null,
   async (
