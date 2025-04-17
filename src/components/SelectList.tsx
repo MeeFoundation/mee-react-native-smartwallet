@@ -41,7 +41,7 @@ export const SelectList: FC<SelectListProps> = ({
   showCounter = false,
   onCreate,
 }) => {
-  const [_firstRender, _setFirstRender] = useState<boolean>(true)
+  const [_firstRender] = useState<boolean>(true)
   const [dropdown, setDropdown] = useState<boolean>(showDropdown)
   const [height, setHeight] = useState<number>(350)
   const dropdownHeight = useRef(new Animated.Value(0)).current

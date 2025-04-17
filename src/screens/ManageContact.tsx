@@ -3,7 +3,7 @@ import { Accordion } from "@components/Accordion"
 import { AddConnectionAttribute } from "@components/AddConnectionAttribute"
 import { BackgroundLayout } from "@components/BackgroundLayout"
 import { ConnectionCard } from "@components/ConnectionCard"
-import { TextEditableLabelField } from "@components/TextEditableLabelField"
+import { MultipleFieldsBlock } from "@components/MultipleFieldsBlock"
 import { TextField } from "@components/TextField"
 import { Typography } from "@components/Typography"
 import { RootStackParamList } from "@navigation/rootNavigation"
@@ -14,11 +14,19 @@ import { MakeArraysValuesToObjects } from "@utils/ts-utils"
 import { customValidate, emailStruct, requiredStringMoreThanStruct } from "@utils/validation"
 import { useAtomValue, useSetAtom } from "jotai"
 import { mapValues, pick, pickBy } from "lodash-es"
-import React, { useMemo, useState } from "react"
+import React, { FC, useMemo, useState } from "react"
 import { Platform, StyleSheet, TouchableOpacity, View } from "react-native"
+import { PlusSmallIcon, XMarkIcon } from "react-native-heroicons/outline"
+import { SvgProps } from "react-native-svg"
 import { array, object } from "superstruct"
+import { AppButton } from "../components/AppButton"
 
-const Fields_Keys = ["emails", "firstName", "lastName", "phones"] as const
+const InputCustomRightIconActive: FC<SvgProps> = ({ style, ...props }) => (
+  // @ts-ignore for svg, colors property works correctly
+  <XMarkIcon style={[style, { color: colors["gray-800"] }]} {...props} />
+)
+
+const Fields_Keys = ["emails", "firstName", "lastName", "phones", "addresses"] as const
 export const ManageContact = () => {
   const { navigate } = useNavigation()
   const route = useRoute<RouteProp<RootStackParamList, "Manage Contact">>()
@@ -75,6 +83,16 @@ export const ManageContact = () => {
                 value: requiredStringMoreThanStruct(1),
               }),
             ),
+            addresses:
+              (fields.sharedWithYou.addresses?.length ?? 0) > 0
+                ? array(
+                    object(
+                      mapValues(fields.sharedWithYou.addresses?.[0], () =>
+                        requiredStringMoreThanStruct(1),
+                      ),
+                    ),
+                  )
+                : undefined,
           },
           visibleKeys,
         ),
@@ -148,55 +166,88 @@ export const ManageContact = () => {
                 {isEditing.sharedWithYou ? (
                   <View>
                     <View style={styles.infoPaddingContainer}>
-                      <View style={styles.infoInputCol}>
-                        <Typography style={[styles.infoLabel, { marginBottom: -6 }]}>
-                          Emails
-                        </Typography>
-                        {fieldsVisibility.sharedWithYou?.emails &&
-                          fields.sharedWithYou.emails?.map((emailInfo, emailIndex) => (
+                      {fieldsVisibility.sharedWithYou?.emails && (
+                        <View style={styles.infoInputCol}>
+                          <Typography style={[styles.infoLabel, { marginBottom: -6 }]}>
+                            Emails
+                          </Typography>
+                          {fields.sharedWithYou.emails?.map((emailInfo, emailIndex) => (
                             <View key={emailIndex}>
-                              <TextEditableLabelField
-                                labelValue={emailInfo.key}
-                                value={emailInfo.value}
-                                onChangeText={(text) => {
-                                  setFields((state) => ({
-                                    ...state,
-                                    sharedWithYou: {
-                                      ...state.sharedWithYou,
-                                      emails: state.sharedWithYou.emails?.map((emInfo, idx) =>
-                                        emailIndex === idx ? { ...emInfo, value: text } : emInfo,
-                                      ),
+                              <MultipleFieldsBlock
+                                valuesConfig={[
+                                  {
+                                    label: "Label",
+                                    value: emailInfo.key,
+                                    onChange: (text) => {
+                                      setFields((state) => ({
+                                        ...state,
+                                        sharedWithYou: {
+                                          ...state.sharedWithYou,
+                                          emails: state.sharedWithYou.emails?.map((emInfo, idx) =>
+                                            emailIndex === idx ? { ...emInfo, key: text } : emInfo,
+                                          ),
+                                        },
+                                      }))
                                     },
-                                  }))
-                                }}
-                                onChangeLabel={(text) => {
-                                  setFields((state) => ({
-                                    ...state,
-                                    sharedWithYou: {
-                                      ...state.sharedWithYou,
-                                      emails: state.sharedWithYou.emails?.map((emInfo, idx) =>
-                                        emailIndex === idx ? { ...emInfo, key: text } : emInfo,
-                                      ),
+                                    errorText:
+                                      validationErrors.sharedWithYou.emails?.[emailIndex]?.key,
+                                  },
+                                  {
+                                    label: "Email",
+                                    value: emailInfo.value,
+                                    onChange: (text) => {
+                                      setFields((state) => ({
+                                        ...state,
+                                        sharedWithYou: {
+                                          ...state.sharedWithYou,
+                                          emails: state.sharedWithYou.emails?.map((emInfo, idx) =>
+                                            emailIndex === idx
+                                              ? { ...emInfo, value: text }
+                                              : emInfo,
+                                          ),
+                                        },
+                                      }))
                                     },
-                                  }))
-                                }}
+                                    errorText:
+                                      validationErrors.sharedWithYou.emails?.[emailIndex]?.value,
+                                  },
+                                ]}
                                 style={styles.infoInput}
-                                disabled={contactPlatform !== Platform.OS}
-                                errorText={
-                                  validationErrors.sharedWithYou.emails?.[emailIndex]?.value
-                                }
-                                labelErrorText={
-                                  validationErrors.sharedWithYou.emails?.[emailIndex]?.key
-                                }
+                                RightIconActive={InputCustomRightIconActive}
                               />
                             </View>
                           ))}
-                      </View>
+                          {Array.isArray(contact.sharedInfo.emails) &&
+                            (contact.sharedInfo.emails?.length ?? 0) > 0 && (
+                              <AppButton
+                                IconLeft={PlusSmallIcon}
+                                text={"Add another email"}
+                                onPress={() => {
+                                  setFields({
+                                    ...fields,
+                                    sharedWithYou: {
+                                      ...fields.sharedWithYou,
+                                      emails: [
+                                        ...(fields.sharedWithYou.emails ?? []),
+                                        mapValues(fields.sharedWithYou.emails?.[0], "") as {
+                                          key: string
+                                          value: string
+                                        },
+                                      ],
+                                    },
+                                  })
+                                }}
+                                variant="link"
+                                textStyles={styles.addNewListItemText}
+                                style={styles.addNewListItem}
+                              />
+                            )}
+                        </View>
+                      )}
                       <View style={StyleSheet.compose(styles.infoInputRow, styles.infoBorder)}>
                         <TextField
                           label="First Name"
                           propsStyles={{ container: styles.infoInput }}
-                          disabled={contactPlatform !== Platform.OS}
                           value={fields.sharedWithYou.firstName}
                           errorText={validationErrors.sharedWithYou.firstName}
                           onChangeText={(text) => {
@@ -208,13 +259,13 @@ export const ManageContact = () => {
                               },
                             }))
                           }}
+                          RightIconActive={InputCustomRightIconActive}
                         />
                       </View>
                       <View style={StyleSheet.compose(styles.infoInputRow, styles.infoBorder)}>
                         <TextField
                           label="Last Name"
                           propsStyles={{ container: styles.infoInput }}
-                          disabled={contactPlatform !== Platform.OS}
                           value={fields.sharedWithYou.lastName}
                           errorText={validationErrors.sharedWithYou.lastName}
                           onChangeText={(text) => {
@@ -226,57 +277,178 @@ export const ManageContact = () => {
                               },
                             }))
                           }}
+                          RightIconActive={InputCustomRightIconActive}
                         />
                       </View>
-                      <View style={StyleSheet.compose(styles.infoInputCol, styles.infoBorder)}>
-                        <Typography style={[styles.infoLabel, { marginBottom: -6 }]}>
-                          Phone Numbers
-                        </Typography>
-                        {fieldsVisibility.sharedWithYou?.phones &&
-                          fields.sharedWithYou.phones?.map((phoneInfo, phoneIndex) => (
+                      {fieldsVisibility.sharedWithYou?.phones && (
+                        <View style={StyleSheet.compose(styles.infoInputCol, styles.infoBorder)}>
+                          <Typography style={[styles.infoLabel, { marginBottom: -6 }]}>
+                            Phone Numbers
+                          </Typography>
+                          {fields.sharedWithYou.phones?.map((phoneInfo, phoneIndex) => (
                             <View key={phoneIndex}>
-                              <TextEditableLabelField
-                                labelValue={phoneInfo.key}
-                                value={phoneInfo.value}
-                                onChangeText={(text) => {
-                                  setFields((state) => ({
-                                    ...state,
-                                    sharedWithYou: {
-                                      ...state.sharedWithYou,
-                                      phones: state.sharedWithYou.phones?.map((emInfo, idx) =>
-                                        phoneIndex === idx ? { ...emInfo, value: text } : emInfo,
-                                      ),
+                              <MultipleFieldsBlock
+                                valuesConfig={[
+                                  {
+                                    label: "Label",
+                                    value: phoneInfo.key,
+                                    onChange: (text) => {
+                                      setFields((state) => ({
+                                        ...state,
+                                        sharedWithYou: {
+                                          ...state.sharedWithYou,
+                                          phones: state.sharedWithYou.phones?.map((emInfo, idx) =>
+                                            phoneIndex === idx ? { ...emInfo, key: text } : emInfo,
+                                          ),
+                                        },
+                                      }))
                                     },
-                                  }))
-                                }}
-                                onChangeLabel={(text) => {
-                                  setFields((state) => ({
-                                    ...state,
-                                    sharedWithYou: {
-                                      ...state.sharedWithYou,
-                                      phones: state.sharedWithYou.phones?.map((emInfo, idx) =>
-                                        phoneIndex === idx ? { ...emInfo, key: text } : emInfo,
-                                      ),
+                                    errorText:
+                                      validationErrors.sharedWithYou.emails?.[phoneIndex]?.key,
+                                  },
+                                  {
+                                    label: "Number",
+                                    value: phoneInfo.value,
+                                    onChange: (text) => {
+                                      setFields((state) => ({
+                                        ...state,
+                                        sharedWithYou: {
+                                          ...state.sharedWithYou,
+                                          phones: state.sharedWithYou.phones?.map((emInfo, idx) =>
+                                            phoneIndex === idx
+                                              ? { ...emInfo, value: text }
+                                              : emInfo,
+                                          ),
+                                        },
+                                      }))
                                     },
-                                  }))
-                                }}
+                                    errorText:
+                                      validationErrors.sharedWithYou.emails?.[phoneIndex]?.value,
+                                  },
+                                ]}
                                 style={styles.infoInput}
-                                disabled={contactPlatform !== Platform.OS}
-                                errorText={
-                                  validationErrors.sharedWithYou.phones?.[phoneIndex]?.value
-                                }
-                                labelErrorText={
-                                  validationErrors.sharedWithYou.phones?.[phoneIndex]?.key
-                                }
+                                RightIconActive={InputCustomRightIconActive}
                               />
                             </View>
                           ))}
-                      </View>
+                          {Array.isArray(contact.sharedInfo.phones) &&
+                            (contact.sharedInfo.phones?.length ?? 0) > 0 && (
+                              <AppButton
+                                IconLeft={PlusSmallIcon}
+                                text={"Add another phone"}
+                                onPress={() => {
+                                  setFields({
+                                    ...fields,
+                                    sharedWithYou: {
+                                      ...fields.sharedWithYou,
+                                      phones: [
+                                        ...(fields.sharedWithYou.phones ?? []),
+                                        mapValues(fields.sharedWithYou.phones?.[0], "") as {
+                                          key: string
+                                          value: string
+                                        },
+                                      ],
+                                    },
+                                  })
+                                }}
+                                variant="link"
+                                textStyles={styles.addNewListItemText}
+                                style={styles.addNewListItem}
+                              />
+                            )}
+                        </View>
+                      )}
+                      {fieldsVisibility.sharedWithYou?.addresses && (
+                        <View style={StyleSheet.compose(styles.infoInputCol, styles.infoBorder)}>
+                          <Typography style={[styles.infoLabel, { marginBottom: -6 }]}>
+                            Addresses
+                          </Typography>
+                          {fields.sharedWithYou.addresses?.map((addressInfo, addressIndex) => (
+                            <View key={addressIndex}>
+                              <MultipleFieldsBlock
+                                valuesConfig={Object.entries(addressInfo).map(([key, value]) => ({
+                                  label: key,
+                                  value: value,
+                                  onChange: (text) => {
+                                    setFields((state) => ({
+                                      ...state,
+                                      sharedWithYou: {
+                                        ...state.sharedWithYou,
+                                        addresses: state.sharedWithYou.addresses?.map(
+                                          (adInfo, idx) =>
+                                            addressIndex === idx
+                                              ? { ...adInfo, [key]: text }
+                                              : adInfo,
+                                        ),
+                                      },
+                                    }))
+                                  },
+                                  errorText:
+                                    validationErrors.sharedWithYou.addresses?.[addressIndex]?.[key],
+                                }))}
+                                style={styles.infoInput}
+                                RightIconActive={InputCustomRightIconActive}
+                              />
+                            </View>
+                          ))}
+                          {Array.isArray(contact.sharedInfo.addresses) &&
+                            (contact.sharedInfo.addresses?.length ?? 0) > 0 && (
+                              <AppButton
+                                IconLeft={PlusSmallIcon}
+                                text={"Add another address"}
+                                onPress={() => {
+                                  setFields({
+                                    ...fields,
+                                    sharedWithYou: {
+                                      ...fields.sharedWithYou,
+                                      addresses: [
+                                        ...(fields.sharedWithYou.addresses ?? []),
+                                        mapValues(fields.sharedWithYou.addresses?.[0], ""),
+                                      ],
+                                    },
+                                  })
+                                }}
+                                variant="link"
+                                textStyles={styles.addNewListItemText}
+                                style={styles.addNewListItem}
+                              />
+                            )}
+                        </View>
+                      )}
                     </View>
                     <View style={styles.newFieldsSelectContainer}>
                       <AddConnectionAttribute
                         data={Fields_Keys.filter((key) => !fieldsVisibility.sharedWithYou[key])}
                         onSelect={(data) => {
+                          if (Array.isArray(fields.sharedWithYou[data])) {
+                            if (data === "addresses") {
+                              setFields({
+                                ...fields,
+                                sharedWithYou: {
+                                  ...fields.sharedWithYou,
+                                  [data]: [
+                                    {
+                                      label: "",
+                                      street: "",
+                                      city: "",
+                                      region: "",
+                                      state: "",
+                                      postCode: "",
+                                      country: "",
+                                    },
+                                  ],
+                                },
+                              })
+                            } else {
+                              setFields({
+                                ...fields,
+                                sharedWithYou: {
+                                  ...fields.sharedWithYou,
+                                  [data]: [{ value: "", key: "" }],
+                                },
+                              })
+                            }
+                          }
                           setFieldsVisibility((state) => ({
                             sharedWithYou: {
                               ...state.sharedWithYou,
@@ -312,12 +484,34 @@ export const ManageContact = () => {
                       <Typography style={styles.infoText}>{contact.sharedInfo.lastName}</Typography>
                     </View>
                     {fieldsVisibility.sharedWithYou?.phones && (
-                      <View style={styles.infoRow}>
+                      <View style={[styles.infoRow, styles.infoBorder]}>
                         <Typography style={styles.infoLabel}>Phone numbers</Typography>
                         {contact.sharedInfo.phones?.map((phoneInfo, phoneIndex) => (
                           <View style={styles.arrayItemBlock} key={phoneIndex}>
                             <Typography style={styles.infoArrayText}>{phoneInfo.value}</Typography>
                             <Typography style={styles.infoArrayLabel}>{phoneInfo.key}</Typography>
+                          </View>
+                        ))}
+                      </View>
+                    )}
+                    {fieldsVisibility.sharedWithYou?.addresses && (
+                      <View style={[styles.infoRow, styles.infoBorder]}>
+                        <Typography style={styles.infoLabel}>Addresses</Typography>
+                        {contact.sharedInfo.addresses?.map((addressInfo, addressIndex) => (
+                          <View
+                            style={[
+                              styles.complexDataContainer,
+                              styles.infoRow,
+                              addressIndex !== 0 && styles.infoBorder,
+                            ]}
+                            key={addressIndex}
+                          >
+                            {Object.entries(addressInfo).map(([key, value], innerIndex) => (
+                              <View key={innerIndex}>
+                                <Typography style={styles.infoLabel}>{key}</Typography>
+                                <Typography style={styles.infoText}>{value}</Typography>
+                              </View>
+                            ))}
                           </View>
                         ))}
                       </View>
@@ -344,6 +538,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, 0.90)",
   },
   infoRow: { paddingVertical: 8 },
+  complexDataContainer: { gap: 4 },
   infoBorder: { borderTopWidth: 1, borderTopColor: colors.border },
   infoLabel: {
     color: colors.secondary,
@@ -382,7 +577,6 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 8,
     overflow: "hidden",
   },
-
   infoContainer: {
     borderRadius: 8,
     borderColor: "rgba(255, 255, 255, 0.80)",
@@ -407,7 +601,9 @@ const styles = StyleSheet.create({
     borderColor: colors.white,
     borderWidth: 2,
     backgroundColor: "rgba(255, 255, 255, 0)",
-    // boxShadow: "0px 0px 10px 0px rgba(0, 0, 0, 0.05)",
     gap: 8,
   },
+
+  addNewListItemText: { color: colors["blue-700"] },
+  addNewListItem: { marginTop: 10, marginBottom: 4 },
 })

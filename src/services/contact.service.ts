@@ -41,7 +41,6 @@ class ContactService {
     }
 
     setObjectItem(CONTACTS_STORAGE_KEY, updContacts)
-
     return updContacts
   }
 
@@ -53,6 +52,7 @@ class ContactService {
     if (!alreadyCreatedConnection?.id) {
       newIdentifier = await generateUserIdentifier()
     }
+
     return {
       id: alreadyCreatedConnection?.id ?? newIdentifier,
       name: nativeContact.displayName || `${nativeContact.familyName} ${nativeContact.givenName}`,
@@ -67,6 +67,7 @@ class ContactService {
           key: num.label,
           value: num.number,
         })),
+        addresses: nativeContact.postalAddresses,
       },
       tags: alreadyCreatedConnection?.tags ?? [],
       iconSrc: nativeContact.thumbnailPath,

@@ -35,7 +35,6 @@ const Tabs = () => {
     },
   ]
   const [activeTab, setActiveTab] = useState(menus?.[0].label)
-  const activeBody = menus.find((menu) => menu.label === activeTab)?.component
   const rows = splitIntoRows(menus, 3)
 
   const setActive = (tabLabel: string) => {

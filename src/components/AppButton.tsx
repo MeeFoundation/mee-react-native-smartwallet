@@ -93,7 +93,7 @@ export const AppButton = forwardRef<AppButtonRef, AppButtonProps>((props, ref) =
     inputRange: [0, 1],
     outputRange: bgColorMap[variant],
   })
-  const textColor = textColorMap[variant]
+  const textColor = tStyles?.color ?? textColorMap[variant]
   const paddings = ["link", "link_danger"].includes(variant) ? { paddings: 0 } : paddingsMap[size]
   const textStyles: TextStyle = {
     fontWeight: !["link", "link_danger"].includes(variant) ? "700" : "400",
