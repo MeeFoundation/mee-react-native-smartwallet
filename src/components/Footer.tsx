@@ -1,24 +1,13 @@
 import { BottomSheetBackDrop } from "@components/BottomSheet"
 import BottomSheet from "@gorhom/bottom-sheet"
 import { useNavigation } from "@react-navigation/native"
-import { alertContactsNoPermissionAlert } from "@utils/alerts"
 import { colors } from "@utils/theme"
 import { useSetAtom } from "jotai"
 import { FC, useRef } from "react"
-import {
-  PermissionsAndroid,
-  Platform,
-  Pressable,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native"
-import Contacts from "react-native-contacts"
+import { Platform, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { LinkIcon, PlusCircleIcon, ShareIcon, UserGroupIcon } from "react-native-heroicons/outline"
 import { IconSources } from "../assets"
-import { contactService } from "../services/contact.service"
-import { ContactsStore } from "../store/contacts"
+import { setAndroidContactsAtom, setIosContactsAtom } from "../store/contacts"
 import { Avatar } from "./Avatar"
 import { Typography } from "./Typography"
 
@@ -31,36 +20,8 @@ export const Footer: FC<FooterProps> = ({ activePage }) => {
   const navigation = useNavigation()
   const isCompaniesPage = activePage === "companies"
   const isPeoplePage = activePage === "people"
-  const setContacts = useSetAtom(ContactsStore)
-
-  const getIosContacts = async () => {
-    let contacts
-    try {
-      contacts = await Contacts.getAll()
-    } catch (err) {
-      alertContactsNoPermissionAlert()
-      console.error("Error fetching contacts: ", err)
-      return undefined
-    }
-
-    const result = await contactService.rewriteContactsByPlatform(contacts, "ios")
-    return result
-  }
-
-  const getAndroidContacts = async () => {
-    const permission = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-    )
-    if (permission !== PermissionsAndroid.RESULTS.GRANTED) {
-      alertContactsNoPermissionAlert()
-      console.error("Permission denied")
-      return undefined
-    }
-    const contacts = await Contacts.getAll()
-
-    const result = await contactService.rewriteContactsByPlatform(contacts, "android")
-    return result
-  }
+  const setIosContacts = useSetAtom(setIosContactsAtom)
+  const setAndroidContacts = useSetAtom(setAndroidContactsAtom)
 
   const onAddPress = () => {
     bottomSheetRef.current?.expand()
@@ -137,9 +98,8 @@ export const Footer: FC<FooterProps> = ({ activePage }) => {
 
                   <Pressable
                     onPress={async () => {
-                      const contacts = await getIosContacts()
-                      if (contacts) {
-                        setContacts(contacts)
+                      const res = await setIosContacts()
+                      if (res) {
                         bottomSheetRef.current?.close()
                       }
                     }}
@@ -159,9 +119,8 @@ export const Footer: FC<FooterProps> = ({ activePage }) => {
                     // some bug on the android, last block stretching beyond the parent and even screen
                     style={{ maxWidth: 50 }}
                     onPress={async () => {
-                      const contacts = await getAndroidContacts()
-                      if (contacts) {
-                        setContacts(contacts)
+                      const res = await setAndroidContacts()
+                      if (res) {
                         bottomSheetRef.current?.close()
                       }
                     }}
