@@ -1,6 +1,6 @@
 import { FC } from "react"
-import { StyleSheet, View, ViewStyle } from "react-native"
-import { TextField } from "./TextField"
+import { StyleSheet, View } from "react-native"
+import { TextField, TextFieldProps } from "./TextField"
 
 export type MultipleFieldsBlockProps = {
   valuesConfig: {
@@ -10,14 +10,13 @@ export type MultipleFieldsBlockProps = {
     errorText?: string
     placeholder?: string
   }[]
-  style?: ViewStyle
-  disabled?: boolean
-}
+} & Pick<TextFieldProps, "RightIconActive" | "style" | "disabled">
 
 export const MultipleFieldsBlock: FC<MultipleFieldsBlockProps> = ({
   valuesConfig,
   style,
   disabled,
+  RightIconActive,
 }) => {
   return (
     <View style={StyleSheet.compose(styles.container, style)}>
@@ -38,6 +37,7 @@ export const MultipleFieldsBlock: FC<MultipleFieldsBlockProps> = ({
             ]),
           }}
           errorText={valueConfig.errorText}
+          RightIconActive={RightIconActive}
         />
       ))}
     </View>

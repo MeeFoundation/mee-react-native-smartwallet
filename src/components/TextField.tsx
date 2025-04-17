@@ -79,6 +79,7 @@ export const TextField: FC<TextFieldProps> = ({
 
   const focusHandler = () => {
     onFocus && onFocus()
+    inputRef.current?.focus()
     setIsFocused(true)
 
     if (isLabelInside && !value) {
@@ -92,6 +93,7 @@ export const TextField: FC<TextFieldProps> = ({
 
   const blurHandler = () => {
     onBlur && onBlur()
+    inputRef.current?.blur()
     setIsFocused(false)
 
     if (isLabelInside && !value) {
@@ -161,15 +163,9 @@ export const TextField: FC<TextFieldProps> = ({
           {errorText}
         </Text>
       )}
-
       {RightIconActive && inputRef.current?.isFocused() && (
         <TouchableOpacity onPress={clearHandler}>
-          <RightIconActive
-            width={24}
-            height={24}
-            style={[iconStyle]}
-            color={inputRef.current?.isFocused() ? "black" : colors["gray-400"]}
-          />
+          <RightIconActive width={24} height={24} style={[iconStyle]} color={"black"} />
         </TouchableOpacity>
       )}
       {/* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */}
@@ -197,8 +193,8 @@ export const textFieldStyles = StyleSheet.create({
     flexDirection: "row",
   },
   inputIcon: {
-    color: colors["gray-400"],
     position: "absolute",
+    zIndex: 120,
   },
   label: {
     fontSize: 12,
@@ -221,7 +217,6 @@ export const textFieldStyles = StyleSheet.create({
     position: "absolute",
     bottom: 8,
     left: 16,
-    zIndex: 10,
   },
   labelInsideLabel: {
     position: "absolute",
@@ -233,7 +228,6 @@ export const textFieldStyles = StyleSheet.create({
   labelInsideInput: {
     paddingTop: 24,
     paddingBottom: 6,
-    zIndex: 5,
     fontWeight: "500",
   },
   input: {
