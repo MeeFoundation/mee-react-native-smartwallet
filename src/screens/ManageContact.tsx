@@ -11,22 +11,257 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { ContactsDetails, deleteContactAtom, updateContactAtom } from "@store/contacts"
 import { colors } from "@utils/theme"
 import { MakeArraysValuesToObjects } from "@utils/ts-utils"
-import { customValidate, emailStruct, requiredStringMoreThanStruct } from "@utils/validation"
 import { useAtomValue, useSetAtom } from "jotai"
-import { mapValues, pick, pickBy } from "lodash-es"
-import React, { FC, useMemo, useState } from "react"
+import { mapValues } from "lodash-es"
+import React, { FC, Fragment, useMemo, useState } from "react"
 import { Platform, StyleSheet, TouchableOpacity, View } from "react-native"
 import { PlusSmallIcon, XMarkIcon } from "react-native-heroicons/outline"
 import { SvgProps } from "react-native-svg"
-import { array, object } from "superstruct"
 import { AppButton } from "../components/AppButton"
+import {
+  NestedData,
+  NestedSchema,
+  NoData,
+  SharedInfo,
+  isArrayPlainSchemaType,
+  isPlainSchemaType,
+} from "../services/core.service"
 
 const InputCustomRightIconActive: FC<SvgProps> = ({ style, ...props }) => (
   // @ts-ignore for svg, colors property works correctly
   <XMarkIcon style={[style, { color: colors["gray-800"] }]} {...props} />
 )
 
-const Fields_Keys = ["emails", "firstName", "lastName", "phones", "addresses"] as const
+const mapValuesNested = (
+  scheme: NestedSchema["schema"],
+): { [key: string]: string | NestedData } => {
+  return mapValues(Array.isArray(scheme) ? scheme[0] : scheme, (val) =>
+    val.type === "nested" ? mapValuesNested(val.schema) : "",
+  )
+}
+
+const NestedComponent = ({
+  setFields,
+  fieldSchema,
+  fieldKey,
+  isEditing,
+}: {
+  setFields?: (values: NestedData) => void
+  fieldSchema: NestedSchema
+  fieldKey: string
+  isEditing?: boolean
+}) => {
+  const nestedSchema = fieldSchema.schema
+  const nestedData = fieldSchema.data
+
+  return isEditing ? (
+    <View style={styles.infoInputCol}>
+      <Typography style={[styles.infoLabel, { marginBottom: -6 }]}>{fieldSchema?.title}</Typography>
+      {Array.isArray(nestedSchema) &&
+        Array.isArray(nestedData) &&
+        nestedData?.map((arrayObjData, arrayObjIndex) => {
+          return (
+            <View key={arrayObjIndex}>
+              <MultipleFieldsBlock
+                valuesConfig={Object.entries(nestedSchema[0])
+                  .filter(([, value]) => value.type !== "nested")
+                  .map(([schemaKey, schemaValue]) => ({
+                    label: schemaValue.title,
+                    value: arrayObjData?.[schemaKey] as string,
+                    onChange: (text) => {
+                      setFields?.(
+                        nestedData?.map((objData, objDataIndex) =>
+                          objDataIndex === arrayObjIndex
+                            ? {
+                                ...objData,
+                                [schemaKey]: text,
+                              }
+                            : objData,
+                        ),
+                      )
+                    },
+                    // errorText:
+                    //   validationErrors.sharedWithYou.emails?.[emailIndex]
+                    //     ?.key,
+                  }))}
+                style={styles.infoInput}
+                RightIconActive={InputCustomRightIconActive}
+              />
+              <View
+                style={{
+                  marginLeft: 16,
+                  maxWidth: 300,
+                }}
+              >
+                {Object.entries(nestedSchema[0])
+                  .filter(([, value]) => value.type === "nested")
+                  .map(([schemaKey, schemaValue]) => {
+                    return (
+                      <NestedComponent
+                        key={schemaKey}
+                        setFields={(values) => {
+                          setFields?.(
+                            nestedData?.map((objData, objDataIndex) =>
+                              objDataIndex === arrayObjIndex
+                                ? {
+                                    ...objData,
+                                    [schemaKey]: values,
+                                  }
+                                : objData,
+                            ),
+                          )
+                        }}
+                        fieldSchema={{
+                          ...(schemaValue as NoData<NestedSchema>),
+                          data: arrayObjData?.[schemaKey] as NestedData,
+                        }}
+                        fieldKey={schemaKey}
+                        isEditing
+                      />
+                    )
+                  })}
+              </View>
+            </View>
+          )
+        })}
+      {Array.isArray(nestedSchema) &&
+        Array.isArray(nestedData) &&
+        (nestedData?.length ?? 0) > 0 && (
+          <AppButton
+            IconLeft={PlusSmallIcon}
+            text={`Add another ${fieldSchema.title}`}
+            onPress={() => {
+              setFields?.([...nestedData, mapValuesNested(nestedSchema)])
+            }}
+            variant="link"
+            textStyles={styles.addNewListItemText}
+            style={styles.addNewListItem}
+          />
+        )}
+      {!Array.isArray(nestedSchema) && !Array.isArray(nestedData) && (
+        <View>
+          <MultipleFieldsBlock
+            valuesConfig={Object.entries(nestedSchema)
+              .filter(([, value]) => value.type !== "nested")
+              .map(([schemaKey]) => ({
+                label: nestedSchema[schemaKey].title,
+                value: nestedData?.[schemaKey] as string,
+                onChange: (text) => {
+                  setFields?.({
+                    ...nestedData,
+                    [schemaKey]: text,
+                  })
+                },
+                // errorText:
+                //   validationErrors.sharedWithYou.emails?.[emailIndex]
+                //     ?.key,
+              }))}
+            style={styles.infoInput}
+            RightIconActive={InputCustomRightIconActive}
+          />
+          <View
+            style={{
+              marginLeft: 16,
+              maxWidth: 300,
+            }}
+          >
+            {Object.entries(nestedSchema)
+              .filter(([, value]) => value.type === "nested")
+              .map(([schemaKey, schemaValue]) => {
+                return (
+                  <NestedComponent
+                    key={schemaKey}
+                    setFields={(values) => {
+                      setFields?.({
+                        ...nestedData,
+                        [schemaKey]: values,
+                      })
+                    }}
+                    fieldSchema={{
+                      ...(schemaValue as NoData<NestedSchema>),
+                      data: nestedData?.[schemaKey] as NestedData,
+                    }}
+                    fieldKey={schemaKey}
+                    isEditing
+                  />
+                )
+              })}
+          </View>
+        </View>
+      )}
+    </View>
+  ) : (
+    <View style={[styles.infoRow, styles.infoBorder]}>
+      <Typography style={styles.infoLabel}>{fieldSchema.title}</Typography>
+      {Array.isArray(nestedSchema) &&
+        Array.isArray(nestedData) &&
+        nestedData?.map((arrayObjData, arrayObjIndex) => (
+          <View
+            style={[
+              styles.complexDataContainer,
+              styles.infoRow,
+              arrayObjIndex !== 0 && styles.infoBorder,
+            ]}
+            key={arrayObjIndex}
+          >
+            {Object.entries(nestedSchema[0])
+              .filter(([_, value]) => value.type !== "nested")
+              .map(([key], innerIndex) => (
+                <View key={innerIndex}>
+                  <Typography style={styles.infoLabel}>{key}</Typography>
+                  <Typography style={styles.infoText}>{arrayObjData[key] as string}</Typography>
+                </View>
+              ))}
+            {Object.entries(nestedSchema[0])
+              .filter(([_, value]) => value.type === "nested")
+              .map(([schemaKey, schemaValue], innerIndex) => (
+                <View key={innerIndex} style={{ marginLeft: 16, maxWidth: 300 }}>
+                  <Typography style={styles.infoLabel}>{schemaKey}</Typography>
+                  <NestedComponent
+                    key={schemaKey}
+                    fieldSchema={{
+                      ...(schemaValue as NoData<NestedSchema>),
+                      data: arrayObjData?.[schemaKey] as NestedData,
+                    }}
+                    fieldKey={schemaKey}
+                    isEditing={false}
+                  />
+                </View>
+              ))}
+          </View>
+        ))}
+      {!Array.isArray(nestedSchema) && !Array.isArray(nestedData) && (
+        <View style={[styles.complexDataContainer, styles.infoRow]}>
+          {Object.entries(nestedSchema)
+            .filter(([_, value]) => value.type !== "nested")
+            .map(([key], innerIndex) => (
+              <View key={innerIndex}>
+                <Typography style={styles.infoLabel}>{key}</Typography>
+                <Typography style={styles.infoText}>{nestedData[key] as string}</Typography>
+              </View>
+            ))}
+          {Object.entries(nestedSchema)
+            .filter(([_, value]) => value.type === "nested")
+            .map(([schemaKey, schemaValue], innerIndex) => (
+              <View key={innerIndex} style={{ marginLeft: 16, maxWidth: 300 }}>
+                <Typography style={styles.infoLabel}>{schemaKey}</Typography>
+                <NestedComponent
+                  key={schemaKey}
+                  fieldSchema={{
+                    ...(schemaValue as NoData<NestedSchema>),
+                    data: nestedData?.[schemaKey] as NestedData,
+                  }}
+                  fieldKey={schemaKey}
+                  isEditing={false}
+                />
+              </View>
+            ))}
+        </View>
+      )}
+    </View>
+  )
+}
+
 export const ManageContact = () => {
   const { navigate } = useNavigation()
   const route = useRoute<RouteProp<RootStackParamList, "Manage Contact">>()
@@ -35,8 +270,14 @@ export const ManageContact = () => {
   const updateContact = useSetAtom(updateContactAtom)
 
   const [isEditing, setIsEditing] = useState({ sharedWithYou: false })
-  const [fields, setFields] = useState({ sharedWithYou: contact?.sharedInfo })
-  const [fieldsVisibility, setFieldsVisibility] = useState({
+  const [fields, setFields] = useState<{
+    sharedWithYou: Record<string, SharedInfo[keyof SharedInfo]>
+  }>({
+    sharedWithYou: contact?.sharedInfo,
+  })
+  const [fieldsVisibility, setFieldsVisibility] = useState<{
+    sharedWithYou: Record<string, boolean | undefined>
+  }>({
     sharedWithYou: mapValues(contact?.sharedInfo, (val) =>
       Array.isArray(val) ? !!val && val.length > 0 : !!val,
     ),
@@ -65,56 +306,57 @@ export const ManageContact = () => {
 
   const onSaveOrEdit = () => {
     if (isEditing.sharedWithYou) {
-      const visibleKeys = Object.keys(pickBy(fieldsVisibility.sharedWithYou, (val) => val))
-      const ContactInfoValidationObject = object(
-        pick(
-          {
-            emails: array(
-              object({
-                key: requiredStringMoreThanStruct(1),
-                value: emailStruct,
-              }),
-            ),
-            firstName: requiredStringMoreThanStruct(1),
-            lastName: requiredStringMoreThanStruct(1),
-            phones: array(
-              object({
-                key: requiredStringMoreThanStruct(1),
-                value: requiredStringMoreThanStruct(1),
-              }),
-            ),
-            addresses:
-              (fields.sharedWithYou.addresses?.length ?? 0) > 0
-                ? array(
-                    object(
-                      mapValues(fields.sharedWithYou.addresses?.[0], () =>
-                        requiredStringMoreThanStruct(1),
-                      ),
-                    ),
-                  )
-                : undefined,
-          },
-          visibleKeys,
-        ),
-      )
+      // const visibleKeys = Object.keys(pickBy(fieldsVisibility.sharedWithYou, (val) => val))
+      // const ContactInfoValidationObject = object(
+      //   pick(
+      //     {
+      //       emails: array(
+      //         object({
+      //           key: requiredStringMoreThanStruct(1),
+      //           value: emailStruct,
+      //         }),
+      //       ),
+      //       firstName: requiredStringMoreThanStruct(1),
+      //       lastName: requiredStringMoreThanStruct(1),
+      //       phones: array(
+      //         object({
+      //           key: requiredStringMoreThanStruct(1),
+      //           value: requiredStringMoreThanStruct(1),
+      //         }),
+      //       ),
+      //       addresses:
+      //         (fields.sharedWithYou.addresses?.length ?? 0) > 0
+      //           ? array(
+      //               object(
+      //                 mapValues(fields.sharedWithYou.addresses?.[0], () =>
+      //                   requiredStringMoreThanStruct(1),
+      //                 ),
+      //               ),
+      //             )
+      //           : undefined,
+      //     },
+      //     visibleKeys,
+      //   ),
+      // )
 
-      const validationInfo = customValidate(
-        pick(fields.sharedWithYou, visibleKeys),
-        ContactInfoValidationObject,
-      )
+      // const validationInfo = customValidate(
+      //   pick(fields.sharedWithYou, visibleKeys),
+      //   ContactInfoValidationObject,
+      // )
 
-      if (!validationInfo.valid) {
-        setValidationErrors((state) => ({
-          ...state,
-          sharedWithYou: validationInfo.errors,
-        }))
-        return
-      }
+      // if (!validationInfo.valid) {
+      //   setValidationErrors((state) => ({
+      //     ...state,
+      //     sharedWithYou: validationInfo.errors,
+      //   }))
+      //   return
+      // }
 
       setValidationErrors((state) => ({
         ...state,
         sharedWithYou: {},
       }))
+
       contact.contactInfo?.recordID &&
         updateContact({
           recordID: contact.contactInfo?.recordID,
@@ -166,277 +408,108 @@ export const ManageContact = () => {
                 {isEditing.sharedWithYou ? (
                   <View>
                     <View style={styles.infoPaddingContainer}>
-                      {fieldsVisibility.sharedWithYou?.emails && (
-                        <View style={styles.infoInputCol}>
-                          <Typography style={[styles.infoLabel, { marginBottom: -6 }]}>
-                            Emails
-                          </Typography>
-                          {fields.sharedWithYou.emails?.map((emailInfo, emailIndex) => (
-                            <View key={emailIndex}>
-                              <MultipleFieldsBlock
-                                valuesConfig={[
-                                  {
-                                    label: "Label",
-                                    value: emailInfo.key,
-                                    onChange: (text) => {
-                                      setFields((state) => ({
-                                        ...state,
-                                        sharedWithYou: {
-                                          ...state.sharedWithYou,
-                                          emails: state.sharedWithYou.emails?.map((emInfo, idx) =>
-                                            emailIndex === idx ? { ...emInfo, key: text } : emInfo,
-                                          ),
-                                        },
-                                      }))
-                                    },
-                                    errorText:
-                                      validationErrors.sharedWithYou.emails?.[emailIndex]?.key,
-                                  },
-                                  {
-                                    label: "Email",
-                                    value: emailInfo.value,
-                                    onChange: (text) => {
-                                      setFields((state) => ({
-                                        ...state,
-                                        sharedWithYou: {
-                                          ...state.sharedWithYou,
-                                          emails: state.sharedWithYou.emails?.map((emInfo, idx) =>
-                                            emailIndex === idx
-                                              ? { ...emInfo, value: text }
-                                              : emInfo,
-                                          ),
-                                        },
-                                      }))
-                                    },
-                                    errorText:
-                                      validationErrors.sharedWithYou.emails?.[emailIndex]?.value,
-                                  },
-                                ]}
-                                style={styles.infoInput}
-                                RightIconActive={InputCustomRightIconActive}
-                              />
-                            </View>
-                          ))}
-                          {Array.isArray(contact.sharedInfo.emails) &&
-                            (contact.sharedInfo.emails?.length ?? 0) > 0 && (
-                              <AppButton
-                                IconLeft={PlusSmallIcon}
-                                text={"Add another email"}
-                                onPress={() => {
-                                  setFields({
-                                    ...fields,
-                                    sharedWithYou: {
-                                      ...fields.sharedWithYou,
-                                      emails: [
-                                        ...(fields.sharedWithYou.emails ?? []),
-                                        mapValues(fields.sharedWithYou.emails?.[0], "") as {
-                                          key: string
-                                          value: string
-                                        },
-                                      ],
-                                    },
-                                  })
-                                }}
-                                variant="link"
-                                textStyles={styles.addNewListItemText}
-                                style={styles.addNewListItem}
-                              />
-                            )}
-                        </View>
-                      )}
-                      <View style={StyleSheet.compose(styles.infoInputRow, styles.infoBorder)}>
-                        <TextField
-                          label="First Name"
-                          propsStyles={{ container: styles.infoInput }}
-                          value={fields.sharedWithYou.firstName}
-                          errorText={validationErrors.sharedWithYou.firstName}
-                          onChangeText={(text) => {
-                            setFields((state) => ({
-                              ...state,
-                              sharedWithYou: {
-                                ...state.sharedWithYou,
-                                firstName: text,
-                              },
-                            }))
-                          }}
-                          RightIconActive={InputCustomRightIconActive}
-                        />
-                      </View>
-                      <View style={StyleSheet.compose(styles.infoInputRow, styles.infoBorder)}>
-                        <TextField
-                          label="Last Name"
-                          propsStyles={{ container: styles.infoInput }}
-                          value={fields.sharedWithYou.lastName}
-                          errorText={validationErrors.sharedWithYou.lastName}
-                          onChangeText={(text) => {
-                            setFields((state) => ({
-                              ...state,
-                              sharedWithYou: {
-                                ...state.sharedWithYou,
-                                lastName: text,
-                              },
-                            }))
-                          }}
-                          RightIconActive={InputCustomRightIconActive}
-                        />
-                      </View>
-                      {fieldsVisibility.sharedWithYou?.phones && (
-                        <View style={StyleSheet.compose(styles.infoInputCol, styles.infoBorder)}>
-                          <Typography style={[styles.infoLabel, { marginBottom: -6 }]}>
-                            Phone Numbers
-                          </Typography>
-                          {fields.sharedWithYou.phones?.map((phoneInfo, phoneIndex) => (
-                            <View key={phoneIndex}>
-                              <MultipleFieldsBlock
-                                valuesConfig={[
-                                  {
-                                    label: "Label",
-                                    value: phoneInfo.key,
-                                    onChange: (text) => {
-                                      setFields((state) => ({
-                                        ...state,
-                                        sharedWithYou: {
-                                          ...state.sharedWithYou,
-                                          phones: state.sharedWithYou.phones?.map((emInfo, idx) =>
-                                            phoneIndex === idx ? { ...emInfo, key: text } : emInfo,
-                                          ),
-                                        },
-                                      }))
-                                    },
-                                    errorText:
-                                      validationErrors.sharedWithYou.emails?.[phoneIndex]?.key,
-                                  },
-                                  {
-                                    label: "Number",
-                                    value: phoneInfo.value,
-                                    onChange: (text) => {
-                                      setFields((state) => ({
-                                        ...state,
-                                        sharedWithYou: {
-                                          ...state.sharedWithYou,
-                                          phones: state.sharedWithYou.phones?.map((emInfo, idx) =>
-                                            phoneIndex === idx
-                                              ? { ...emInfo, value: text }
-                                              : emInfo,
-                                          ),
-                                        },
-                                      }))
-                                    },
-                                    errorText:
-                                      validationErrors.sharedWithYou.emails?.[phoneIndex]?.value,
-                                  },
-                                ]}
-                                style={styles.infoInput}
-                                RightIconActive={InputCustomRightIconActive}
-                              />
-                            </View>
-                          ))}
-                          {Array.isArray(contact.sharedInfo.phones) &&
-                            (contact.sharedInfo.phones?.length ?? 0) > 0 && (
-                              <AppButton
-                                IconLeft={PlusSmallIcon}
-                                text={"Add another phone"}
-                                onPress={() => {
-                                  setFields({
-                                    ...fields,
-                                    sharedWithYou: {
-                                      ...fields.sharedWithYou,
-                                      phones: [
-                                        ...(fields.sharedWithYou.phones ?? []),
-                                        mapValues(fields.sharedWithYou.phones?.[0], "") as {
-                                          key: string
-                                          value: string
-                                        },
-                                      ],
-                                    },
-                                  })
-                                }}
-                                variant="link"
-                                textStyles={styles.addNewListItemText}
-                                style={styles.addNewListItem}
-                              />
-                            )}
-                        </View>
-                      )}
-                      {fieldsVisibility.sharedWithYou?.addresses && (
-                        <View style={StyleSheet.compose(styles.infoInputCol, styles.infoBorder)}>
-                          <Typography style={[styles.infoLabel, { marginBottom: -6 }]}>
-                            Addresses
-                          </Typography>
-                          {fields.sharedWithYou.addresses?.map((addressInfo, addressIndex) => (
-                            <View key={addressIndex}>
-                              <MultipleFieldsBlock
-                                valuesConfig={Object.entries(addressInfo).map(([key, value]) => ({
-                                  label: key,
-                                  value: value,
-                                  onChange: (text) => {
-                                    setFields((state) => ({
-                                      ...state,
+                      {Object.keys(fields.sharedWithYou).map((fieldKey) => {
+                        if (!fieldsVisibility.sharedWithYou[fieldKey]) {
+                          return null
+                        }
+
+                        const fieldSchema = fields.sharedWithYou[fieldKey]
+                        return (
+                          <>
+                            {isPlainSchemaType(fieldSchema?.type) && (
+                              <View
+                                style={StyleSheet.compose(styles.infoInputRow, styles.infoBorder)}
+                              >
+                                <TextField
+                                  label={fieldSchema.title}
+                                  propsStyles={{ container: styles.infoInput }}
+                                  value={fieldSchema.data}
+                                  // errorText={validationErrors.sharedWithYou[fieldKey]}
+                                  onChangeText={(text) => {
+                                    setFields({
+                                      ...fields,
                                       sharedWithYou: {
-                                        ...state.sharedWithYou,
-                                        addresses: state.sharedWithYou.addresses?.map(
-                                          (adInfo, idx) =>
-                                            addressIndex === idx
-                                              ? { ...adInfo, [key]: text }
-                                              : adInfo,
-                                        ),
+                                        ...fields.sharedWithYou,
+                                        [fieldKey]: {
+                                          ...fieldSchema,
+                                          data: text,
+                                        },
                                       },
-                                    }))
-                                  },
-                                  errorText:
-                                    validationErrors.sharedWithYou.addresses?.[addressIndex]?.[key],
-                                }))}
-                                style={styles.infoInput}
-                                RightIconActive={InputCustomRightIconActive}
-                              />
-                            </View>
-                          ))}
-                          {Array.isArray(contact.sharedInfo.addresses) &&
-                            (contact.sharedInfo.addresses?.length ?? 0) > 0 && (
-                              <AppButton
-                                IconLeft={PlusSmallIcon}
-                                text={"Add another address"}
-                                onPress={() => {
-                                  setFields({
-                                    ...fields,
+                                    })
+                                  }}
+                                  RightIconActive={InputCustomRightIconActive}
+                                />
+                              </View>
+                            )}
+                            {isArrayPlainSchemaType(fieldSchema?.type) && (
+                              <View style={styles.infoInputCol}>
+                                <Typography style={[styles.infoLabel, { marginBottom: -6 }]}>
+                                  {fieldSchema?.title}
+                                </Typography>
+                                {fieldSchema.data?.map((dataValue, dataIndex) => (
+                                  <TextField
+                                    propsStyles={{ container: styles.infoInput }}
+                                    value={dataValue}
+                                    // errorText={validationErrors.sharedWithYou[fieldKey]}
+                                    onChangeText={(text) => {
+                                      setFields({
+                                        ...fields,
+                                        sharedWithYou: {
+                                          ...fields.sharedWithYou,
+                                          [fieldKey]: {
+                                            ...fieldSchema,
+                                            data: fieldSchema.data?.map((data, index) =>
+                                              index === dataIndex ? text : data,
+                                            ),
+                                          },
+                                        },
+                                      })
+                                    }}
+                                    RightIconActive={InputCustomRightIconActive}
+                                  />
+                                ))}
+                              </View>
+                            )}
+                            {fieldSchema?.type === "nested" && (
+                              <NestedComponent
+                                fieldSchema={fieldSchema}
+                                fieldKey={fieldKey}
+                                setFields={(values) => {
+                                  setFields((state) => ({
+                                    ...state,
                                     sharedWithYou: {
-                                      ...fields.sharedWithYou,
-                                      addresses: [
-                                        ...(fields.sharedWithYou.addresses ?? []),
-                                        mapValues(fields.sharedWithYou.addresses?.[0], ""),
-                                      ],
+                                      ...state.sharedWithYou,
+                                      [fieldKey]: {
+                                        ...fieldSchema,
+                                        data: values,
+                                      },
                                     },
-                                  })
+                                  }))
                                 }}
-                                variant="link"
-                                textStyles={styles.addNewListItemText}
-                                style={styles.addNewListItem}
+                                isEditing
                               />
                             )}
-                        </View>
-                      )}
+                          </>
+                        )
+                      })}
                     </View>
                     <View style={styles.newFieldsSelectContainer}>
                       <AddConnectionAttribute
-                        data={Fields_Keys.filter((key) => !fieldsVisibility.sharedWithYou[key])}
-                        onSelect={(data) => {
-                          if (Array.isArray(fields.sharedWithYou[data])) {
-                            if (data === "addresses") {
+                        data={Object.keys(fields.sharedWithYou).filter(
+                          (key) => !fieldsVisibility.sharedWithYou[key],
+                        )}
+                        onSelect={(dataKey) => {
+                          const type = fields.sharedWithYou[dataKey].type
+                          if (type === "nested") {
+                            if (Array.isArray(fields.sharedWithYou[dataKey].schema)) {
                               setFields({
                                 ...fields,
                                 sharedWithYou: {
                                   ...fields.sharedWithYou,
-                                  [data]: [
-                                    {
-                                      label: "",
-                                      street: "",
-                                      city: "",
-                                      region: "",
-                                      state: "",
-                                      postCode: "",
-                                      country: "",
-                                    },
-                                  ],
+                                  [dataKey]: {
+                                    ...fields.sharedWithYou[dataKey],
+                                    data: [mapValuesNested(fields.sharedWithYou[dataKey].schema)],
+                                  },
                                 },
                               })
                             } else {
@@ -444,15 +517,33 @@ export const ManageContact = () => {
                                 ...fields,
                                 sharedWithYou: {
                                   ...fields.sharedWithYou,
-                                  [data]: [{ value: "", key: "" }],
+                                  [dataKey]: {
+                                    ...fields.sharedWithYou[dataKey],
+                                    data: mapValuesNested(fields.sharedWithYou[dataKey].schema),
+                                  },
                                 },
                               })
                             }
                           }
+
+                          if (isArrayPlainSchemaType(type)) {
+                            setFields({
+                              ...fields,
+                              sharedWithYou: {
+                                ...fields.sharedWithYou,
+                                [dataKey]: {
+                                  ...fields.sharedWithYou[dataKey],
+                                  type,
+                                  data: [""],
+                                },
+                              },
+                            })
+                          }
+
                           setFieldsVisibility((state) => ({
                             sharedWithYou: {
                               ...state.sharedWithYou,
-                              [data]: true,
+                              [dataKey]: true,
                             },
                           }))
                         }}
@@ -462,60 +553,45 @@ export const ManageContact = () => {
                   </View>
                 ) : (
                   <View style={styles.infoPaddingContainer}>
-                    {fieldsVisibility.sharedWithYou?.emails && (
-                      <View style={styles.infoRow}>
-                        <Typography style={styles.infoLabel}>Emails</Typography>
-                        {contact.sharedInfo.emails?.map((emailInfo, emailIndex) => (
-                          <View style={styles.arrayItemBlock} key={emailIndex}>
-                            <Typography style={styles.infoArrayText}>{emailInfo.value}</Typography>
-                            <Typography style={styles.infoArrayLabel}>{emailInfo.key}</Typography>
-                          </View>
-                        ))}
-                      </View>
-                    )}
-                    <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
-                      <Typography style={styles.infoLabel}>First Name</Typography>
-                      <Typography style={styles.infoText}>
-                        {contact.sharedInfo.firstName}
-                      </Typography>
-                    </View>
-                    <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
-                      <Typography style={styles.infoLabel}>Last Name</Typography>
-                      <Typography style={styles.infoText}>{contact.sharedInfo.lastName}</Typography>
-                    </View>
-                    {fieldsVisibility.sharedWithYou?.phones && (
-                      <View style={[styles.infoRow, styles.infoBorder]}>
-                        <Typography style={styles.infoLabel}>Phone numbers</Typography>
-                        {contact.sharedInfo.phones?.map((phoneInfo, phoneIndex) => (
-                          <View style={styles.arrayItemBlock} key={phoneIndex}>
-                            <Typography style={styles.infoArrayText}>{phoneInfo.value}</Typography>
-                            <Typography style={styles.infoArrayLabel}>{phoneInfo.key}</Typography>
-                          </View>
-                        ))}
-                      </View>
-                    )}
-                    {fieldsVisibility.sharedWithYou?.addresses && (
-                      <View style={[styles.infoRow, styles.infoBorder]}>
-                        <Typography style={styles.infoLabel}>Addresses</Typography>
-                        {contact.sharedInfo.addresses?.map((addressInfo, addressIndex) => (
-                          <View
-                            style={[
-                              styles.complexDataContainer,
-                              styles.infoRow,
-                              addressIndex !== 0 && styles.infoBorder,
-                            ]}
-                            key={addressIndex}
-                          >
-                            {Object.entries(addressInfo).map(([key, value], innerIndex) => (
-                              <View key={innerIndex}>
-                                <Typography style={styles.infoLabel}>{key}</Typography>
-                                <Typography style={styles.infoText}>{value}</Typography>
-                              </View>
-                            ))}
-                          </View>
-                        ))}
-                      </View>
-                    )}
+                    {Object.keys(fields.sharedWithYou).map((fieldKey) => {
+                      if (!fieldsVisibility.sharedWithYou[fieldKey]) {
+                        return null
+                      }
+
+                      const fieldSchema = fields.sharedWithYou[fieldKey]
+                      return (
+                        <Fragment key={fieldKey}>
+                          {isPlainSchemaType(fieldSchema?.type) && (
+                            <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
+                              <Typography style={styles.infoLabel}>{fieldSchema.title}</Typography>
+                              <Typography style={styles.infoText}>{fieldSchema.data}</Typography>
+                            </View>
+                          )}
+                          {isArrayPlainSchemaType(fieldSchema?.type) && (
+                            <View style={styles.infoInputCol}>
+                              <Typography style={[styles.infoLabel, { marginBottom: -6 }]}>
+                                {fieldSchema?.title}
+                              </Typography>
+                              {fieldSchema.data?.map((dataValue, dataIndex) => (
+                                <View
+                                  style={StyleSheet.compose({ paddingTop: 8 }, styles.infoBorder)}
+                                  key={dataIndex}
+                                >
+                                  <Typography style={styles.infoText}>{dataValue}</Typography>
+                                </View>
+                              ))}
+                            </View>
+                          )}
+                          {fieldSchema.type === "nested" && (
+                            <NestedComponent
+                              fieldKey={fieldKey}
+                              fieldSchema={fieldSchema}
+                              isEditing={false}
+                            />
+                          )}
+                        </Fragment>
+                      )
+                    })}
                   </View>
                 )}
               </Accordion>

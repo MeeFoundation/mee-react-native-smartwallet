@@ -24,6 +24,6 @@ export const getObjectItem = <T>(key: string): T | null => {
   return value ? JSON.parse(value) : null
 }
 
-export const setObjectItem = (key: string, value: Record<string, unknown>): void => {
+export const setObjectItem = <T>(key: string, value: T): void => {
   storage.set(key, JSON.stringify(value))
 }

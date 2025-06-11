@@ -1,4 +1,4 @@
-import { Connection, SharedInfo } from "@services/core.service"
+import { Connection, NestedDataArray, SharedInfo } from "@services/core.service"
 import { alertContactsNoPermissionAlert } from "@utils/alerts"
 import { atom } from "jotai"
 import { atomFamily } from "jotai/utils"
@@ -109,23 +109,24 @@ export const updateContactAtom = atom(
         if (nativeContact) {
           await Contacts.updateContact({
             ...nativeContact,
-            givenName: newContactInfo.firstName,
-            familyName: newContactInfo.lastName,
-            emailAddresses: newContactInfo.emails?.map((emailInfo) => ({
-              label: emailInfo.key,
-              email: emailInfo.value,
+            givenName: newContactInfo.firstName.data as string,
+            familyName: newContactInfo.lastName.data as string,
+            emailAddresses: (newContactInfo.emails?.data as NestedDataArray)?.map((emailInfo) => ({
+              label: emailInfo.key as string,
+              email: emailInfo.value as string,
             })),
-            phoneNumbers: newContactInfo.phones?.map((phoneInfo) => ({
-              label: phoneInfo.key,
-              number: phoneInfo.value,
+            phoneNumbers: (newContactInfo.phones?.data as NestedDataArray)?.map((phoneInfo) => ({
+              label: phoneInfo.key as string,
+              number: phoneInfo.value as string,
             })),
-            postalAddresses: newContactInfo.addresses as unknown as PostalAddress[],
+            postalAddresses: newContactInfo.addresses
+              ?.data as NestedDataArray as unknown as PostalAddress[],
           })
         }
 
         const getNewContact = (oldCont: Connection, newContInfo: SharedInfo) => ({
           ...oldCont,
-          name: newContInfo.firstName + " " + newContInfo.lastName,
+          name: `${newContInfo.firstName.data} ${newContInfo.lastName.data}`,
           sharedInfo: newContInfo,
         })
         if (Platform.OS === "ios" || Platform.OS === "android") {

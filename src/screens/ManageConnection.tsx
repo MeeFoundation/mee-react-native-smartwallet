@@ -137,16 +137,20 @@ export const ManageConnection = () => {
               <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
                 <EnvelopeIcon color={colors.primary} />
                 <Typography style={styles.infoText}>
-                  {connection.sharedInfo.emails?.[0]?.value}
+                  {connection.sharedInfo.email?.data as string}
                 </Typography>
               </View>
               <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
                 <UserIcon color={colors.primary} />
-                <Typography style={styles.infoText}>{connection.sharedInfo.firstName}</Typography>
+                <Typography style={styles.infoText}>
+                  {connection.sharedInfo.firstName?.data as string}
+                </Typography>
               </View>
               <View style={styles.infoRow}>
                 <UserIcon color={colors.primary} />
-                <Typography style={styles.infoText}>{connection.sharedInfo.lastName}</Typography>
+                <Typography style={styles.infoText}>
+                  {connection.sharedInfo.lastName?.data as string}
+                </Typography>
               </View>
             </View>
           </Accordion>
