@@ -6,7 +6,7 @@ import BottomSheet from "@gorhom/bottom-sheet"
 import { isAuthenticatedState, isFirstTimeAuthState } from "@store/index"
 import { colors } from "@utils/theme"
 import { useAtom, useSetAtom } from "jotai"
-import { getIdentityContextById } from "mee-rust"
+// import { getIdentityContextById } from "mee-rust"
 import { useLayoutEffect, useRef, useState } from "react"
 import { Linking, Platform, StyleSheet, View } from "react-native"
 import ReactNativeBiometrics, { BiometryType } from "react-native-biometrics"
@@ -26,13 +26,13 @@ const getSetupPrivacyText = (type: BiometryType | null) => {
   return `To store your data, Mee contains a secure data vault, which is protected by ${type}. Please set up ${type}.`
 }
 
-const testingRustIntegration = () => {
-  getIdentityContextById("49").name
-}
+// const testingRustIntegration = () => {
+//   getIdentityContextById("49").name
+// }
 
 export const Login = () => {
   // test that uniffi RUST function does not crush the app
-  testingRustIntegration()
+  // testingRustIntegration()
 
   const rnBiometrics = new ReactNativeBiometrics({ allowDeviceCredentials: true })
   const [firstTimeAuth, setFirstTimeAuth] = useAtom(isFirstTimeAuthState)
