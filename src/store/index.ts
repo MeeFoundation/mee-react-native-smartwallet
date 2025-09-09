@@ -1,10 +1,15 @@
-import { Connection, coreService } from "@services/core.service"
+import { Connection, coreService, Group } from "@services/core.service"
+import { groupService } from "@services/group.service"
 import { atom } from "jotai"
 import { atomFamily, atomWithDefault } from "jotai/utils"
 import { atomWithMMKV } from "./atomWithMMKV"
 
 export const ConnectionsStore = atomWithDefault<Connection[] | Promise<Connection[]>>(
   async () => await coreService.getConnections(),
+)
+
+export const GroupsStore = atomWithDefault<Group[] | Promise<Group[]>>(
+  async () => await groupService.getGroups(),
 )
 
 export const TagsStore = atom(async (get) => {

@@ -1,70 +1,58 @@
 import { BackgroundLayout } from "@components/BackgroundLayout"
+import { BottomSheetBackDrop } from "@components/BottomSheet"
 import { Footer } from "@components/Footer"
 import { GroupListCard } from "@components/GroupListCard"
 import * as ListLayout from "@components/ListLayout"
+import { Typography } from "@components/Typography"
+import BottomSheet from "@gorhom/bottom-sheet"
 import { Group } from "@services/core.service"
-import { FC } from "react"
-import { SectionList, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { GroupsStore } from "@store/index"
+import { colors } from "@utils/theme"
+import { useAtomValue } from "jotai"
+import { FC, useRef } from "react"
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { AdjustmentsVerticalIcon } from "react-native-heroicons/outline"
 
 const styles = StyleSheet.create({
-  sectionSeparator: {
-    height: 12,
-    width: "100%",
-  },
   sectionContainer: {
     flex: 1,
-    marginTop: 8,
+  },
+  filterButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    flex: 1,
+    gap: 8,
+    borderRadius: 8,
+    backgroundColor: colors["white/95"],
+    borderColor: colors["black/10"],
+    borderWidth: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    height: 44,
+    alignItems: "center",
+  },
+  filterButtonText: {
+    fontWeight: 500,
   },
 })
-
-const groups: Group[] = [
-  {
-    id: "1",
-    name: "Group 1",
-    connections: [
-      {
-        id: "1",
-        name: "Connection 1",
-        sharedInfo: {
-          email: "test1@gmail.com",
-          firstName: "John",
-          lastName: "Doe",
-        },
-        tags: [],
-        profile: "Family",
-      },
-    ],
-  },
-  {
-    id: "2",
-    name: "Group 2",
-    connections: [
-      {
-        id: "2",
-        name: "Connection 2",
-        sharedInfo: {
-          email: "test2@gmail.com",
-          firstName: "John",
-          lastName: "Doe",
-        },
-        tags: [],
-        profile: "Family",
-      },
-    ],
-  },
-]
-
-/* -------------------------------------------------------------------------------------------------
- * SectionSeparator
- * -----------------------------------------------------------------------------------------------*/
-const SectionSeparator: FC = () => <View style={styles.sectionSeparator} />
 
 /* -------------------------------------------------------------------------------------------------
  * Groups
  * -----------------------------------------------------------------------------------------------*/
 const Groups: FC = () => {
+  const groups = useAtomValue(GroupsStore)
+  const filterSheetRef = useRef<BottomSheet>(null)
+
   const handleGroupItemPress = (item: Group) => {
     console.log("[handleGroupItemPress]: item", item)
+  }
+
+  const handleFilterButtonPress = () => {
+    filterSheetRef.current?.expand()
+  }
+
+  const clearFilters = () => {
+    console.log("[clearFilters]")
   }
 
   return (
@@ -72,25 +60,35 @@ const Groups: FC = () => {
       <BackgroundLayout />
       <ListLayout.Root>
         <ListLayout.Header>
-          <Text>Groups</Text>
+          <TouchableOpacity style={styles.filterButton} onPress={handleFilterButtonPress}>
+            <Typography style={styles.filterButtonText}>Filters</Typography>
+            <AdjustmentsVerticalIcon size={20} color="black" />
+          </TouchableOpacity>
         </ListLayout.Header>
         <ListLayout.Content>
-          <SectionList
-            contentContainerStyle={{ gap: 8 }}
-            sections={[{ data: groups }]}
+          <FlatList
+            data={groups}
             keyExtractor={(item, index) => item.id + index}
             renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => handleGroupItemPress(item)}>
-                <GroupListCard group={item} />
-              </TouchableOpacity>
+              <GroupListCard group={item} onPress={() => handleGroupItemPress(item)} />
             )}
-            renderSectionFooter={() => <View style={{ height: 8 }} />}
-            SectionSeparatorComponent={SectionSeparator}
             style={styles.sectionContainer}
           />
         </ListLayout.Content>
       </ListLayout.Root>
       <Footer activePage="groups" />
+
+      <BottomSheetBackDrop
+        ref={filterSheetRef}
+        title="Filters"
+        rightButtonAction={clearFilters}
+        rightButtonVariant="link_danger"
+        rightButtonText="Clear All"
+      >
+        <View>
+          <Text>Filters</Text>
+        </View>
+      </BottomSheetBackDrop>
     </>
   )
 }

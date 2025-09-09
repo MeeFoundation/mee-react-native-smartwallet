@@ -2,7 +2,8 @@ import { AppButton } from "@components/AppButton"
 import * as ConnectionListCard from "@components/ListConnectionCard"
 import { Connection } from "@services/core.service"
 import { FC } from "react"
-import { ChevronDownIcon } from "react-native-heroicons/outline"
+import { TouchableOpacity } from "react-native"
+import { ChevronRightIcon } from "react-native-heroicons/outline"
 
 /* -------------------------------------------------------------------------------------------------
  * PersonListCard
@@ -10,19 +11,21 @@ import { ChevronDownIcon } from "react-native-heroicons/outline"
 type PersonListCardProps = { person: Connection }
 
 const PersonListCard: FC<PersonListCardProps> = ({ person }) => (
-  <ConnectionListCard.Root>
-    <ConnectionListCard.Content>
-      <ConnectionListCard.Thumbnail text={person.name} />
-      <ConnectionListCard.Description name={person.name} />
-      <ConnectionListCard.Actions>
-        <ConnectionListCard.Button>
-          <AppButton onPress={() => {}} size="sm" variant="tertiary">
-            <ChevronDownIcon color="black" />
-          </AppButton>
-        </ConnectionListCard.Button>
-      </ConnectionListCard.Actions>
-    </ConnectionListCard.Content>
-  </ConnectionListCard.Root>
+  <TouchableOpacity onPress={() => {}}>
+    <ConnectionListCard.Root>
+      <ConnectionListCard.Content>
+        <ConnectionListCard.Thumbnail text={person.name} />
+        <ConnectionListCard.Description name={person.name} />
+        <ConnectionListCard.Actions>
+          <ConnectionListCard.Button>
+            <AppButton onPress={() => {}} size="sm" variant="link">
+              <ChevronRightIcon color="black" />
+            </AppButton>
+          </ConnectionListCard.Button>
+        </ConnectionListCard.Actions>
+      </ConnectionListCard.Content>
+    </ConnectionListCard.Root>
+  </TouchableOpacity>
 )
 
 /* -----------------------------------------------------------------------------------------------*/

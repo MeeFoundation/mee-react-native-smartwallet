@@ -28,6 +28,7 @@ export type Connection = {
 
 export type Group = {
   id: string
+  iconSrc?: ImageRequireSource | string
   connections: Connection[]
   name: string
 }

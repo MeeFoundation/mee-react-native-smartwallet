@@ -21,9 +21,11 @@ const lightColors = {
   primaryActive: "#69A0A7",
   tabBarActiveColor: "#4f868e80",
   black: "#000000",
+  "black/10": "rgba(0, 0, 0, 0.1)",
   white: "#FFFFFF",
   "white/80": "rgba(255, 255, 255, 0.8)",
   "white/90": "rgba(255, 255, 255, 0.9)",
+  "white/95": "rgba(255, 255, 255, 0.95)",
   transparent: "transparent",
   /**
    *  #606264

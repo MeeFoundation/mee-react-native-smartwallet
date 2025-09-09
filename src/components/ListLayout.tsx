@@ -4,14 +4,14 @@ import { StyleSheet, View, ViewProps } from "react-native"
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
     justifyContent: "flex-start",
     padding: 8,
+    gap: 8,
   },
   content: {
     flex: 1,
   },
-  header: {},
+  header: { flexDirection: "row", justifyContent: "space-between", gap: 8 },
 })
 
 /* -------------------------------------------------------------------------------------------------

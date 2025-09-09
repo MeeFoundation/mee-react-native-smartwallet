@@ -6,6 +6,7 @@ const styles = StyleSheet.create({
   root: {
     borderRadius: 12,
     borderWidth: 2,
+    overflow: "hidden",
   },
 
   holder: {

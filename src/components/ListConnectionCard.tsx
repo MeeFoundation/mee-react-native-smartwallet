@@ -50,6 +50,13 @@ const styles = StyleSheet.create({
   contentHint: {
     fontSize: 12,
   },
+  button: {
+    width: 44,
+    height: 44,
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
+  },
 })
 
 /* -------------------------------------------------------------------------------------------------
@@ -62,7 +69,7 @@ const ConnectionListCardButton: FC<ConnectionListCardButtonProps> = ({
   children,
   ...rest
 }) => (
-  <View style={style} {...rest}>
+  <View style={[styles.button, style]} {...rest}>
     {children}
   </View>
 )
