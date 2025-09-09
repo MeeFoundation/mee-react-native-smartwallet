@@ -4,7 +4,7 @@ import { colors } from "@utils/theme"
 import { FC } from "react"
 import { Image, ImageSourcePropType, StyleSheet, Text, View, ViewStyle } from "react-native"
 
-type AvatarProps = {
+export type AvatarProps = {
   text: string
   src?: ImageSourcePropType | string
   size?: number

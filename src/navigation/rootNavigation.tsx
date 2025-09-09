@@ -4,6 +4,7 @@ import { useNavigation, useRoute } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { Connections } from "@screens/Connections"
 import { DataGenerating } from "@screens/DataGenerating"
+import { Groups } from "@screens/Groups"
 import { Login } from "@screens/Login"
 import { ManageConnection } from "@screens/ManageConnection"
 import { ManageContact } from "@screens/ManageContact"
@@ -12,7 +13,7 @@ import { Welcome } from "@screens/Welcome"
 import { isAuthenticatedState } from "@store/index"
 import { colors, fonts } from "@utils/theme"
 import { useAtomValue } from "jotai"
-import { Fragment, useEffect } from "react"
+import { FC, Fragment, useEffect } from "react"
 import { Platform, StatusBar } from "react-native"
 import { ChevronLeftIcon } from "react-native-heroicons/outline"
 
@@ -29,6 +30,7 @@ export const rootNavigationLinks = {
   manageContact: "Manage Contact",
   settings: "Settings",
   login: "Login",
+  groups: "Groups",
 } as const
 
 type RootNavigationLinks = typeof rootNavigationLinks
@@ -173,6 +175,14 @@ const WelcomeStack = () => {
   )
 }
 
+const GroupsStack: FC = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptions}>
+      <Stack.Screen name={rootNavigationLinks.groups} component={Groups} />
+    </Stack.Navigator>
+  )
+}
+
 export function RootStack() {
   // const isWelcomeViewed = useAtomValue(isWelcomeViewedAtom)
   const isAuthenticated = useAtomValue(isAuthenticatedState)
@@ -210,6 +220,13 @@ export function RootStack() {
             name={rootNavigationLinks.connections}
             component={ConnectionsStack}
           />
+
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name={rootNavigationLinks.groups}
+            component={GroupsStack}
+          />
+
           {/* <Stack.Screen
             options={{ headerShown: false }}
             name={rootNavigationLinks.home}

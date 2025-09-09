@@ -26,6 +26,12 @@ export type Connection = {
   }
 }
 
+export type Group = {
+  id: string
+  connections: Connection[]
+  name: string
+}
+
 class CoreService {
   async getConnectionDetails(id: string) {
     const connection = mockConnections.find((c) => c.id === id)

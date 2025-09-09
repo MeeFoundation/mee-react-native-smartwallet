@@ -5,7 +5,16 @@ import { colors } from "@utils/theme"
 import { useSetAtom } from "jotai"
 import { FC, useRef } from "react"
 import { Platform, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native"
-import { LinkIcon, PlusCircleIcon, ShareIcon, UserGroupIcon } from "react-native-heroicons/outline"
+import {
+  PlusCircleIcon,
+  ShareIcon,
+  UserGroupIcon as UserGroupOutlineIcon,
+  UsersIcon as UsersOutlineIcon,
+} from "react-native-heroicons/outline"
+import {
+  UserGroupIcon as UserGroupSolidIcon,
+  UsersIcon as UsersSolidIcon,
+} from "react-native-heroicons/solid"
 import { IconSources } from "../assets"
 import { setAndroidContactsAtom, setIosContactsAtom } from "../store/contacts"
 import { Avatar } from "./Avatar"
@@ -18,8 +27,8 @@ type FooterProps = {
 export const Footer: FC<FooterProps> = ({ activePage }) => {
   const bottomSheetRef = useRef<BottomSheet>(null)
   const navigation = useNavigation()
-  const isCompaniesPage = activePage === "companies"
   const isPeoplePage = activePage === "people"
+  const isGroupsPage = activePage === "groups"
   const setIosContacts = useSetAtom(setIosContactsAtom)
   const setAndroidContacts = useSetAtom(setAndroidContactsAtom)
 
@@ -27,11 +36,12 @@ export const Footer: FC<FooterProps> = ({ activePage }) => {
     bottomSheetRef.current?.expand()
   }
 
-  const CompaniesPress = () => {
-    navigation.navigate("Companies")
-  }
   const PeoplePress = () => {
     navigation.navigate("Companies", { customView: "People" })
+  }
+
+  const GroupsPress = () => {
+    navigation.navigate("Groups")
   }
 
   return (
@@ -48,22 +58,21 @@ export const Footer: FC<FooterProps> = ({ activePage }) => {
           zIndex: 1,
         }}
       >
-        <TouchableOpacity onPress={CompaniesPress} style={styles.footerItem} hitSlop={8}>
-          <LinkIcon
-            size={20}
-            color={isCompaniesPage ? colors.primary : "black"}
-            strokeWidth={isCompaniesPage ? 2 : 1}
-          />
-          <Typography style={{ color: isCompaniesPage ? colors.primary : "black" }}>
-            Companies
-          </Typography>
+        <TouchableOpacity onPress={GroupsPress} style={styles.footerItem} hitSlop={8}>
+          {isGroupsPage ? (
+            <UserGroupSolidIcon size={20} color={colors.primary} />
+          ) : (
+            <UserGroupOutlineIcon size={20} color="black" />
+          )}
+          <Typography style={{ color: isGroupsPage ? colors.primary : "black" }}>Groups</Typography>
         </TouchableOpacity>
+
         <TouchableOpacity onPress={PeoplePress} style={styles.footerItem} hitSlop={8}>
-          <UserGroupIcon
-            size={20}
-            color={isPeoplePage ? colors.primary : "black"}
-            strokeWidth={isPeoplePage ? 2 : 1}
-          />
+          {isPeoplePage ? (
+            <UsersSolidIcon size={20} color={colors.primary} />
+          ) : (
+            <UsersOutlineIcon size={20} color="black" />
+          )}
           <Typography style={{ color: isPeoplePage ? colors.primary : "black" }}>People</Typography>
         </TouchableOpacity>
         <TouchableOpacity onPress={onAddPress} style={styles.footerItem} hitSlop={8}>
