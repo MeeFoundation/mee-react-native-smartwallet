@@ -6,12 +6,12 @@ import { StyleSheet, Text } from "react-native"
 
 type FontWeight = "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900"
 
-type Props = {
+export type TypographyProps = {
   fontFamily?: NestedKeyOf<typeof fonts>
   weight?: FontWeight
 } & ComponentProps<typeof Text>
 
-export const Typography = (props: Props) => {
+export const Typography = (props: TypographyProps) => {
   const { fontFamily = "publicSans.regular", weight = "400", style, ...rest } = props
   const _fontFamily = get(fonts, fontFamily) as string
 

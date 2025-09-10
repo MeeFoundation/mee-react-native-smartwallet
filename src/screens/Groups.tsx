@@ -1,35 +1,21 @@
 import { BackgroundLayout } from "@components/BackgroundLayout"
 import { BottomSheetBackDrop } from "@components/BottomSheet"
+import { FilterGroups } from "@components/FIlterGroups"
+import { FiltersSelectButton } from "@components/FiltersSelectButton"
 import { Footer } from "@components/Footer"
 import { GroupListCard } from "@components/GroupListCard"
 import * as ListLayout from "@components/ListLayout"
-import { Typography } from "@components/Typography"
 import BottomSheet from "@gorhom/bottom-sheet"
-import { Group } from "@services/core.service"
+import { emptyGroupFilter, filterGroups, Group, GroupFilter } from "@services/group.service"
+import { groupFilterAtom } from "@store/group"
 import { GroupsStore } from "@store/index"
-import { colors } from "@utils/theme"
-import { useAtomValue } from "jotai"
-import { FC, useRef } from "react"
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native"
-import { AdjustmentsVerticalIcon } from "react-native-heroicons/outline"
+import { useAtom, useAtomValue } from "jotai"
+import { FC, useCallback, useMemo, useRef } from "react"
+import { FlatList, StyleSheet, View } from "react-native"
 
 const styles = StyleSheet.create({
   sectionContainer: {
     flex: 1,
-  },
-  filterButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    flex: 1,
-    gap: 8,
-    borderRadius: 8,
-    backgroundColor: colors["white/95"],
-    borderColor: colors["black/10"],
-    borderWidth: 1,
-    flexDirection: "row",
-    justifyContent: "center",
-    height: 44,
-    alignItems: "center",
   },
   filterButtonText: {
     fontWeight: 500,
@@ -40,32 +26,43 @@ const styles = StyleSheet.create({
  * Groups
  * -----------------------------------------------------------------------------------------------*/
 const Groups: FC = () => {
-  const groups = useAtomValue(GroupsStore)
+  const allGroups = useAtomValue(GroupsStore)
+  const [filter, setFilter] = useAtom(groupFilterAtom)
   const filterSheetRef = useRef<BottomSheet>(null)
 
-  const handleGroupItemPress = (item: Group) => {
+  const groups = useMemo(() => filterGroups(allGroups, filter), [allGroups, filter])
+
+  const handleGroupItemPress = useCallback((item: Group) => {
     console.log("[handleGroupItemPress]: item", item)
-  }
+  }, [])
 
-  const handleFilterButtonPress = () => {
+  const handleFilterButtonPress = useCallback(() => {
     filterSheetRef.current?.expand()
-  }
+  }, [])
 
-  const clearFilters = () => {
-    console.log("[clearFilters]")
-  }
+  const clearFilters = useCallback(() => setFilter(emptyGroupFilter), [setFilter])
+
+  const handleFilterSubmit = useCallback(
+    (value: GroupFilter) => {
+      setFilter(value)
+      filterSheetRef.current?.close()
+      return value
+    },
+    [setFilter],
+  )
 
   return (
     <>
       <BackgroundLayout />
+
       <ListLayout.Root>
         <ListLayout.Header>
-          <TouchableOpacity style={styles.filterButton} onPress={handleFilterButtonPress}>
-            <Typography style={styles.filterButtonText}>Filters</Typography>
-            <AdjustmentsVerticalIcon size={20} color="black" />
-          </TouchableOpacity>
+          <FiltersSelectButton onPress={handleFilterButtonPress} />
         </ListLayout.Header>
         <ListLayout.Content>
+          {/* TODO: add error view */}
+          {/* TODO: add empty view */}
+          {/* TODO: add loading view */}
           <FlatList
             data={groups}
             keyExtractor={(item, index) => item.id + index}
@@ -85,8 +82,8 @@ const Groups: FC = () => {
         rightButtonVariant="link_danger"
         rightButtonText="Clear All"
       >
-        <View>
-          <Text>Filters</Text>
+        <View style={{ flex: 1, padding: 16, gap: 8 }}>
+          <FilterGroups value={filter} onSubmit={handleFilterSubmit} groups={allGroups} />
         </View>
       </BottomSheetBackDrop>
     </>

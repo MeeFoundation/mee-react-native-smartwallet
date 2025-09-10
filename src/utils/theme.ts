@@ -22,7 +22,9 @@ const lightColors = {
   tabBarActiveColor: "#4f868e80",
   black: "#000000",
   "black/10": "rgba(0, 0, 0, 0.1)",
+  "black/07": "rgba(0, 0, 0, 0.07)",
   white: "#FFFFFF",
+  "white/60": "rgba(255, 255, 255, 0.6)",
   "white/80": "rgba(255, 255, 255, 0.8)",
   "white/90": "rgba(255, 255, 255, 0.9)",
   "white/95": "rgba(255, 255, 255, 0.95)",
@@ -52,6 +54,7 @@ const lightColors = {
   "gray-400": "#A1A4A3",
   "gray-600": "#747776",
   "gray-800": "#464A48",
+  "gray-900": "#111827",
   /**
    * Default/gray/900 - #111827
    */
