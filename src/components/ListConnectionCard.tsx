@@ -1,5 +1,5 @@
 import { Avatar, AvatarProps } from "@components/Avatar"
-import { Typography } from "@components/Typography"
+import { Typography, TypographyProps } from "@components/Typography"
 import { colors } from "@utils/theme"
 import { FC, ReactNode } from "react"
 import { StyleSheet, View, ViewProps } from "react-native"
@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
   },
   description: {
     flexGrow: 1,
+    gap: 4,
   },
   count: {
     color: colors["gray-600"],
@@ -49,6 +50,9 @@ const styles = StyleSheet.create({
   },
   contentHint: {
     fontSize: 12,
+  },
+  danger: {
+    color: colors["red-700"],
   },
   button: {
     width: 44,
@@ -103,30 +107,44 @@ const ConnectionListCardActions: FC<ConnectionListCardActionsProps> = ({ style, 
 )
 
 /* -------------------------------------------------------------------------------------------------
+ * ConnectionListCardName
+ * -----------------------------------------------------------------------------------------------*/
+type ConnectionListCardNameProps = TypographyProps
+
+const ConnectionListCardName: FC<ConnectionListCardNameProps> = ({ style, ...rest }) => (
+  <Typography
+    style={[styles.contentName, style]}
+    fontFamily="publicSans.medium"
+    weight="500"
+    {...rest}
+  />
+)
+
+/* -------------------------------------------------------------------------------------------------
+ * ConnectionListCardHint
+ * -----------------------------------------------------------------------------------------------*/
+type ConnectionListCardHintProps = TypographyProps & {
+  danger?: boolean
+}
+
+const ConnectionListCardHint: FC<ConnectionListCardHintProps> = ({ style, danger, ...rest }) => (
+  <Typography
+    style={[styles.contentHint, danger && styles.danger, style]}
+    fontFamily="publicSans.regular"
+    weight="400"
+    {...rest}
+  />
+)
+
+/* -------------------------------------------------------------------------------------------------
  * ConnectionListCardDescription
  * -----------------------------------------------------------------------------------------------*/
-type ConnectionListCardDescriptionProps = Omit<ViewProps, "children"> & {
-  name: ReactNode
-  hint?: ReactNode
-}
+type ConnectionListCardDescriptionProps = ViewProps
 
 const ConnectionListCardDescription: FC<ConnectionListCardDescriptionProps> = ({
   style,
-  name,
-  hint,
   ...rest
-}) => (
-  <View style={[styles.description, style]} {...rest}>
-    <Typography style={styles.contentName} fontFamily="publicSans.medium" weight="500">
-      {name}
-    </Typography>
-    {hint && (
-      <Typography style={styles.contentHint} fontFamily="publicSans.regular" weight="400">
-        {hint}
-      </Typography>
-    )}
-  </View>
-)
+}) => <View style={[styles.description, style]} {...rest} />
 
 /* -------------------------------------------------------------------------------------------------
  * ConnectionListCardThumbnail
@@ -173,6 +191,8 @@ const Actions = ConnectionListCardActions
 const Count = ConnectionListCardCount
 const Button = ConnectionListCardButton
 const Content = ConnectionListCardContent
+const Name = ConnectionListCardName
+const Hint = ConnectionListCardHint
 
 export {
   Root,
@@ -182,6 +202,8 @@ export {
   Count,
   Button,
   Content,
+  Name,
+  Hint,
   //
   ConnectionListCard,
   ConnectionListCardThumbnail,
@@ -190,6 +212,8 @@ export {
   ConnectionListCardCount,
   ConnectionListCardButton,
   ConnectionListCardContent,
+  ConnectionListCardName,
+  ConnectionListCardHint,
 }
 export type {
   ConnectionListCardProps,
@@ -199,4 +223,6 @@ export type {
   ConnectionListCardCountProps,
   ConnectionListCardButtonProps,
   ConnectionListCardContentProps,
+  ConnectionListCardNameProps,
+  ConnectionListCardHintProps,
 }

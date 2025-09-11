@@ -15,7 +15,9 @@ const PersonListCard: FC<PersonListCardProps> = ({ person }) => (
     <ConnectionListCard.Root>
       <ConnectionListCard.Content>
         <ConnectionListCard.Thumbnail text={person.name} />
-        <ConnectionListCard.Description name={person.name} />
+        <ConnectionListCard.Description>
+          <ConnectionListCard.Name>{person.name}</ConnectionListCard.Name>
+        </ConnectionListCard.Description>
         <ConnectionListCard.Actions>
           <ConnectionListCard.Button>
             <AppButton onPress={() => {}} size="sm" variant="link">

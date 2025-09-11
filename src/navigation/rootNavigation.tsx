@@ -31,6 +31,7 @@ export const rootNavigationLinks = {
   settings: "Settings",
   login: "Login",
   groups: "Groups",
+  groupsList: "Groups List",
 } as const
 
 type RootNavigationLinks = typeof rootNavigationLinks
@@ -142,7 +143,7 @@ const ConnectionsStack = () => {
     }
   }, [])
   const route = useRoute()
-
+  console.log("route", route)
   if (route.params && "customView" in route.params && route.params.customView === "People") {
     return (
       <Stack.Navigator screenOptions={screenOptions}>
@@ -178,7 +179,7 @@ const WelcomeStack = () => {
 const GroupsStack: FC = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name={rootNavigationLinks.groups} component={Groups} />
+      <Stack.Screen name={rootNavigationLinks.groupsList} component={Groups} />
     </Stack.Navigator>
   )
 }

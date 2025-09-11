@@ -2,7 +2,7 @@ import { AppButton } from "@components/AppButton"
 import * as ConnectionListCard from "@components/ListConnectionCard"
 import * as ConnectionListExpandableCard from "@components/ListConnectionExpandableCard"
 import { PersonListCard } from "@components/PersonListCard"
-import { Group } from "@services/core.service"
+import { Group } from "@services/group.service"
 import { FC, useState } from "react"
 import { StyleSheet, TouchableOpacity, View } from "react-native"
 import { ChevronDownIcon, ChevronUpIcon } from "react-native-heroicons/outline"
@@ -29,7 +29,12 @@ const GroupListCard: FC<GroupListCardProps> = ({ group, onPress }) => {
           <ConnectionListCard.Root variant={isExpanded ? "expanded" : "default"}>
             <ConnectionListCard.Content>
               <ConnectionListCard.Thumbnail text={group.name} src={group.iconSrc} />
-              <ConnectionListCard.Description name={group.name} />
+              <ConnectionListCard.Description>
+                <ConnectionListCard.Name>{group.name}</ConnectionListCard.Name>
+                <ConnectionListCard.Hint danger={group.status === "archived"}>
+                  {group.status !== "archived" ? null : "Archived/Paused"}
+                </ConnectionListCard.Hint>
+              </ConnectionListCard.Description>
               <ConnectionListCard.Actions>
                 <ConnectionListCard.Count>{group.connections.length}</ConnectionListCard.Count>
                 <ConnectionListCard.Button>
