@@ -34,11 +34,11 @@ class CoreService {
       throw new Error("Connection not found")
     }
 
-    return connection
+    return await Promise.resolve(connection)
   }
 
   async getConnections() {
-    return mockConnections
+    return await Promise.resolve(mockConnections)
   }
 }
 

@@ -110,7 +110,7 @@ class ContactService {
 
     setObjectItem(CONTACTS_STORAGE_KEY, updContacts)
 
-    return updContacts
+    return Promise.resolve(updContacts)
   }
 }
 

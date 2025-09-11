@@ -37,11 +37,11 @@ class GroupService {
       throw new Error("Group not found")
     }
 
-    return connection
+    return await Promise.resolve(connection)
   }
 
   async getGroups() {
-    return mockGroups
+    return await Promise.resolve(mockGroups)
   }
 }
 

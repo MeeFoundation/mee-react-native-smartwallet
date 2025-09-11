@@ -38,7 +38,7 @@ type RootNavigationLinks = typeof rootNavigationLinks
 
 export type RootNavigationLink = RootNavigationLinks[keyof RootNavigationLinks]
 
-export type RootNavigationLinkObject = { [key in RootNavigationLink]: any }
+export type RootNavigationLinkObject = { [_key in RootNavigationLink]: any }
 
 export type RootStackParamList = {
   "Manage Connection": { id: string }
@@ -48,6 +48,7 @@ export type RootStackParamList = {
 export type RootStackParamListWithLinks = RootStackParamList & RootNavigationLinkObject
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace ReactNavigation {
     interface RootParamList extends RootStackParamListWithLinks {}
   }

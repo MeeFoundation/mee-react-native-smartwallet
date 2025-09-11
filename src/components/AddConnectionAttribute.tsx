@@ -70,7 +70,7 @@ export const AddConnectionAttribute = <T extends string>({
         <View style={styles.dropdown}>
           {data.length >= 1 ? (
             data.map((item, index: number) => {
-              let value = item
+              const value = item
               const isSelected = selected === value
               return (
                 <TouchableOpacity

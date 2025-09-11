@@ -11,5 +11,18 @@
       "@utils/*": ["./src/utils/*"],
       "@store/*": ["./src/store/*"]
     }
-  }
+  },
+  "exclude": ["node_modules"],
+  "include": [
+    "src",
+    ".eslintrc.js",
+    "@types",
+    "App.tsx",
+    "index.js",
+    "babel.config.js",
+    "metro.config.js",
+    "__tests__",
+    "jest.config.js",
+    "react-native.config.js"
+  ]
 }

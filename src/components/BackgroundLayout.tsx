@@ -1,8 +1,9 @@
 import Background from "@assets/images/background.svg"
 import { FC } from "react"
 import { View } from "react-native"
+import { SvgProps } from "react-native-svg"
 
-export const BackgroundLayout: FC<{ Svg?: React.FunctionComponent }> = ({ Svg }) => {
+export const BackgroundLayout: FC<{ Svg?: React.ComponentType<SvgProps> }> = ({ Svg }) => {
   const SvgComponent = Svg ?? Background
   return (
     <View

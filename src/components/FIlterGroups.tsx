@@ -63,9 +63,16 @@ const FilterGroups: FC<FilterGroupsProps> = ({ value, onSubmit, onSuccess, onCha
     [currentValue, onChange],
   )
 
-  const handleSubmit = useCallback(async () => {
-    await onSubmit(currentValue)
-    onSuccess?.(currentValue)
+  const handleSubmit = useCallback(() => {
+    const fn = async () => {
+      await onSubmit(currentValue)
+      onSuccess?.(currentValue)
+    }
+
+    // TODO add error handling
+    fn().catch((err) => {
+      console.error("error submitting groups", err)
+    })
   }, [currentValue, onSubmit, onSuccess])
 
   return (

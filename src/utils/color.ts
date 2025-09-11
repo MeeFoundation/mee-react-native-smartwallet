@@ -8,6 +8,7 @@ export const hexAlphaColor = (hex: string, opacityPercent: number) => {
 const getHashOfString = (str: string) => {
   let hash = 0
   for (let i = 0; i < str.length; i++) {
+    // eslint-disable-next-line no-bitwise
     hash = str.charCodeAt(i) + ((hash << 9) - hash)
   }
   hash = Math.abs(hash)

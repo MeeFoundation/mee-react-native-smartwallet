@@ -25,7 +25,7 @@ export const RadioList: FC<RadioListProps> = ({ data, selected, onSelect }) => {
                 ...styles.item,
                 backgroundColor: isActive ? "white" : "transparent",
                 borderWidth: isActive ? 2 : 1,
-                borderColor: isActive ? colors["primaryActive"] : colors["gray-200"],
+                borderColor: isActive ? colors.primaryActive : colors["gray-200"],
               }}
             >
               <View style={styles.itemRow}>
@@ -35,7 +35,7 @@ export const RadioList: FC<RadioListProps> = ({ data, selected, onSelect }) => {
               <View
                 style={{
                   ...styles.checkItem,
-                  borderColor: isActive ? colors["primaryActive"] : colors["gray-400"],
+                  borderColor: isActive ? colors.primaryActive : colors["gray-400"],
                 }}
               >
                 {isActive && (
@@ -43,7 +43,7 @@ export const RadioList: FC<RadioListProps> = ({ data, selected, onSelect }) => {
                     style={{
                       width: 12,
                       height: 12,
-                      backgroundColor: colors["primaryActive"],
+                      backgroundColor: colors.primaryActive,
                       borderRadius: 100,
                     }}
                   />
@@ -69,7 +69,7 @@ export const styles = StyleSheet.create({
     gap: 16,
     paddingHorizontal: 16,
     borderRadius: 8,
-    height: 44
+    height: 44,
   },
   itemRow: { flexDirection: "row", gap: 5 },
   checkItem: {

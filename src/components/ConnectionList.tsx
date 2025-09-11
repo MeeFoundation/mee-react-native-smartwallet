@@ -105,7 +105,7 @@ const CompaniesList: FC<CompaniesListProps> = ({
   if (connections.length === 0) {
     return <EmptyConnections />
   }
-  const getMenuActions = (item: Connection) => {
+  const getMenuActions = (_item: Connection) => {
     const menuActions: MenuAction[] = [
       {
         name: "Source Profile",
@@ -181,9 +181,12 @@ const PeopleList: FC<CompaniesListProps> = ({
       Platform.OS === item.contactInfo?.platform && {
         name: "Delete contact",
         key: "delete",
-        onPress: async () => {
+        onPress: () => {
           if (item.contactInfo?.recordID) {
-            deleteContact({ contact: item })
+            // TODO add error handling
+            deleteContact({ contact: item }).catch((err) => {
+              console.error("error deleting contact", err)
+            })
           }
         },
         icon: "trash",

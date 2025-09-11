@@ -9,7 +9,10 @@ export const alertContactsNoPermissionAlert = () =>
       {
         text: "Settings",
         onPress: () => {
-          Linking.openSettings()
+          // TODO add error handling
+          Linking.openSettings().catch((error) => {
+            console.error("error opening settings", error)
+          })
         },
       },
       { text: "Maybe later" },

@@ -28,10 +28,8 @@ const Portal: React.FC<PortalProps> = ({ children, name }) => {
 
   useEffect(() => {
     addComponent({ name, component: children })
-    return () => {
-      removeComponent(name)
-    }
-  }, [children, name])
+    return () => removeComponent(name)
+  }, [addComponent, removeComponent, children, name])
 
   return null
 }
@@ -55,7 +53,7 @@ const PortalProvider: FC<PropsWithChildren> = ({ children }) => {
   return (
     <PortalContext.Provider value={{ addComponent, removeComponent }}>
       <Fragment>{children}</Fragment>
-      <Fragment>{Object.entries(components).map(([name, Component]) => Component)}</Fragment>
+      <Fragment>{Object.values(components).map((Component) => Component)}</Fragment>
     </PortalContext.Provider>
   )
 }

@@ -40,9 +40,11 @@ export const Backdrop: FC<BackdropProps> = ({ onClick, color = "transparent" }) 
   }
 
   useLayoutEffect(() => {
-    mainRef.current?.measureInWindow((x, y, width, height) => {
+    mainRef.current?.measureInWindow((x, y) => {
       setPos({ x: x > 1 ? -x : pos.x, y: y > 0 ? -y : pos.y })
     })
+    // TODO Check whether thiere must be an empty dependency array
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

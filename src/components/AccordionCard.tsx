@@ -77,9 +77,12 @@ export const AccordionCard = (props: Props) => {
                 Platform.OS === connection.contactInfo?.platform && {
                   name: "Delete contact",
                   key: "delete",
-                  onPress: async () => {
+                  onPress: () => {
                     if (connection.contactInfo?.recordID) {
-                      deleteContact({ contact: connection })
+                      // TODO add error handling
+                      deleteContact({ contact: connection }).catch((err) => {
+                        console.error("error deleting contact", err)
+                      })
                     }
                   },
                   icon: "trash",

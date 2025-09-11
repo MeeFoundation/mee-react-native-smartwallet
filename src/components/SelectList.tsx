@@ -85,7 +85,7 @@ export const SelectList: FC<SelectListProps> = ({
 
   useEffect(() => {
     if (search.length > 0) {
-      let filtered = data.filter((item) => {
+      const filtered = data.filter((item) => {
         return item.toLowerCase().includes(search.toLowerCase())
       })
       setFilteredData(filtered)
@@ -154,7 +154,7 @@ export const SelectList: FC<SelectListProps> = ({
               )}
               {filteredData.length >= 1 ? (
                 filteredData.map((item, index: number) => {
-                  let value = item
+                  const value = item
                   const isSelected = selected?.indexOf(value) !== -1
                   return (
                     <TouchableOpacity

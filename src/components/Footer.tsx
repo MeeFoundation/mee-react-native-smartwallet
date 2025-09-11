@@ -106,11 +106,17 @@ export const Footer: FC<FooterProps> = ({ activePage }) => {
                   </Typography>
 
                   <Pressable
-                    onPress={async () => {
-                      const res = await setIosContacts()
-                      if (res) {
-                        bottomSheetRef.current?.close()
+                    onPress={() => {
+                      const fn = async () => {
+                        const res = await setIosContacts()
+                        if (res) {
+                          bottomSheetRef.current?.close()
+                        }
                       }
+                      // TODO add error handling
+                      fn().catch((err) => {
+                        console.error("error setting ios contacts", err)
+                      })
                     }}
                   >
                     <Typography style={styles.connectText}>Connect</Typography>
@@ -127,11 +133,18 @@ export const Footer: FC<FooterProps> = ({ activePage }) => {
                   <Pressable
                     // some bug on the android, last block stretching beyond the parent and even screen
                     style={{ maxWidth: 50 }}
-                    onPress={async () => {
-                      const res = await setAndroidContacts()
-                      if (res) {
-                        bottomSheetRef.current?.close()
+                    // TODO move to handler
+                    onPress={() => {
+                      const fn = async () => {
+                        const res = await setAndroidContacts()
+                        if (res) {
+                          bottomSheetRef.current?.close()
+                        }
                       }
+
+                      fn().catch((err) => {
+                        console.error("error setting android contacts", err)
+                      })
                     }}
                   >
                     <Typography style={styles.connectText}>Connect</Typography>

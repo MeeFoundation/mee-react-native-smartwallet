@@ -13,9 +13,15 @@ import ReactNativeBiometrics, { BiometryType } from "react-native-biometrics"
 
 const handleOpenSettings = () => {
   if (Platform.OS === "ios") {
-    Linking.openURL("app-settings:")
+    // TODO add error handling
+    Linking.openURL("app-settings:").catch((error) => {
+      console.error("error opening settings", error)
+    })
   } else {
-    Linking.openSettings()
+    // TODO add error handling
+    Linking.openSettings().catch((error) => {
+      console.error("error opening settings", error)
+    })
   }
 }
 
@@ -47,7 +53,10 @@ export const Login = () => {
     })
 
     if (error) {
-      handleAuth()
+      // TODO add error handling
+      handleAuth().catch((err) => {
+        console.error("error handling auth", err)
+      })
       return
     }
 
@@ -63,18 +72,21 @@ export const Login = () => {
   }
 
   const checkAvailableBiometricAuth = async () => {
-    const { available, biometryType } = await rnBiometrics.isSensorAvailable()
+    const biometrics = await rnBiometrics.isSensorAvailable()
 
-    setBiometryType(biometryType ?? null)
+    setBiometryType(biometrics.biometryType ?? null)
 
-    if (available && !firstTimeAuth && biometryType !== null) {
-      handleAuth()
+    if (biometrics.available && !firstTimeAuth && biometrics.biometryType !== null) {
+      // TODO add error handling
+      handleAuth().catch((error) => {
+        console.error("error handling auth", error)
+      })
       return
     }
     setFirstTimeAuth(true)
   }
 
-  const onPressContinue = async () => {
+  const onPressContinue = () => {
     if (!setupPrivacy) {
       setAuthenticated(true)
       return
@@ -84,11 +96,20 @@ export const Login = () => {
       handleOpenSettings()
       return
     }
-    handleAuth()
+
+    // TODO add error handling
+    handleAuth().catch((error) => {
+      console.error("error handling auth", error)
+    })
   }
 
   useLayoutEffect(() => {
-    checkAvailableBiometricAuth()
+    // TODO add error handling
+    checkAvailableBiometricAuth().catch((error) => {
+      console.error("error checking available biometric auth", error)
+    })
+    // TODO Check whether thiere must be an empty dependency array
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

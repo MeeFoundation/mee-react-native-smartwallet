@@ -9,7 +9,7 @@ type FilterTagsProps = {
 
 export const FilterTags: FC<FilterTagsProps> = ({ tags, selectedTags, onSelectTags }) => {
   const selectTagHandler = (tag: string) => {
-    if (selectedTags.indexOf(tag) == -1) {
+    if (selectedTags.indexOf(tag) < 0) {
       onSelectTags([...selectedTags, tag])
     } else {
       onSelectTags(selectedTags.filter((val) => val !== tag))

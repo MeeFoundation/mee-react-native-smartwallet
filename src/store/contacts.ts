@@ -176,8 +176,7 @@ export const deleteContactAtom = atom(
             return
           }
         }
-        // it is possible to pass only recordID, not the whole contact
-        // @ts-ignore
+        // @ts-expect-error it is possible to pass only recordID, not the whole contact
         await Contacts.deleteContact({
           recordID: contact.contactInfo?.recordID,
         })

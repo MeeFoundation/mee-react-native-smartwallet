@@ -47,7 +47,7 @@ const Tabs = () => {
   return (
     <View style={tabsStyles.container}>
       <View style={tabsStyles.head}>
-        {rows.map((row, rowIdx) => {
+        {rows.map((row) => {
           const width: DimensionValue = `${100 / row.length}%`
           return row.map((item, idx) => {
             // const originIdx = (rowIdx ?? 1) * 3 + idx
@@ -79,13 +79,16 @@ export const ManageConnection = () => {
   const [connection, setConnection] = useAtom(ConnectionDetails(route.params.id))
   const [allTags] = useAtom(TagsStore)
 
-  const setSelectedTags = async (tags: string[]) => {
+  const setSelectedTags = (tags: string[]) => {
     if (!connection) {
       return
     }
     const updatedConnection = { ...connection, tags }
 
-    setConnection(updatedConnection)
+    // TODO add error handling
+    setConnection(updatedConnection).catch((err) => {
+      console.error("error setting selected tags", err)
+    })
   }
 
   const connectionCardActions = useMemo<MenuAction[]>(

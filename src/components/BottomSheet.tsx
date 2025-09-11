@@ -76,8 +76,9 @@ export const BottomSheetBackDrop = forwardRef<BottomSheetMethods, Props>((props:
       ref={createRef}
       index={index}
       snapPoints={snapPoints}
+      // FIXME extract component
       backdropComponent={(bottomSheetBackdropProps) =>
-        backdropComponent?.({ ...bottomSheetBackdropProps, ...backDropProps })
+        backdropComponent?.({ ...bottomSheetBackdropProps, ...backDropProps }) ?? null
       }
       enableDynamicSizing={enableDynamicSizing}
       containerStyle={{ zIndex: 102 }}

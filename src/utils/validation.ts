@@ -1,5 +1,5 @@
 import { merge } from "lodash-es"
-import { Failure, Struct, StructError, define, validate as structValidate } from "superstruct"
+import { Struct, define, validate as structValidate } from "superstruct"
 
 export const requiredStringMoreThanStruct = (length: number) =>
   define<string>("RequiredString", (value) => {
@@ -29,12 +29,12 @@ export const customValidate = <T, V, S>(
 ) => {
   const [err, result] = structValidate(value, struct, options)
   if (err) {
-    const errors = (err as StructError).failures() as Failure[]
+    const errors = err.failures()
     const createErrorsPath = (obj: Record<string, unknown>, path: string[], lastValue: string) => {
       let currentIndex = 0
 
       const addPathByKey = (lastObj: Record<string, unknown>) => {
-        let pathKeyObj = {}
+        const pathKeyObj = {}
         lastObj[path[currentIndex]] = currentIndex === path.length - 1 ? lastValue : pathKeyObj
         currentIndex++
         if (currentIndex !== path.length) {
@@ -47,7 +47,8 @@ export const customValidate = <T, V, S>(
       return obj
     }
     const errorsMap = errors.reduce((acc, error) => {
-      const newErrorMapping = createErrorsPath({}, error.path, error.message)
+      // FIXME add type validation
+      const newErrorMapping = createErrorsPath({}, error.path as string[], error.message)
       return merge(acc, newErrorMapping)
     }, {} as Record<string, unknown>)
 

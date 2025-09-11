@@ -9,7 +9,7 @@ import { SvgProps } from "react-native-svg"
 
 export type WelcomeSlide = {
   btn?: boolean
-  CloudImage: React.FunctionComponent<SvgProps>
+  CloudImage: React.ComponentType<SvgProps>
 }
 
 export const WelcomeItem = ({ btn = false, CloudImage }: WelcomeSlide) => {

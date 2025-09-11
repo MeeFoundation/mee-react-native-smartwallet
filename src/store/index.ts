@@ -1,5 +1,5 @@
-import { Connection, coreService, Group } from "@services/core.service"
-import { groupService } from "@services/group.service"
+import { Connection, coreService } from "@services/core.service"
+import { Group, groupService } from "@services/group.service"
 import { atom } from "jotai"
 import { atomFamily, atomWithDefault } from "jotai/utils"
 import { atomWithMMKV } from "./atomWithMMKV"

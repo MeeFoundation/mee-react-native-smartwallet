@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
   expandableContentHolder: {
     padding: 8,
     paddingTop: 0,
+    zIndex: 10,
   },
 })
 
@@ -54,9 +55,10 @@ const ConnectionListCardExpandableContentHolder: FC<
   return (
     <Animated.ScrollView
       nestedScrollEnabled={true}
-      style={[{ overflow: "hidden", maxHeight: contentHeightRef.current }]}
+      style={[{ overflow: "hidden", maxHeight: contentHeightRef.current }, style]}
+      {...rest}
     >
-      <View style={[styles.expandableContentHolder, { zIndex: 10 }]}>{children}</View>
+      <View style={styles.expandableContentHolder}>{children}</View>
     </Animated.ScrollView>
   )
 }

@@ -21,7 +21,8 @@ export const clearAll = (): void => {
 
 export const getObjectItem = <T>(key: string): T | null => {
   const value = storage.getString(key)
-  return value ? JSON.parse(value) : null
+  // FIXME this is unsafe
+  return value ? (JSON.parse(value) as T) : null
 }
 
 export const setObjectItem = (key: string, value: Record<string, unknown>): void => {

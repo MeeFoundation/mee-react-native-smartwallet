@@ -22,7 +22,7 @@ import { array, object } from "superstruct"
 import { AppButton } from "../components/AppButton"
 
 const InputCustomRightIconActive: FC<SvgProps> = ({ style, ...props }) => (
-  // @ts-ignore for svg, colors property works correctly
+  // @ts-expect-error for svg, colors property works correctly
   <XMarkIcon style={[style, { color: colors["gray-800"] }]} {...props} />
 )
 
@@ -121,6 +121,10 @@ export const ManageContact = () => {
           newContactInfo: fields.sharedWithYou,
           oldContact: contact,
         })
+          // TODO add error handling
+          .catch(() => {
+            console.error("Error updating contact")
+          })
     }
     setIsEditing((state) => ({ ...state, sharedWithYou: !state.sharedWithYou }))
   }

@@ -73,7 +73,8 @@ export const BottomSheetBackModal = forwardRef<BottomSheetModal, Props>((props: 
       // when it -1 it leads to incorrect work, modal sheet is closed by default without it
       index={index === -1 ? 0 : index}
       snapPoints={snapPoints}
-      backdropComponent={(props) => backdropComponent?.({ ...props, ...backDropProps })}
+      // FIXME extract component
+      backdropComponent={(p) => backdropComponent?.({ ...p, ...backDropProps }) ?? null}
       enableDynamicSizing={enableDynamicSizing}
       containerStyle={{ zIndex: 102 }}
       handleStyle={propsStyles?.sheetHandler}

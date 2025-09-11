@@ -8,6 +8,7 @@ import CircleCheckSvg from "./images/circle-check.svg"
 import CloseSvg from "./images/close.svg"
 import Cloud1Svg from "./images/cloud-1.svg"
 import Cloud2Svg from "./images/cloud-2.svg"
+import disney from "./images/connection/disney-icon.png"
 import DatabaseSvg from "./images/database.svg"
 import FaceIdSvg from "./images/faceid.svg"
 import KeySvg from "./images/key.svg"
@@ -23,18 +24,27 @@ import SearchSvg from "./images/search.svg"
 import UserSvg from "./images/user.svg"
 import VehicleSvg from "./images/vehicle.svg"
 
+import android from "./images/connection/android-icon.png"
+import apple from "./images/connection/apple-icon.png"
+import disneyPlus from "./images/connection/disney-plus-icon.png"
+import google from "./images/connection/google-icon.png"
+import times from "./images/connection/times.png"
+
 export const IconSources = {
-  disney: require("./images/connection/disney-icon.png"),
-  disneyPlus: require("./images/connection/disney-plus-icon.png"),
-  google: require("./images/connection/google-icon.png"),
-  apple: require("./images/connection/apple-icon.png"),
-  android: require("./images/connection/android-icon.png"),
-  times: require("./images/connection/times.png"),
+  disney,
+  disneyPlus,
+  google,
+  apple,
+  android,
+  times,
 }
 
+import cloud from "./images/cloud-bg.webp"
+import mascot from "./images/mee-mascot.webp"
+
 export const WelcomeSources = {
-  cloud: require("./images/cloud-bg.webp"),
-  mascot: require("./images/mee-mascot.webp"),
+  cloud,
+  mascot,
 }
 
 export {

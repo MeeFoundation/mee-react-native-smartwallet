@@ -11,7 +11,7 @@ import { colors } from "@utils/theme"
 import { FC, useEffect, useRef, useState } from "react"
 import { Animated, Dimensions, StyleSheet } from "react-native"
 
-type DataGeneratingProps = {}
+type DataGeneratingProps = Record<string, never>
 
 const steps = [
   { title: "Generating unique device keys", function: generateUniqueDeviceKeys },
@@ -49,7 +49,10 @@ export const DataGenerating: FC<DataGeneratingProps> = ({}) => {
       setLoading(false)
     }
 
-    runSteps()
+    // TODO add error handling
+    runSteps().catch((err) => {
+      console.error("error running steps", err)
+    })
   }, [])
 
   const onFinishAnimation = () => {
