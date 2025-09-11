@@ -6,6 +6,7 @@ import { Footer } from "@components/Footer"
 import { GroupListCard } from "@components/GroupListCard"
 import * as ListLayout from "@components/ListLayout"
 import BottomSheet from "@gorhom/bottom-sheet"
+import { useNavigation } from "@react-navigation/native"
 import { emptyGroupFilter, filterGroups, Group, GroupFilter } from "@services/group.service"
 import { groupFilterAtom } from "@store/group"
 import { GroupsStore } from "@store/index"
@@ -25,16 +26,21 @@ const styles = StyleSheet.create({
 /* -------------------------------------------------------------------------------------------------
  * Groups
  * -----------------------------------------------------------------------------------------------*/
-const Groups: FC = () => {
+const GroupsScreen: FC = () => {
+  const navigation = useNavigation()
   const allGroups = useAtomValue(GroupsStore)
   const [filter, setFilter] = useAtom(groupFilterAtom)
   const filterSheetRef = useRef<BottomSheet>(null)
 
   const groups = useMemo(() => filterGroups(allGroups, filter), [allGroups, filter])
 
-  const handleGroupItemPress = useCallback((item: Group) => {
-    console.log("[handleGroupItemPress]: item", item)
-  }, [])
+  const handleGroupItemPress = useCallback(
+    (item: Group) => {
+      navigation.navigate("Group Details", { id: item.id })
+      console.log("[handleGroupItemPress]: item", item)
+    },
+    [navigation],
+  )
 
   const handleFilterButtonPress = useCallback(() => {
     filterSheetRef.current?.expand()
@@ -92,4 +98,4 @@ const Groups: FC = () => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { Groups }
+export { GroupsScreen }

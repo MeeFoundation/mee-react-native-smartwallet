@@ -12,6 +12,24 @@ export const GroupsStore = atomWithDefault<Group[] | Promise<Group[]>>(
   async () => await groupService.getGroups(),
 )
 
+export const GroupDetails = atomFamily((id: string) =>
+  atom(
+    async (get) => {
+      const groups = await get(GroupsStore)
+      const group = groups.find((g) => g.id === id)
+      if (!group) {
+        console.error(`Group with id ${id} not found`)
+      }
+      return group!
+    },
+    async (get, set, group: Group) => {
+      const groups = await get(GroupsStore)
+      const updatedGroups = groups.map((g) => (g.id === group.id ? group : g))
+      set(GroupsStore, updatedGroups)
+    },
+  ),
+)
+
 export const TagsStore = atom(async (get) => {
   const tags: string[] = []
   const connections = await get(ConnectionsStore)

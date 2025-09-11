@@ -4,7 +4,8 @@ import { useNavigation, useRoute } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { Connections } from "@screens/Connections"
 import { DataGenerating } from "@screens/DataGenerating"
-import { Groups } from "@screens/Groups"
+import { GroupScreen } from "@screens/Group"
+import { GroupsScreen } from "@screens/Groups"
 import { Login } from "@screens/Login"
 import { ManageConnection } from "@screens/ManageConnection"
 import { ManageContact } from "@screens/ManageContact"
@@ -32,6 +33,7 @@ export const rootNavigationLinks = {
   login: "Login",
   groups: "Groups",
   groupsList: "Groups List",
+  groupDetails: "Group Details",
 } as const
 
 type RootNavigationLinks = typeof rootNavigationLinks
@@ -43,6 +45,7 @@ export type RootNavigationLinkObject = { [_key in RootNavigationLink]: any }
 export type RootStackParamList = {
   "Manage Connection": { id: string }
   "Manage Contact": { id: string }
+  "Group Details": { id: string }
 }
 
 export type RootStackParamListWithLinks = RootStackParamList & RootNavigationLinkObject
@@ -180,7 +183,8 @@ const WelcomeStack = () => {
 const GroupsStack: FC = () => {
   return (
     <Stack.Navigator screenOptions={screenOptions}>
-      <Stack.Screen name={rootNavigationLinks.groupsList} component={Groups} />
+      <Stack.Screen name={rootNavigationLinks.groupsList} component={GroupsScreen} />
+      <Stack.Screen name={rootNavigationLinks.groupDetails} component={GroupScreen} />
     </Stack.Navigator>
   )
 }
