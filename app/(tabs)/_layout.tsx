@@ -115,6 +115,7 @@ export default function TabLayout() {
           <Tabs.Screen
             name="index"
             options={{
+              title: "Groups",
               headerLeft: () => <HeaderLeft>Groups</HeaderLeft>,
               tabBarIcon: ({ focused, color }) => (
                 <IconSymbol
@@ -131,6 +132,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="people"
           options={{
+            title: "People",
             headerLeft: () => <HeaderLeft>People</HeaderLeft>,
             tabBarIcon: ({ focused, color }) => (
               <IconSymbol
