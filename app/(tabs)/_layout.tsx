@@ -1,6 +1,7 @@
 import { IconSources } from "@/assets"
 import { Avatar } from "@/components/Avatar"
 import { BottomSheetBackDrop } from "@/components/BottomSheet"
+import { HeaderLeft, HeaderRight } from "@/components/Header"
 import { IconSymbol } from "@/components/IconSymbol"
 import { Typography } from "@/components/Typography"
 import { colors } from "@/constants/colors"
@@ -85,6 +86,7 @@ export default function TabLayout() {
   const setIosContacts = useSetAtom(setIosContactsAtom)
   const setAndroidContacts = useSetAtom(setAndroidContactsAtom)
   const isAuthenticated = useAtomValue(isAuthenticatedAtom)
+  const headerBgColor = useThemeColor("primary")
 
   // FIXME fixme
   const isPeoplePage = true
@@ -96,9 +98,15 @@ export default function TabLayout() {
     <>
       <Tabs
         screenOptions={{
+          headerTitle: "",
+          headerRight: HeaderRight,
+          headerStyle: {
+            backgroundColor: headerBgColor,
+          },
+
           tabBarActiveTintColor: activeTabColor,
           tabBarInactiveTintColor: inactiveTabColor,
-          headerShown: false,
+          headerShown: true,
           tabBarLabelStyle: styles.tabBarLabel,
           tabBarStyle: styles.tabs,
         }}
@@ -107,7 +115,7 @@ export default function TabLayout() {
           <Tabs.Screen
             name="index"
             options={{
-              title: "Groups",
+              headerLeft: () => <HeaderLeft>Groups</HeaderLeft>,
               tabBarIcon: ({ focused, color }) => (
                 <IconSymbol
                   width={24}
@@ -123,7 +131,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="people"
           options={{
-            title: "People",
+            headerLeft: () => <HeaderLeft>People</HeaderLeft>,
             tabBarIcon: ({ focused, color }) => (
               <IconSymbol
                 width={24}

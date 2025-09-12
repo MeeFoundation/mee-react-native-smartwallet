@@ -1,8 +1,6 @@
 import { Drawer } from "@/components/Drawer"
-import { HeaderLeft, HeaderRight } from "@/components/Header"
 import { HeaderBackButton } from "@/components/HeaderBackButton"
 import { fonts } from "@/constants/fonts"
-import { useThemeColor } from "@/hooks/useThemeColor"
 import { isAuthenticatedAtom } from "@/store/auth"
 import { isWelcomeViewedAtom } from "@/store/welcome"
 import { getWelcomeScreenLink } from "@/utils/links"
@@ -14,7 +12,7 @@ import * as SplashScreen from "expo-splash-screen"
 import { StatusBar } from "expo-status-bar"
 import { useAtomValue } from "jotai"
 import { useEffect, type FC } from "react"
-import { Text, useColorScheme } from "react-native"
+import { useColorScheme } from "react-native"
 import "react-native-reanimated"
 
 SplashScreen.setOptions({
@@ -43,7 +41,6 @@ const SplashScreenController: FC = () => {
 
 const RootNavigator: FC = () => {
   const router = useRouter()
-  const headerBgColor = useThemeColor("primary")
   const isAuthenticated = useAtomValue(isAuthenticatedAtom)
   const isWelcomeViewed = useAtomValue(isWelcomeViewedAtom)
 
@@ -68,47 +65,23 @@ const RootNavigator: FC = () => {
     <Drawer>
       <Stack>
         <Stack.Protected guard={isAuthenticated}>
-          <Stack.Screen
-            name="(tabs)"
-            options={{
-              title: "Groups",
-              headerShown: true,
-              headerTitle: "",
-              headerLeft: () => (
-                <HeaderLeft>
-                  <Text>Groups</Text>
-                </HeaderLeft>
-              ),
-              headerRight: HeaderRight,
-              headerStyle: {
-                backgroundColor: headerBgColor,
-              },
-            }}
-          />
-
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="groups/[id]" options={{ title: "Group" }} />
-
           <Stack.Screen name="companies" options={{ title: "Companies" }} />
-
           <Stack.Screen
             name="data-generating"
             options={{ headerShown: false, title: "Data Generating" }}
           />
-
           <Stack.Screen name="settings" options={{ title: "Settings" }} />
-
           <Stack.Screen
             name="manage-connection/[id]"
             options={{ title: "Manage Connection", headerLeft: () => <HeaderBackButton /> }}
           />
-
           <Stack.Screen
             name="manage-contact/[id]"
             options={{ title: "Manage Contact", headerLeft: () => <HeaderBackButton /> }}
           />
-
           <Stack.Screen name="welcome" options={{ headerShown: false }} />
-
           <Stack.Screen name="+not-found" />
         </Stack.Protected>
 
