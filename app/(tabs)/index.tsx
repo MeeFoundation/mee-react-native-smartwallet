@@ -40,7 +40,6 @@ export default function HomeScreen() {
 
   const handleGroupItemPress = useCallback(
     (item: Group) => {
-      console.log("[handleGroupItemPress]: item", item)
       router.push(getGroupScreenLink(item))
     },
     [router],

@@ -42,6 +42,7 @@ const SplashScreenController: FC = () => {
 const RootNavigator: FC = () => {
   const headerBgColor = useThemeColor("primary")
   const isAuthenticated = useAtomValue(isAuthenticatedAtom)
+
   return (
     <Drawer>
       <Stack>
@@ -64,6 +65,8 @@ const RootNavigator: FC = () => {
             }}
           />
 
+          <Stack.Screen name="groups/[id]" options={{ title: "Group" }} />
+
           <Stack.Screen name="companies" options={{ title: "Companies" }} />
 
           <Stack.Screen
@@ -74,12 +77,12 @@ const RootNavigator: FC = () => {
           <Stack.Screen name="settings" options={{ title: "Settings" }} />
 
           <Stack.Screen
-            name="manage-connection"
+            name="manage-connection/[id]"
             options={{ title: "Manage Connection", headerLeft: () => <HeaderBackButton /> }}
           />
 
           <Stack.Screen
-            name="manage-contact"
+            name="manage-contact/[id]"
             options={{ title: "Manage Contact", headerLeft: () => <HeaderBackButton /> }}
           />
 
