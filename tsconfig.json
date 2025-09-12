@@ -1,28 +1,13 @@
 {
-  "extends": "@react-native/typescript-config/tsconfig.json",
+  "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "baseUrl": ".",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "verbatimModuleSyntax": true,
     "paths": {
-      "@assets/*": ["./src/assets/*"],
-      "@components/*": ["./src/components/*"],
-      "@navigation/*": ["./src/navigation/*"],
-      "@screens/*": ["./src/screens/*"],
-      "@services/*": ["./src/services/*"],
-      "@utils/*": ["./src/utils/*"],
-      "@store/*": ["./src/store/*"]
+      "@/*": ["./*"]
     }
   },
-  "exclude": ["node_modules"],
-  "include": [
-    "src",
-    ".eslintrc.js",
-    "@types",
-    "App.tsx",
-    "index.js",
-    "babel.config.js",
-    "metro.config.js",
-    "__tests__",
-    "jest.config.js",
-    "react-native.config.js"
-  ]
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }

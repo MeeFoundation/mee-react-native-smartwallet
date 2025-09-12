@@ -1,28 +1,19 @@
-/* eslint-disable @typescript-eslint/no-var-requires  */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+const { getDefaultConfig } = require("expo/metro-config");
 
-/**
- * Metro configuration
- * https://reactnative.dev/docs/metro
- *
- * @type {import('metro-config').MetroConfig}
- */
-const { getDefaultConfig, mergeConfig } = require("@react-native/metro-config")
-const { wrapWithReanimatedMetroConfig } = require("react-native-reanimated/metro-config")
+module.exports = (() => {
+  const config = getDefaultConfig(__dirname);
 
-const defaultConfig = getDefaultConfig(__dirname)
-const { assetExts, sourceExts } = defaultConfig.resolver
+  const { transformer, resolver } = config;
 
-const config = {
-  transformer: {
-    babelTransformerPath: require.resolve("react-native-svg-transformer"),
-  },
-  resolver: {
-    assetExts: assetExts.filter((ext) => ext !== "svg"),
-    sourceExts: [...sourceExts, "svg"],
-  },
-}
+  config.transformer = {
+    ...transformer,
+    babelTransformerPath: require.resolve("react-native-svg-transformer/expo"),
+  };
+  config.resolver = {
+    ...resolver,
+    assetExts: resolver.assetExts.filter((ext) => ext !== "svg"),
+    sourceExts: [...resolver.sourceExts, "svg"],
+  };
 
-module.exports = wrapWithReanimatedMetroConfig(mergeConfig(getDefaultConfig(__dirname), config))
+  return config;
+})();
