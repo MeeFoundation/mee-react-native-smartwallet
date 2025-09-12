@@ -86,6 +86,7 @@ export default function SignIn() {
       return
     }
 
+    // TODO make it more clear
     if (success && firstTimeAuth) {
       setFirstTimeAuth(false)
       setSetupPrivacy(false)

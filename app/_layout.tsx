@@ -4,14 +4,16 @@ import { HeaderBackButton } from "@/components/HeaderBackButton"
 import { fonts } from "@/constants/fonts"
 import { useThemeColor } from "@/hooks/useThemeColor"
 import { isAuthenticatedAtom } from "@/store/auth"
+import { isWelcomeViewedAtom } from "@/store/welcome"
+import { getWelcomeScreenLink } from "@/utils/links"
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet"
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native"
 import { useFonts } from "expo-font"
-import { Stack } from "expo-router"
+import { Stack, useRouter } from "expo-router"
 import * as SplashScreen from "expo-splash-screen"
 import { StatusBar } from "expo-status-bar"
 import { useAtomValue } from "jotai"
-import { type FC } from "react"
+import { useEffect, type FC } from "react"
 import { Text, useColorScheme } from "react-native"
 import "react-native-reanimated"
 
@@ -32,7 +34,7 @@ const SplashScreenController: FC = () => {
     [fonts.publicSans.boldItalic]: require("../assets/fonts/PublicSans-BoldItalic.ttf"),
   })
 
-  if (!loaded) {
+  if (loaded) {
     SplashScreen.hideAsync()
   }
 
@@ -40,8 +42,27 @@ const SplashScreenController: FC = () => {
 }
 
 const RootNavigator: FC = () => {
+  const router = useRouter()
   const headerBgColor = useThemeColor("primary")
   const isAuthenticated = useAtomValue(isAuthenticatedAtom)
+  const isWelcomeViewed = useAtomValue(isWelcomeViewedAtom)
+
+  // FIXME there is something wring with awaiting fir initialization complete => check render race conditions
+  useEffect(
+    () => {
+      if (!isAuthenticated) return
+
+      const checkOnboarding = async () => {
+        // TODO maybe return user to the initial screen
+        if (!isWelcomeViewed) router.replace(getWelcomeScreenLink())
+      }
+
+      checkOnboarding()
+    },
+    // Check initial isWelcomeViewed only
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isAuthenticated],
+  )
 
   return (
     <Drawer>
@@ -85,6 +106,8 @@ const RootNavigator: FC = () => {
             name="manage-contact/[id]"
             options={{ title: "Manage Contact", headerLeft: () => <HeaderBackButton /> }}
           />
+
+          <Stack.Screen name="welcome" options={{ headerShown: false }} />
 
           <Stack.Screen name="+not-found" />
         </Stack.Protected>

@@ -2,7 +2,7 @@ import { BubblesSvg, MeeMascotSvg } from "@/assets"
 import { AppButton } from "@/components/AppButton"
 import { colors } from "@/constants/colors"
 import { isWelcomeViewedAtom } from "@/store/welcome"
-import { getGroupsScreenLink } from "@/utils/links"
+import { getHomeScreenLink } from "@/utils/links"
 import { useRouter } from "expo-router"
 import { useSetAtom } from "jotai"
 import { Dimensions, StyleSheet, View } from "react-native"
@@ -18,7 +18,7 @@ export const WelcomeItem = ({ btn = false, CloudImage }: WelcomeSlide) => {
   const setIsWelcomeViewedAtom = useSetAtom(isWelcomeViewedAtom)
   const handlePress = () => {
     setIsWelcomeViewedAtom(true)
-    router.navigate(getGroupsScreenLink())
+    router.navigate(getHomeScreenLink())
   }
 
   return (
