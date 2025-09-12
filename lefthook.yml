@@ -1,3 +1,12 @@
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      run: yarn lint
+    check-types:
+      run: yarn check-types
+    # knip:
+    #   run: yarn knip
 # EXAMPLE USAGE:
 #
 #   Refer for explanation to following link:
