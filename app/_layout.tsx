@@ -66,10 +66,7 @@ const RootNavigator: FC = () => {
       <Stack>
         <Stack.Protected guard={isAuthenticated}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="groups/[id]"
-            options={{ title: "Group", headerBackButtonDisplayMode: "minimal" }}
-          />
+          <Stack.Screen name="groups/[id]" options={{ title: "Group" }} />
           <Stack.Screen name="companies" options={{ title: "Companies" }} />
           <Stack.Screen
             name="data-generating"

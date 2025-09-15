@@ -1,57 +1,111 @@
-// TODO refactor
+import type { ComponentProps } from "react"
 import { View } from "react-native"
 import * as Dropdown from "zeego/dropdown-menu"
 
-export const DropdownMenu = Dropdown.Root
-export const DropdownMenuTrigger = Dropdown.create(
-  (props: React.ComponentProps<typeof Dropdown.Trigger>) => (
+/* -------------------------------------------------------------------------------------------------
+ * DropdownMenu
+ * -----------------------------------------------------------------------------------------------*/
+type DropdownMenuProps = ComponentProps<typeof Dropdown.Root>
+const DropdownMenu = Dropdown.Root
+
+/* -------------------------------------------------------------------------------------------------
+ * DropdownMenuTrigger
+ * -----------------------------------------------------------------------------------------------*/
+type DropdownMenuTriggerProps = ComponentProps<typeof Dropdown.Trigger>
+
+const DropdownMenuTrigger = Dropdown.create(
+  (props: DropdownMenuTriggerProps) => (
     <Dropdown.Trigger {...props} asChild>
       <View aria-role="button">{props.children}</View>
     </Dropdown.Trigger>
   ),
   "Trigger",
 )
-export const DropdownMenuContent = Dropdown.Content
 
-export const DropdownMenuItem = Dropdown.create(
-  (props: React.ComponentProps<typeof Dropdown.Item>) => <Dropdown.Item {...props} />,
+/* -------------------------------------------------------------------------------------------------
+ * DropdownMenuContent
+ * -----------------------------------------------------------------------------------------------*/
+type DropdownMenuContentProps = ComponentProps<typeof Dropdown.Content>
+
+const DropdownMenuContent = Dropdown.Content
+
+/* -------------------------------------------------------------------------------------------------
+ * DropdownMenuItem
+ * -----------------------------------------------------------------------------------------------*/
+type DropdownMenuItemProps = ComponentProps<typeof Dropdown.Item>
+
+const DropdownMenuItem = Dropdown.create(
+  (props: DropdownMenuItemProps) => <Dropdown.Item {...props} />,
   "Item",
 )
 
-export const DropdownMenuItemTitle = Dropdown.create(
-  (props: React.ComponentProps<typeof Dropdown.ItemTitle>) => <Dropdown.ItemTitle {...props} />,
+/* -------------------------------------------------------------------------------------------------
+ * DropdownMenuTiitle
+ * -----------------------------------------------------------------------------------------------*/
+type DropdownMenuItemTitleProps = ComponentProps<typeof Dropdown.ItemTitle>
+
+const DropdownMenuItemTitle = Dropdown.create(
+  (props: DropdownMenuItemTitleProps) => <Dropdown.ItemTitle {...props} />,
   "ItemTitle",
 )
 
-export const DropdownMenuIcon = Dropdown.create(
-  (props: React.ComponentProps<typeof Dropdown.ItemIcon>) => (
-    <Dropdown.ItemIcon {...props} style={{ height: 80 }} />
-  ),
+/* -------------------------------------------------------------------------------------------------
+ * DropdownMenuIcon
+ * -----------------------------------------------------------------------------------------------*/
+type DropdownMenuIconProps = ComponentProps<typeof Dropdown.ItemIcon>
+
+const DropdownMenuIcon = Dropdown.create(
+  (props: DropdownMenuIconProps) => <Dropdown.ItemIcon {...props} style={{ height: 80 }} />,
   "ItemIcon",
 )
 
-export const DropdownMenuItemImage = Dropdown.create(
-  (props: React.ComponentProps<typeof Dropdown.ItemImage>) => <Dropdown.ItemImage {...props} />,
+/* -------------------------------------------------------------------------------------------------
+ * DropdownMenuItemImage
+ * -----------------------------------------------------------------------------------------------*/
+type DropdownMenuItemImageProps = ComponentProps<typeof Dropdown.ItemImage>
+
+const DropdownMenuItemImage = Dropdown.create(
+  (props: DropdownMenuItemImageProps) => <Dropdown.ItemImage {...props} />,
   "ItemImage",
 )
 
-export const DropdownMenuLabel = Dropdown.create(
-  (props: React.ComponentProps<typeof Dropdown.Label>) => <Dropdown.Label {...props} />,
+/* -------------------------------------------------------------------------------------------------
+ * DropdownMenuItemImage
+ * -----------------------------------------------------------------------------------------------*/
+type DropdownMenuLabelProps = ComponentProps<typeof Dropdown.Label>
+
+const DropdownMenuLabel = Dropdown.create(
+  (props: DropdownMenuLabelProps) => <Dropdown.Label {...props} />,
   "Label",
 )
 
-export const DropdownMenuSeparator = Dropdown.create(
-  (props: React.ComponentProps<typeof Dropdown.Separator>) => <Dropdown.Separator {...props} />,
+/* -------------------------------------------------------------------------------------------------
+ * DropdownMenuSeparator
+ * -----------------------------------------------------------------------------------------------*/
+type DropdownMenuSeparatorProps = ComponentProps<typeof Dropdown.Separator>
+
+const DropdownMenuSeparator = Dropdown.create(
+  (props: DropdownMenuSeparatorProps) => <Dropdown.Separator {...props} />,
   "Separator",
 )
 
-export const DropdownMenuGroup = Dropdown.create(
-  (props: React.ComponentProps<typeof Dropdown.Group>) => <Dropdown.Group {...props} />,
+/* -------------------------------------------------------------------------------------------------
+ * DropdownMenuGroup
+ * -----------------------------------------------------------------------------------------------*/
+type DropdownMenuGroupProps = ComponentProps<typeof Dropdown.Group>
+
+const DropdownMenuGroup = Dropdown.create(
+  (props: DropdownMenuGroupProps) => <Dropdown.Group {...props} />,
   "Group",
 )
 
-export const DropdownMenuCheckboxItem = Dropdown.create(
-  (props: React.ComponentProps<typeof Dropdown.CheckboxItem>) => (
+/* -------------------------------------------------------------------------------------------------
+ * DropdownMenuCheckboxItem
+ * -----------------------------------------------------------------------------------------------*/
+type DropdownMenuCheckboxItemProps = ComponentProps<typeof Dropdown.CheckboxItem>
+
+const DropdownMenuCheckboxItem = Dropdown.create(
+  (props: DropdownMenuCheckboxItemProps) => (
     <Dropdown.CheckboxItem
       {...props}
       style={{ ...props.style, display: "flex", alignItems: "center", gap: 8 }}
@@ -62,29 +116,111 @@ export const DropdownMenuCheckboxItem = Dropdown.create(
   "CheckboxItem",
 )
 
-export const DropdownMenuSubTrigger = Dropdown.create(
-  (props: React.ComponentProps<typeof Dropdown.SubTrigger>) => <Dropdown.SubTrigger {...props} />,
+/* -------------------------------------------------------------------------------------------------
+ * DropdownMenuSubTrigger
+ * -----------------------------------------------------------------------------------------------*/
+type DropdownMenuSubTriggerProps = ComponentProps<typeof Dropdown.SubTrigger>
+
+const DropdownMenuSubTrigger = Dropdown.create(
+  (props: DropdownMenuSubTriggerProps) => <Dropdown.SubTrigger {...props} />,
   "SubTrigger",
 )
 
-export const DropdownMenuSubContent = Dropdown.create(
-  (props: React.ComponentProps<typeof Dropdown.SubContent>) => <Dropdown.SubContent {...props} />,
+/* -------------------------------------------------------------------------------------------------
+ * DropdownMenuSubContent
+ * -----------------------------------------------------------------------------------------------*/
+type DropdownMenuSubContentProps = ComponentProps<typeof Dropdown.SubContent>
+
+const DropdownMenuSubContent = Dropdown.create(
+  (props: DropdownMenuSubContentProps) => <Dropdown.SubContent {...props} />,
   "SubContent",
 )
 
-export const DropdownMenuSub = Dropdown.create(
-  (props: React.ComponentProps<typeof Dropdown.Sub>) => <Dropdown.Sub {...props} />,
+/* -------------------------------------------------------------------------------------------------
+ * DropdownMenuSub
+ * -----------------------------------------------------------------------------------------------*/
+type DropdownMenuSubProps = ComponentProps<typeof Dropdown.Sub>
+
+const DropdownMenuSub = Dropdown.create(
+  (props: DropdownMenuSubProps) => <Dropdown.Sub {...props} />,
   "Sub",
 )
 
-export const DropdownMenuItemIndicator = Dropdown.create(
-  (props: React.ComponentProps<typeof Dropdown.ItemIndicator>) => (
-    <Dropdown.ItemIndicator {...props} />
-  ),
+/* -------------------------------------------------------------------------------------------------
+ * DropdownMenuItemIndicator
+ * -----------------------------------------------------------------------------------------------*/
+type DropdownMenuItemIndicatorProps = ComponentProps<typeof Dropdown.ItemIndicator>
+
+const DropdownMenuItemIndicator = Dropdown.create(
+  (props: DropdownMenuItemIndicatorProps) => <Dropdown.ItemIndicator {...props} />,
   "ItemIndicator",
 )
 
-export const DropdownMenuArrow = Dropdown.create(
-  (props: React.ComponentProps<typeof Dropdown.Arrow>) => <Dropdown.Arrow {...props} />,
+/* -------------------------------------------------------------------------------------------------
+ * DropdownMenuArrow
+ * -----------------------------------------------------------------------------------------------*/
+type DropdownMenuArrowProps = ComponentProps<typeof Dropdown.Arrow>
+
+const DropdownMenuArrow = Dropdown.create(
+  (props: DropdownMenuArrowProps) => <Dropdown.Arrow {...props} />,
   "Arrow",
 )
+
+/* -----------------------------------------------------------------------------------------------*/
+
+export {
+  DropdownMenuArrow as MenuArrow,
+  DropdownMenuCheckboxItem as MenuCheckboxItem,
+  DropdownMenuContent as MenuContent,
+  DropdownMenuGroup as MenuGroup,
+  DropdownMenuIcon as MenuIcon,
+  DropdownMenuItem as MenuItem,
+  DropdownMenuItemImage as MenuItemImage,
+  DropdownMenuItemIndicator as MenuItemIndicator,
+  DropdownMenuItemTitle as MenuItemTitle,
+  DropdownMenuLabel as MenuLabel,
+  DropdownMenuSeparator as MenuSeparator,
+  DropdownMenuSub as MenuSub,
+  DropdownMenuSubContent as MenuSubContent,
+  DropdownMenuSubTrigger as MenuSubTrigger,
+  DropdownMenuTrigger as MenuTrigger,
+  DropdownMenu as Root,
+}
+
+export {
+  DropdownMenu,
+  DropdownMenuArrow,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuIcon,
+  DropdownMenuItem,
+  DropdownMenuItemImage,
+  DropdownMenuItemIndicator,
+  DropdownMenuItemTitle,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+}
+
+export type {
+  DropdownMenuArrowProps,
+  DropdownMenuCheckboxItemProps,
+  DropdownMenuContentProps,
+  DropdownMenuGroupProps,
+  DropdownMenuIconProps,
+  DropdownMenuItemImageProps,
+  DropdownMenuItemIndicatorProps,
+  DropdownMenuItemProps,
+  DropdownMenuItemTitleProps,
+  DropdownMenuLabelProps,
+  DropdownMenuProps,
+  DropdownMenuSeparatorProps,
+  DropdownMenuSubContentProps,
+  DropdownMenuSubProps,
+  DropdownMenuSubTriggerProps,
+  DropdownMenuTriggerProps,
+}

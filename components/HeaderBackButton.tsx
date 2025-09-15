@@ -4,6 +4,29 @@ import { AppButton } from "./AppButton"
 import { IconSymbol } from "./IconSymbol"
 
 /* -------------------------------------------------------------------------------------------------
+ * HeaderBackButtonMinimal
+ * -----------------------------------------------------------------------------------------------*/
+type HeaderBackButtonMinimalProps = {
+  color?: string
+}
+
+const HeaderBackButtonMinimal: FC<HeaderBackButtonMinimalProps> = ({ color }) => {
+  const navigation = useNavigation()
+
+  const handleBack = () => {
+    navigation.goBack()
+  }
+
+  return (
+    <AppButton
+      variant="link"
+      onPress={handleBack}
+      leftElement={<IconSymbol strokeWidth={2} color={color} name="chevron-left.outlined" />}
+    />
+  )
+}
+
+/* -------------------------------------------------------------------------------------------------
  * HeaderBackButton
  * -----------------------------------------------------------------------------------------------*/
 const HeaderBackButton: FC = () => {
@@ -26,4 +49,6 @@ const HeaderBackButton: FC = () => {
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { HeaderBackButton }
+export { HeaderBackButton, HeaderBackButtonMinimal }
+
+export type { HeaderBackButtonMinimalProps }

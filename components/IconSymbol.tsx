@@ -1,12 +1,16 @@
 import type { FC } from "react"
 import {
+  ArchiveBoxIcon as ArchiveBoxOutlineIcon,
   Bars3Icon as Bars3OutlineIcon,
   BellIcon as BellOutlineIcon,
   ChevronLeftIcon as ChevronLeftOutlineIcon,
   Cog8ToothIcon as Cog8ToothOutlineIcon,
+  EllipsisVerticalIcon as EllipsisVerticalOutlineIcon,
   MagnifyingGlassIcon as MagnifyingGlassOutlineIcon,
   PaperAirplaneIcon as PaperAirplaneOutlineIcon,
+  PencilIcon as PencilOutlineIcon,
   ShareIcon as ShareOutlineIcon,
+  TrashIcon as TrashOutlineIcon,
   UserGroupIcon as UserGroupOutlineIcon,
   UserIcon as UserOutlineIcon,
   UsersIcon as UsersOutlineIcon,
@@ -29,9 +33,13 @@ const MAPPING = {
   "magnifying-glass.outlined": MagnifyingGlassOutlineIcon,
   "bell.outlined": BellOutlineIcon,
   "bars-3.outlined": Bars3OutlineIcon,
+  "ellipsis-vertical.outlined": EllipsisVerticalOutlineIcon,
   "cog-8-tooth.outlined": Cog8ToothOutlineIcon,
   "paper-airplane.outlined": PaperAirplaneOutlineIcon,
   "user.outlined": UserOutlineIcon,
+  "pencil.outlined": PencilOutlineIcon,
+  "archive-box.outlined": ArchiveBoxOutlineIcon,
+  "trash.outlined": TrashOutlineIcon,
 } as const
 
 type IconSymbolName = keyof typeof MAPPING

@@ -1,10 +1,25 @@
+import { AppButton } from "@/components/AppButton"
+import { Avatar } from "@/components/Avatar"
 import { BackgroundLayout } from "@/components/BackgroundLayout"
+import * as DropdownMenu from "@/components/DropdownMenu"
+import { HeaderBackButtonMinimal } from "@/components/HeaderBackButton"
+import { IconSymbol } from "@/components/IconSymbol"
+import { ScreenTitle } from "@/components/ScreenTitle"
+import { StatusPanel } from "@/components/StatusPanel"
+import { colors } from "@/constants/colors"
 import { InvalidRouteParamsError } from "@/errors/invalid-route-params.error"
 import { GroupDetails } from "@/store/group"
 import { type ErrorBoundaryProps, Stack, useLocalSearchParams, useRouter } from "expo-router"
 import { useAtomValue } from "jotai"
-import { useEffect } from "react"
-import { Text, View } from "react-native"
+import { useCallback, useEffect } from "react"
+import { StyleSheet, Text, View } from "react-native"
+
+const styles = StyleSheet.create({
+  page: {
+    flex: 1,
+    padding: 8,
+  },
+})
 
 /* -------------------------------------------------------------------------------------------------
  * ErrorBoundary
@@ -20,14 +35,86 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
 }
 
 /* -------------------------------------------------------------------------------------------------
+ * HeaderRight
+ * -----------------------------------------------------------------------------------------------*/
+const HeaderRight = () => {
+  const handleRenameGroup = useCallback(() => {
+    throw new Error("Not implemented")
+  }, [])
+
+  const handleArchiveGroup = useCallback(() => {
+    throw new Error("Not implemented")
+  }, [])
+
+  const handleDeleteGroup = useCallback(() => {
+    throw new Error("Not implemented")
+  }, [])
+
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.MenuTrigger>
+        <AppButton variant="link">
+          <IconSymbol
+            strokeWidth={2}
+            color={colors["blue-700"]}
+            name="ellipsis-vertical.outlined"
+          />
+        </AppButton>
+      </DropdownMenu.MenuTrigger>
+
+      <DropdownMenu.MenuContent>
+        {/* Rename group */}
+        <DropdownMenu.MenuItem
+          key="rename-group"
+          onSelect={handleRenameGroup}
+          textValue="Rename Group"
+          color={colors.danger}
+        >
+          <DropdownMenu.MenuItemTitle>
+            <Text style={{ color: colors.danger }}>Rename Group</Text>
+          </DropdownMenu.MenuItemTitle>
+        </DropdownMenu.MenuItem>
+
+        {/* Archive/unarchive group */}
+        <DropdownMenu.MenuItem
+          key="archive-group"
+          onSelect={handleArchiveGroup}
+          textValue="Archive Group"
+          color={colors.danger}
+        >
+          <DropdownMenu.MenuItemTitle>
+            <Text style={{ color: colors.danger }}>Archive Group</Text>
+          </DropdownMenu.MenuItemTitle>
+        </DropdownMenu.MenuItem>
+
+        {/* <DropdownMenu.MenuSeparator /> */}
+
+        {/* Delete group */}
+        <DropdownMenu.MenuItem
+          destructive
+          key="delete-group"
+          onSelect={handleDeleteGroup}
+          textValue="Delete Group"
+          color={colors.danger}
+        >
+          <DropdownMenu.MenuItemTitle>
+            <Text style={{ color: colors.danger }}>Delete Group</Text>
+          </DropdownMenu.MenuItemTitle>
+        </DropdownMenu.MenuItem>
+      </DropdownMenu.MenuContent>
+    </DropdownMenu.Root>
+  )
+}
+
+/* -------------------------------------------------------------------------------------------------
  * GroupScreen
  * -----------------------------------------------------------------------------------------------*/
 //  TODO Add loading & error state
 export default function GroupScreen() {
   const { id } = useLocalSearchParams()
-  const router = useRouter()
-
   if (typeof id !== "string") throw new InvalidRouteParamsError()
+
+  const router = useRouter()
 
   const group = useAtomValue(GroupDetails(id))
   useEffect(() => {
@@ -41,13 +128,29 @@ export default function GroupScreen() {
       <Stack.Screen
         options={{
           title: group.name,
+          headerTitle: () => (
+            <ScreenTitle thumbnail={<Avatar src={group.iconSrc} text={group.name} size={28} />}>
+              {group.name}
+            </ScreenTitle>
+          ),
+          headerRight: () => <HeaderRight />,
+          headerLeft: () => <HeaderBackButtonMinimal color={colors["blue-700"]} />,
         }}
       />
 
-      {/* TODO implement */}
-      {group.status === "archived" && <Text>Archived/Paused</Text>}
+      <View style={styles.page}>
+        {group.status === "archived" && (
+          <StatusPanel
+            variant="danger"
+            title="This group is archived and paused"
+            description="The data below is visible to you only."
+          />
+        )}
 
-      <Text>{group.name}</Text>
+        <Text>{group.name}</Text>
+      </View>
     </>
   )
 }
+
+/* -----------------------------------------------------------------------------------------------*/

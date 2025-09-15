@@ -3,6 +3,7 @@ import { Appearance } from "react-native"
 const blackPaletteLight = {
   black: "#000000",
   "black/10": "rgba(0, 0, 0, 0.1)",
+  "black/40": "rgba(0, 0, 0, 0.4)",
   "black/07": "rgba(0, 0, 0, 0.07)",
 } as const
 
