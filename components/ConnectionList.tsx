@@ -1,5 +1,5 @@
 import { NoHaveConnections } from "@/assets/index"
-import type { Connection } from "@/services/core.service"
+import type { Connection } from "@/models/connection"
 import { ConnectionsStore } from "@/store/connection"
 import { ContactsStore, deleteContactAtom } from "@/store/contacts"
 import { getManageConnectionScreenLink } from "@/utils/links"

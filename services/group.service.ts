@@ -1,15 +1,5 @@
-import type { Connection } from "@/services/core.service"
-import { mockConnections } from "@/services/mockData/connections"
+import type { Group } from "@/models/group"
 import { mockGroups } from "@/services/mockData/groups"
-import type { ImageRequireSource } from "react-native"
-
-export type Group = {
-  id: string
-  name: string
-  status: "active" | "archived"
-  iconSrc?: ImageRequireSource | string
-  connections: Connection[]
-}
 
 export type GroupFilter = {
   status: Group["status"] | null
@@ -31,16 +21,16 @@ export const filterGroups = (groups: Group[], filter: GroupFilter) => {
 }
 
 class GroupService {
-  async getGroupDetails(id: string) {
-    const connection = mockConnections.find((c) => c.id === id)
-    if (!connection) {
+  async getGroupDetails(id: string): Promise<Group> {
+    const group = mockGroups.find((g) => g.id === id)
+    if (!group) {
       throw new Error("Group not found")
     }
 
-    return await Promise.resolve(connection)
+    return await Promise.resolve(group)
   }
 
-  async getGroups() {
+  async getGroups(): Promise<Group[]> {
     return await Promise.resolve(mockGroups)
   }
 }

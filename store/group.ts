@@ -1,9 +1,5 @@
-import {
-  defaultGroupFilter,
-  type Group,
-  type GroupFilter,
-  groupService,
-} from "@/services/group.service"
+import type { Group } from "@/models/group"
+import { defaultGroupFilter, type GroupFilter, groupService } from "@/services/group.service"
 import { atom } from "jotai"
 import { atomFamily, atomWithDefault } from "jotai/utils"
 

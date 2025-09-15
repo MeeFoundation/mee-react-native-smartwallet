@@ -4,12 +4,8 @@ import { FilterGroups } from "@/components/FIlterGroups"
 import { FiltersSelectButton } from "@/components/FiltersSelectButton"
 import { GroupListCard } from "@/components/GroupListCard"
 import * as ListLayout from "@/components/ListLayout"
-import {
-  emptyGroupFilter,
-  filterGroups,
-  type Group,
-  type GroupFilter,
-} from "@/services/group.service"
+import type { Group } from "@/models/group"
+import { emptyGroupFilter, filterGroups, type GroupFilter } from "@/services/group.service"
 import { groupFilterAtom, groupsStore } from "@/store/group"
 import { getGroupScreenLink } from "@/utils/links"
 import BottomSheet from "@gorhom/bottom-sheet"

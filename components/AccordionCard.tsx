@@ -1,4 +1,5 @@
 import { colors } from "@/constants/colors"
+import type { Connection } from "@/models/connection"
 import { getManageContactScreenLink } from "@/utils/links"
 import { useRouter } from "expo-router"
 import { useSetAtom } from "jotai"
@@ -12,7 +13,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native"
-import type { Connection } from "../services/core.service"
 import { deleteContactAtom } from "../store/contacts"
 import { Accordion } from "./Accordion"
 import { ConnectionCard } from "./ConnectionCard"

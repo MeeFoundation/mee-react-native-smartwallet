@@ -1,15 +1,17 @@
 import { CONTACTS_STORAGE_KEY } from "@/constants/contacts"
-import { type Connection } from "@/services/core.service"
+import { type Connection } from "@/models/connection"
 import { getObjectItem, setObjectItem } from "@/store/storage"
 import { generateUserIdentifier } from "@/utils/data"
 import { Platform } from "react-native"
 import type { Contact as NativeContact } from "react-native-contacts"
+
 import "./mockData/contacts"
 
 export interface ContactsState {
   ios?: Connection[]
   android?: Connection[]
 }
+
 class ContactService {
   async getContacts() {
     const contacts = getObjectItem<ContactsState>(CONTACTS_STORAGE_KEY)

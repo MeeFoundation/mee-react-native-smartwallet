@@ -1,5 +1,5 @@
-import type { Connection } from "@/services/core.service"
-import type { Group } from "@/services/group.service"
+import type { Connection } from "@/models/connection"
+import type { Group } from "@/models/group"
 import type { O } from "ts-toolbelt"
 
 /* -------------------------------------------------------------------------------------------------

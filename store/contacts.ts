@@ -1,6 +1,6 @@
 import type { PromiseOrType } from "@/@types/utils"
+import type { Connection, SharedInfo } from "@/models/connection"
 import { type ContactsState, contactService } from "@/services/contact.service"
-import type { Connection, SharedInfo } from "@/services/core.service"
 import { alertContactsNoPermissionAlert } from "@/utils/alerts"
 import { atom } from "jotai"
 import { atomFamily } from "jotai/utils"

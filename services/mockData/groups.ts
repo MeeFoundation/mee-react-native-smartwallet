@@ -1,5 +1,5 @@
 import { IconSources } from "@/assets/index"
-import type { Group } from "@/services/group.service"
+import type { Group } from "@/models/group"
 import { mockConnections } from "@/services/mockData/connections"
 
 const idGenerator = () => {

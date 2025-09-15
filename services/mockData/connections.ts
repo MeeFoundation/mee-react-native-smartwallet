@@ -1,5 +1,5 @@
 import { IconSources } from "@/assets/index"
-import type { Connection } from "@/services/core.service"
+import type { Connection } from "@/models/connection"
 
 const idGenerator = () => {
   let lastId = 0

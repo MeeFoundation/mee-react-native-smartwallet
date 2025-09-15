@@ -1,9 +1,10 @@
-import { type Connection, coreService } from "@/services/core.service"
+import type { Connection } from "@/models/connection"
+import { connectionService } from "@/services/connection.service"
 import { atom } from "jotai"
 import { atomFamily, atomWithDefault } from "jotai/utils"
 
 export const ConnectionsStore = atomWithDefault<Connection[] | Promise<Connection[]>>(
-  async () => await coreService.getConnections(),
+  async () => await connectionService.getConnections(),
 )
 
 export const ConnectionDetails = atomFamily((id: string) =>

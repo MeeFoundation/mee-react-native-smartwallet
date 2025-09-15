@@ -1,6 +1,6 @@
 import { AppButton } from "@/components/AppButton"
 import * as ConnectionListCard from "@/components/ListConnectionCard"
-import { type Connection } from "@/services/core.service"
+import type { Connection } from "@/models/connection"
 import { type FC } from "react"
 import { TouchableOpacity } from "react-native"
 import { ChevronRightIcon } from "react-native-heroicons/outline"
