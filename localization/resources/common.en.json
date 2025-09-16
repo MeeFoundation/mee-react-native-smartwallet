@@ -1,0 +1,18 @@
+{
+  "tabs": {
+    "groups": {
+      "title": "Groups"
+    },
+    "people": {
+      "title": "People"
+    },
+    "share": {
+      "title": "Share"
+    },
+    "wallet": {
+      "title": "Wallet"
+    }
+  },
+
+  "filters_button": { "text": "Filters" }
+}

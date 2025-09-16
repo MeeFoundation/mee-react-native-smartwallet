@@ -13,6 +13,7 @@ import BottomSheet from "@gorhom/bottom-sheet"
 import { Tabs } from "expo-router"
 import { useAtomValue, useSetAtom } from "jotai"
 import React, { useRef } from "react"
+import { useTranslation } from "react-i18next"
 import { Platform, Pressable, StyleSheet, Text, View } from "react-native"
 
 const styles = StyleSheet.create({
@@ -80,6 +81,7 @@ const styles = StyleSheet.create({
 })
 
 export default function TabLayout() {
+  const { t } = useTranslation()
   const activeTabColor = useThemeColor("primary")
   const inactiveTabColor = useThemeColor("gray-800")
   const bottomSheetRef = useRef<BottomSheet>(null)
@@ -115,7 +117,7 @@ export default function TabLayout() {
           <Tabs.Screen
             name="index"
             options={{
-              title: "Groups",
+              title: t("tabs.groups.title"),
               headerLeft: () => <HeaderLeft>Groups</HeaderLeft>,
               tabBarIcon: ({ focused, color }) => (
                 <IconSymbol
@@ -132,7 +134,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="people"
           options={{
-            title: "People",
+            title: t("tabs.people.title"),
             headerLeft: () => <HeaderLeft>People</HeaderLeft>,
             tabBarIcon: ({ focused, color }) => (
               <IconSymbol
@@ -148,7 +150,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="share-placeholder"
           options={{
-            title: "Share",
+            title: t("tabs.share.title"),
             tabBarIcon: ({ color }) => (
               <IconSymbol width={24} height={24} name="share.outlined" color={color} />
             ),
@@ -164,7 +166,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="wallet-placeholder"
           options={{
-            title: "Wallet",
+            title: t("tabs.wallet.title"),
             tabBarIcon: ({ color }) => (
               <IconSymbol width={24} height={24} name="wallet.outlined" color={color} />
             ),
@@ -179,7 +181,6 @@ export default function TabLayout() {
       </Tabs>
 
       {/* FIXME Move this somewhere */}
-
       <BottomSheetBackDrop
         ref={bottomSheetRef}
         title="Add"

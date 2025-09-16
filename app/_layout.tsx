@@ -1,6 +1,7 @@
 import { Drawer } from "@/components/Drawer"
 import { HeaderBackButton } from "@/components/HeaderBackButton"
 import { fonts } from "@/constants/fonts"
+import { useInitializeLocalizations } from "@/hooks/use-initialize-localization"
 import { isAuthenticatedAtom } from "@/store/auth"
 import { isWelcomeViewedAtom } from "@/store/welcome"
 import { getWelcomeScreenLink } from "@/utils/links"
@@ -32,7 +33,9 @@ const SplashScreenController: FC = () => {
     [fonts.publicSans.boldItalic]: require("../assets/fonts/PublicSans-BoldItalic.ttf"),
   })
 
-  if (loaded) {
+  const localizationInitialized = useInitializeLocalizations()
+
+  if (loaded && localizationInitialized) {
     SplashScreen.hideAsync()
   }
 

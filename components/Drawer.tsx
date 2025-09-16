@@ -2,6 +2,7 @@ import { Typography } from "@/components/Typography"
 import { colors } from "@/constants/colors"
 import { isAuthenticatedAtom, isFirstTimeAuthAtom } from "@/store/auth"
 import { drawerIsOpenedAtom } from "@/store/drawer"
+import { languageAtom } from "@/store/localization"
 import { isWelcomeViewedAtom } from "@/store/welcome"
 import { getSettingsScreenLink, getWelcomeScreenLink } from "@/utils/links"
 import { useRouter } from "expo-router"
@@ -54,6 +55,7 @@ const Drawer: FC<DrawerProps> = ({ children }) => {
   const setIsWelcomeViewed = useSetAtom(isWelcomeViewedAtom)
   const setFirstTimeAuth = useSetAtom(isFirstTimeAuthAtom)
   const setAuthenticated = useSetAtom(isAuthenticatedAtom)
+  const [locale, setLocale] = useAtom(languageAtom)
 
   const navigateLogin = () => setAuthenticated(false)
 
@@ -101,6 +103,11 @@ const Drawer: FC<DrawerProps> = ({ children }) => {
       label: "Set First Time Auth",
       icon: <IconSymbol name="bell.outlined" color={colors.secondary} />,
       onPress: onItemPress(onFirstTimeAuth),
+    },
+    {
+      label: `Switch Language to [${locale === "en" ? "es" : "en"}]`,
+      icon: <IconSymbol name="language.outline" color={colors.secondary} />,
+      onPress: onItemPress(() => setLocale((prev) => (prev === "en" ? "es" : "en"))),
     },
   ]
 

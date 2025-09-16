@@ -1,0 +1,18 @@
+{
+  "tabs": {
+    "groups": {
+      "title": "Grupos"
+    },
+    "people": {
+      "title": "Personas"
+    },
+    "share": {
+      "title": "Compartir"
+    },
+    "wallet": {
+      "title": "Billetera"
+    }
+  },
+
+  "filters_button": { "text": "Filtros" }
+}

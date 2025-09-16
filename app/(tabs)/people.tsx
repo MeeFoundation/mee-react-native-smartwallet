@@ -20,6 +20,7 @@ import { FlashList, type ListRenderItem } from "@shopify/flash-list"
 import { useAtomValue, useSetAtom } from "jotai"
 import { range } from "lodash-es"
 import { Fragment, useCallback, useEffect, useRef, useState, type FC } from "react"
+import { useTranslation } from "react-i18next"
 import { RefreshControl, StyleSheet, Text, View, type ViewProps } from "react-native"
 
 const styles = StyleSheet.create({
@@ -140,16 +141,12 @@ const PersonsList: FC = () => {
 }
 
 export default function PeopleScreen() {
+  const { t } = useTranslation()
   const allProfiles = useAtomValue(ProfileStore)
   const bottomSheetRef = useRef<BottomSheet>(null)
   const filterSheetRef = useRef<BottomSheet>(null)
   const [filter, setFilter] = useState<FilterValue>({})
-  // const [_, setSelectedProfile] = useState<string>("All profiles")
   const [temporarySelectedProfile, setTemporarySelectedProfile] = useState<string>("All profiles")
-
-  // const applyProfileFilter = () => {
-  //   setSelectedProfile(temporarySelectedProfile)
-  // }
 
   const clearFilters = () => {
     setFilter({})
@@ -165,7 +162,7 @@ export default function PeopleScreen() {
       <BackgroundLayout />
       <ListLayout.Root>
         <ListLayout.Header>
-          <FiltersSelectButton />
+          <FiltersSelectButton>{t("filters_button.text")}</FiltersSelectButton>
         </ListLayout.Header>
         <ListLayout.Content>
           <PersonsList />
