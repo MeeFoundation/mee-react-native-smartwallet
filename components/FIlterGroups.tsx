@@ -2,7 +2,7 @@ import { AppButton } from "@/components/AppButton"
 import * as FilterRadioButton from "@/components/FilterRadioButton"
 import { Label } from "@/components/Label"
 import { colors } from "@/constants/colors"
-import type { GroupFilter, GroupsParams } from "@/services/groups.service"
+import type { GroupsFilter, GroupsListFetchParams } from "@/models/group"
 import { getManagePaginatedGroupsListAtom, getPaginatedGroupsListStateAtom } from "@/store/groups"
 import { usePaginatedState } from "@/utils/paginated-list"
 import { isEqual } from "lodash-es"
@@ -17,15 +17,15 @@ const styles = StyleSheet.create({
  * Groups
  * -----------------------------------------------------------------------------------------------*/
 type FilterGroupsProps = {
-  value: GroupFilter
+  value: GroupsFilter
 
-  onSubmit: (value: GroupFilter) => GroupFilter | Promise<GroupFilter>
-  onChange?: (value: GroupFilter) => void
-  onSuccess?: (value: GroupFilter) => void
+  onSubmit: (value: GroupsFilter) => GroupsFilter | Promise<GroupsFilter>
+  onChange?: (value: GroupsFilter) => void
+  onSuccess?: (value: GroupsFilter) => void
 }
 
-const activeFetchParams: GroupsParams = { filter: { status: "active" } }
-const archivedFetchParams: GroupsParams = { filter: { status: "archived" } }
+const activeFetchParams: GroupsListFetchParams = { filter: { status: "active" } }
+const archivedFetchParams: GroupsListFetchParams = { filter: { status: "archived" } }
 
 const FilterGroups: FC<FilterGroupsProps> = ({ value, onSubmit, onSuccess, onChange }) => {
   const [currentValue, setCurrentValue] = useState(value)
@@ -57,7 +57,7 @@ const FilterGroups: FC<FilterGroupsProps> = ({ value, onSubmit, onSuccess, onCha
 
   const updateActive = useCallback(
     (active: boolean) => {
-      const nextValue: GroupFilter = { ...currentValue, status: active ? "active" : null }
+      const nextValue: GroupsFilter = { ...currentValue, status: active ? "active" : null }
       onChange?.(nextValue)
       setCurrentValue(nextValue)
     },
@@ -66,7 +66,7 @@ const FilterGroups: FC<FilterGroupsProps> = ({ value, onSubmit, onSuccess, onCha
 
   const updateArchived = useCallback(
     (archived: boolean) => {
-      const nextValue: GroupFilter = { ...currentValue, status: archived ? "archived" : null }
+      const nextValue: GroupsFilter = { ...currentValue, status: archived ? "archived" : null }
       onChange?.(nextValue)
       setCurrentValue(nextValue)
     },

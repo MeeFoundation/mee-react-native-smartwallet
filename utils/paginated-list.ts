@@ -1,5 +1,5 @@
 import type { AppError } from "@/errors/app-error"
-import type { IndexPaginationResponse } from "@/models/api"
+import type { PaginatedListResponse } from "@/models/api"
 import { useAtomValue, useSetAtom, type Atom, type WritableAtom } from "jotai"
 import { useEffect } from "react"
 
@@ -11,7 +11,7 @@ export type PaginatedListState<TItem> = {
   isFetching: boolean
   isFetchingNextPage: boolean
   isFetched: boolean
-  data: IndexPaginationResponse<TItem> | null
+  data: PaginatedListResponse<TItem> | null
   error: AppError | null
 }
 

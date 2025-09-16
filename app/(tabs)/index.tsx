@@ -7,8 +7,8 @@ import * as ListLayout from "@/components/ListLayout"
 import { Typography } from "@/components/Typography"
 import { colors } from "@/constants/colors"
 import type { AppError } from "@/errors/app-error"
-import type { Group } from "@/models/group"
-import { emptyGroupFilter, type GroupFilter, type GroupsParams } from "@/services/groups.service"
+import type { GroupsFilter, GroupsListFetchParams, ShortGroup } from "@/models/group"
+import { emptyGroupFilter } from "@/services/groups.service"
 import {
   getManagePaginatedGroupsListAtom,
   getPaginatedGroupsListStateAtom,
@@ -90,7 +90,7 @@ const GroupsListEmptyView: FC<GroupsListEmptyViewProps> = ({ isFetched }) =>
  * GroupsList
  * -----------------------------------------------------------------------------------------------*/
 type GroupsListProps = {
-  fetchParams: GroupsParams
+  fetchParams: GroupsListFetchParams
 }
 
 const GroupsList: FC<GroupsListProps> = ({ fetchParams }) => {
@@ -102,7 +102,7 @@ const GroupsList: FC<GroupsListProps> = ({ fetchParams }) => {
   )
 
   const handleGroupItemPress = useCallback(
-    (item: Group) => router.navigate(getGroupScreenLink(item)),
+    (item: ShortGroup) => router.navigate(getGroupScreenLink(item)),
     [router],
   )
 
@@ -114,7 +114,7 @@ const GroupsList: FC<GroupsListProps> = ({ fetchParams }) => {
     manageGroupsList("refresh")
   }, [manageGroupsList])
 
-  const keyExtractor = useCallback((item: Group) => item.id, [])
+  const keyExtractor = useCallback((item: ShortGroup) => item.id, [])
 
   const refreshControl = (
     <RefreshControl
@@ -124,7 +124,7 @@ const GroupsList: FC<GroupsListProps> = ({ fetchParams }) => {
     />
   )
 
-  const renderItem: ListRenderItem<Group> = useCallback(
+  const renderItem: ListRenderItem<ShortGroup> = useCallback(
     ({ item }) => <GroupListCard group={item} onPress={() => handleGroupItemPress(item)} />,
     [handleGroupItemPress],
   )
@@ -154,7 +154,7 @@ export default function HomeScreen() {
   const { t } = useTranslation()
   const [filter, setFilter] = useAtom(groupFilterAtom)
   const filterSheetRef = useRef<BottomSheet>(null)
-  const groupsFetchParams: GroupsParams = useMemo(() => ({ filter }), [filter])
+  const groupsFetchParams: GroupsListFetchParams = useMemo(() => ({ filter }), [filter])
 
   const handleFilterButtonPress = useCallback(() => {
     filterSheetRef.current?.expand()
@@ -163,7 +163,7 @@ export default function HomeScreen() {
   const clearFilters = useCallback(() => setFilter(emptyGroupFilter), [setFilter])
 
   const handleFilterSubmit = useCallback(
-    (value: GroupFilter) => {
+    (value: GroupsFilter) => {
       setFilter(value)
       filterSheetRef.current?.close()
       return value

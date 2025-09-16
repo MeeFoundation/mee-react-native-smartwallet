@@ -1,9 +1,9 @@
-export type IndexPaginationRequest = {
+export type PaginatedFetchParams = {
   startIndex: number
   limit: number
 }
 
-export type IndexPaginationResponse<TItem> = {
+export type PaginatedListResponse<TItem> = {
   items: TItem[]
   nextIndex: number | null
   totalCount?: number

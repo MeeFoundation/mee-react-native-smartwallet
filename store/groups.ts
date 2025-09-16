@@ -1,42 +1,42 @@
 import { DEFAULT_PAGE_SIZE } from "@/constants/api"
 import { AppError } from "@/errors/app-error"
 import { UnknownError } from "@/errors/unknown.error"
-import type { IndexPaginationRequest } from "@/models/api"
-import type { Group } from "@/models/group"
-import {
-  defaultGroupFilter,
-  type GroupFilter,
-  type GroupsIndexPaginatedResponse,
-  type GroupsParams,
-  groupsService,
-} from "@/services/groups.service"
+import type { PaginatedFetchParams } from "@/models/api"
+import type {
+  Group,
+  GroupsFilter,
+  GroupsListFetchParams,
+  GroupsPaginatedListResponse,
+  ShortGroup,
+} from "@/models/group"
+import { defaultGroupFilter, groupsService } from "@/services/groups.service"
 import {
   INITIAL_PAGINATED_STATE,
   type PaginatedListState,
   type PaginationAction,
 } from "@/utils/paginated-list"
 import { atom, type SetStateAction, type WritableAtom } from "jotai"
-import { atomFamily, atomWithDefault } from "jotai/utils"
+import { atomFamily } from "jotai/utils"
 import { isEqual } from "lodash-es"
 
-type PaginatedGroupsPersonsListState = PaginatedListState<Group>
+type PaginatedGroupsPersonsListState = PaginatedListState<ShortGroup>
 
 export const getPaginatedGroupsListStateAtom = atomFamily<
-  GroupsParams,
+  GroupsListFetchParams,
   WritableAtom<
     PaginatedGroupsPersonsListState,
     [SetStateAction<PaginatedGroupsPersonsListState>],
     void
   >
->((_params: GroupsParams) => atom(INITIAL_PAGINATED_STATE), isEqual)
+>((_params: GroupsListFetchParams) => atom(INITIAL_PAGINATED_STATE), isEqual)
 
-export const getManagePaginatedGroupsListAtom = atomFamily((params: GroupsParams) => {
+export const getManagePaginatedGroupsListAtom = atomFamily((params: GroupsListFetchParams) => {
   const groupsDataAtom = getPaginatedGroupsListStateAtom(params)
 
   return atom(null, async (get, set, action: PaginationAction) => {
     const currentState = get(groupsDataAtom)
 
-    const fetchParams: IndexPaginationRequest & GroupsParams = {
+    const fetchParams: PaginatedFetchParams & GroupsListFetchParams = {
       ...params,
       startIndex: 0,
       limit: DEFAULT_PAGE_SIZE,
@@ -74,7 +74,7 @@ export const getManagePaginatedGroupsListAtom = atomFamily((params: GroupsParams
         /**
          * Only load more adds data to the list
          */
-        const newData: GroupsIndexPaginatedResponse =
+        const newData: GroupsPaginatedListResponse =
           action === "loadMore" && prev.data
             ? { ...result, items: [...prev.data.items, ...result.items] }
             : result
@@ -103,9 +103,13 @@ export const getManagePaginatedGroupsListAtom = atomFamily((params: GroupsParams
   })
 }, isEqual)
 
-// remove
-export const groupFilterAtom = atomWithDefault<GroupFilter>(() => defaultGroupFilter)
+/**
+ * Groups screen filter atom
+ */
+// TODO idk whether it should be a separate atom or a state of a component
+export const groupFilterAtom = atom<GroupsFilter>(defaultGroupFilter)
 
+// remove
 export const GroupDetails = atomFamily((id: string) =>
   atom(
     async () => {

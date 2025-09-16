@@ -8,8 +8,7 @@ import { RadioList } from "@/components/RadioList"
 import { Typography } from "@/components/Typography"
 import { colors } from "@/constants/colors"
 import type { AppError } from "@/errors/app-error"
-import type { Person } from "@/models/person"
-import type { PersonsParams } from "@/services/persons.service"
+import type { PersonsListFetchParams, ShortPerson } from "@/models/person"
 import {
   getManagePaginatedPersonsListAtom,
   getPaginatedPersonsListStateAtom,
@@ -88,7 +87,10 @@ const PersonsListEmptyView: FC<PersonsListEmptyViewProps> = ({ isFetched }) =>
  * PersonsList
  * -----------------------------------------------------------------------------------------------*/
 const PersonsList: FC = () => {
-  const fetchParams: PersonsParams = useMemo(() => ({ filter: { connectionStatus: "active" } }), [])
+  const fetchParams: PersonsListFetchParams = useMemo(
+    () => ({ filter: { connectionStatus: "active" } }),
+    [],
+  )
 
   const [listState, managePersonsList] = usePaginatedState(
     fetchParams,
@@ -96,7 +98,7 @@ const PersonsList: FC = () => {
     getManagePaginatedPersonsListAtom,
   )
 
-  const handlePersonItemPress = useCallback((_item: Person) => {
+  const handlePersonItemPress = useCallback((_item: ShortPerson) => {
     throw new Error("Not implemented")
   }, [])
 
@@ -108,7 +110,7 @@ const PersonsList: FC = () => {
     managePersonsList("refresh")
   }, [managePersonsList])
 
-  const keyExtractor = useCallback((item: Person) => item.id, [])
+  const keyExtractor = useCallback((item: ShortPerson) => item.id, [])
 
   const refreshControl = (
     <RefreshControl
@@ -118,7 +120,7 @@ const PersonsList: FC = () => {
     />
   )
 
-  const renderItem: ListRenderItem<Person> = useCallback(
+  const renderItem: ListRenderItem<ShortPerson> = useCallback(
     ({ item }) => <PersonListCard person={item} onPress={() => handlePersonItemPress(item)} />,
     [handlePersonItemPress],
   )

@@ -1,33 +1,26 @@
-import type { IndexPaginationRequest, IndexPaginationResponse } from "@/models/api"
-import type { Group } from "@/models/group"
+import type {
+  Group,
+  GroupsFilter,
+  GroupsListFetchParams,
+  GroupsPaginatedListFetchParams,
+  GroupsPaginatedListResponse,
+} from "@/models/group"
 import { mockGroups } from "@/services/mockData/groups"
 
-export type GroupFilter = {
-  status: Group["status"] | null
-}
-
-export type GroupsParams = {
-  filter?: GroupFilter
-}
-
-export const defaultGroupFilter: GroupFilter = {
+export const defaultGroupFilter: GroupsFilter = {
   status: "active",
 }
 
-export const emptyGroupFilter: GroupFilter = {
+export const emptyGroupFilter: GroupsFilter = {
   status: null,
 }
 
-export const filterGroups = (groups: Group[], params: GroupsParams) => {
+export const filterGroups = (groups: Group[], params: GroupsListFetchParams) => {
   const filterStatus = (group: Group) =>
     params.filter?.status === null ? true : group.status === params.filter?.status
 
   return groups.filter(filterStatus)
 }
-
-export type GroupsIndexPaginationRequest = IndexPaginationRequest & GroupsParams
-
-export type GroupsIndexPaginatedResponse = IndexPaginationResponse<Group>
 
 class GroupsService {
   async getGroupDetails(id: string): Promise<Group> {
@@ -39,7 +32,7 @@ class GroupsService {
     return await Promise.resolve(group)
   }
 
-  async getGroups(params: GroupsIndexPaginationRequest): Promise<GroupsIndexPaginatedResponse> {
+  async getGroups(params: GroupsPaginatedListFetchParams): Promise<GroupsPaginatedListResponse> {
     await new Promise((resolve) => setTimeout(resolve, 1000))
     const filteredGroups = filterGroups(mockGroups, { filter: params.filter })
 

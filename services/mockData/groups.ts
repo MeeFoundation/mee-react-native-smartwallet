@@ -60,4 +60,4 @@ export const mockGroups: Group[] = [
     name: "Disney Plus",
     connections: [],
   },
-]
+] as any

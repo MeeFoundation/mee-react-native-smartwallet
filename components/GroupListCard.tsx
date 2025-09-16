@@ -1,6 +1,6 @@
 import { AppButton } from "@/components/AppButton"
 import * as ConnectionListCard from "@/components/ListConnectionCard"
-import type { Group } from "@/models/group"
+import type { ShortGroup } from "@/models/group"
 import { type FC, useState } from "react"
 import { TouchableOpacity } from "react-native"
 import { ChevronDownIcon, ChevronUpIcon } from "react-native-heroicons/outline"
@@ -13,7 +13,7 @@ const GroupListCardSkeleton: FC = ConnectionListCard.ConnectionListCardSkeleton
 /* -------------------------------------------------------------------------------------------------
  * GroupListCard
  * -----------------------------------------------------------------------------------------------*/
-type GroupListCardProps = { group: Group; onPress: () => void }
+type GroupListCardProps = { group: ShortGroup; onPress: () => void }
 
 const GroupListCard: FC<GroupListCardProps> = ({ group, onPress }) => {
   const [isExpanded, setIsExpanded] = useState(false)

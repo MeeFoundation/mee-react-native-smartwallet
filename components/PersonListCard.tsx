@@ -1,6 +1,6 @@
 import { AppButton } from "@/components/AppButton"
 import * as ConnectionListCard from "@/components/ListConnectionCard"
-import type { Person } from "@/models/person"
+import type { ShortPerson } from "@/models/person"
 import { type FC } from "react"
 import { TouchableOpacity } from "react-native"
 import { ChevronRightIcon } from "react-native-heroicons/outline"
@@ -15,7 +15,7 @@ const PersonListSkeleton: FC<PersonListSkeletonProps> = ConnectionListCard.Skele
 /* -------------------------------------------------------------------------------------------------
  * PersonListCard
  * -----------------------------------------------------------------------------------------------*/
-type PersonListCardProps = { person: Person; onPress?: () => void }
+type PersonListCardProps = { person: ShortPerson; onPress?: () => void }
 
 const PersonListCard: FC<PersonListCardProps> = ({ onPress, person }) => (
   <TouchableOpacity onPress={onPress}>

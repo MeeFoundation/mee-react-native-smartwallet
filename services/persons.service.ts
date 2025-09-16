@@ -1,21 +1,12 @@
-import type { IndexPaginationRequest, IndexPaginationResponse } from "@/models/api"
 import type { Connection } from "@/models/connection"
-import type { Person } from "@/models/person"
+import type {
+  PersonsFilter,
+  PersonsListFetchParams,
+  PersonsPaginatedListFetchParams,
+  PersonsPaginatedListResponse,
+} from "@/models/person"
 import { mockConnections } from "@/services/mockData/connections"
 import { assertUnreachable } from "@/utils/assert-unreachable"
-
-export type PersonsFilter = {
-  connectionStatus?: Connection["status"] | null
-  has?: ("email" | "password" | "phone" | "payment_details")[]
-}
-
-export type PersonsParams = {
-  filter?: PersonsFilter
-}
-
-export type PersonsIndexPaginationRequest = IndexPaginationRequest & PersonsParams
-
-export type PersonsIndexPaginatedResponse = IndexPaginationResponse<Person>
 
 export const defaultPersonsFilter: PersonsFilter = {
   connectionStatus: "active",
@@ -27,7 +18,10 @@ export const emptyPersonsFilter: PersonsFilter = {
   has: [],
 }
 
-export const filterPersons = (persons: Connection[], { filter }: PersonsParams): Connection[] => {
+export const filterPersons = (
+  persons: Connection[],
+  { filter }: PersonsListFetchParams,
+): Connection[] => {
   if (!filter) return persons
 
   const filterByConnectionStatus = (person: Connection) =>
@@ -71,7 +65,7 @@ class PersonsService {
     return await Promise.resolve(connection)
   }
 
-  async getPersons(params: PersonsIndexPaginationRequest): Promise<PersonsIndexPaginatedResponse> {
+  async getPersons(params: PersonsPaginatedListFetchParams): Promise<PersonsPaginatedListResponse> {
     await new Promise((resolve) => setTimeout(resolve, 1000))
     const filteredPersons = filterPersons(mockConnections, { filter: params.filter })
 
