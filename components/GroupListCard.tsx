@@ -1,17 +1,14 @@
 import { AppButton } from "@/components/AppButton"
 import * as ConnectionListCard from "@/components/ListConnectionCard"
-import * as ConnectionListExpandableCard from "@/components/ListConnectionExpandableCard"
-import { PersonListCard } from "@/components/PersonListCard"
 import type { Group } from "@/models/group"
 import { type FC, useState } from "react"
-import { StyleSheet, TouchableOpacity, View } from "react-native"
+import { TouchableOpacity } from "react-native"
 import { ChevronDownIcon, ChevronUpIcon } from "react-native-heroicons/outline"
 
-const styles = StyleSheet.create({
-  peopleList: {
-    gap: 8,
-  },
-})
+/* -------------------------------------------------------------------------------------------------
+ * GroupListCardSkeleton
+ * -----------------------------------------------------------------------------------------------*/
+const GroupListCardSkeleton: FC = ConnectionListCard.ConnectionListCardSkeleton
 
 /* -------------------------------------------------------------------------------------------------
  * GroupListCard
@@ -23,46 +20,32 @@ const GroupListCard: FC<GroupListCardProps> = ({ group, onPress }) => {
   const toggleExpanded = () => setIsExpanded(!isExpanded)
 
   return (
-    <ConnectionListExpandableCard.Root expanded={isExpanded}>
-      <ConnectionListExpandableCard.CardHolder expanded={isExpanded}>
-        <TouchableOpacity onPress={onPress}>
-          <ConnectionListCard.Root variant={isExpanded ? "expanded" : "default"}>
-            <ConnectionListCard.Content>
-              <ConnectionListCard.Thumbnail text={group.name} src={group.iconSrc} />
-              <ConnectionListCard.Description>
-                <ConnectionListCard.Name>{group.name}</ConnectionListCard.Name>
-                <ConnectionListCard.Hint danger={group.status === "archived"}>
-                  {group.status !== "archived" ? null : "Archived/Paused"}
-                </ConnectionListCard.Hint>
-              </ConnectionListCard.Description>
-              <ConnectionListCard.Actions>
-                <ConnectionListCard.Count>{group.connections.length}</ConnectionListCard.Count>
-                <ConnectionListCard.Button>
-                  <AppButton onPress={toggleExpanded} size="sm" variant="link">
-                    {isExpanded ? (
-                      <ChevronUpIcon color="black" />
-                    ) : (
-                      <ChevronDownIcon color="black" />
-                    )}
-                  </AppButton>
-                </ConnectionListCard.Button>
-              </ConnectionListCard.Actions>
-            </ConnectionListCard.Content>
-          </ConnectionListCard.Root>
-        </TouchableOpacity>
-      </ConnectionListExpandableCard.CardHolder>
-      <ConnectionListExpandableCard.ContentHolder expanded={isExpanded}>
-        <View style={styles.peopleList}>
-          {group.connections.map((connection) => (
-            <PersonListCard key={connection.id} person={connection} />
-          ))}
-        </View>
-      </ConnectionListExpandableCard.ContentHolder>
-    </ConnectionListExpandableCard.Root>
+    <TouchableOpacity onPress={onPress}>
+      <ConnectionListCard.Root variant={isExpanded ? "expanded" : "default"}>
+        <ConnectionListCard.Content>
+          <ConnectionListCard.Thumbnail text={group.name} src={group.iconSrc} />
+          <ConnectionListCard.Description>
+            <ConnectionListCard.Name>{group.name}</ConnectionListCard.Name>
+
+            {group.status === "archived" ? (
+              <ConnectionListCard.Hint danger>Archived/Paused</ConnectionListCard.Hint>
+            ) : null}
+          </ConnectionListCard.Description>
+          <ConnectionListCard.Actions>
+            <ConnectionListCard.Count>{group.connections.length}</ConnectionListCard.Count>
+            <ConnectionListCard.Button>
+              <AppButton onPress={toggleExpanded} size="sm" variant="link">
+                {isExpanded ? <ChevronUpIcon color="black" /> : <ChevronDownIcon color="black" />}
+              </AppButton>
+            </ConnectionListCard.Button>
+          </ConnectionListCard.Actions>
+        </ConnectionListCard.Content>
+      </ConnectionListCard.Root>
+    </TouchableOpacity>
   )
 }
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { GroupListCard }
+export { GroupListCard, GroupListCardSkeleton }
 export type { GroupListCardProps }

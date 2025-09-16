@@ -15,11 +15,12 @@ import {
   getPaginatedPersonsListStateAtom,
 } from "@/store/persons"
 import { ProfileStore } from "@/store/profile"
+import { usePaginatedState } from "@/utils/paginated-list"
 import BottomSheet from "@gorhom/bottom-sheet"
 import { FlashList, type ListRenderItem } from "@shopify/flash-list"
-import { useAtomValue, useSetAtom } from "jotai"
+import { useAtomValue } from "jotai"
 import { range } from "lodash-es"
-import { Fragment, useCallback, useEffect, useRef, useState, type FC } from "react"
+import { Fragment, useCallback, useMemo, useRef, useState, type FC } from "react"
 import { useTranslation } from "react-i18next"
 import { RefreshControl, StyleSheet, Text, View, type ViewProps } from "react-native"
 
@@ -87,13 +88,13 @@ const PersonsListEmptyView: FC<PersonsListEmptyViewProps> = ({ isFetched }) =>
  * PersonsList
  * -----------------------------------------------------------------------------------------------*/
 const PersonsList: FC = () => {
-  const fetchParams: PersonsParams = { filter: { connectionStatus: "active" } }
-  const listState = useAtomValue(getPaginatedPersonsListStateAtom(fetchParams))
-  const managePersonsList = useSetAtom(getManagePaginatedPersonsListAtom(fetchParams))
+  const fetchParams: PersonsParams = useMemo(() => ({ filter: { connectionStatus: "active" } }), [])
 
-  useEffect(() => {
-    if (!listState.isFetched && !listState.isFetching) managePersonsList("reset")
-  }, [listState.isFetched, listState.isFetching, managePersonsList])
+  const [listState, managePersonsList] = usePaginatedState(
+    fetchParams,
+    getPaginatedPersonsListStateAtom,
+    getManagePaginatedPersonsListAtom,
+  )
 
   const handlePersonItemPress = useCallback((_item: Person) => {
     throw new Error("Not implemented")
@@ -140,6 +141,9 @@ const PersonsList: FC = () => {
   )
 }
 
+/* -------------------------------------------------------------------------------------------------
+ * PeopleScreen
+ * -----------------------------------------------------------------------------------------------*/
 export default function PeopleScreen() {
   const { t } = useTranslation()
   const allProfiles = useAtomValue(ProfileStore)

@@ -1,5 +1,7 @@
 import type { AppError } from "@/errors/app-error"
 import type { IndexPaginationResponse } from "@/models/api"
+import { useAtomValue, useSetAtom, type Atom, type WritableAtom } from "jotai"
+import { useEffect } from "react"
 
 export type PaginationAction = "loadMore" | "refresh" | "reset"
 
@@ -21,4 +23,28 @@ export const INITIAL_PAGINATED_STATE: PaginatedListState<any> = {
   isFetched: false,
   data: null,
   error: null,
+}
+
+export const useFetchInitialList = <TItem>(
+  listState: PaginatedListState<TItem>,
+  manageList: (action: PaginationAction) => void,
+) => {
+  useEffect(() => {
+    if (!listState.isFetched && !listState.isFetching) manageList("reset")
+  }, [listState.isFetched, listState.isFetching, manageList])
+}
+
+export const usePaginatedState = <TItem, TFetchParams>(
+  fetchParams: TFetchParams,
+  getStateAtom: (param: TFetchParams) => Atom<PaginatedListState<TItem>>,
+  getActionAtom: (
+    param: TFetchParams,
+  ) => WritableAtom<null, [action: PaginationAction], Promise<void>>,
+) => {
+  const state = useAtomValue(getStateAtom(fetchParams))
+  const manageList = useSetAtom(getActionAtom(fetchParams))
+
+  useFetchInitialList(state, manageList)
+
+  return [state, manageList] as const
 }

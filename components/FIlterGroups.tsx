@@ -2,10 +2,11 @@ import { AppButton } from "@/components/AppButton"
 import * as FilterRadioButton from "@/components/FilterRadioButton"
 import { Label } from "@/components/Label"
 import { colors } from "@/constants/colors"
-import type { Group } from "@/models/group"
-import type { GroupFilter } from "@/services/group.service"
+import type { GroupFilter, GroupsParams } from "@/services/groups.service"
+import { getManagePaginatedGroupsListAtom, getPaginatedGroupsListStateAtom } from "@/store/groups"
+import { usePaginatedState } from "@/utils/paginated-list"
 import { isEqual } from "lodash-es"
-import { type FC, useCallback, useEffect, useMemo, useState } from "react"
+import { type FC, useCallback, useEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
 
 const styles = StyleSheet.create({
@@ -17,15 +18,29 @@ const styles = StyleSheet.create({
  * -----------------------------------------------------------------------------------------------*/
 type FilterGroupsProps = {
   value: GroupFilter
-  groups: Group[]
 
   onSubmit: (value: GroupFilter) => GroupFilter | Promise<GroupFilter>
   onChange?: (value: GroupFilter) => void
   onSuccess?: (value: GroupFilter) => void
 }
 
-const FilterGroups: FC<FilterGroupsProps> = ({ value, onSubmit, onSuccess, onChange, groups }) => {
+const activeFetchParams: GroupsParams = { filter: { status: "active" } }
+const archivedFetchParams: GroupsParams = { filter: { status: "archived" } }
+
+const FilterGroups: FC<FilterGroupsProps> = ({ value, onSubmit, onSuccess, onChange }) => {
   const [currentValue, setCurrentValue] = useState(value)
+
+  const [activeGroupsListState] = usePaginatedState(
+    activeFetchParams,
+    getPaginatedGroupsListStateAtom,
+    getManagePaginatedGroupsListAtom,
+  )
+
+  const [archivedGroupsListState] = usePaginatedState(
+    archivedFetchParams,
+    getPaginatedGroupsListStateAtom,
+    getManagePaginatedGroupsListAtom,
+  )
 
   /**
    * React on change of value prop
@@ -37,15 +52,8 @@ const FilterGroups: FC<FilterGroupsProps> = ({ value, onSubmit, onSuccess, onCha
     // eslint-disable-next-line react-hooks/exhaustive-deps -- react only on props changed
   }, [value])
 
-  const activeCount = useMemo(
-    () => groups.filter((group) => group.status === "active").length,
-    [groups],
-  )
-
-  const archivedCount = useMemo(
-    () => groups.filter((group) => group.status === "archived").length,
-    [groups],
-  )
+  const activeCount = activeGroupsListState.data?.items.length
+  const archivedCount = archivedGroupsListState.data?.items.length
 
   const updateActive = useCallback(
     (active: boolean) => {
