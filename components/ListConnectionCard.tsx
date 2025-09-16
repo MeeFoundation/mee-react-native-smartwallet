@@ -14,6 +14,7 @@ const connectionListCardStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors["white/80"],
     padding: 8,
+    minHeight: 64,
   },
   expanded: {
     borderTopLeftRadius: 8,
@@ -24,6 +25,9 @@ const connectionListCardStyles = StyleSheet.create({
     elevation: 5,
     boxShadow: `0px 2px 16px 0px ${colors["black/10"]}`,
     padding: 8,
+  },
+  skeleton: {
+    backgroundColor: colors["gray-200"],
   },
 })
 
@@ -183,22 +187,21 @@ const ConnectionListCard: FC<ConnectionListCardProps> = ({
   </View>
 )
 
+/* -------------------------------------------------------------------------------------------------
+ * ConnectionListCardSkeleton
+ * -----------------------------------------------------------------------------------------------*/
+type ConnectionListCardSkeletonProps = ViewProps
+
+const ConnectionListCardSkeleton: FC<ConnectionListCardSkeletonProps> = ({ style, ...rest }) => (
+  <View
+    style={[connectionListCardStyles.default, connectionListCardStyles.skeleton, style]}
+    {...rest}
+  />
+)
+
 /* -----------------------------------------------------------------------------------------------*/
 
-const Root = ConnectionListCard
-const Thumbnail = ConnectionListCardThumbnail
-const Description = ConnectionListCardDescription
-const Actions = ConnectionListCardActions
-const Count = ConnectionListCardCount
-const Button = ConnectionListCardButton
-const Content = ConnectionListCardContent
-const Name = ConnectionListCardName
-const Hint = ConnectionListCardHint
-
 export {
-  Actions,
-  Button,
-  //
   ConnectionListCard,
   ConnectionListCardActions,
   ConnectionListCardButton,
@@ -207,15 +210,23 @@ export {
   ConnectionListCardDescription,
   ConnectionListCardHint,
   ConnectionListCardName,
+  ConnectionListCardSkeleton,
   ConnectionListCardThumbnail,
-  Content,
-  Count,
-  Description,
-  Hint,
-  Name,
-  Root,
-  Thumbnail,
 }
+
+export {
+  ConnectionListCardActions as Actions,
+  ConnectionListCardButton as Button,
+  ConnectionListCardContent as Content,
+  ConnectionListCardCount as Count,
+  ConnectionListCardDescription as Description,
+  ConnectionListCardHint as Hint,
+  ConnectionListCardName as Name,
+  ConnectionListCard as Root,
+  ConnectionListCardSkeleton as Skeleton,
+  ConnectionListCardThumbnail as Thumbnail,
+}
+
 export type {
   ConnectionListCardActionsProps,
   ConnectionListCardButtonProps,
@@ -225,5 +236,6 @@ export type {
   ConnectionListCardHintProps,
   ConnectionListCardNameProps,
   ConnectionListCardProps,
+  ConnectionListCardSkeletonProps,
   ConnectionListCardThumbnailProps,
 }

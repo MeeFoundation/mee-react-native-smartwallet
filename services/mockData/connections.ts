@@ -27,6 +27,7 @@ export const mockConnections: Connection[] = [
     iconSrc: IconSources.disney,
     name: "Disneydasdas",
     tags: [tags.entertainment, tags.group],
+    status: "active",
     sharedInfo: {
       email: "test1@gmail.com",
       firstName: "John",
@@ -39,6 +40,7 @@ export const mockConnections: Connection[] = [
     iconSrc: IconSources.disney,
     name: "Disney Plus",
     tags: [tags.entertainment],
+    status: "active",
     sharedInfo: {
       email: "test2@gmail.com",
       firstName: "John",
@@ -53,6 +55,7 @@ export const mockConnections: Connection[] = [
     iconSrc: IconSources.google,
     name: "Google connection",
     tags: [tags.google],
+    status: "active",
     sharedInfo: {
       email: "test3@gmail.com",
       firstName: "John",
@@ -65,6 +68,7 @@ export const mockConnections: Connection[] = [
     iconSrc: IconSources.google,
     name: "Google connection",
     tags: [tags.google],
+    status: "active",
     sharedInfo: {
       email: "test4@gmail.com",
       firstName: "John",
@@ -79,6 +83,7 @@ export const mockConnections: Connection[] = [
     iconSrc: IconSources.disney,
     name: "Disney",
     tags: [tags.entertainments],
+    status: "active",
     sharedInfo: {
       email: "test5@gmail.com",
       firstName: "John",
@@ -92,6 +97,7 @@ export const mockConnections: Connection[] = [
     iconSrc: IconSources.disneyPlus,
     name: "Disney Plus",
     tags: [tags.entertainments],
+    status: "active",
     sharedInfo: {
       email: "test6@gmail.com",
       firstName: "John",
@@ -106,6 +112,7 @@ export const mockConnections: Connection[] = [
     iconSrc: IconSources.google,
     name: "Google connection",
     tags: [tags.social],
+    status: "active",
     sharedInfo: {
       email: "test7@gmail.com",
       firstName: "John",
@@ -118,6 +125,7 @@ export const mockConnections: Connection[] = [
     iconSrc: IconSources.google,
     name: "Google connection",
     tags: [tags.social],
+    status: "active",
     sharedInfo: {
       email: "test8@gmail.com",
       firstName: "John",
@@ -132,6 +140,7 @@ export const mockConnections: Connection[] = [
     iconSrc: IconSources.disney,
     name: "Disney",
     tags: [tags.smths],
+    status: "active",
     sharedInfo: {
       email: "test9@gmail.com",
       firstName: "John",
@@ -143,6 +152,7 @@ export const mockConnections: Connection[] = [
     iconSrc: IconSources.disneyPlus,
     name: "Disney Plus",
     tags: [tags.smths],
+    status: "active",
     sharedInfo: {
       email: "test10@gmail.com",
       firstName: "John",

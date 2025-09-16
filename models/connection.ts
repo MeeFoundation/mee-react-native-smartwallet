@@ -8,6 +8,8 @@ export type BasicInfo = {
   emails?: { key: string; value: string }[]
   phones?: { key: string; value: string }[]
   addresses?: Record<string, string>[]
+  passwords?: { key: string; value: string }[]
+  paymentDetails?: unknown[]
 }
 
 export type SharedInfo = BasicInfo
@@ -19,6 +21,7 @@ export type Connection = {
   tags: string[]
   iconSrc?: ImageRequireSource | string
   profile?: string
+  status: "active" | "archived"
 
   contactInfo?: {
     recordID: string
