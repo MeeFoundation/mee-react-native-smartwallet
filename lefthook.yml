@@ -2,9 +2,9 @@ pre-commit:
   parallel: true
   commands:
     lint:
-      run: yarn lint
+      run: pnpm lint
     check-types:
-      run: yarn check-types
+      run: pnpm check-types
     # knip:
     #   run: yarn knip
 # EXAMPLE USAGE:

@@ -5,23 +5,11 @@
   "private": true,
   "scripts": {
     "start": "expo start",
-    "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "eslint .",
-    "start-rc": "npx react-native start --reset-cache",
-    "test": "jest",
-    "check-types": "tsc --noEmit",
-    "manifest": "react-native-asset",
-    "not:postinstall": "yarn upgrade mee-rust && cd ios && pod install --repo-update",
-    "android-release-aab": "cd android && ./gradlew bundleRelease",
-    "android-release-test": "react-native run-android --variant release",
-    "clean": "rm -rf ~/Library/Developer/Xcode/DerivedData && rm -rf node_modules/ /tmp/metro-*  && watchman watch-del-all && watchman shutdown-server && yarn cache clean",
-    "clean-android": "rm -rf android/build android/app/.cxx android/app/build || true && cd android && ./gradlew clean && cd ..",
-    "deep-clean": "rm -rf ~/Library/Developer/Xcode/DerivedData ios/build ios/Pods && yarn clean-android && rm -rf node_modules/ /tmp/metro-* && watchman watch-del-all && watchman shutdown-server && yarn cache clean && rm -rf yarn.lock",
-    "reset": "yarn clean && yarn install",
-    "deep-reset": "yarn deep-clean && yarn install"
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
@@ -60,6 +48,7 @@
     "react-native-aes-crypto": "^3.2.1",
     "react-native-biometrics": "^3.0.1",
     "react-native-contacts": "^8.0.7",
+    "react-native-drawer-layout": "^4.1.13",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-heroicons": "^4.0.0",
     "react-native-ios-context-menu": "3.1.0",
@@ -89,6 +78,5 @@
   },
   "engines": {
     "node": ">=18"
-  },
-  "packageManager": "yarn@1.22.22"
+  }
 }

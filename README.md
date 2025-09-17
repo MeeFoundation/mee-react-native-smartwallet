@@ -6,19 +6,19 @@
 2. Install dependencies:
 
 ```sh
-yarn install
+pnpm install
 ```
 
 ### Run on iOS
 
 ```sh
-yarn ios
+pnpm ios
 ```
 
 ### Run on Android
 
 ```sh
-yarn android
+pnpm android
 ```
 
 ## Localization
