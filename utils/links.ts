@@ -11,7 +11,17 @@ export const getHomeScreenLink = () => "/" as const
  * Groups screens
  * -----------------------------------------------------------------------------------------------*/
 export const getGroupsScreenLink = () => "/" as const
-export const getGroupScreenLink = (group: O.AtLeast<Group, "id">) => `/groups/${group.id}` as const
+export const getGroupChatScreenLink = (group: O.AtLeast<Group, "id">) =>
+  `/groups/${group.id}/chat` as const
+export const getGroupMemebersScreenLink = (group: O.AtLeast<Group, "id">) =>
+  `/groups/${group.id}/members` as const
+export const getGroupMyInfoScreenLink = (group: O.AtLeast<Group, "id">) =>
+  `/groups/${group.id}/my-info` as const
+
+/**
+ * Chat screen is the default screen for a group
+ */
+export const getGroupScreenLink = getGroupChatScreenLink
 
 /* -------------------------------------------------------------------------------------------------
  * People screen

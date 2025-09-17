@@ -112,6 +112,7 @@ const HeaderRight = () => {
 //  TODO Add loading & error state
 export default function GroupScreen() {
   const { id } = useLocalSearchParams()
+
   if (typeof id !== "string") throw new InvalidRouteParamsError()
 
   const router = useRouter()
