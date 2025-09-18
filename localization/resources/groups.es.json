@@ -9,5 +9,18 @@
     "myInfo": {
       "title": "Mi Info"
     }
+  },
+  "chat": {
+    "input": {
+      "placeholder": "escribe algo"
+    },
+    "actions": {
+      "attach_file": {
+        "text": "Adjuntar archivo"
+      },
+      "cancel": {
+        "text": "Cancelar"
+      }
+    }
   }
 }
