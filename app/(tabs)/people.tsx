@@ -1,3 +1,17 @@
+import BottomSheet from "@gorhom/bottom-sheet"
+import { FlashList, type ListRenderItem } from "@shopify/flash-list"
+import { useAtomValue } from "jotai"
+import { range } from "lodash-es"
+import { Fragment, useCallback, useMemo, useRef, useState, type FC } from "react"
+import { useTranslation } from "react-i18next"
+import { RefreshControl, StyleSheet, Text, View, type ViewProps } from "react-native"
+
+import { colors } from "@/constants/colors"
+
+import type { PersonsListFetchParams, ShortPerson } from "@/models/person"
+
+import type { AppError } from "@/errors/app-error"
+
 import { BackgroundLayout } from "@/components/BackgroundLayout"
 import { BottomSheetBackDrop } from "@/components/BottomSheet"
 import { FilterConnections, type FilterValue } from "@/components/FilterConnections"
@@ -6,22 +20,14 @@ import * as ListLayout from "@/components/ListLayout"
 import { PersonListCard, PersonListSkeleton } from "@/components/PersonListCard"
 import { RadioList } from "@/components/RadioList"
 import { Typography } from "@/components/Typography"
-import { colors } from "@/constants/colors"
-import type { AppError } from "@/errors/app-error"
-import type { PersonsListFetchParams, ShortPerson } from "@/models/person"
+
 import {
   getManagePaginatedPersonsListAtom,
   getPaginatedPersonsListStateAtom,
 } from "@/store/persons"
 import { ProfileStore } from "@/store/profile"
+
 import { usePaginatedState } from "@/utils/paginated-list"
-import BottomSheet from "@gorhom/bottom-sheet"
-import { FlashList, type ListRenderItem } from "@shopify/flash-list"
-import { useAtomValue } from "jotai"
-import { range } from "lodash-es"
-import { Fragment, useCallback, useMemo, useRef, useState, type FC } from "react"
-import { useTranslation } from "react-i18next"
-import { RefreshControl, StyleSheet, Text, View, type ViewProps } from "react-native"
 
 const styles = StyleSheet.create({
   addConnectionContainer: {
