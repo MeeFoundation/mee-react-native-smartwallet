@@ -1,0 +1,255 @@
+import { IconSources } from "@/assets/images"
+import { setAndroidContactsAtom, setIosContactsAtom } from "@/entities/contact"
+import { isAuthenticatedAtom } from "@/features/auth"
+import { colors, fonts } from "@/shared/config"
+import { useThemeColor } from "@/shared/lib/useThemeColor"
+import { Avatar } from "@/shared/ui/Avatar"
+import { BottomSheetBackDrop } from "@/shared/ui/BottomSheet"
+import { HeaderLeft, HeaderRight } from "@/shared/ui/Header"
+import { IconSymbol } from "@/shared/ui/IconSymbol"
+import { Typography } from "@/shared/ui/Typography"
+import BottomSheet from "@gorhom/bottom-sheet"
+import { Tabs } from "expo-router"
+import { useAtomValue, useSetAtom } from "jotai"
+import React, { useRef } from "react"
+import { useTranslation } from "react-i18next"
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native"
+
+const styles = StyleSheet.create({
+  tabs: {
+    paddingTop: 11, // NOTE: expo icon holder has 5ps padding itself
+    height: 85,
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    borderTopWidth: 1,
+    borderColor: "#FFF",
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+  },
+
+  tabBarLabel: {
+    fontFamily: "PublicSans-Medium",
+    fontWeight: "400",
+    fontSize: 10,
+  },
+
+  // TODO Refactor
+
+  addConnectionContainer: {
+    flex: 1,
+    flexDirection: "column",
+    width: "100%",
+    padding: 16,
+  },
+  addConnectionItem: {
+    alignItems: "flex-start",
+    width: "100%",
+    gap: 8,
+  },
+  footerItem: {
+    flex: 1,
+    gap: 4,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  title: {
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: 500,
+  },
+  container: {
+    padding: 8,
+    paddingRight: 24,
+    gap: 8,
+    alignItems: "center",
+    flexDirection: "row",
+    borderRadius: 8,
+    width: "100%",
+    backgroundColor: "rgba(255, 255, 255, 0.6)",
+
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.80)",
+  },
+  image: { width: 48, height: 48, borderRadius: 9999 },
+  name: { flexGrow: 1 },
+  border: { borderColor: colors.primary, borderWidth: 2 },
+  connectText: { color: colors.link, fontSize: 12, lineHeight: 16 },
+})
+
+export default function TabLayout() {
+  const { t } = useTranslation()
+  const activeTabColor = useThemeColor("primary")
+  const inactiveTabColor = useThemeColor("gray-800")
+  const bottomSheetRef = useRef<BottomSheet>(null)
+  const setIosContacts = useSetAtom(setIosContactsAtom)
+  const setAndroidContacts = useSetAtom(setAndroidContactsAtom)
+  const isAuthenticated = useAtomValue(isAuthenticatedAtom)
+  const headerBgColor = useThemeColor("primary")
+
+  // FIXME fixme
+  const isPeoplePage = true
+  const onAddPress = () => {
+    bottomSheetRef.current?.expand()
+  }
+
+  return (
+    <>
+      <Tabs
+        screenOptions={{
+          headerTitle: "",
+          headerRight: HeaderRight,
+          headerStyle: {
+            backgroundColor: headerBgColor,
+          },
+
+          tabBarActiveTintColor: activeTabColor,
+          tabBarInactiveTintColor: inactiveTabColor,
+          headerShown: true,
+          tabBarLabelStyle: styles.tabBarLabel,
+          tabBarStyle: styles.tabs,
+        }}
+      >
+        <Tabs.Protected guard={isAuthenticated}>
+          <Tabs.Screen
+            name="index"
+            options={{
+              title: t("tabs.groups.title"),
+              headerLeft: () => <HeaderLeft>Groups</HeaderLeft>,
+              tabBarIcon: ({ focused, color }) => (
+                <IconSymbol
+                  width={24}
+                  height={24}
+                  color={color}
+                  name={focused ? "groups.filled" : "groups.outlined"}
+                />
+              ),
+            }}
+          />
+        </Tabs.Protected>
+
+        <Tabs.Screen
+          name="people"
+          options={{
+            title: t("tabs.people.title"),
+            headerLeft: () => <HeaderLeft>People</HeaderLeft>,
+            tabBarIcon: ({ focused, color }) => (
+              <IconSymbol
+                width={24}
+                height={24}
+                name={focused ? "users.filled" : "users.outlined"}
+                color={color}
+              />
+            ),
+          }}
+        />
+
+        <Tabs.Screen
+          name="share-placeholder"
+          options={{
+            title: t("tabs.share.title"),
+            tabBarIcon: ({ color }) => (
+              <IconSymbol width={24} height={24} name="share.outlined" color={color} />
+            ),
+          }}
+          listeners={{
+            tabPress: (e) => {
+              e.preventDefault()
+              onAddPress()
+            },
+          }}
+        />
+
+        <Tabs.Screen
+          name="wallet-placeholder"
+          options={{
+            title: t("tabs.wallet.title"),
+            tabBarIcon: ({ color }) => (
+              <IconSymbol width={24} height={24} name="wallet.outlined" color={color} />
+            ),
+          }}
+          listeners={{
+            tabPress: (e) => {
+              e.preventDefault()
+              onAddPress()
+            },
+          }}
+        />
+      </Tabs>
+
+      {/* FIXME Move this somewhere */}
+      <BottomSheetBackDrop
+        ref={bottomSheetRef}
+        title="Add"
+        propsStyles={{
+          contentContainer: {
+            backgroundColor: "rgba(242, 242, 242, 0.93)",
+          },
+        }}
+      >
+        <View style={styles.addConnectionContainer}>
+          {isPeoplePage && (
+            <View style={styles.addConnectionItem}>
+              <Text style={styles.title}>Your contacts</Text>
+              {Platform.OS === "ios" && (
+                <View style={styles.container}>
+                  <Avatar src={IconSources.apple} text={"Apple contacts"} size={48} />
+                  <Typography style={styles.name} fontFamily={fonts.publicSans.bold} weight="500">
+                    Apple contacts
+                  </Typography>
+
+                  <Pressable
+                    onPress={() => {
+                      const fn = async () => {
+                        const res = await setIosContacts()
+                        if (res) {
+                          bottomSheetRef.current?.close()
+                        }
+                      }
+                      // TODO add error handling
+                      fn().catch((err) => {
+                        console.error("error setting ios contacts", err)
+                      })
+                    }}
+                  >
+                    <Typography style={styles.connectText}>Connect</Typography>
+                  </Pressable>
+                </View>
+              )}
+              {Platform.OS === "android" && (
+                <View style={styles.container}>
+                  <Avatar src={IconSources.android} text={"Android contacts"} size={48} />
+                  <Typography style={styles.name} fontFamily={fonts.publicSans.bold} weight="500">
+                    Android contacts
+                  </Typography>
+
+                  <Pressable
+                    // some bug on the android, last block stretching beyond the parent and even screen
+                    style={{ maxWidth: 50 }}
+                    // TODO move to handler
+                    onPress={() => {
+                      const fn = async () => {
+                        const res = await setAndroidContacts()
+                        if (res) {
+                          bottomSheetRef.current?.close()
+                        }
+                      }
+
+                      fn().catch((err) => {
+                        console.error("error setting android contacts", err)
+                      })
+                    }}
+                  >
+                    <Typography style={styles.connectText}>Connect</Typography>
+                  </Pressable>
+                </View>
+              )}
+            </View>
+          )}
+        </View>
+      </BottomSheetBackDrop>
+    </>
+  )
+}
