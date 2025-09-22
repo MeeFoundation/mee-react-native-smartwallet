@@ -1,17 +1,12 @@
 import { type ErrorBoundaryProps, useLocalSearchParams } from 'expo-router'
 import { useAtomValue } from 'jotai'
-import { StyleSheet, Text, View } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
+
+import { GroupMyInfo } from '@/widgets/group-my-info'
 
 import { getGroupAtom } from '@/entities/group'
 
 import { InvalidRouteParamsError } from '@/shared/errors'
-
-const styles = StyleSheet.create({
-  page: {
-    flex: 1,
-    padding: 8,
-  },
-})
 
 /* -------------------------------------------------------------------------------------------------
  * ErrorBoundary
@@ -37,9 +32,9 @@ export default function GroupMyInfoScreen() {
   const group = useAtomValue(getGroupAtom(id))
 
   return (
-    <View style={styles.page}>
-      <Text>My Info: {group.name}</Text>
-    </View>
+    <ScrollView>
+      <GroupMyInfo group={group} />
+    </ScrollView>
   )
 }
 

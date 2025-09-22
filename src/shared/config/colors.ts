@@ -10,6 +10,7 @@ const blackPaletteLight = {
 
 const whitePaletteLight = {
   white: '#FFFFFF',
+  'white/50': 'rgba(255, 255, 255, 0.5)',
   'white/60': 'rgba(255, 255, 255, 0.6)',
   'white/80': 'rgba(255, 255, 255, 0.8)',
   'white/90': 'rgba(255, 255, 255, 0.9)',

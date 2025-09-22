@@ -1,0 +1,166 @@
+import type { FC } from 'react'
+import { StyleSheet, View } from 'react-native'
+
+import type { Group } from '@/entities/group/model/types'
+
+import { fonts } from '@/shared/config'
+import { Avatar } from '@/shared/ui/Avatar'
+import * as ExpandableSection from '@/shared/ui/ExpandableSection'
+import { Typography } from '@/shared/ui/Typography'
+
+const styles = StyleSheet.create({
+  header: {
+    alignItems: 'center',
+    padding: 16,
+  },
+  sections: {
+    gap: 8,
+  },
+})
+
+/* -------------------------------------------------------------------------------------------------
+ * PersonalDetailsSection
+ * -----------------------------------------------------------------------------------------------*/
+type PersonalDetailsSectionProps = Omit<ExpandableSection.ExpandableSectionProps, 'children'>
+
+const PersonalDetailsSection: FC<PersonalDetailsSectionProps> = (props) => {
+  return (
+    <ExpandableSection.Root {...props}>
+      <ExpandableSection.Head>
+        <ExpandableSection.Title>
+          <ExpandableSection.TitleText>Personal details</ExpandableSection.TitleText>
+        </ExpandableSection.Title>
+        <ExpandableSection.Actions>
+          <ExpandableSection.ToggleAction />
+        </ExpandableSection.Actions>
+      </ExpandableSection.Head>
+
+      <ExpandableSection.Content>
+        <Typography>content</Typography>
+        <Typography>content</Typography>
+        <Typography>content</Typography>
+        <Typography>content</Typography>
+      </ExpandableSection.Content>
+    </ExpandableSection.Root>
+  )
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * HealthSection
+ * -----------------------------------------------------------------------------------------------*/
+type HealthSectionProps = Omit<ExpandableSection.ExpandableSectionProps, 'children'>
+
+const HealthSection: FC<HealthSectionProps> = (props) => {
+  return (
+    <ExpandableSection.Root {...props}>
+      <ExpandableSection.Head>
+        <ExpandableSection.Title>
+          <ExpandableSection.TitleText>Health</ExpandableSection.TitleText>
+        </ExpandableSection.Title>
+        <ExpandableSection.Actions>
+          <ExpandableSection.ToggleAction />
+        </ExpandableSection.Actions>
+      </ExpandableSection.Head>
+
+      <ExpandableSection.Content>
+        <Typography>content</Typography>
+        <Typography>content</Typography>
+        <Typography>content</Typography>
+        <Typography>content</Typography>
+      </ExpandableSection.Content>
+    </ExpandableSection.Root>
+  )
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * AvailabilityCalendarSection
+ * -----------------------------------------------------------------------------------------------*/
+type AvailabilityCalendarSectionProps = Omit<ExpandableSection.ExpandableSectionProps, 'children'>
+
+const AvailabilityCalendarSection: FC<AvailabilityCalendarSectionProps> = (props) => {
+  return (
+    <ExpandableSection.Root {...props}>
+      <ExpandableSection.Head>
+        <ExpandableSection.Title>
+          <ExpandableSection.TitleText>Availability calendar</ExpandableSection.TitleText>
+        </ExpandableSection.Title>
+        <ExpandableSection.Actions>
+          <ExpandableSection.ToggleAction />
+        </ExpandableSection.Actions>
+      </ExpandableSection.Head>
+      <ExpandableSection.Content>
+        <Typography>content</Typography>
+        <Typography>content</Typography>
+        <Typography>content</Typography>
+        <Typography>content</Typography>
+      </ExpandableSection.Content>
+    </ExpandableSection.Root>
+  )
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * DocumentsSection
+ * -----------------------------------------------------------------------------------------------*/
+type DocumentsSectionProps = Omit<ExpandableSection.ExpandableSectionProps, 'children'>
+
+const DocumentsSection: FC<DocumentsSectionProps> = (props) => {
+  return (
+    <ExpandableSection.Root {...props}>
+      <ExpandableSection.Head>
+        <ExpandableSection.Title>
+          <ExpandableSection.TitleText>Documents</ExpandableSection.TitleText>
+        </ExpandableSection.Title>
+        <ExpandableSection.Actions>
+          <ExpandableSection.ToggleAction />
+        </ExpandableSection.Actions>
+      </ExpandableSection.Head>
+
+      <ExpandableSection.Content>
+        <Typography>content</Typography>
+        <Typography>content</Typography>
+        <Typography>content</Typography>
+        <Typography>content</Typography>
+      </ExpandableSection.Content>
+    </ExpandableSection.Root>
+  )
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * IconSymbol
+ * -----------------------------------------------------------------------------------------------*/
+type GroupMyInfoProps = {
+  group: Group
+}
+
+const GroupMyInfo = ({ group }: GroupMyInfoProps) => {
+  const myConnection = group.connections.at(0)
+
+  return !myConnection ? null : (
+    <View style={{ flex: 1 }}>
+      <View style={styles.header}>
+        <Avatar size={112} src={myConnection.iconSrc} style={{ marginBottom: 8 }} text={myConnection.name} />
+        <Typography fontFamily={fonts.publicSans.bold} style={{ fontSize: 24, lineHeight: 32 }} weight="600">
+          {myConnection.name}
+        </Typography>
+
+        {/* TODO implement  */}
+        <Typography fontFamily={fonts.publicSans.regular} style={{ fontSize: 16, lineHeight: 24 }} weight="400">
+          Admin • Open to work
+        </Typography>
+      </View>
+
+      <View style={styles.sections}>
+        <PersonalDetailsSection />
+        <AvailabilityCalendarSection />
+        <HealthSection />
+        <DocumentsSection />
+      </View>
+    </View>
+  )
+}
+
+/* -----------------------------------------------------------------------------------------------*/
+
+export { GroupMyInfo }
+
+export type { GroupMyInfoProps }
