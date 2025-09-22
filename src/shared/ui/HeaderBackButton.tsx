@@ -1,7 +1,8 @@
-import { useNavigation } from "@react-navigation/native"
-import { type FC } from "react"
-import { AppButton } from "./AppButton"
-import { IconSymbol } from "./IconSymbol"
+import { useNavigation } from '@react-navigation/native'
+import type { FC } from 'react'
+
+import { AppButton } from './AppButton'
+import { IconSymbol } from './IconSymbol'
 
 /* -------------------------------------------------------------------------------------------------
  * HeaderBackButtonMinimal
@@ -19,9 +20,9 @@ const HeaderBackButtonMinimal: FC<HeaderBackButtonMinimalProps> = ({ color }) =>
 
   return (
     <AppButton
-      variant="link"
+      leftElement={<IconSymbol color={color} name="chevron-left.outlined" strokeWidth={2} />}
       onPress={handleBack}
-      leftElement={<IconSymbol strokeWidth={2} color={color} name="chevron-left.outlined" />}
+      variant="link"
     />
   )
 }
@@ -38,11 +39,11 @@ const HeaderBackButton: FC = () => {
 
   return (
     <AppButton
-      variant="link"
+      leftElement={<IconSymbol name="chevron-left.outlined" />}
       onPress={handleBack}
       text="Back"
       textStyles={{ fontSize: 17, marginRight: 16 }}
-      leftElement={<IconSymbol name="chevron-left.outlined" />}
+      variant="link"
     />
   )
 }

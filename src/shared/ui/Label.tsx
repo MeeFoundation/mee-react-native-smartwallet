@@ -1,14 +1,15 @@
-import { colors, fonts } from "@/shared/config"
-import { Typography, type TypographyProps } from "@/shared/ui/Typography"
-import { type FC } from "react"
-import { StyleSheet } from "react-native"
+import type { FC } from 'react'
+import { StyleSheet } from 'react-native'
+
+import { colors, fonts } from '@/shared/config'
+import { Typography, type TypographyProps } from '@/shared/ui/Typography'
 
 const styles = StyleSheet.create({
   label: {
+    color: colors['gray-900'],
     fontSize: 16,
+    fontWeight: '500',
     lineHeight: 24,
-    fontWeight: "500",
-    color: colors["gray-900"],
   },
 })
 

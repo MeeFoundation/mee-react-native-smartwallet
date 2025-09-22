@@ -1,34 +1,37 @@
-import { isAuthenticatedAtom, isFirstTimeAuthAtom } from "@/features/auth"
-import { languageAtom } from "@/features/localization"
-import { colors } from "@/shared/config"
-import { drawerIsOpenedAtom } from "@/shared/model"
-import { IconSymbol } from "@/shared/ui/IconSymbol"
-import { Typography } from "@/shared/ui/Typography"
-import { isWelcomeViewedAtom } from "@/widgets/welcome/@x/drawer"
-import { useRouter } from "expo-router"
-import { useAtom, useSetAtom } from "jotai"
-import type { FC, PropsWithChildren, ReactNode } from "react"
-import { Pressable, type PressableProps, StyleSheet, View } from "react-native"
-import { Drawer as ReactNativeDrawer } from "react-native-drawer-layout"
+import { useRouter } from 'expo-router'
+import { useAtom, useSetAtom } from 'jotai'
+import type { FC, PropsWithChildren, ReactNode } from 'react'
+import { Pressable, type PressableProps, StyleSheet, View } from 'react-native'
+import { Drawer as ReactNativeDrawer } from 'react-native-drawer-layout'
+
+import { isWelcomeViewedAtom } from '@/widgets/welcome/@x/drawer'
+
+import { isAuthenticatedAtom, isFirstTimeAuthAtom } from '@/features/auth'
+import { languageAtom } from '@/features/localization'
+
+import { colors } from '@/shared/config'
+import { drawerIsOpenedAtom } from '@/shared/model'
+import { IconSymbol } from '@/shared/ui/IconSymbol'
+import { Typography } from '@/shared/ui/Typography'
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: colors.white,
+    flex: 1,
     paddingTop: 64,
   },
   item: {
-    padding: 16,
-    flexDirection: "row",
+    alignItems: 'center',
+    flexDirection: 'row',
     gap: 16,
-    alignItems: "center",
+    padding: 16,
   },
 })
 
 /* -------------------------------------------------------------------------------------------------
  * DrawerItem
  * -----------------------------------------------------------------------------------------------*/
-type DrawerItemProps = Omit<PressableProps, "children" | "style"> & {
+type DrawerItemProps = Omit<PressableProps, 'children' | 'style'> & {
   label: string
   icon: ReactNode
 }
@@ -72,53 +75,53 @@ const Drawer: FC<DrawerProps> = ({ children }) => {
 
   const showWelcomeScreenHandler = () => {
     setIsWelcomeViewed(false)
-    router.navigate("/welcome")
+    router.navigate('/welcome')
   }
 
   // TODO refactor. Maybe saparate drawer content
   const itemsProps: DrawerItemProps[] = [
     {
-      label: "Settings",
       icon: <IconSymbol name="cog-8-tooth.outlined" />,
-      onPress: onItemPress(() => router.navigate("/settings")),
+      label: 'Settings',
+      onPress: onItemPress(() => router.navigate('/settings')),
     },
 
     {
-      label: "Login",
       icon: <IconSymbol name="user.outlined" />,
+      label: 'Login',
       onPress: onItemPress(navigateLogin),
     },
     {
-      label: "Send Feedback",
-      icon: <IconSymbol name="paper-airplane.outlined" transform={[{ rotate: "270deg" }]} />,
+      icon: <IconSymbol name="paper-airplane.outlined" transform={[{ rotate: '270deg' }]} />,
+      label: 'Send Feedback',
       onPress: onItemPress(() => false),
     },
     {
-      label: "Show Welcome again",
-      icon: <IconSymbol name="bell.outlined" color={colors.secondary} />,
+      icon: <IconSymbol color={colors.secondary} name="bell.outlined" />,
+      label: 'Show Welcome again',
       onPress: onItemPress(showWelcomeScreenHandler),
     },
     {
-      label: "Set First Time Auth",
-      icon: <IconSymbol name="bell.outlined" color={colors.secondary} />,
+      icon: <IconSymbol color={colors.secondary} name="bell.outlined" />,
+      label: 'Set First Time Auth',
       onPress: onItemPress(onFirstTimeAuth),
     },
     {
-      label: `Switch Language to [${locale === "en" ? "es" : "en"}]`,
-      icon: <IconSymbol name="language.outline" color={colors.secondary} />,
-      onPress: onItemPress(() => setLocale((prev) => (prev === "en" ? "es" : "en"))),
+      icon: <IconSymbol color={colors.secondary} name="language.outline" />,
+      label: `Switch Language to [${locale === 'en' ? 'es' : 'en'}]`,
+      onPress: onItemPress(() => setLocale((prev) => (prev === 'en' ? 'es' : 'en'))),
     },
   ]
 
   return (
     <ReactNativeDrawer
-      open={isOpen}
-      onOpen={() => setIsOpen(true)}
       onClose={() => setIsOpen(false)}
+      onOpen={() => setIsOpen(true)}
+      open={isOpen}
       renderDrawerContent={() => (
         <View style={styles.container}>
           {itemsProps.map((item, index) => (
-            <DrawerItem key={index} onPress={item.onPress} label={item.label} icon={item.icon} />
+            <DrawerItem icon={item.icon} key={item.id ?? index} label={item.label} onPress={item.onPress} />
           ))}
         </View>
       )}

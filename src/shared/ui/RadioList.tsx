@@ -1,9 +1,12 @@
 // TODO refactor
-import { colors } from "@/shared/config"
-import { type FC } from "react"
-import { StyleSheet, View } from "react-native"
-import { AnimatedTouchable } from "./AnimatedTouchable"
-import { Typography } from "./Typography"
+
+import type { FC } from 'react'
+import { StyleSheet, View } from 'react-native'
+
+import { colors } from '@/shared/config'
+
+import { AnimatedTouchable } from './AnimatedTouchable'
+import { Typography } from './Typography'
 
 type RadioListProps = {
   data: { title: string; count: number }[]
@@ -20,32 +23,32 @@ export const RadioList: FC<RadioListProps> = ({ data, selected, onSelect }) => {
           const isActive = selected === item.title
           return (
             <AnimatedTouchable
-              onPress={() => onSelect(item.title)}
               key={item.title}
+              onPress={() => onSelect(item.title)}
               style={{
                 ...styles.item,
-                backgroundColor: isActive ? "white" : "transparent",
+                backgroundColor: isActive ? 'white' : 'transparent',
+                borderColor: isActive ? colors.primaryActive : colors['gray-200'],
                 borderWidth: isActive ? 2 : 1,
-                borderColor: isActive ? colors.primaryActive : colors["gray-200"],
               }}
             >
               <View style={styles.itemRow}>
                 <Typography>{item.title}</Typography>
-                <Typography style={{ color: colors["gray-400"] }}>({item.count})</Typography>
+                <Typography style={{ color: colors['gray-400'] }}>({item.count})</Typography>
               </View>
               <View
                 style={{
                   ...styles.checkItem,
-                  borderColor: isActive ? colors.primaryActive : colors["gray-400"],
+                  borderColor: isActive ? colors.primaryActive : colors['gray-400'],
                 }}
               >
                 {isActive && (
                   <View
                     style={{
-                      width: 12,
-                      height: 12,
                       backgroundColor: colors.primaryActive,
                       borderRadius: 100,
+                      height: 12,
+                      width: 12,
                     }}
                   />
                 )}
@@ -60,25 +63,25 @@ export const RadioList: FC<RadioListProps> = ({ data, selected, onSelect }) => {
 }
 
 export const styles = StyleSheet.create({
-  container: { gap: 8 },
-  item: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "100%",
-    paddingVertical: 8,
-    gap: 16,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    height: 44,
-  },
-  itemRow: { flexDirection: "row", gap: 5 },
   checkItem: {
-    width: 16,
-    height: 16,
+    alignItems: 'center',
     borderRadius: 100,
     borderWidth: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    height: 16,
+    justifyContent: 'center',
+    width: 16,
   },
+  container: { gap: 8 },
+  item: {
+    alignItems: 'center',
+    borderRadius: 8,
+    flexDirection: 'row',
+    gap: 16,
+    height: 44,
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    width: '100%',
+  },
+  itemRow: { flexDirection: 'row', gap: 5 },
 })

@@ -1,35 +1,36 @@
-import { FilterConnections, type FilterValue } from "@/entities/connection"
-import type { PersonsListFetchParams, ShortPerson } from "@/entities/person"
+import type BottomSheet from '@gorhom/bottom-sheet'
+import { FlashList, type ListRenderItem } from '@shopify/flash-list'
+import { useAtomValue } from 'jotai'
+import { range } from 'lodash-es'
+import { type FC, Fragment, useCallback, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { RefreshControl, StyleSheet, Text, View, type ViewProps } from 'react-native'
+
+import { FilterConnections, type FilterValue } from '@/entities/connection'
+import type { PersonsListFetchParams, ShortPerson } from '@/entities/person'
 import {
   getManagePaginatedPersonsListAtom,
   getPaginatedPersonsListStateAtom,
   PersonListCard,
   PersonListSkeleton,
-} from "@/entities/person"
-import { ProfileStore } from "@/entities/profile"
-import { colors } from "@/shared/config"
-import type { AppError } from "@/shared/errors"
-import { BackgroundLayout } from "@/shared/ui/BackgroundLayout"
-import { BottomSheetBackDrop } from "@/shared/ui/BottomSheet"
-import { FiltersSelectButton } from "@/shared/ui/FiltersSelectButton"
-import * as ListLayout from "@/shared/ui/ListLayout"
-import { RadioList } from "@/shared/ui/RadioList"
-import { Typography } from "@/shared/ui/Typography"
-import BottomSheet from "@gorhom/bottom-sheet"
-import { FlashList, type ListRenderItem } from "@shopify/flash-list"
-import { useAtomValue } from "jotai"
-import { range } from "lodash-es"
-import { Fragment, useCallback, useMemo, useRef, useState, type FC } from "react"
-import { useTranslation } from "react-i18next"
-import { RefreshControl, StyleSheet, Text, View, type ViewProps } from "react-native"
+} from '@/entities/person'
+import { ProfileStore } from '@/entities/profile'
 
-import { usePaginatedState } from "@/shared/lib/paginated-list"
+import { colors } from '@/shared/config'
+import type { AppError } from '@/shared/errors'
+import { usePaginatedState } from '@/shared/lib/paginated-list'
+import { BackgroundLayout } from '@/shared/ui/BackgroundLayout'
+import { BottomSheetBackDrop } from '@/shared/ui/BottomSheet'
+import { FiltersSelectButton } from '@/shared/ui/FiltersSelectButton'
+import * as ListLayout from '@/shared/ui/ListLayout'
+import { RadioList } from '@/shared/ui/RadioList'
+import { Typography } from '@/shared/ui/Typography'
 
 const styles = StyleSheet.create({
   addConnectionContainer: {
     flex: 1,
+    flexDirection: 'column',
     padding: 16,
-    flexDirection: "column",
   },
   listSeparator: {
     height: 8,
@@ -57,7 +58,7 @@ const PeopleListErrorView: FC<PeopleListErrorProps> = () => <Text>Error</Text>
 /* -------------------------------------------------------------------------------------------------
  * PersonsLoadingView
  * -----------------------------------------------------------------------------------------------*/
-type PersonsLoadingViewProps = Omit<ViewProps, "children"> & {
+type PersonsLoadingViewProps = Omit<ViewProps, 'children'> & {
   isFetchingNextPage: boolean
 }
 
@@ -89,10 +90,7 @@ const PersonsListEmptyView: FC<PersonsListEmptyViewProps> = ({ isFetched }) =>
  * PersonsList
  * -----------------------------------------------------------------------------------------------*/
 const PersonsList: FC = () => {
-  const fetchParams: PersonsListFetchParams = useMemo(
-    () => ({ filter: { connectionStatus: "active" } }),
-    [],
-  )
+  const fetchParams: PersonsListFetchParams = useMemo(() => ({ filter: { connectionStatus: 'active' } }), [])
 
   const [listState, managePersonsList] = usePaginatedState(
     fetchParams,
@@ -101,29 +99,25 @@ const PersonsList: FC = () => {
   )
 
   const handlePersonItemPress = useCallback((_item: ShortPerson) => {
-    throw new Error("Not implemented")
+    throw new Error('Not implemented')
   }, [])
 
   const handleEndReached = useCallback(() => {
-    listState.hasNextPage && !listState.isFetchingNextPage && managePersonsList("loadMore")
+    listState.hasNextPage && !listState.isFetchingNextPage && managePersonsList('loadMore')
   }, [listState.hasNextPage, listState.isFetchingNextPage, managePersonsList])
 
   const handleRefresh = useCallback(() => {
-    managePersonsList("refresh")
+    managePersonsList('refresh')
   }, [managePersonsList])
 
   const keyExtractor = useCallback((item: ShortPerson) => item.id, [])
 
   const refreshControl = (
-    <RefreshControl
-      tintColor={colors.primary}
-      refreshing={listState.isRefreshing}
-      onRefresh={handleRefresh}
-    />
+    <RefreshControl onRefresh={handleRefresh} refreshing={listState.isRefreshing} tintColor={colors.primary} />
   )
 
   const renderItem: ListRenderItem<ShortPerson> = useCallback(
-    ({ item }) => <PersonListCard person={item} onPress={() => handlePersonItemPress(item)} />,
+    ({ item }) => <PersonListCard onPress={() => handlePersonItemPress(item)} person={item} />,
     [handlePersonItemPress],
   )
 
@@ -132,15 +126,15 @@ const PersonsList: FC = () => {
   return (
     <FlashList
       data={listState.data?.items}
+      ItemSeparatorComponent={ListSeparator}
       keyExtractor={keyExtractor}
+      ListEmptyComponent={<PersonsListEmptyView isFetched={listState.isFetched} />}
+      ListFooterComponent={<PersonsLoadingView isFetchingNextPage={listState.isFetchingNextPage} />}
+      onEndReached={handleEndReached}
+      onEndReachedThreshold={0.2}
       refreshControl={refreshControl}
       refreshing={listState.isRefreshing}
-      ListEmptyComponent={<PersonsListEmptyView isFetched={listState.isFetched} />}
       renderItem={renderItem}
-      onEndReachedThreshold={0.2}
-      onEndReached={handleEndReached}
-      ItemSeparatorComponent={ListSeparator}
-      ListFooterComponent={<PersonsLoadingView isFetchingNextPage={listState.isFetchingNextPage} />}
     />
   )
 }
@@ -154,7 +148,7 @@ export default function PeopleScreen() {
   const bottomSheetRef = useRef<BottomSheet>(null)
   const filterSheetRef = useRef<BottomSheet>(null)
   const [filter, setFilter] = useState<FilterValue>({})
-  const [temporarySelectedProfile, setTemporarySelectedProfile] = useState<string>("All profiles")
+  const [temporarySelectedProfile, setTemporarySelectedProfile] = useState<string>('All profiles')
 
   const clearFilters = () => {
     setFilter({})
@@ -170,7 +164,7 @@ export default function PeopleScreen() {
       <BackgroundLayout />
       <ListLayout.Root>
         <ListLayout.Header>
-          <FiltersSelectButton>{t("filters_button.text")}</FiltersSelectButton>
+          <FiltersSelectButton>{t('filters_button.text')}</FiltersSelectButton>
         </ListLayout.Header>
         <ListLayout.Content>
           <PersonsList />
@@ -183,20 +177,16 @@ export default function PeopleScreen() {
         // rightButtonAction={applyProfileFilter}
       >
         <View style={styles.addConnectionContainer}>
-          <RadioList
-            data={allProfiles}
-            onSelect={setTemporarySelectedProfile}
-            selected={temporarySelectedProfile}
-          />
+          <RadioList data={allProfiles} onSelect={setTemporarySelectedProfile} selected={temporarySelectedProfile} />
         </View>
       </BottomSheetBackDrop>
 
       <BottomSheetBackDrop
         ref={filterSheetRef}
-        title="Filters"
         rightButtonAction={clearFilters}
-        rightButtonVariant="link_danger"
         rightButtonText="Clear All"
+        rightButtonVariant="link_danger"
+        title="Filters"
       >
         <View style={styles.addConnectionContainer}>
           <FilterConnections filter={filter} onChangeFilter={applyFilters} />

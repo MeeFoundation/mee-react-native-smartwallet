@@ -1,15 +1,18 @@
-import { ConnectionCard, ConnectionDetails, type MenuAction } from "@/entities/connection"
-import { TagsStore } from "@/entities/tag"
-import { colors } from "@/shared/config"
-import { InvalidRouteParamsError } from "@/shared/errors"
-import { Accordion } from "@/shared/ui/Accordion"
-import { SelectTags } from "@/shared/ui/SelectTags"
-import { Typography } from "@/shared/ui/Typography"
-import { useLocalSearchParams } from "expo-router"
-import { useAtom } from "jotai"
-import React, { useMemo, useState } from "react"
-import { type DimensionValue, Pressable, StyleSheet, View } from "react-native"
-import { EnvelopeIcon, UserIcon } from "react-native-heroicons/outline"
+import { useLocalSearchParams } from 'expo-router'
+import { useAtom } from 'jotai'
+import type React from 'react'
+import { useMemo, useState } from 'react'
+import { type DimensionValue, Pressable, StyleSheet, View } from 'react-native'
+import { EnvelopeIcon, UserIcon } from 'react-native-heroicons/outline'
+
+import { ConnectionCard, ConnectionDetails, type MenuAction } from '@/entities/connection'
+import { TagsStore } from '@/entities/tag'
+
+import { colors } from '@/shared/config'
+import { InvalidRouteParamsError } from '@/shared/errors'
+import { Accordion } from '@/shared/ui/Accordion'
+import { SelectTags } from '@/shared/ui/SelectTags'
+import { Typography } from '@/shared/ui/Typography'
 
 type TabItem = {
   label: string
@@ -30,8 +33,8 @@ const splitIntoRows = (items: TabItem[], maxInRow: number) => {
 const Tabs = () => {
   const menus: TabItem[] = [
     {
-      label: "Profile",
       component: <Typography />,
+      label: 'Profile',
     },
   ]
   const [activeTab, setActiveTab] = useState(menus?.[0].label)
@@ -49,16 +52,16 @@ const Tabs = () => {
       <View style={tabsStyles.head}>
         {rows.map((row) => {
           const width: DimensionValue = `${100 / row.length}%`
-          return row.map((item, idx) => {
+          return row.map((item) => {
             // const originIdx = (rowIdx ?? 1) * 3 + idx
             const isActive = item.label === activeTab
             const activeStyles = isActive ? tabsStyles.itemActive : {}
 
             return (
               <Pressable
+                key={item.label}
                 onPress={() => setActive(item.label)}
                 style={[StyleSheet.compose(tabsStyles.item, { width }), activeStyles]}
-                key={idx}
               >
                 <Typography style={tabsStyles.text}>{item.label}</Typography>
               </Pressable>
@@ -73,7 +76,7 @@ const Tabs = () => {
 
 export default function ManageConnection() {
   const { id } = useLocalSearchParams()
-  if (typeof id !== "string") throw new InvalidRouteParamsError()
+  if (typeof id !== 'string') throw new InvalidRouteParamsError()
 
   const [connection, setConnection] = useAtom(ConnectionDetails(id))
   const [allTags] = useAtom(TagsStore)
@@ -86,30 +89,30 @@ export default function ManageConnection() {
 
     // TODO add error handling
     setConnection(updatedConnection).catch((err) => {
-      console.error("error setting selected tags", err)
+      console.error('error setting selected tags', err)
     })
   }
 
   const connectionCardActions = useMemo<MenuAction[]>(
     () => [
       {
-        name: "Source Profile",
-        key: "source-profile",
+        icon: 'userGroup',
+        key: 'source-profile',
+        name: 'Source Profile',
         onPress: () => {},
-        icon: "userGroup",
       },
       {
-        name: "Manage connection",
-        key: "edit",
+        icon: 'pencil',
+        key: 'edit',
+        name: 'Manage connection',
         onPress: () => {},
-        icon: "pencil",
       },
-      { name: "Link connection", key: "link", onPress: () => {}, icon: "link" },
+      { icon: 'link', key: 'link', name: 'Link connection', onPress: () => {} },
       {
-        name: "Archive Connection",
-        key: "delete",
+        icon: 'trash',
+        key: 'delete',
+        name: 'Archive Connection',
         onPress: () => {},
-        icon: "trash",
       },
     ],
     [],
@@ -119,28 +122,14 @@ export default function ManageConnection() {
     <View style={styles.page}>
       {connection && (
         <>
-          <ConnectionCard
-            border
-            name={connection.name}
-            logo={connection.iconSrc}
-            menuActions={connectionCardActions}
-          />
+          <ConnectionCard border logo={connection.iconSrc} menuActions={connectionCardActions} name={connection.name} />
           <Tabs />
-          <SelectTags
-            tags={allTags}
-            selectedTags={connection.tags}
-            onSelectTags={setSelectedTags}
-          />
-          <Accordion
-            head={<Typography weight="500">Required info shared</Typography>}
-            collapsed={false}
-          >
+          <SelectTags onSelectTags={setSelectedTags} selectedTags={connection.tags} tags={allTags} />
+          <Accordion collapsed={false} head={<Typography weight="500">Required info shared</Typography>}>
             <View style={styles.infoContainer}>
               <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
                 <EnvelopeIcon color={colors.primary} />
-                <Typography style={styles.infoText}>
-                  {connection.sharedInfo.emails?.[0]?.value}
-                </Typography>
+                <Typography style={styles.infoText}>{connection.sharedInfo.emails?.[0]?.value}</Typography>
               </View>
               <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
                 <UserIcon color={colors.primary} />
@@ -159,38 +148,38 @@ export default function ManageConnection() {
 }
 
 const styles = StyleSheet.create({
+  infoBorder: { borderBottomColor: colors.border, borderBottomWidth: 1 },
+  infoContainer: { flexDirection: 'column' },
+  infoRow: { alignItems: 'center', flexDirection: 'row', gap: 10, paddingVertical: 8 },
+  infoSvg: { color: colors.primary },
+  infoText: { color: colors.primary },
   page: {
-    flex: 1,
-    padding: 16,
     backgroundColor: colors.white,
     borderColor: colors.gray,
     borderWidth: 1,
-    flexDirection: "column",
+    flex: 1,
+    flexDirection: 'column',
     gap: 24,
+    padding: 16,
   },
-  infoContainer: { flexDirection: "column" },
-  infoRow: { flexDirection: "row", gap: 10, alignItems: "center", paddingVertical: 8 },
-  infoSvg: { color: colors.primary },
-  infoBorder: { borderBottomWidth: 1, borderBottomColor: colors.border },
-  infoText: { color: colors.primary },
 })
 
 const tabsStyles = StyleSheet.create({
-  container: { flexDirection: "column", gap: 24 },
+  container: { flexDirection: 'column', gap: 24 },
   head: {
-    flexDirection: "row",
-    flexWrap: "wrap",
     backgroundColor: colors.tertiary,
     borderRadius: 8,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
     padding: 2,
   },
   item: {
-    justifyContent: "center",
-    alignItems: "center",
+    alignItems: 'center',
+    borderRadius: 8,
+    justifyContent: 'center',
     paddingHorizontal: 10,
     paddingVertical: 6,
-    borderRadius: 8,
   },
   itemActive: { backgroundColor: colors.white },
-  text: { fontSize: 13, letterSpacing: -0.08, lineHeight: 20, textAlign: "center" },
+  text: { fontSize: 13, letterSpacing: -0.08, lineHeight: 20, textAlign: 'center' },
 })

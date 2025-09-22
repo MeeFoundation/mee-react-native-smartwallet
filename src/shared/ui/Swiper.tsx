@@ -1,10 +1,13 @@
 // TODO refactor
-import { colors } from "@/shared/config"
-import { hexAlphaColor } from "@/shared/lib/color"
-import { useRef, useState } from "react"
-import { Animated, Dimensions, FlatList, type ListRenderItem, StyleSheet, View } from "react-native"
-import { ChevronLeftIcon } from "react-native-heroicons/outline"
-import { AnimatedTouchable } from "./AnimatedTouchable"
+
+import { useRef, useState } from 'react'
+import { Animated, Dimensions, FlatList, type ListRenderItem, StyleSheet, View } from 'react-native'
+import { ChevronLeftIcon } from 'react-native-heroicons/outline'
+
+import { colors } from '@/shared/config'
+import { hexAlphaColor } from '@/shared/lib/color'
+
+import { AnimatedTouchable } from './AnimatedTouchable'
 
 type PaginatorProps<T> = {
   data: T[]
@@ -12,37 +15,34 @@ type PaginatorProps<T> = {
 }
 
 const Paginator = <T,>({ data, scrollX }: PaginatorProps<T>) => {
-  const width = Dimensions.get("screen").width
+  const width = Dimensions.get('screen').width
 
   return (
-    <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+    <View style={{ alignItems: 'center', flexDirection: 'row', gap: 4 }}>
       {data.map((_, i) => {
         const inputRange = [(i - 1) * width, i * width, (i + 1) * width]
 
         const dotWidth = scrollX.interpolate({
+          extrapolate: 'clamp',
           inputRange,
           outputRange: [8, 20, 8],
-          extrapolate: "clamp",
         })
 
         const dotColor = scrollX.interpolate({
+          extrapolate: 'clamp',
           inputRange,
-          outputRange: [
-            hexAlphaColor(colors.primary, 50),
-            colors.primary,
-            hexAlphaColor(colors.primary, 50),
-          ],
-          extrapolate: "clamp",
+          outputRange: [hexAlphaColor(colors.primary, 50), colors.primary, hexAlphaColor(colors.primary, 50)],
         })
 
         return (
           <Animated.View
+            // biome-ignore lint/suspicious/noArrayIndexKey: only index is available here
             key={i}
             style={{
-              width: dotWidth,
-              height: 8,
-              borderRadius: 4,
               backgroundColor: dotColor,
+              borderRadius: 4,
+              height: 8,
+              width: dotWidth,
             }}
           />
         )
@@ -58,12 +58,7 @@ type SwiperProps<T> = {
   bounces?: boolean
 }
 
-export const Swiper = <T,>({
-  data,
-  renderItem,
-  showPaginator = true,
-  bounces = true,
-}: SwiperProps<T>) => {
+export const Swiper = <T,>({ data, renderItem, showPaginator = true, bounces = true }: SwiperProps<T>) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const sliderPos = useRef(new Animated.Value(0)).current
   const slidesRef = useRef<FlatList>(null)
@@ -83,48 +78,48 @@ export const Swiper = <T,>({
   return (
     <View
       style={{
-        position: "relative",
-        flex: data.length,
         backgroundColor: colors.warning,
+        flex: data.length,
         paddingBottom: 90,
         paddingTop: 20,
+        position: 'relative',
       }}
     >
       <FlatList
+        bounces={bounces}
         data={data}
-        renderItem={renderItem}
         horizontal
-        showsHorizontalScrollIndicator={false}
-        pagingEnabled
         onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: sliderPos } } }], {
           useNativeDriver: false,
         })}
-        bounces={bounces}
-        scrollEventThrottle={16}
         onViewableItemsChanged={({ viewableItems }) => setCurrentIndex(viewableItems[0].index ?? 0)}
-        viewabilityConfig={{ viewAreaCoveragePercentThreshold: 50 }}
+        pagingEnabled
         ref={slidesRef}
+        renderItem={renderItem}
+        scrollEventThrottle={16}
+        showsHorizontalScrollIndicator={false}
+        viewabilityConfig={{ viewAreaCoveragePercentThreshold: 50 }}
       />
       {showPaginator && (
         <View style={styles.paginatorContainer}>
           <AnimatedTouchable
-            style={[styles.btn, { opacity: currentIndex === 0 ? 0 : 1 }]}
-            onPress={scrollPrev}
             disabled={currentIndex === 0}
+            onPress={scrollPrev}
+            style={[styles.btn, { opacity: currentIndex === 0 ? 0 : 1 }]}
           >
             <ChevronLeftIcon color={colors.primary} size={24} strokeWidth={2} />
           </AnimatedTouchable>
           <Paginator data={data} scrollX={sliderPos} />
           <AnimatedTouchable
-            style={[styles.btn, { opacity: currentIndex >= data.length - 1 ? 0 : 1 }]}
-            onPress={scrollNext}
             disabled={currentIndex >= data.length - 1}
+            onPress={scrollNext}
+            style={[styles.btn, { opacity: currentIndex >= data.length - 1 ? 0 : 1 }]}
           >
             <ChevronLeftIcon
               color={colors.primary}
-              style={{ transform: [{ rotate: "180deg" }] }}
               size={24}
               strokeWidth={2}
+              style={{ transform: [{ rotate: '180deg' }] }}
             />
           </AnimatedTouchable>
         </View>
@@ -134,16 +129,16 @@ export const Swiper = <T,>({
 }
 
 const styles = StyleSheet.create({
-  paginatorContainer: {
-    flexDirection: "row",
-    position: "absolute",
-    bottom: 36,
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "100%",
-    paddingHorizontal: 16,
-  },
   btn: {
     padding: 12,
+  },
+  paginatorContainer: {
+    alignItems: 'center',
+    bottom: 36,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    position: 'absolute',
+    width: '100%',
   },
 })

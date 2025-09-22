@@ -1,9 +1,12 @@
-import { ConnectionListCard } from "@/entities/connection/@x/person"
-import { AppButton } from "@/shared/ui/AppButton"
-import { type FC } from "react"
-import { TouchableOpacity } from "react-native"
-import { ChevronRightIcon } from "react-native-heroicons/outline"
-import type { ShortPerson } from "../model/types"
+import type { FC } from 'react'
+import { TouchableOpacity } from 'react-native'
+import { ChevronRightIcon } from 'react-native-heroicons/outline'
+
+import { ConnectionListCard } from '@/entities/connection/@x/person'
+
+import { AppButton } from '@/shared/ui/AppButton'
+
+import type { ShortPerson } from '../model/types'
 
 /* -------------------------------------------------------------------------------------------------
  * PersonListSkeleton

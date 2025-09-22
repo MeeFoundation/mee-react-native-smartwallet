@@ -1,6 +1,7 @@
-import type { FC } from "react"
-import { StyleSheet, View } from "react-native"
-import { TextField, type TextFieldProps } from "./TextField"
+import type { FC } from 'react'
+import { StyleSheet, View } from 'react-native'
+
+import { TextField, type TextFieldProps } from './TextField'
 
 export type MultipleFieldsBlockProps = {
   valuesConfig: {
@@ -10,7 +11,7 @@ export type MultipleFieldsBlockProps = {
     errorText?: string
     placeholder?: string
   }[]
-} & Pick<TextFieldProps, "RightIconActive" | "style" | "disabled">
+} & Pick<TextFieldProps, 'RightIconActive' | 'style' | 'disabled'>
 
 export const MultipleFieldsBlock: FC<MultipleFieldsBlockProps> = ({
   valuesConfig,
@@ -22,11 +23,11 @@ export const MultipleFieldsBlock: FC<MultipleFieldsBlockProps> = ({
     <View style={[styles.container, style]}>
       {valuesConfig.map((valueConfig, index) => (
         <TextField
-          key={index}
-          value={valueConfig.value}
-          label={valueConfig.label}
-          isLabelInside
           disabled={disabled}
+          errorText={valueConfig.errorText}
+          isLabelInside
+          key={valueConfig.label}
+          label={valueConfig.label}
           onChangeText={valueConfig.onChange}
           placeholder={valueConfig.placeholder}
           propsStyles={{
@@ -36,8 +37,8 @@ export const MultipleFieldsBlock: FC<MultipleFieldsBlockProps> = ({
               index !== 0 && index !== valuesConfig.length - 1 && styles.inputIntermediate,
             ]),
           }}
-          errorText={valueConfig.errorText}
           RightIconActive={RightIconActive}
+          value={valueConfig.value}
         />
       ))}
     </View>
@@ -46,6 +47,11 @@ export const MultipleFieldsBlock: FC<MultipleFieldsBlockProps> = ({
 
 const styles = StyleSheet.create({
   container: {},
+  inputBottom: {
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    borderTopWidth: 0,
+  },
   inputIntermediate: {
     borderRadius: 0,
     borderTopWidth: 0,
@@ -53,10 +59,5 @@ const styles = StyleSheet.create({
   inputTop: {
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
-  },
-  inputBottom: {
-    borderTopWidth: 0,
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
   },
 })

@@ -1,11 +1,13 @@
-import { type Connection } from "@/entities/connection/@x/contact"
-import { CONTACTS_STORAGE_KEY } from "@/shared/config"
-import { generateUserIdentifier } from "@/shared/lib/data"
-import { getObjectItem, setObjectItem } from "@/shared/model"
-import { Platform } from "react-native"
-import type { Contact as NativeContact } from "react-native-contacts"
+import { Platform } from 'react-native'
+import type { Contact as NativeContact } from 'react-native-contacts'
 
-import "./mock/contacts"
+import type { Connection } from '@/entities/connection/@x/contact'
+
+import { CONTACTS_STORAGE_KEY } from '@/shared/config'
+import { generateUserIdentifier } from '@/shared/lib/data'
+import { getObjectItem, setObjectItem } from '@/shared/model'
+
+import './mock/contacts'
 
 export interface ContactsState {
   ios?: Connection[]
@@ -20,7 +22,7 @@ class ContactService {
     return contacts
   }
 
-  async rewriteContactsByPlatform(newContacts: NativeContact[], platform: "ios" | "android") {
+  async rewriteContactsByPlatform(newContacts: NativeContact[], platform: 'ios' | 'android') {
     const currentContacts = getObjectItem<{
       ios: Connection[]
       android: Connection[]
@@ -30,9 +32,7 @@ class ContactService {
       newContacts.map((nativeCon) =>
         this.transformNativeContactToConnection(
           nativeCon,
-          currentContacts?.[platform]?.find(
-            (currentCon) => currentCon.contactInfo?.recordID === nativeCon.recordID,
-          ),
+          currentContacts?.[platform]?.find((currentCon) => currentCon.contactInfo?.recordID === nativeCon.recordID),
         ),
       ),
     )
@@ -46,19 +46,23 @@ class ContactService {
     return updContacts
   }
 
-  async transformNativeContactToConnection(
-    nativeContact: NativeContact,
-    alreadyCreatedConnection?: Connection,
-  ) {
-    let newIdentifier
+  async transformNativeContactToConnection(nativeContact: NativeContact, alreadyCreatedConnection?: Connection) {
+    let newIdentifier: string | undefined
     if (!alreadyCreatedConnection?.id) {
       newIdentifier = await generateUserIdentifier()
     }
 
     return {
+      contactInfo: {
+        platform: Platform.OS === 'android' || Platform.OS === 'ios' ? Platform.OS : undefined,
+        recordID: nativeContact.recordID,
+      },
+      iconSrc: nativeContact.thumbnailPath,
       id: alreadyCreatedConnection?.id ?? newIdentifier,
       name: nativeContact.displayName || `${nativeContact.familyName} ${nativeContact.givenName}`,
+      profile: alreadyCreatedConnection?.profile,
       sharedInfo: {
+        addresses: nativeContact.postalAddresses,
         emails: nativeContact.emailAddresses.map((address) => ({
           key: address.label,
           value: address.email,
@@ -69,19 +73,12 @@ class ContactService {
           key: num.label,
           value: num.number,
         })),
-        addresses: nativeContact.postalAddresses,
       },
       tags: alreadyCreatedConnection?.tags ?? [],
-      iconSrc: nativeContact.thumbnailPath,
-      profile: alreadyCreatedConnection?.profile,
-      contactInfo: {
-        recordID: nativeContact.recordID,
-        platform: Platform.OS === "android" || Platform.OS === "ios" ? Platform.OS : undefined,
-      },
     }
   }
 
-  updateContact(newContact: Connection, platform: "android" | "ios") {
+  updateContact(newContact: Connection, platform: 'android' | 'ios') {
     const currentContacts = getObjectItem<{
       ios: Connection[]
       android: Connection[]
@@ -89,9 +86,7 @@ class ContactService {
 
     const updContacts = {
       ...currentContacts,
-      [platform]: currentContacts?.[platform]?.map((con) =>
-        con.id === newContact.id ? newContact : con,
-      ),
+      [platform]: currentContacts?.[platform]?.map((con) => (con.id === newContact.id ? newContact : con)),
     }
 
     setObjectItem(CONTACTS_STORAGE_KEY, updContacts)
@@ -99,7 +94,7 @@ class ContactService {
     return updContacts
   }
 
-  deleteContact(id: string, platform: "android" | "ios") {
+  deleteContact(id: string, platform: 'android' | 'ios') {
     const currentContacts = getObjectItem<{
       ios: Connection[]
       android: Connection[]

@@ -1,36 +1,35 @@
+import type BottomSheet from '@gorhom/bottom-sheet'
+import { FlashList, type ListRenderItem } from '@shopify/flash-list'
+import { useRouter } from 'expo-router'
+import { useAtom } from 'jotai'
+import { range } from 'lodash-es'
+import { type FC, Fragment, useCallback, useMemo, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+import { RefreshControl, StyleSheet, Text, View, type ViewProps } from 'react-native'
+
 import {
   emptyGroupFilter,
   FilterGroups,
-  getManagePaginatedGroupsListAtom,
-  getPaginatedGroupsListStateAtom,
-  groupFilterAtom,
   GroupListCard,
   GroupListCardSkeleton,
   type GroupsFilter,
   type GroupsListFetchParams,
+  getManagePaginatedGroupsListAtom,
+  getPaginatedGroupsListStateAtom,
+  groupFilterAtom,
   type ShortGroup,
-} from "@/entities/group"
-import { colors } from "@/shared/config"
-import type { AppError } from "@/shared/errors"
-import { usePaginatedState } from "@/shared/lib/paginated-list"
-import { BackgroundLayout } from "@/shared/ui/BackgroundLayout"
-import { BottomSheetBackDrop } from "@/shared/ui/BottomSheet"
-import { FiltersSelectButton } from "@/shared/ui/FiltersSelectButton"
-import * as ListLayout from "@/shared/ui/ListLayout"
-import { Typography } from "@/shared/ui/Typography"
-import BottomSheet from "@gorhom/bottom-sheet"
-import { FlashList, type ListRenderItem } from "@shopify/flash-list"
-import { useRouter } from "expo-router"
-import { useAtom } from "jotai"
-import { range } from "lodash-es"
-import { Fragment, useCallback, useMemo, useRef, type FC } from "react"
-import { useTranslation } from "react-i18next"
-import { RefreshControl, StyleSheet, Text, View, type ViewProps } from "react-native"
+} from '@/entities/group'
+
+import { colors } from '@/shared/config'
+import type { AppError } from '@/shared/errors'
+import { usePaginatedState } from '@/shared/lib/paginated-list'
+import { BackgroundLayout } from '@/shared/ui/BackgroundLayout'
+import { BottomSheetBackDrop } from '@/shared/ui/BottomSheet'
+import { FiltersSelectButton } from '@/shared/ui/FiltersSelectButton'
+import * as ListLayout from '@/shared/ui/ListLayout'
+import { Typography } from '@/shared/ui/Typography'
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    flex: 1,
-  },
   filterButtonText: {
     fontWeight: 500,
   },
@@ -39,6 +38,9 @@ const styles = StyleSheet.create({
   },
   loadingView: {
     paddingTop: 8,
+  },
+  sectionContainer: {
+    flex: 1,
   },
 })
 
@@ -60,7 +62,7 @@ const GroupsListErrorView: FC<GroupsListErrorProps> = () => <Text>Error</Text>
 /* -------------------------------------------------------------------------------------------------
  * GroupsLoadingView
  * -----------------------------------------------------------------------------------------------*/
-type GroupsLoadingViewProps = Omit<ViewProps, "children"> & {
+type GroupsLoadingViewProps = Omit<ViewProps, 'children'> & {
   isFetchingNextPage: boolean
 }
 
@@ -103,27 +105,20 @@ const GroupsList: FC<GroupsListProps> = ({ fetchParams }) => {
     getManagePaginatedGroupsListAtom,
   )
 
-  const handleGroupItemPress = useCallback(
-    (item: ShortGroup) => router.navigate(`/groups/${item.id}`),
-    [router],
-  )
+  const handleGroupItemPress = useCallback((item: ShortGroup) => router.navigate(`/groups/${item.id}`), [router])
 
   const handleEndReached = useCallback(() => {
-    listState.hasNextPage && !listState.isFetchingNextPage && manageGroupsList("loadMore")
+    listState.hasNextPage && !listState.isFetchingNextPage && manageGroupsList('loadMore')
   }, [listState.hasNextPage, listState.isFetchingNextPage, manageGroupsList])
 
   const handleRefresh = useCallback(() => {
-    manageGroupsList("refresh")
+    manageGroupsList('refresh')
   }, [manageGroupsList])
 
   const keyExtractor = useCallback((item: ShortGroup) => item.id, [])
 
   const refreshControl = (
-    <RefreshControl
-      tintColor={colors.primary}
-      refreshing={listState.isRefreshing}
-      onRefresh={handleRefresh}
-    />
+    <RefreshControl onRefresh={handleRefresh} refreshing={listState.isRefreshing} tintColor={colors.primary} />
   )
 
   const renderItem: ListRenderItem<ShortGroup> = useCallback(
@@ -136,15 +131,15 @@ const GroupsList: FC<GroupsListProps> = ({ fetchParams }) => {
   return (
     <FlashList
       data={listState.data?.items}
+      ItemSeparatorComponent={ListSeparator}
       keyExtractor={keyExtractor}
+      ListEmptyComponent={<GroupsListEmptyView isFetched={listState.isFetched} />}
+      ListFooterComponent={<GroupsLoadingView isFetchingNextPage={listState.isFetchingNextPage} />}
+      onEndReached={handleEndReached}
+      onEndReachedThreshold={0.2}
       refreshControl={refreshControl}
       refreshing={listState.isRefreshing}
-      ListEmptyComponent={<GroupsListEmptyView isFetched={listState.isFetched} />}
       renderItem={renderItem}
-      onEndReachedThreshold={0.2}
-      onEndReached={handleEndReached}
-      ItemSeparatorComponent={ListSeparator}
-      ListFooterComponent={<GroupsLoadingView isFetchingNextPage={listState.isFetchingNextPage} />}
     />
   )
 }
@@ -178,9 +173,7 @@ export default function HomeScreen() {
       <BackgroundLayout />
       <ListLayout.Root>
         <ListLayout.Header>
-          <FiltersSelectButton onPress={handleFilterButtonPress}>
-            {t("filters_button.text")}
-          </FiltersSelectButton>
+          <FiltersSelectButton onPress={handleFilterButtonPress}>{t('filters_button.text')}</FiltersSelectButton>
         </ListLayout.Header>
 
         <ListLayout.Content>
@@ -190,13 +183,13 @@ export default function HomeScreen() {
 
       <BottomSheetBackDrop
         ref={filterSheetRef}
-        title="Filters"
         rightButtonAction={clearFilters}
-        rightButtonVariant="link_danger"
         rightButtonText="Clear All"
+        rightButtonVariant="link_danger"
+        title="Filters"
       >
-        <View style={{ flex: 1, padding: 16, gap: 8 }}>
-          <FilterGroups value={filter} onSubmit={handleFilterSubmit} />
+        <View style={{ flex: 1, gap: 8, padding: 16 }}>
+          <FilterGroups onSubmit={handleFilterSubmit} value={filter} />
         </View>
       </BottomSheetBackDrop>
     </>

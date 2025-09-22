@@ -1,11 +1,13 @@
-import CheckIcon from "@/assets/images/check.svg"
-import { colors } from "@/shared/config"
-import { BottomSheetBackModal } from "@/shared/ui/BottomSheetModal"
-import { Typography } from "@/shared/ui/Typography"
-import { BottomSheetModal } from "@gorhom/bottom-sheet"
-import { useRef } from "react"
-import { StyleSheet, TouchableOpacity, View } from "react-native"
-import { PlusSmallIcon } from "react-native-heroicons/outline"
+import type { BottomSheetModal } from '@gorhom/bottom-sheet'
+import { useRef } from 'react'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { PlusSmallIcon } from 'react-native-heroicons/outline'
+
+import CheckIcon from '@/assets/images/check.svg'
+
+import { colors } from '@/shared/config'
+import { BottomSheetBackModal } from '@/shared/ui/BottomSheetModal'
+import { Typography } from '@/shared/ui/Typography'
 
 export const AddConnectionAttribute = <T extends string>({
   data,
@@ -31,22 +33,22 @@ export const AddConnectionAttribute = <T extends string>({
       >
         <View
           style={{
-            borderColor: "#FFF",
+            alignItems: 'center',
+            backgroundColor: 'rgba(255, 255, 255, 0.90)',
+            borderColor: '#FFF',
             borderWidth: 1,
-            backgroundColor: "rgba(255, 255, 255, 0.90)",
-            justifyContent: "center",
-            alignItems: "center",
-            paddingVertical: 8,
-            flexDirection: "row",
+            flexDirection: 'row',
             gap: 8,
+            justifyContent: 'center',
+            paddingVertical: 8,
           }}
         >
-          <PlusSmallIcon stroke={colors["blue-700"]} />
+          <PlusSmallIcon stroke={colors['blue-700']} />
           <Typography
             style={{
+              color: colors['blue-700'],
               fontSize: 18,
               lineHeight: 28,
-              color: colors["blue-700"],
             }}
           >
             {label}
@@ -54,35 +56,35 @@ export const AddConnectionAttribute = <T extends string>({
         </View>
       </TouchableOpacity>
       <BottomSheetBackModal
-        ref={bottomSheetRef}
-        title={label}
         propsStyles={{
           contentContainer: {
-            backgroundColor: "rgb(248, 248, 248)",
+            backgroundColor: 'rgb(248, 248, 248)',
           },
           sheetHandler: {
-            backgroundColor: "rgb(248, 248, 248)",
+            backgroundColor: 'rgb(248, 248, 248)',
             borderTopLeftRadius: 16,
             borderTopRightRadius: 16,
           },
         }}
+        ref={bottomSheetRef}
+        title={label}
       >
         <View style={styles.dropdown}>
           {data.length >= 1 ? (
-            data.map((item, index: number) => {
+            data.map((item) => {
               const value = item
               const isSelected = selected === value
               return (
                 <TouchableOpacity
-                  style={[styles.option, isSelected ? styles.optionSelected : {}]}
-                  key={index}
+                  key={item}
                   onPress={() => {
                     onSelect(item)
                     bottomSheetRef.current?.close()
                   }}
+                  style={[styles.option, isSelected ? styles.optionSelected : {}]}
                 >
                   <Typography style={styles.optionText}>{value}</Typography>
-                  {isSelected && <CheckIcon width={24} height={24} />}
+                  {isSelected && <CheckIcon height={24} width={24} />}
                 </TouchableOpacity>
               )
             })
@@ -99,20 +101,20 @@ export const AddConnectionAttribute = <T extends string>({
 
 export const styles = StyleSheet.create({
   dropdown: {
-    padding: 16,
     gap: 8,
+    padding: 16,
   },
   option: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+    borderColor: 'rgba(0, 0, 0, 0.07)',
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "rgba(0, 0, 0, 0.07)",
-    backgroundColor: "rgba(255, 255, 255, 1)",
-  },
-  optionText: {
-    lineHeight: 24,
-    fontWeight: 500,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
   },
   optionSelected: {},
+  optionText: {
+    fontWeight: 500,
+    lineHeight: 24,
+  },
 })

@@ -1,13 +1,15 @@
-import { colors } from "@/shared/config"
-import { usePaginatedState } from "@/shared/lib/paginated-list"
-import { AppButton } from "@/shared/ui/AppButton"
-import * as FilterRadioButton from "@/shared/ui/FilterRadioButton"
-import { Label } from "@/shared/ui/Label"
-import { isEqual } from "lodash-es"
-import { type FC, useCallback, useEffect, useState } from "react"
-import { StyleSheet, View } from "react-native"
-import { getManagePaginatedGroupsListAtom, getPaginatedGroupsListStateAtom } from "../model/store"
-import type { GroupsFilter, GroupsListFetchParams } from "../model/types"
+import { isEqual } from 'lodash-es'
+import { type FC, useCallback, useEffect, useState } from 'react'
+import { StyleSheet, View } from 'react-native'
+
+import { colors } from '@/shared/config'
+import { usePaginatedState } from '@/shared/lib/paginated-list'
+import { AppButton } from '@/shared/ui/AppButton'
+import * as FilterRadioButton from '@/shared/ui/FilterRadioButton'
+import { Label } from '@/shared/ui/Label'
+
+import { getManagePaginatedGroupsListAtom, getPaginatedGroupsListStateAtom } from '../model/store'
+import type { GroupsFilter, GroupsListFetchParams } from '../model/types'
 
 const styles = StyleSheet.create({
   container: { gap: 8 },
@@ -24,8 +26,8 @@ type FilterGroupsProps = {
   onSuccess?: (value: GroupsFilter) => void
 }
 
-const activeFetchParams: GroupsListFetchParams = { filter: { status: "active" } }
-const archivedFetchParams: GroupsListFetchParams = { filter: { status: "archived" } }
+const activeFetchParams: GroupsListFetchParams = { filter: { status: 'active' } }
+const archivedFetchParams: GroupsListFetchParams = { filter: { status: 'archived' } }
 
 const FilterGroups: FC<FilterGroupsProps> = ({ value, onSubmit, onSuccess, onChange }) => {
   const [currentValue, setCurrentValue] = useState(value)
@@ -45,11 +47,12 @@ const FilterGroups: FC<FilterGroupsProps> = ({ value, onSubmit, onSuccess, onCha
   /**
    * React on change of value prop
    */
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: react only on props changed
   useEffect(() => {
     if (!isEqual(currentValue, value)) {
       setCurrentValue(value)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- react only on props changed
   }, [value])
 
   const activeCount = activeGroupsListState.data?.items.length
@@ -57,7 +60,7 @@ const FilterGroups: FC<FilterGroupsProps> = ({ value, onSubmit, onSuccess, onCha
 
   const updateActive = useCallback(
     (active: boolean) => {
-      const nextValue: GroupsFilter = { ...currentValue, status: active ? "active" : null }
+      const nextValue: GroupsFilter = { ...currentValue, status: active ? 'active' : null }
       onChange?.(nextValue)
       setCurrentValue(nextValue)
     },
@@ -66,7 +69,7 @@ const FilterGroups: FC<FilterGroupsProps> = ({ value, onSubmit, onSuccess, onCha
 
   const updateArchived = useCallback(
     (archived: boolean) => {
-      const nextValue: GroupsFilter = { ...currentValue, status: archived ? "archived" : null }
+      const nextValue: GroupsFilter = { ...currentValue, status: archived ? 'archived' : null }
       onChange?.(nextValue)
       setCurrentValue(nextValue)
     },
@@ -81,7 +84,7 @@ const FilterGroups: FC<FilterGroupsProps> = ({ value, onSubmit, onSuccess, onCha
 
     // TODO add error handling
     fn().catch((err) => {
-      console.error("error submitting groups", err)
+      console.error('error submitting groups', err)
     })
   }, [currentValue, onSubmit, onSuccess])
 
@@ -89,25 +92,18 @@ const FilterGroups: FC<FilterGroupsProps> = ({ value, onSubmit, onSuccess, onCha
     <>
       <View style={styles.container}>
         <Label>Group status</Label>
-        <FilterRadioButton.Root value={currentValue.status === "active"} onChange={updateActive}>
+        <FilterRadioButton.Root onChange={updateActive} value={currentValue.status === 'active'}>
           <FilterRadioButton.Label>Active</FilterRadioButton.Label>
-          <FilterRadioButton.Tip style={{ color: colors["gray-600"] }}>
-            ({activeCount})
-          </FilterRadioButton.Tip>
+          <FilterRadioButton.Tip style={{ color: colors['gray-600'] }}>({activeCount})</FilterRadioButton.Tip>
         </FilterRadioButton.Root>
 
-        <FilterRadioButton.Root
-          value={currentValue.status === "archived"}
-          onChange={updateArchived}
-        >
+        <FilterRadioButton.Root onChange={updateArchived} value={currentValue.status === 'archived'}>
           <FilterRadioButton.Label>Archived</FilterRadioButton.Label>
-          <FilterRadioButton.Tip style={{ color: colors["gray-600"] }}>
-            ({archivedCount})
-          </FilterRadioButton.Tip>
+          <FilterRadioButton.Tip style={{ color: colors['gray-600'] }}>({archivedCount})</FilterRadioButton.Tip>
         </FilterRadioButton.Root>
       </View>
 
-      <AppButton fullWidth={true} text="Apply Filters" onPress={handleSubmit} />
+      <AppButton fullWidth={true} onPress={handleSubmit} text="Apply Filters" />
     </>
   )
 }

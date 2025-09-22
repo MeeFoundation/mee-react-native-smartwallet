@@ -1,17 +1,19 @@
-import { ConnectionList, FilterConnections, type FilterValue } from "@/entities/connection"
-import { ProfileStore } from "@/entities/profile"
-import { BottomSheetBackDrop } from "@/shared/ui/BottomSheet"
-import { RadioList } from "@/shared/ui/RadioList"
-import BottomSheet from "@gorhom/bottom-sheet"
-import { useAtomValue } from "jotai"
-import { useRef, useState } from "react"
-import { StyleSheet, View } from "react-native"
+import type BottomSheet from '@gorhom/bottom-sheet'
+import { useAtomValue } from 'jotai'
+import { useRef, useState } from 'react'
+import { StyleSheet, View } from 'react-native'
+
+import { ConnectionList, FilterConnections, type FilterValue } from '@/entities/connection'
+import { ProfileStore } from '@/entities/profile'
+
+import { BottomSheetBackDrop } from '@/shared/ui/BottomSheet'
+import { RadioList } from '@/shared/ui/RadioList'
 
 const styles = StyleSheet.create({
   addConnectionContainer: {
     flex: 1,
+    flexDirection: 'column',
     padding: 16,
-    flexDirection: "column",
   },
 })
 
@@ -20,8 +22,8 @@ export default function CompaniesScreen() {
   const bottomSheetRef = useRef<BottomSheet>(null)
   const filterSheetRef = useRef<BottomSheet>(null)
   const [filter, setFilter] = useState<FilterValue>({})
-  const [selectedProfile, setSelectedProfile] = useState<string>("All profiles")
-  const [temporarySelectedProfile, setTemporarySelectedProfile] = useState<string>("All profiles")
+  const [selectedProfile, setSelectedProfile] = useState<string>('All profiles')
+  const [temporarySelectedProfile, setTemporarySelectedProfile] = useState<string>('All profiles')
 
   const applyProfileFilter = () => {
     setSelectedProfile(temporarySelectedProfile)
@@ -48,32 +50,24 @@ export default function CompaniesScreen() {
     <>
       <ConnectionList
         filter={filter}
-        selectedProfile={selectedProfile}
         isPeopleView={false}
-        onProfilesPress={onProfilesPress}
         onFilterPress={onFilterPress}
+        onProfilesPress={onProfilesPress}
+        selectedProfile={selectedProfile}
       />
 
-      <BottomSheetBackDrop
-        ref={bottomSheetRef}
-        title="Select profile"
-        rightButtonAction={applyProfileFilter}
-      >
+      <BottomSheetBackDrop ref={bottomSheetRef} rightButtonAction={applyProfileFilter} title="Select profile">
         <View style={styles.addConnectionContainer}>
-          <RadioList
-            data={allProfiles}
-            onSelect={setTemporarySelectedProfile}
-            selected={temporarySelectedProfile}
-          />
+          <RadioList data={allProfiles} onSelect={setTemporarySelectedProfile} selected={temporarySelectedProfile} />
         </View>
       </BottomSheetBackDrop>
 
       <BottomSheetBackDrop
         ref={filterSheetRef}
-        title="Filters"
         rightButtonAction={clearFilters}
-        rightButtonVariant="link_danger"
         rightButtonText="Clear All"
+        rightButtonVariant="link_danger"
+        title="Filters"
       >
         <View style={styles.addConnectionContainer}>
           <FilterConnections filter={filter} onChangeFilter={applyFilters} />

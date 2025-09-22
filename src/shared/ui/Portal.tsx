@@ -1,12 +1,4 @@
-import {
-  createContext,
-  type FC,
-  Fragment,
-  type PropsWithChildren,
-  useContext,
-  useEffect,
-  useState,
-} from "react"
+import { createContext, type FC, type PropsWithChildren, useContext, useEffect, useState } from 'react'
 
 type NamedElement = {
   name: string
@@ -27,7 +19,7 @@ const Portal: React.FC<PortalProps> = ({ children, name }) => {
   const { addComponent, removeComponent } = useContext(PortalContext)
 
   useEffect(() => {
-    addComponent({ name, component: children })
+    addComponent({ component: children, name })
     return () => removeComponent(name)
   }, [addComponent, removeComponent, children, name])
 
@@ -52,8 +44,8 @@ const PortalProvider: FC<PropsWithChildren> = ({ children }) => {
   }
   return (
     <PortalContext.Provider value={{ addComponent, removeComponent }}>
-      <Fragment>{children}</Fragment>
-      <Fragment>{Object.values(components).map((Component) => Component)}</Fragment>
+      {children}
+      {Object.values(components).map((Component) => Component)}
     </PortalContext.Provider>
   )
 }

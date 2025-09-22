@@ -1,17 +1,17 @@
-import { type FC } from "react"
-import { StyleSheet, View, type ViewProps } from "react-native"
+import type { FC } from 'react'
+import { StyleSheet, View, type ViewProps } from 'react-native'
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "flex-start",
-    padding: 8,
     gap: 8,
+    justifyContent: 'flex-start',
+    padding: 8,
   },
   content: {
     flex: 1,
   },
-  header: { flexDirection: "row", justifyContent: "space-between", gap: 8 },
+  header: { flexDirection: 'row', gap: 8, justifyContent: 'space-between' },
 })
 
 /* -------------------------------------------------------------------------------------------------
@@ -37,9 +37,7 @@ const ListLayoutContent: FC<ListLayoutContentProps> = ({ style, ...rest }) => (
  * -----------------------------------------------------------------------------------------------*/
 type ListLayoutProps = ViewProps
 
-const ListLayout: FC<ListLayoutProps> = ({ style, ...rest }) => (
-  <View style={[styles.container, style]} {...rest} />
-)
+const ListLayout: FC<ListLayoutProps> = ({ style, ...rest }) => <View style={[styles.container, style]} {...rest} />
 
 /* -----------------------------------------------------------------------------------------------*/
 

@@ -1,8 +1,10 @@
-import { getGroupAtom } from "@/entities/group"
-import { InvalidRouteParamsError } from "@/shared/errors"
-import { type ErrorBoundaryProps, useLocalSearchParams } from "expo-router"
-import { useAtomValue } from "jotai"
-import { StyleSheet, Text, View } from "react-native"
+import { type ErrorBoundaryProps, useLocalSearchParams } from 'expo-router'
+import { useAtomValue } from 'jotai'
+import { StyleSheet, Text, View } from 'react-native'
+
+import { getGroupAtom } from '@/entities/group'
+
+import { InvalidRouteParamsError } from '@/shared/errors'
 
 const styles = StyleSheet.create({
   page: {
@@ -17,7 +19,7 @@ const styles = StyleSheet.create({
 // FIXME implements
 export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
   return (
-    <View style={{ flex: 1, backgroundColor: "red" }}>
+    <View style={{ backgroundColor: 'red', flex: 1 }}>
       <Text>{error.message}</Text>
       <Text onPress={retry}>Try Again?</Text>
     </View>
@@ -30,16 +32,14 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
 //  TODO Add loading & error state
 export default function GroupMyInfoScreen() {
   const { id } = useLocalSearchParams()
-  if (typeof id !== "string") throw new InvalidRouteParamsError()
+  if (typeof id !== 'string') throw new InvalidRouteParamsError()
 
   const group = useAtomValue(getGroupAtom(id))
 
   return (
-    <>
-      <View style={styles.page}>
-        <Text>My Info: {group.name}</Text>
-      </View>
-    </>
+    <View style={styles.page}>
+      <Text>My Info: {group.name}</Text>
+    </View>
   )
 }
 

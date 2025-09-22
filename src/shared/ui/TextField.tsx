@@ -1,6 +1,5 @@
-import { colors } from "@/shared/config"
-import { BottomSheetTextInput } from "@gorhom/bottom-sheet"
-import { type ComponentProps, type FC, useRef, useState } from "react"
+import { BottomSheetTextInput } from '@gorhom/bottom-sheet'
+import { type ComponentProps, type FC, useRef, useState } from 'react'
 import {
   Animated,
   type StyleProp,
@@ -8,14 +7,16 @@ import {
   Text,
   type TextStyle,
   TouchableOpacity,
+  useAnimatedValue,
   View,
   type ViewStyle,
-  useAnimatedValue,
-} from "react-native"
-import { TextInput } from "react-native-gesture-handler"
-import type { SvgProps } from "react-native-svg"
+} from 'react-native'
+import { TextInput } from 'react-native-gesture-handler'
+import type { SvgProps } from 'react-native-svg'
 
-export type InputSize = "md" | "lg"
+import { colors } from '@/shared/config'
+
+export type InputSize = 'md' | 'lg'
 
 export type TextFieldProps = {
   value: string | undefined
@@ -44,7 +45,7 @@ export const TextField: FC<TextFieldProps> = ({
   onBlur,
   RightIcon,
   RightIconActive,
-  size = "lg",
+  size = 'lg',
   errorText,
   disabled,
   isBottomSheetTextInput,
@@ -58,16 +59,16 @@ export const TextField: FC<TextFieldProps> = ({
     if (isLabelInside) {
       return
     }
-    if (sz === "md") {
+    if (sz === 'md') {
       return { height: 44 }
     }
     return { height: 50 }
   }
   const getInputIconSize = (sz: InputSize) => {
-    if (sz === "md") {
-      return { right: 16, bottom: 9 }
+    if (sz === 'md') {
+      return { bottom: 9, right: 16 }
     }
-    return { right: 16, bottom: 13 }
+    return { bottom: 13, right: 16 }
   }
 
   const inputStyle = [
@@ -78,43 +79,46 @@ export const TextField: FC<TextFieldProps> = ({
   const iconStyle = [textFieldStyles.inputIcon, getInputIconSize(size)]
 
   const focusHandler = () => {
-    onFocus && onFocus()
+    onFocus?.()
     inputRef.current?.focus()
     setIsFocused(true)
 
     if (isLabelInside && !value) {
       Animated.timing(insideLabelTranslateYValue, {
+        duration: 150,
         toValue: 0,
         useNativeDriver: true,
-        duration: 150,
       }).start()
     }
   }
 
   const blurHandler = () => {
-    onBlur && onBlur()
+    onBlur?.()
     inputRef.current?.blur()
     setIsFocused(false)
 
     if (isLabelInside && !value) {
       Animated.timing(insideLabelTranslateYValue, {
+        duration: 150,
         toValue: 9,
         useNativeDriver: true,
-        duration: 150,
       }).start()
     }
   }
 
   const clearHandler = () => {
-    onChangeText("")
+    onChangeText('')
   }
 
   const inputProps = {
-    ref: inputRef,
-    value: value,
     editable: !disabled,
+    onBlur: blurHandler,
     onChangeText: onChangeText,
+    onFocus: focusHandler,
+    onSubmitEditing: blurHandler,
     placeholder: placeholder,
+    placeholderTextColor: colors['gray-400'],
+    ref: inputRef,
     style: [
       inputStyle,
       errorText && textFieldStyles.errorBorder,
@@ -122,10 +126,7 @@ export const TextField: FC<TextFieldProps> = ({
       isLabelInside && textFieldStyles.labelInsideInput,
       isLabelInside && errorText && { paddingBottom: 22 },
     ] satisfies StyleProp<TextStyle>,
-    placeholderTextColor: colors["gray-400"],
-    onFocus: focusHandler,
-    onBlur: blurHandler,
-    onSubmitEditing: blurHandler,
+    value: value,
   }
 
   return (
@@ -151,31 +152,23 @@ export const TextField: FC<TextFieldProps> = ({
           {label}
         </Animated.Text>
       )}
-      {isBottomSheetTextInput ? (
-        <BottomSheetTextInput {...inputProps} />
-      ) : (
-        <TextInput {...inputProps} />
-      )}
+      {isBottomSheetTextInput ? <BottomSheetTextInput {...inputProps} /> : <TextInput {...inputProps} />}
       {errorText && (
-        <Text
-          style={[textFieldStyles.errorText, isLabelInside && textFieldStyles.labelInsideError]}
-        >
-          {errorText}
-        </Text>
+        <Text style={[textFieldStyles.errorText, isLabelInside && textFieldStyles.labelInsideError]}>{errorText}</Text>
       )}
       {RightIconActive && inputRef.current?.isFocused() && (
         <TouchableOpacity onPress={clearHandler}>
-          <RightIconActive width={24} height={24} style={iconStyle} color={"black"} />
+          <RightIconActive color={'black'} height={24} style={iconStyle} width={24} />
         </TouchableOpacity>
       )}
       {}
       {RightIcon && ((RightIconActive && !inputRef.current?.isFocused()) || !RightIconActive) && (
         <TouchableOpacity onPress={focusHandler}>
           <RightIcon
-            width={24}
+            color={inputRef.current?.isFocused() ? 'black' : colors['gray-400']}
             height={24}
             style={iconStyle}
-            color={inputRef.current?.isFocused() ? "black" : colors["gray-400"]}
+            width={24}
           />
         </TouchableOpacity>
       )}
@@ -185,62 +178,62 @@ export const TextField: FC<TextFieldProps> = ({
 
 export const textFieldStyles = StyleSheet.create({
   container: {
-    position: "relative",
-  },
-  inputWrapper: {
-    flex: 1,
-    position: "relative",
-    flexDirection: "row",
-  },
-  inputIcon: {
-    position: "absolute",
-  },
-  label: {
-    fontSize: 12,
-    fontWeight: "500",
-    lineHeight: 16,
-    color: colors.secondary,
-    marginBottom: 2,
+    position: 'relative',
   },
   errorBorder: {
     borderColor: colors.danger,
   },
   errorText: {
     color: colors.danger,
-    marginTop: 2,
     fontSize: 12,
-    fontWeight: "500",
+    fontWeight: '500',
     lineHeight: 16,
-  },
-  labelInsideError: {
-    position: "absolute",
-    bottom: 8,
-    left: 16,
-  },
-  labelInsideLabel: {
-    position: "absolute",
-    top: 8,
-    left: 16,
-    zIndex: 10,
-    color: colors["gray-800"],
-  },
-  labelInsideInput: {
-    paddingTop: 24,
-    paddingBottom: 6,
-    fontWeight: "500",
+    marginTop: 2,
   },
   input: {
-    paddingHorizontal: 16,
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: colors["gray-200"],
     backgroundColor: colors.white,
+    borderColor: colors['gray-200'],
     borderRadius: 8,
-    lineHeight: 20,
+    borderWidth: 1,
     fontSize: 16,
+    justifyContent: 'center',
+    lineHeight: 20,
+    paddingHorizontal: 16,
   },
   inputFocus: {
     borderColor: colors.primary,
     borderWidth: 2,
+  },
+  inputIcon: {
+    position: 'absolute',
+  },
+  inputWrapper: {
+    flex: 1,
+    flexDirection: 'row',
+    position: 'relative',
+  },
+  label: {
+    color: colors.secondary,
+    fontSize: 12,
+    fontWeight: '500',
+    lineHeight: 16,
+    marginBottom: 2,
+  },
+  labelInsideError: {
+    bottom: 8,
+    left: 16,
+    position: 'absolute',
+  },
+  labelInsideInput: {
+    fontWeight: '500',
+    paddingBottom: 6,
+    paddingTop: 24,
+  },
+  labelInsideLabel: {
+    color: colors['gray-800'],
+    left: 16,
+    position: 'absolute',
+    top: 8,
+    zIndex: 10,
   },
 })

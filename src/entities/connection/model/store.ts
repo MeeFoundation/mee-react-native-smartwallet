@@ -1,7 +1,8 @@
-import { atom } from "jotai"
-import { atomFamily, atomWithDefault } from "jotai/utils"
-import { connectionService } from "./service"
-import type { Connection } from "./types"
+import { atom } from 'jotai'
+import { atomFamily, atomWithDefault } from 'jotai/utils'
+
+import { connectionService } from './service'
+import type { Connection } from './types'
 
 export const ConnectionsStore = atomWithDefault<Connection[] | Promise<Connection[]>>(
   async () => await connectionService.getConnections(),
@@ -15,6 +16,8 @@ export const ConnectionDetails = atomFamily((id: string) =>
       if (!connection) {
         console.error(`Connection with id ${id} not found`)
       }
+      // TODO Remove !
+      // biome-ignore lint/style/noNonNullAssertion: remove this
       return connection!
     },
     async (get, set, connection: Connection) => {

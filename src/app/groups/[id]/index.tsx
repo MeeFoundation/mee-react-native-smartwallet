@@ -1,18 +1,20 @@
-import { getGroupAtom } from "@/entities/group"
-import { colors } from "@/shared/config"
-import { InvalidRouteParamsError } from "@/shared/errors"
-import { AppButton } from "@/shared/ui/AppButton"
-import { Avatar } from "@/shared/ui/Avatar"
-import { BackgroundLayout } from "@/shared/ui/BackgroundLayout"
-import * as DropdownMenu from "@/shared/ui/DropdownMenu"
-import { HeaderBackButtonMinimal } from "@/shared/ui/HeaderBackButton"
-import { IconSymbol } from "@/shared/ui/IconSymbol"
-import { ScreenTitle } from "@/shared/ui/ScreenTitle"
-import { StatusPanel } from "@/shared/ui/StatusPanel"
-import { type ErrorBoundaryProps, Stack, useLocalSearchParams, useRouter } from "expo-router"
-import { useAtomValue } from "jotai"
-import { useCallback, useEffect } from "react"
-import { StyleSheet, Text, View } from "react-native"
+import { type ErrorBoundaryProps, Stack, useLocalSearchParams } from 'expo-router'
+import { useAtomValue } from 'jotai'
+import { useCallback } from 'react'
+import { StyleSheet, Text, View } from 'react-native'
+
+import { getGroupAtom } from '@/entities/group'
+
+import { colors } from '@/shared/config'
+import { InvalidRouteParamsError } from '@/shared/errors'
+import { AppButton } from '@/shared/ui/AppButton'
+import { Avatar } from '@/shared/ui/Avatar'
+import { BackgroundLayout } from '@/shared/ui/BackgroundLayout'
+import * as DropdownMenu from '@/shared/ui/DropdownMenu'
+import { HeaderBackButtonMinimal } from '@/shared/ui/HeaderBackButton'
+import { IconSymbol } from '@/shared/ui/IconSymbol'
+import { ScreenTitle } from '@/shared/ui/ScreenTitle'
+import { StatusPanel } from '@/shared/ui/StatusPanel'
 
 const styles = StyleSheet.create({
   page: {
@@ -27,7 +29,7 @@ const styles = StyleSheet.create({
 // FIXME implements
 export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
   return (
-    <View style={{ flex: 1, backgroundColor: "red" }}>
+    <View style={{ backgroundColor: 'red', flex: 1 }}>
       <Text>{error.message}</Text>
       <Text onPress={retry}>Try Again?</Text>
     </View>
@@ -39,36 +41,32 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
  * -----------------------------------------------------------------------------------------------*/
 const HeaderRight = () => {
   const handleRenameGroup = useCallback(() => {
-    throw new Error("Not implemented")
+    throw new Error('Not implemented')
   }, [])
 
   const handleArchiveGroup = useCallback(() => {
-    throw new Error("Not implemented")
+    throw new Error('Not implemented')
   }, [])
 
   const handleDeleteGroup = useCallback(() => {
-    throw new Error("Not implemented")
+    throw new Error('Not implemented')
   }, [])
 
   return (
     <DropdownMenu.Root>
       <DropdownMenu.MenuTrigger>
         <AppButton variant="link">
-          <IconSymbol
-            strokeWidth={2}
-            color={colors["blue-700"]}
-            name="ellipsis-vertical.outlined"
-          />
+          <IconSymbol color={colors['blue-700']} name="ellipsis-vertical.outlined" strokeWidth={2} />
         </AppButton>
       </DropdownMenu.MenuTrigger>
 
       <DropdownMenu.MenuContent>
         {/* Rename group */}
         <DropdownMenu.MenuItem
+          color={colors.danger}
           key="rename-group"
           onSelect={handleRenameGroup}
           textValue="Rename Group"
-          color={colors.danger}
         >
           <DropdownMenu.MenuItemTitle>
             <Text style={{ color: colors.danger }}>Rename Group</Text>
@@ -77,10 +75,10 @@ const HeaderRight = () => {
 
         {/* Archive/unarchive group */}
         <DropdownMenu.MenuItem
+          color={colors.danger}
           key="archive-group"
           onSelect={handleArchiveGroup}
           textValue="Archive Group"
-          color={colors.danger}
         >
           <DropdownMenu.MenuItemTitle>
             <Text style={{ color: colors.danger }}>Archive Group</Text>
@@ -91,11 +89,11 @@ const HeaderRight = () => {
 
         {/* Delete group */}
         <DropdownMenu.MenuItem
+          color={colors.danger}
           destructive
           key="delete-group"
           onSelect={handleDeleteGroup}
           textValue="Delete Group"
-          color={colors.danger}
         >
           <DropdownMenu.MenuItemTitle>
             <Text style={{ color: colors.danger }}>Delete Group</Text>
@@ -113,14 +111,9 @@ const HeaderRight = () => {
 export default function GroupScreen() {
   const { id } = useLocalSearchParams()
 
-  if (typeof id !== "string") throw new InvalidRouteParamsError()
-
-  const router = useRouter()
+  if (typeof id !== 'string') throw new InvalidRouteParamsError()
 
   const group = useAtomValue(getGroupAtom(id))
-  useEffect(() => {
-    // router.setop setParams({ name: group.name,  })
-  }, [router, group.name])
 
   return (
     <>
@@ -128,23 +121,23 @@ export default function GroupScreen() {
 
       <Stack.Screen
         options={{
-          title: group.name,
+          headerLeft: () => <HeaderBackButtonMinimal color={colors['blue-700']} />,
+          headerRight: () => <HeaderRight />,
           headerTitle: () => (
-            <ScreenTitle thumbnail={<Avatar src={group.iconSrc} text={group.name} size={28} />}>
+            <ScreenTitle thumbnail={<Avatar size={28} src={group.iconSrc} text={group.name} />}>
               {group.name}
             </ScreenTitle>
           ),
-          headerRight: () => <HeaderRight />,
-          headerLeft: () => <HeaderBackButtonMinimal color={colors["blue-700"]} />,
+          title: group.name,
         }}
       />
 
       <View style={styles.page}>
-        {group.status === "archived" && (
+        {group.status === 'archived' && (
           <StatusPanel
-            variant="danger"
-            title="This group is archived and paused"
             description="The data below is visible to you only."
+            title="This group is archived and paused"
+            variant="danger"
           />
         )}
 
