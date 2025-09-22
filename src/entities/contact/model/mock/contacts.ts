@@ -1,39 +1,40 @@
-import { CONTACTS_STORAGE_KEY } from "@/shared/config"
-import { getObjectItem, setObjectItem } from "@/shared/model"
-import { Platform } from "react-native"
+import { Platform } from 'react-native'
+
+import { CONTACTS_STORAGE_KEY } from '@/shared/config'
+import { getObjectItem, setObjectItem } from '@/shared/model'
 
 const store = getObjectItem(CONTACTS_STORAGE_KEY) ?? {}
-const opposedPlatform = Platform.OS === "ios" ? "android" : "ios"
+const opposedPlatform = Platform.OS === 'ios' ? 'android' : 'ios'
 
 setObjectItem(CONTACTS_STORAGE_KEY, {
   ...store,
   [opposedPlatform]: [
     {
-      id: "1",
-      name: "Ivan Dron",
+      contactInfo: {
+        platform: opposedPlatform,
+        recordID: '1',
+      },
+      id: '1',
+      name: 'Ivan Dron',
       sharedInfo: {
-        firstName: "Ivan",
-        lastName: "Dron",
-        emails: [{ key: "Home", value: "ivan231@gmail.com" }],
+        emails: [{ key: 'Home', value: 'ivan231@gmail.com' }],
+        firstName: 'Ivan',
+        lastName: 'Dron',
       },
       tags: [],
-      contactInfo: {
-        recordID: "1",
-        platform: opposedPlatform,
-      },
     },
     {
-      id: "2",
-      name: "Thomas Dron",
+      contactInfo: {
+        platform: opposedPlatform,
+        recordID: '2',
+      },
+      id: '2',
+      name: 'Thomas Dron',
       sharedInfo: {
-        firstName: "Thomas",
-        lastName: "Dron",
+        firstName: 'Thomas',
+        lastName: 'Dron',
       },
       tags: [],
-      contactInfo: {
-        recordID: "2",
-        platform: opposedPlatform,
-      },
     },
   ],
 })

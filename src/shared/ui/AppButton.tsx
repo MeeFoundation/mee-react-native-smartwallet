@@ -1,7 +1,5 @@
 // TODO Refactor
-import { colors } from "@/shared/config"
-import { hexAlphaColor } from "@/shared/lib/color"
-import { Typography } from "@/shared/ui/Typography"
+
 import {
   type ComponentPropsWithoutRef,
   type ElementRef,
@@ -9,58 +7,55 @@ import {
   Fragment,
   type ReactNode,
   type RefObject,
-} from "react"
-import {
-  Animated,
-  type GestureResponderEvent,
-  Pressable,
-  StyleSheet,
-  type TextStyle,
-  View,
-} from "react-native"
-import type { SvgProps } from "react-native-svg"
+} from 'react'
+import { Animated, type GestureResponderEvent, Pressable, StyleSheet, type TextStyle, View } from 'react-native'
+import type { SvgProps } from 'react-native-svg'
 
-export type ButtonVariant = "primary" | "secondary" | "danger" | "tertiary" | "link" | "link_danger"
+import { colors } from '@/shared/config'
+import { hexAlphaColor } from '@/shared/lib/color'
+import { Typography } from '@/shared/ui/Typography'
 
-type Size = "md" | "sm" | "xs" | "lg"
+export type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'tertiary' | 'link' | 'link_danger'
+
+type Size = 'md' | 'sm' | 'xs' | 'lg'
 
 type AppButtonRef = ElementRef<typeof Pressable>
 
 const ANIMATION_DURATION = 100
 
 const bgColorMap: Record<ButtonVariant, [string, string]> = {
+  danger: [colors.white, colors.transparentActive],
+  link: [colors.transparent, colors.transparent],
+  link_danger: [colors.transparent, colors.transparent],
   // TODO make better semantic colors
   primary: [colors.primary, colors.primaryActive],
   secondary: [colors.white, colors.transparentActive],
-  danger: [colors.white, colors.transparentActive],
   tertiary: [colors.transparent, hexAlphaColor(colors.transparentActive, 20)],
-  link: [colors.transparent, colors.transparent],
-  link_danger: [colors.transparent, colors.transparent],
 }
 
 const textColorMap: Record<ButtonVariant, string> = {
-  primary: colors.white,
-  secondary: colors.primary,
   danger: colors.danger,
-  tertiary: colors.secondary,
   link: colors.link,
   link_danger: colors.danger,
+  primary: colors.white,
+  secondary: colors.primary,
+  tertiary: colors.secondary,
 }
 
 const paddingsMap = {
+  lg: {
+    paddingHorizontal: 16,
+    paddingVertical: 18,
+  },
   md: {
-    paddingVertical: 12,
     paddingHorizontal: 32,
+    paddingVertical: 12,
   },
   sm: {
     padding: 10,
   },
   xs: {
     padding: 6,
-  },
-  lg: {
-    paddingVertical: 18,
-    paddingHorizontal: 16,
   },
 }
 
@@ -83,7 +78,7 @@ type AppButtonProps = {
   size?: Size
   textStyles?: TextStyle
   ref?: RefObject<AppButtonRef | null>
-} & Omit<ComponentPropsWithoutRef<typeof Pressable>, "children">
+} & Omit<ComponentPropsWithoutRef<typeof Pressable>, 'children'>
 
 export const AppButton: FC<AppButtonProps> = (props) => {
   const {
@@ -92,11 +87,11 @@ export const AppButton: FC<AppButtonProps> = (props) => {
     text,
     IconLeft,
     IconRight,
-    variant = "primary",
+    variant = 'primary',
     justifyStart,
     onPress,
     onPressOut,
-    size = "md",
+    size = 'md',
     textStyles: tStyles = {},
     ref,
     ...rest
@@ -107,11 +102,11 @@ export const AppButton: FC<AppButtonProps> = (props) => {
     outputRange: bgColorMap[variant],
   })
   const textColor = tStyles?.color ?? textColorMap[variant]
-  const paddings = ["link", "link_danger"].includes(variant) ? { paddings: 0 } : paddingsMap[size]
+  const paddings = ['link', 'link_danger'].includes(variant) ? { paddings: 0 } : paddingsMap[size]
   const textStyles: TextStyle = {
-    fontWeight: !["link", "link_danger"].includes(variant) ? "700" : "400",
     color: textColor,
     fontSize: fontSizeMap[size],
+    fontWeight: !['link', 'link_danger'].includes(variant) ? '700' : '400',
     ...tStyles,
   }
 
@@ -121,19 +116,19 @@ export const AppButton: FC<AppButtonProps> = (props) => {
     outputRange: [colors.transparent, colors.transparentActive],
   })
 
-  const conditionalStyles = variant === "tertiary" ? { borderColor, borderWidth: 1 } : {}
+  const conditionalStyles = variant === 'tertiary' ? { borderColor, borderWidth: 1 } : {}
 
   const handlePress = (event: GestureResponderEvent) => {
     Animated.parallel([
       Animated.timing(backgroundColorRef, {
+        duration: ANIMATION_DURATION,
         toValue: 1,
         useNativeDriver: true,
-        duration: ANIMATION_DURATION,
       }),
       Animated.timing(borderRef, {
+        duration: ANIMATION_DURATION,
         toValue: 1,
         useNativeDriver: true,
-        duration: ANIMATION_DURATION,
       }),
     ]).start()
 
@@ -143,14 +138,14 @@ export const AppButton: FC<AppButtonProps> = (props) => {
   const onRelease = (event: GestureResponderEvent) => {
     Animated.parallel([
       Animated.timing(backgroundColorRef, {
+        duration: ANIMATION_DURATION,
         toValue: 0,
         useNativeDriver: true,
-        duration: ANIMATION_DURATION,
       }),
       Animated.timing(borderRef, {
+        duration: ANIMATION_DURATION,
         toValue: 0,
         useNativeDriver: true,
-        duration: ANIMATION_DURATION,
       }),
     ]).start()
 
@@ -158,19 +153,19 @@ export const AppButton: FC<AppButtonProps> = (props) => {
   }
 
   return (
-    <View style={StyleSheet.flatten(props.fullWidth && { width: "100%", flexDirection: "row" })}>
+    <View style={StyleSheet.flatten(props.fullWidth && { flexDirection: 'row', width: '100%' })}>
       <Pressable
-        ref={ref}
-        role="button"
-        style={[{ width: props.fullWidth ? "100%" : "auto" }]}
         onPress={handlePress}
         onPressOut={onRelease}
+        ref={ref}
+        role="button"
+        style={[{ width: props.fullWidth ? '100%' : 'auto' }]}
         {...rest}
       >
         <Animated.View
           style={{
-            justifyContent: justifyStart ? "space-between" : "center",
-            alignItems: "center",
+            alignItems: 'center',
+            justifyContent: justifyStart ? 'space-between' : 'center',
             ...paddings,
             ...styles.container,
             backgroundColor,
@@ -196,19 +191,19 @@ export const AppButton: FC<AppButtonProps> = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    gap: 12,
     borderRadius: 10,
+    flexDirection: 'row',
+    gap: 12,
   },
-  text: { fontWeight: 700 },
+  danger: {},
+  link: {},
+  link_danger: {},
   primary: {},
   secondary: {
     backgroundColor: colors.white,
     borderColor: colors.primary,
     borderWidth: 3,
   },
-  danger: {},
   tertiary: {},
-  link: {},
-  link_danger: {},
+  text: { fontWeight: 700 },
 })

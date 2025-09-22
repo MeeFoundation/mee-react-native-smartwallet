@@ -1,14 +1,6 @@
-import { type FC, type PropsWithChildren, useRef, useState } from "react"
-import {
-  Animated,
-  Easing,
-  Keyboard,
-  Pressable,
-  StyleSheet,
-  View,
-  type ViewStyle,
-} from "react-native"
-import { ChevronDownIcon } from "react-native-heroicons/outline"
+import { type FC, type PropsWithChildren, useRef, useState } from 'react'
+import { Animated, Easing, Keyboard, Pressable, StyleSheet, View, type ViewStyle } from 'react-native'
+import { ChevronDownIcon } from 'react-native-heroicons/outline'
 
 type AccordionProps = {
   head: React.ReactNode
@@ -36,7 +28,7 @@ export const Accordion: FC<PropsWithChildren<AccordionProps>> = ({
 
   const spin = spinValue.interpolate({
     inputRange: [0, 1],
-    outputRange: ["0deg", "180deg"],
+    outputRange: ['0deg', '180deg'],
   })
 
   const collapseContent = () => {
@@ -47,14 +39,14 @@ export const Accordion: FC<PropsWithChildren<AccordionProps>> = ({
 
     Animated.parallel([
       Animated.timing(spinValue, {
-        toValue: 1,
         duration: animationDuration,
         easing: Easing.linear,
+        toValue: 1,
         useNativeDriver: false,
       }),
       Animated.timing(contentHeight, {
-        toValue: 0,
         duration: animationDuration,
+        toValue: 0,
         useNativeDriver: false,
       }),
     ]).start()
@@ -65,14 +57,14 @@ export const Accordion: FC<PropsWithChildren<AccordionProps>> = ({
 
     Animated.parallel([
       Animated.timing(spinValue, {
-        toValue: 0,
         duration: animationDuration,
         easing: Easing.linear,
+        toValue: 0,
         useNativeDriver: false,
       }),
       Animated.timing(contentHeight, {
-        toValue: contentMaxHeight,
         duration: animationDuration,
+        toValue: contentMaxHeight,
         useNativeDriver: false,
       }),
     ]).start(() => {
@@ -94,8 +86,8 @@ export const Accordion: FC<PropsWithChildren<AccordionProps>> = ({
         {head}
         <View
           style={{
-            flexDirection: "row",
-            alignItems: "center",
+            alignItems: 'center',
+            flexDirection: 'row',
             gap: 10,
           }}
         >
@@ -107,26 +99,23 @@ export const Accordion: FC<PropsWithChildren<AccordionProps>> = ({
       </Pressable>
       <Animated.ScrollView
         nestedScrollEnabled={true}
-        style={[
-          { height: "auto", maxHeight: contentHeight },
-          isCollapsed ? styles.collapsedContent : null,
-        ]}
+        style={[{ height: 'auto', maxHeight: contentHeight }, isCollapsed ? styles.collapsedContent : null]}
       >
-        <View style={[{ height: "auto", zIndex: 10 }, propsStyles?.body]}>{children}</View>
+        <View style={[{ height: 'auto', zIndex: 10 }, propsStyles?.body]}>{children}</View>
       </Animated.ScrollView>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  head: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-    justifyContent: "space-between",
-    marginBottom: 8,
-  },
   collapsedContent: {
-    overflow: "hidden",
+    overflow: 'hidden',
+  },
+  head: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 4,
+    justifyContent: 'space-between',
+    marginBottom: 8,
   },
 })

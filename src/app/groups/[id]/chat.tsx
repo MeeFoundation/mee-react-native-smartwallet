@@ -1,18 +1,21 @@
+import { type ErrorBoundaryProps, useLocalSearchParams } from 'expo-router'
+import { useAtomValue, useSetAtom } from 'jotai'
+import { type FC, useCallback } from 'react'
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
+
+import { GroupChat } from '@/widgets/group-chat'
+
 import {
+  type ChatMessage,
   currentUserAtom,
   getChatActionAtom,
   getManagePaginatedChatMessagesListAtom,
   getPaginatedChatMessagesListStateAtom,
-  type ChatMessage,
-} from "@/entities/chat"
-import { getGroupAtom } from "@/entities/group"
-import { InvalidRouteParamsError } from "@/shared/errors"
-import { usePaginatedState } from "@/shared/lib/paginated-list"
-import { GroupChat } from "@/widgets/group-chat"
-import { useLocalSearchParams, type ErrorBoundaryProps } from "expo-router"
-import { useAtomValue, useSetAtom } from "jotai"
-import { useCallback, type FC } from "react"
-import { SafeAreaView, StyleSheet, Text, View } from "react-native"
+} from '@/entities/chat'
+import { getGroupAtom } from '@/entities/group'
+
+import { InvalidRouteParamsError } from '@/shared/errors'
+import { usePaginatedState } from '@/shared/lib/paginated-list'
 
 const styles = StyleSheet.create({
   safeView: {
@@ -26,7 +29,7 @@ const styles = StyleSheet.create({
 // FIXME implements
 export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
   return (
-    <View style={{ flex: 1, backgroundColor: "red" }}>
+    <View style={{ backgroundColor: 'red', flex: 1 }}>
       <Text>{error.message}</Text>
       <Text onPress={retry}>Try Again?</Text>
     </View>
@@ -39,7 +42,7 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
 //  TODO Add loading & error state
 const GroupChatScreen: FC = () => {
   const { id } = useLocalSearchParams()
-  if (typeof id !== "string") throw new InvalidRouteParamsError()
+  if (typeof id !== 'string') throw new InvalidRouteParamsError()
 
   const currentChatUser = useAtomValue(currentUserAtom)
   const chatAction = useSetAtom(getChatActionAtom({ groupId: id }))
@@ -52,18 +55,18 @@ const GroupChatScreen: FC = () => {
   )
 
   const handleSend = useCallback(
-    (message: ChatMessage[]) => chatAction({ type: "send_message", message }),
+    (message: ChatMessage[]) => chatAction({ message, type: 'send_message' }),
     [chatAction],
   )
 
   return (
     <SafeAreaView style={styles.safeView}>
       <GroupChat
-        group={group}
         currentUser={currentChatUser}
-        onSend={handleSend}
-        messages={chatMessagesState.data?.items ?? []}
+        group={group}
         loading={chatMessagesState.isFetching}
+        messages={chatMessagesState.data?.items ?? []}
+        onSend={handleSend}
       />
     </SafeAreaView>
   )

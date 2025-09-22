@@ -1,3 +1,3 @@
-import { makeAtomWithMMKV } from "@/shared/model"
+import { makeAtomWithMMKV } from '@/shared/model'
 
-export const isWelcomeViewedAtom = makeAtomWithMMKV("isWelcomeViewed", false)
+export const isWelcomeViewedAtom = makeAtomWithMMKV('isWelcomeViewed', false)

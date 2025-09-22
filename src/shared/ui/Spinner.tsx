@@ -1,8 +1,10 @@
-import { LogoCharSvg } from "@/assets/images"
-import { colors } from "@/shared/config"
-import { useEffect, useRef } from "react"
-import { Animated, Easing, StyleSheet, View } from "react-native"
-import Svg, { Circle } from "react-native-svg"
+import { useEffect, useRef } from 'react'
+import { Animated, Easing, StyleSheet, View } from 'react-native'
+import Svg, { Circle } from 'react-native-svg'
+
+import { LogoCharSvg } from '@/assets/images'
+
+import { colors } from '@/shared/config'
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle)
 const size = 172
@@ -16,9 +18,9 @@ export const Spinner = () => {
   useEffect(() => {
     const spinAnimation = Animated.loop(
       Animated.timing(rotateValue, {
-        toValue: 1,
         duration: 1000,
         easing: Easing.linear,
+        toValue: 1,
         useNativeDriver: true,
       }),
     )
@@ -30,26 +32,24 @@ export const Spinner = () => {
   // Interpolate the rotation value to degrees
   const rotate = rotateValue.interpolate({
     inputRange: [0, 1],
-    outputRange: ["-90deg", "270deg"],
+    outputRange: ['-90deg', '270deg'],
   })
 
   return (
     <View style={styles.loader}>
-      <LogoCharSvg width={100} height={100} />
-      <Animated.View
-        style={{ transform: [{ rotate }], transformOrigin: "center", position: "absolute" }}
-      >
-        <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+      <LogoCharSvg height={100} width={100} />
+      <Animated.View style={{ position: 'absolute', transform: [{ rotate }], transformOrigin: 'center' }}>
+        <Svg height={size} viewBox={`0 0 ${size} ${size}`} width={size}>
           <AnimatedCircle
             cx={radius}
             cy={radius}
-            r={radius - 3}
             fill="transparent"
+            r={radius - 3}
             stroke="white"
-            strokeWidth="3"
-            strokeDasharray={circleCircumference} // Total length of the stroke
-            strokeDashoffset={strokeDashoffset} // Animated offset for progress
-            strokeLinecap="round" // Smooth edges
+            strokeDasharray={circleCircumference}
+            strokeDashoffset={strokeDashoffset} // Total length of the stroke
+            strokeLinecap="round" // Animated offset for progress
+            strokeWidth="3" // Smooth edges
           />
         </Svg>
       </Animated.View>
@@ -59,11 +59,11 @@ export const Spinner = () => {
 
 const styles = StyleSheet.create({
   loader: {
-    width: 220,
-    height: 220,
-    borderRadius: 6,
+    alignItems: 'center',
     backgroundColor: colors.primary,
-    justifyContent: "center",
-    alignItems: "center",
+    borderRadius: 6,
+    height: 220,
+    justifyContent: 'center',
+    width: 220,
   },
 })

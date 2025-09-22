@@ -1,11 +1,13 @@
-import type { Connection } from "@/entities/connection/@x/group"
-import type { PaginatedFetchParams, PaginatedListResponse } from "@/shared/model"
-import type { ImageRequireSource } from "react-native"
+import type { ImageRequireSource } from 'react-native'
+
+import type { Connection } from '@/entities/connection/@x/group'
+
+import type { PaginatedFetchParams, PaginatedListResponse } from '@/shared/model'
 
 export type ShortGroup = {
   id: string
   name: string
-  status: "active" | "archived"
+  status: 'active' | 'archived'
   iconSrc?: ImageRequireSource | string
   connections: Connection[]
 }
@@ -13,7 +15,7 @@ export type ShortGroup = {
 export type Group = ShortGroup
 
 export type GroupsFilter = {
-  status: Group["status"] | null
+  status: Group['status'] | null
 }
 
 export type GroupsListFetchParams = {

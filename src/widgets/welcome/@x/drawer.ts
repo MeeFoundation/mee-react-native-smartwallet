@@ -1,1 +1,1 @@
-export { isWelcomeViewedAtom } from "../model/store"
+export { isWelcomeViewedAtom } from '../model/store'

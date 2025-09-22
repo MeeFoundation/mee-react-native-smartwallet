@@ -1,14 +1,14 @@
-import { mockGroups } from "./mock/groups"
+import { mockGroups } from './mock/groups'
 import type {
   Group,
   GroupsFilter,
   GroupsListFetchParams,
   GroupsPaginatedListFetchParams,
   GroupsPaginatedListResponse,
-} from "./types"
+} from './types'
 
 export const defaultGroupFilter: GroupsFilter = {
-  status: "active",
+  status: 'active',
 }
 
 export const emptyGroupFilter: GroupsFilter = {
@@ -26,7 +26,7 @@ class GroupsService {
   async getGroupDetails(id: string): Promise<Group> {
     const group = mockGroups.find((g) => g.id === id)
     if (!group) {
-      throw new Error("Group not found")
+      throw new Error('Group not found')
     }
 
     return await Promise.resolve(group)
@@ -38,10 +38,7 @@ class GroupsService {
 
     const response = {
       items: filteredGroups.slice(params.startIndex, params.startIndex + params.limit),
-      nextIndex:
-        filteredGroups.length > params.startIndex + params.limit
-          ? params.startIndex + params.limit
-          : null,
+      nextIndex: filteredGroups.length > params.startIndex + params.limit ? params.startIndex + params.limit : null,
       totalCount: filteredGroups.length,
     }
 

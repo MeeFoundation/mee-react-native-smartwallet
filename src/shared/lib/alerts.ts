@@ -1,5 +1,5 @@
-import { startCase } from "lodash-es"
-import { Alert, Linking, Platform } from "react-native"
+import { startCase } from 'lodash-es'
+import { Alert, Linking, Platform } from 'react-native'
 
 export const alertContactsNoPermissionAlert = () =>
   Alert.alert(
@@ -7,14 +7,14 @@ export const alertContactsNoPermissionAlert = () =>
     `To allow access to ${startCase(Platform.OS)} Contacts turn them on for Mee app in settings.`,
     [
       {
-        text: "Settings",
         onPress: () => {
           // TODO add error handling
           Linking.openSettings().catch((error) => {
-            console.error("error opening settings", error)
+            console.error('error opening settings', error)
           })
         },
+        text: 'Settings',
       },
-      { text: "Maybe later" },
+      { text: 'Maybe later' },
     ],
   )

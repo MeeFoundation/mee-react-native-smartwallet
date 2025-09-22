@@ -3,5 +3,5 @@ export {
   getChatActionAtom,
   getManagePaginatedChatMessagesListAtom,
   getPaginatedChatMessagesListStateAtom,
-} from "./model/store"
-export type { ChatMessage, ChatUser } from "./model/types"
+} from './model/store'
+export type { ChatMessage, ChatUser } from './model/types'

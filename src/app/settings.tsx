@@ -1,5 +1,6 @@
-import { Typography } from "@/shared/ui/Typography"
-import { View } from "react-native"
+import { View } from 'react-native'
+
+import { Typography } from '@/shared/ui/Typography'
 
 export default function Settings() {
   return (

@@ -1,4 +1,4 @@
-import { AppError } from "./app-error"
+import { AppError } from './app-error'
 
 type UnknownErrorOptions = {
   message?: string
@@ -11,11 +11,11 @@ type UnknownErrorOptions = {
 export class UnknownError extends AppError {
   constructor(options?: UnknownErrorOptions) {
     super({
-      message: options?.message ?? "Unknown error",
       description: options?.description ?? null,
-      suggestRetry: options?.suggestRetry ?? false,
+      message: options?.message ?? 'Unknown error',
       suggestGoBack: options?.suggestGoBack ?? false,
       suggestGoHome: options?.suggestGoHome ?? false,
+      suggestRetry: options?.suggestRetry ?? false,
     })
   }
 }

@@ -1,11 +1,14 @@
-import { BubblesSvg, MeeMascotSvg } from "@/assets/images"
-import { colors } from "@/shared/config"
-import { AppButton } from "@/shared/ui/AppButton"
-import { useRouter } from "expo-router"
-import { useSetAtom } from "jotai"
-import { Dimensions, StyleSheet, View } from "react-native"
-import type { SvgProps } from "react-native-svg"
-import { isWelcomeViewedAtom } from "../model/store"
+import { useRouter } from 'expo-router'
+import { useSetAtom } from 'jotai'
+import { Dimensions, StyleSheet, View } from 'react-native'
+import type { SvgProps } from 'react-native-svg'
+
+import { BubblesSvg, MeeMascotSvg } from '@/assets/images'
+
+import { colors } from '@/shared/config'
+import { AppButton } from '@/shared/ui/AppButton'
+
+import { isWelcomeViewedAtom } from '../model/store'
 
 export type WelcomeSlide = {
   btn?: boolean
@@ -17,7 +20,7 @@ export const WelcomeItem = ({ btn = false, CloudImage }: WelcomeSlide) => {
   const setIsWelcomeViewedAtom = useSetAtom(isWelcomeViewedAtom)
   const handlePress = () => {
     setIsWelcomeViewedAtom(true)
-    router.navigate("/")
+    router.navigate('/')
   }
 
   return (
@@ -26,18 +29,12 @@ export const WelcomeItem = ({ btn = false, CloudImage }: WelcomeSlide) => {
         <CloudImage height="100%" width="100%" />
       </View>
       <View style={styles.image}>
-        <BubblesSvg style={{ color: colors.white, marginBottom: 8 }} height="15%" />
+        <BubblesSvg height="15%" style={{ color: colors.white, marginBottom: 8 }} />
         <MeeMascotSvg height="85%" width="100%" />
       </View>
-      <View style={{ width: "100%", height: 51, alignSelf: "flex-end" }}>
+      <View style={{ alignSelf: 'flex-end', height: 51, width: '100%' }}>
         {btn && (
-          <AppButton
-            onPress={handlePress}
-            variant="secondary"
-            text="Get Started"
-            style={styles.button}
-            hitSlop={12}
-          />
+          <AppButton hitSlop={12} onPress={handlePress} style={styles.button} text="Get Started" variant="secondary" />
         )}
       </View>
     </View>
@@ -45,39 +42,39 @@ export const WelcomeItem = ({ btn = false, CloudImage }: WelcomeSlide) => {
 }
 
 const styles = StyleSheet.create({
+  button: {
+    marginTop: -1,
+    paddingHorizontal: 16,
+    width: '100%',
+  },
   container: {
-    width: Dimensions.get("screen").width,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
     backgroundColor: colors.warning,
-    paddingHorizontal: 6,
-    marginTop: 40,
     flex: 1,
+    justifyContent: 'center',
+    marginTop: 40,
+    paddingHorizontal: 6,
+    width: Dimensions.get('screen').width,
   },
   image: {
+    alignItems: 'center',
     flex: 1,
-    width: "100%",
-    alignItems: "center",
+    width: '100%',
+  },
+  text: {
+    color: colors.primary,
+    fontSize: 14,
+    fontWeight: 'light',
+    lineHeight: 24,
+    textAlign: 'center',
   },
   title: {
     color: colors.primary,
     fontSize: 24,
+    fontStyle: 'italic',
     lineHeight: 36,
-    fontStyle: "italic",
     marginBottom: 8,
+    textAlign: 'center',
     zIndex: 1,
-    textAlign: "center",
-  },
-  text: {
-    color: colors.primary,
-    fontWeight: "light",
-    fontSize: 14,
-    lineHeight: 24,
-    textAlign: "center",
-  },
-  button: {
-    width: "100%",
-    paddingHorizontal: 16,
-    marginTop: -1,
   },
 })

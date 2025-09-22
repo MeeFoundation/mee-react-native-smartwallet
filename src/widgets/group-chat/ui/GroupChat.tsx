@@ -1,51 +1,53 @@
-import type { ChatMessage as ChatMessageType, ChatUser } from "@/entities/chat"
-import type { Group } from "@/entities/group"
-import { colors } from "@/shared/config"
-import { IconSymbol } from "@/shared/ui/IconSymbol"
-import { PLACEHOLDER_TEXT_COLOR, textInputStyles } from "@/shared/ui/TextInput"
-import { useCallback, useMemo, type FC } from "react"
-import { useTranslation } from "react-i18next"
-import { ActivityIndicator, StyleSheet, TouchableOpacity, View } from "react-native"
+import { type FC, useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { ActivityIndicator, StyleSheet, TouchableOpacity, View } from 'react-native'
 import {
   Actions,
+  type ActionsProps,
   Bubble,
+  type BubbleProps,
   Composer,
+  type ComposerProps,
   GiftedChat,
   InputToolbar,
-  Message,
-  type ActionsProps,
-  type BubbleProps,
-  type ComposerProps,
   type InputToolbarProps,
+  Message,
   type MessageProps,
   type SendProps,
-} from "react-native-gifted-chat"
+} from 'react-native-gifted-chat'
+
+import type { ChatMessage as ChatMessageType, ChatUser } from '@/entities/chat'
+import type { Group } from '@/entities/group'
+
+import { colors } from '@/shared/config'
+import { IconSymbol } from '@/shared/ui/IconSymbol'
+import { PLACEHOLDER_TEXT_COLOR, textInputStyles } from '@/shared/ui/TextInput'
 
 /* -------------------------------------------------------------------------------------------------
  * SendButton
  * -----------------------------------------------------------------------------------------------*/
 const sendButtonStyles = StyleSheet.create({
   container: {
-    width: 40,
+    alignItems: 'center',
     height: 40,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  sendButton: {
-    width: 26,
-    height: 26,
-    backgroundColor: colors.primary,
-    borderRadius: 999,
-    paddingVertical: 5,
-    paddingLeft: 6,
-    paddingRight: 4,
-    alignItems: "center",
-    justifyContent: "center",
+    justifyContent: 'center',
+    width: 40,
   },
 
   disabled: {
-    backgroundColor: colors["black/10"],
+    backgroundColor: colors['black/10'],
+  },
+
+  sendButton: {
+    alignItems: 'center',
+    backgroundColor: colors.primary,
+    borderRadius: 999,
+    height: 26,
+    justifyContent: 'center',
+    paddingLeft: 6,
+    paddingRight: 4,
+    paddingVertical: 5,
+    width: 26,
   },
 })
 
@@ -69,7 +71,7 @@ const useRenderSend = () =>
         style={sendButtonStyles.container}
       >
         <View style={[sendButtonStyles.sendButton, disabled && sendButtonStyles.disabled]}>
-          <IconSymbol name="paper-airplane.filled" width={14} height={14} color={colors.white} />
+          <IconSymbol color={colors.white} height={14} name="paper-airplane.filled" width={14} />
         </View>
       </TouchableOpacity>
     )
@@ -80,12 +82,12 @@ const useRenderSend = () =>
  * -----------------------------------------------------------------------------------------------*/
 const chatInputToolbarStyles = StyleSheet.create({
   container: {
-    marginTop: 12,
-    backgroundColor: "transparent",
+    backgroundColor: 'transparent',
     borderTopWidth: 0,
+    marginTop: 12,
   },
   primary: {
-    alignItems: "flex-start",
+    alignItems: 'flex-start',
   },
 })
 
@@ -105,33 +107,10 @@ const useChatInputToolbar = () =>
  * ChatBubble
  * -----------------------------------------------------------------------------------------------*/
 const chatBubbleStyles = StyleSheet.create({
-  wrapper: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-
-    /**
-     * Wee need to set every corner radius to avoid the default styles from the library
-     */
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-  },
-
-  wrapperLeft: {
-    backgroundColor: colors.white,
-    borderWidth: 1,
-    borderColor: colors["black/07"],
-    maxWidth: "100%",
-  },
-  wrapperRight: {
-    backgroundColor: colors.primary,
-    maxWidth: "80%",
-  },
-
   text: {
     fontSize: 16,
     lineHeight: 24,
+    marginBottom: 0,
 
     /**
      * Wee need to set every style to 0 to avoid the default styles from the library
@@ -139,13 +118,35 @@ const chatBubbleStyles = StyleSheet.create({
     marginLeft: 0,
     marginRight: 0,
     marginTop: 0,
-    marginBottom: 0,
+  },
+  textLeft: {
+    color: colors['gray-900'],
   },
   textRight: {
     color: colors.white,
   },
-  textLeft: {
-    color: colors["gray-900"],
+  wrapper: {
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+
+    /**
+     * Wee need to set every corner radius to avoid the default styles from the library
+     */
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+
+  wrapperLeft: {
+    backgroundColor: colors.white,
+    borderColor: colors['black/07'],
+    borderWidth: 1,
+    maxWidth: '100%',
+  },
+  wrapperRight: {
+    backgroundColor: colors.primary,
+    maxWidth: '80%',
   },
 })
 
@@ -155,17 +156,13 @@ const useChatBubble = () =>
       <Bubble
         {...props}
         containerStyle={props.containerStyle}
-        wrapperStyle={{
-          left: [chatBubbleStyles.wrapper, chatBubbleStyles.wrapperLeft, props.wrapperStyle?.left],
-          right: [
-            chatBubbleStyles.wrapper,
-            chatBubbleStyles.wrapperRight,
-            props.wrapperStyle?.right,
-          ],
-        }}
         textStyle={{
           left: [chatBubbleStyles.text, chatBubbleStyles.textLeft, props.textStyle?.left],
           right: [chatBubbleStyles.text, chatBubbleStyles.textRight, props.textStyle?.right],
+        }}
+        wrapperStyle={{
+          left: [chatBubbleStyles.wrapper, chatBubbleStyles.wrapperLeft, props.wrapperStyle?.left],
+          right: [chatBubbleStyles.wrapper, chatBubbleStyles.wrapperRight, props.wrapperStyle?.right],
         }}
       />
     ),
@@ -177,17 +174,17 @@ const useChatBubble = () =>
  * -----------------------------------------------------------------------------------------------*/
 const chatMessageStyles = StyleSheet.create({
   container: {
-    marginLeft: 0,
     gap: 0,
-    paddingLeft: 0,
     marginBottom: 0,
+    marginLeft: 0,
     marginTop: 0,
-  },
-  previousSameUser: {
-    marginTop: 2,
+    paddingLeft: 0,
   },
   previousDifferentUser: {
     marginTop: 8,
+  },
+  previousSameUser: {
+    marginTop: 2,
   },
 })
 
@@ -213,17 +210,17 @@ const useChatMessage = () =>
  * Acrions
  * -----------------------------------------------------------------------------------------------*/
 const useChatActionOptions = () => {
-  const { t: groupsT } = useTranslation("groups")
+  const { t: groupsT } = useTranslation('groups')
 
   const handleAttachFile = useCallback(() => {
     // FIXME Implement
-    throw new Error("Attach file")
+    throw new Error('Attach file')
   }, [])
 
   const handleCancel = useCallback(() => {}, [])
 
-  const attachFileKey = groupsT("chat.actions.attach_file.text")
-  const cancelKey = groupsT("chat.actions.cancel.text")
+  const attachFileKey = groupsT('chat.actions.attach_file.text')
+  const cancelKey = groupsT('chat.actions.cancel.text')
 
   const options: {
     [key: string]: () => void
@@ -247,17 +244,15 @@ const useRenderActions = () => {
       return (
         <Actions
           {...props}
-          options={options}
-          icon={() => (
-            <IconSymbol name="plus.outlined" color={colors["gray-800"]} width={24} height={24} />
-          )}
           containerStyle={{
-            width: 40,
+            alignItems: 'center',
             height: 40,
+            justifyContent: 'center',
             marginLeft: 0,
-            alignItems: "center",
-            justifyContent: "center",
+            width: 40,
           }}
+          icon={() => <IconSymbol color={colors['gray-800']} height={24} name="plus.outlined" width={24} />}
+          options={options}
         />
       )
     },
@@ -266,13 +261,13 @@ const useRenderActions = () => {
 }
 
 const useRenderComposer = () => {
-  const { t: groupsT } = useTranslation("groups")
+  const { t: groupsT } = useTranslation('groups')
 
   return useCallback(
     (props: ComposerProps) => (
       <Composer
         {...props}
-        placeholder={groupsT("chat.input.placeholder")}
+        placeholder={groupsT('chat.input.placeholder')}
         placeholderTextColor={PLACEHOLDER_TEXT_COLOR}
         textInputStyle={[
           textInputStyles.textInput,
@@ -288,10 +283,7 @@ const useRenderComposer = () => {
  * Footer
  * -----------------------------------------------------------------------------------------------*/
 const useRenderFooter = (loading: boolean | undefined) =>
-  useMemo(
-    () => (loading ? () => <ActivityIndicator size="small" color={colors.primary} /> : undefined),
-    [loading],
-  )
+  useMemo(() => (loading ? () => <ActivityIndicator color={colors.primary} size="small" /> : undefined), [loading])
 
 /* -------------------------------------------------------------------------------------------------
  * Nothing
@@ -321,19 +313,19 @@ const GroupChat: FC<GroupChatProps> = (props) => {
 
   return (
     <GiftedChat
-      renderDay={renderNothing}
       messages={props.messages}
       onSend={props.onSend}
-      user={props.currentUser}
       renderActions={renderActions}
-      renderSend={renderSend}
-      renderInputToolbar={renderInputToolbar}
-      renderBubble={renderBubble}
-      renderMessage={renderMessage}
       renderAvatarOnTop
-      renderFooter={renderFooter}
+      renderBubble={renderBubble}
       renderComposer={renderComposer}
+      renderDay={renderNothing}
+      renderFooter={renderFooter}
+      renderInputToolbar={renderInputToolbar}
+      renderMessage={renderMessage}
+      renderSend={renderSend}
       renderTime={renderNothing}
+      user={props.currentUser}
     />
   )
 }

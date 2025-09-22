@@ -1,6 +1,6 @@
-import type { ComponentProps } from "react"
-import { View } from "react-native"
-import * as Dropdown from "zeego/dropdown-menu"
+import type { ComponentProps } from 'react'
+import { View } from 'react-native'
+import * as Dropdown from 'zeego/dropdown-menu'
 
 /* -------------------------------------------------------------------------------------------------
  * DropdownMenu
@@ -19,7 +19,7 @@ const DropdownMenuTrigger = Dropdown.create(
       <View aria-role="button">{props.children}</View>
     </Dropdown.Trigger>
   ),
-  "Trigger",
+  'Trigger',
 )
 
 /* -------------------------------------------------------------------------------------------------
@@ -34,10 +34,7 @@ const DropdownMenuContent = Dropdown.Content
  * -----------------------------------------------------------------------------------------------*/
 type DropdownMenuItemProps = ComponentProps<typeof Dropdown.Item>
 
-const DropdownMenuItem = Dropdown.create(
-  (props: DropdownMenuItemProps) => <Dropdown.Item {...props} />,
-  "Item",
-)
+const DropdownMenuItem = Dropdown.create((props: DropdownMenuItemProps) => <Dropdown.Item {...props} />, 'Item')
 
 /* -------------------------------------------------------------------------------------------------
  * DropdownMenuTiitle
@@ -46,7 +43,7 @@ type DropdownMenuItemTitleProps = ComponentProps<typeof Dropdown.ItemTitle>
 
 const DropdownMenuItemTitle = Dropdown.create(
   (props: DropdownMenuItemTitleProps) => <Dropdown.ItemTitle {...props} />,
-  "ItemTitle",
+  'ItemTitle',
 )
 
 /* -------------------------------------------------------------------------------------------------
@@ -56,7 +53,7 @@ type DropdownMenuIconProps = ComponentProps<typeof Dropdown.ItemIcon>
 
 const DropdownMenuIcon = Dropdown.create(
   (props: DropdownMenuIconProps) => <Dropdown.ItemIcon {...props} style={{ height: 80 }} />,
-  "ItemIcon",
+  'ItemIcon',
 )
 
 /* -------------------------------------------------------------------------------------------------
@@ -66,7 +63,7 @@ type DropdownMenuItemImageProps = ComponentProps<typeof Dropdown.ItemImage>
 
 const DropdownMenuItemImage = Dropdown.create(
   (props: DropdownMenuItemImageProps) => <Dropdown.ItemImage {...props} />,
-  "ItemImage",
+  'ItemImage',
 )
 
 /* -------------------------------------------------------------------------------------------------
@@ -74,10 +71,7 @@ const DropdownMenuItemImage = Dropdown.create(
  * -----------------------------------------------------------------------------------------------*/
 type DropdownMenuLabelProps = ComponentProps<typeof Dropdown.Label>
 
-const DropdownMenuLabel = Dropdown.create(
-  (props: DropdownMenuLabelProps) => <Dropdown.Label {...props} />,
-  "Label",
-)
+const DropdownMenuLabel = Dropdown.create((props: DropdownMenuLabelProps) => <Dropdown.Label {...props} />, 'Label')
 
 /* -------------------------------------------------------------------------------------------------
  * DropdownMenuSeparator
@@ -86,7 +80,7 @@ type DropdownMenuSeparatorProps = ComponentProps<typeof Dropdown.Separator>
 
 const DropdownMenuSeparator = Dropdown.create(
   (props: DropdownMenuSeparatorProps) => <Dropdown.Separator {...props} />,
-  "Separator",
+  'Separator',
 )
 
 /* -------------------------------------------------------------------------------------------------
@@ -94,10 +88,7 @@ const DropdownMenuSeparator = Dropdown.create(
  * -----------------------------------------------------------------------------------------------*/
 type DropdownMenuGroupProps = ComponentProps<typeof Dropdown.Group>
 
-const DropdownMenuGroup = Dropdown.create(
-  (props: DropdownMenuGroupProps) => <Dropdown.Group {...props} />,
-  "Group",
-)
+const DropdownMenuGroup = Dropdown.create((props: DropdownMenuGroupProps) => <Dropdown.Group {...props} />, 'Group')
 
 /* -------------------------------------------------------------------------------------------------
  * DropdownMenuCheckboxItem
@@ -106,14 +97,11 @@ type DropdownMenuCheckboxItemProps = ComponentProps<typeof Dropdown.CheckboxItem
 
 const DropdownMenuCheckboxItem = Dropdown.create(
   (props: DropdownMenuCheckboxItemProps) => (
-    <Dropdown.CheckboxItem
-      {...props}
-      style={{ ...props.style, display: "flex", alignItems: "center", gap: 8 }}
-    >
+    <Dropdown.CheckboxItem {...props} style={{ ...props.style, alignItems: 'center', display: 'flex', gap: 8 }}>
       <Dropdown.ItemIndicator />
     </Dropdown.CheckboxItem>
   ),
-  "CheckboxItem",
+  'CheckboxItem',
 )
 
 /* -------------------------------------------------------------------------------------------------
@@ -123,7 +111,7 @@ type DropdownMenuSubTriggerProps = ComponentProps<typeof Dropdown.SubTrigger>
 
 const DropdownMenuSubTrigger = Dropdown.create(
   (props: DropdownMenuSubTriggerProps) => <Dropdown.SubTrigger {...props} />,
-  "SubTrigger",
+  'SubTrigger',
 )
 
 /* -------------------------------------------------------------------------------------------------
@@ -133,7 +121,7 @@ type DropdownMenuSubContentProps = ComponentProps<typeof Dropdown.SubContent>
 
 const DropdownMenuSubContent = Dropdown.create(
   (props: DropdownMenuSubContentProps) => <Dropdown.SubContent {...props} />,
-  "SubContent",
+  'SubContent',
 )
 
 /* -------------------------------------------------------------------------------------------------
@@ -141,10 +129,7 @@ const DropdownMenuSubContent = Dropdown.create(
  * -----------------------------------------------------------------------------------------------*/
 type DropdownMenuSubProps = ComponentProps<typeof Dropdown.Sub>
 
-const DropdownMenuSub = Dropdown.create(
-  (props: DropdownMenuSubProps) => <Dropdown.Sub {...props} />,
-  "Sub",
-)
+const DropdownMenuSub = Dropdown.create((props: DropdownMenuSubProps) => <Dropdown.Sub {...props} />, 'Sub')
 
 /* -------------------------------------------------------------------------------------------------
  * DropdownMenuItemIndicator
@@ -153,7 +138,7 @@ type DropdownMenuItemIndicatorProps = ComponentProps<typeof Dropdown.ItemIndicat
 
 const DropdownMenuItemIndicator = Dropdown.create(
   (props: DropdownMenuItemIndicatorProps) => <Dropdown.ItemIndicator {...props} />,
-  "ItemIndicator",
+  'ItemIndicator',
 )
 
 /* -------------------------------------------------------------------------------------------------
@@ -161,10 +146,7 @@ const DropdownMenuItemIndicator = Dropdown.create(
  * -----------------------------------------------------------------------------------------------*/
 type DropdownMenuArrowProps = ComponentProps<typeof Dropdown.Arrow>
 
-const DropdownMenuArrow = Dropdown.create(
-  (props: DropdownMenuArrowProps) => <Dropdown.Arrow {...props} />,
-  "Arrow",
-)
+const DropdownMenuArrow = Dropdown.create((props: DropdownMenuArrowProps) => <Dropdown.Arrow {...props} />, 'Arrow')
 
 /* -----------------------------------------------------------------------------------------------*/
 

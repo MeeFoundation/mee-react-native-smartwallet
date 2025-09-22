@@ -1,9 +1,12 @@
-import { ConnectionListCard } from "@/entities/connection/@x/group"
-import { AppButton } from "@/shared/ui/AppButton"
-import { type FC, useState } from "react"
-import { TouchableOpacity } from "react-native"
-import { ChevronDownIcon, ChevronUpIcon } from "react-native-heroicons/outline"
-import type { ShortGroup } from "../model/types"
+import { type FC, useState } from 'react'
+import { TouchableOpacity } from 'react-native'
+import { ChevronDownIcon, ChevronUpIcon } from 'react-native-heroicons/outline'
+
+import { ConnectionListCard } from '@/entities/connection/@x/group'
+
+import { AppButton } from '@/shared/ui/AppButton'
+
+import type { ShortGroup } from '../model/types'
 
 /* -------------------------------------------------------------------------------------------------
  * GroupListCardSkeleton
@@ -21,13 +24,13 @@ const GroupListCard: FC<GroupListCardProps> = ({ group, onPress }) => {
 
   return (
     <TouchableOpacity onPress={onPress}>
-      <ConnectionListCard.Root variant={isExpanded ? "expanded" : "default"}>
+      <ConnectionListCard.Root variant={isExpanded ? 'expanded' : 'default'}>
         <ConnectionListCard.Content>
-          <ConnectionListCard.Thumbnail text={group.name} src={group.iconSrc} />
+          <ConnectionListCard.Thumbnail src={group.iconSrc} text={group.name} />
           <ConnectionListCard.Description>
             <ConnectionListCard.Name>{group.name}</ConnectionListCard.Name>
 
-            {group.status === "archived" ? (
+            {group.status === 'archived' ? (
               <ConnectionListCard.Hint danger>Archived/Paused</ConnectionListCard.Hint>
             ) : null}
           </ConnectionListCard.Description>
@@ -48,4 +51,5 @@ const GroupListCard: FC<GroupListCardProps> = ({ group, onPress }) => {
 /* -----------------------------------------------------------------------------------------------*/
 
 export { GroupListCard, GroupListCardSkeleton }
+
 export type { GroupListCardProps }

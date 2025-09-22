@@ -1,1 +1,1 @@
-export { ConnectionsStore } from "../model/store"
+export { ConnectionsStore } from '../model/store'

@@ -1,3 +1,4 @@
+export { getManagePaginatedPersonsListAtom, getPaginatedPersonsListStateAtom } from './model/store'
 export type {
   Person,
   PersonsFilter,
@@ -5,8 +6,5 @@ export type {
   PersonsPaginatedListFetchParams,
   PersonsPaginatedListResponse,
   ShortPerson,
-} from "./model/types"
-
-export { PersonListCard, PersonListSkeleton } from "./ui/PersonListCard"
-
-export { getManagePaginatedPersonsListAtom, getPaginatedPersonsListStateAtom } from "./model/store"
+} from './model/types'
+export { PersonListCard, PersonListSkeleton } from './ui/PersonListCard'

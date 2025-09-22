@@ -1,1 +1,1 @@
-export { TagsStore } from "./model/store"
+export { TagsStore } from './model/store'

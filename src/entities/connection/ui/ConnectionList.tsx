@@ -1,27 +1,31 @@
-import { NoHaveConnections } from "@/assets/images"
-import { ContactsStore, deleteContactAtom } from "@/entities/contact/@x/connection"
-import { filterNullable } from "@/shared/lib/ts-utils"
-import { BackgroundLayout } from "@/shared/ui/BackgroundLayout"
-import { Typography } from "@/shared/ui/Typography"
-import { useRouter } from "expo-router"
-import { useAtomValue, useSetAtom } from "jotai"
-import { compact, sortBy } from "lodash-es"
-import { type FC, useMemo } from "react"
-import { Platform, SectionList, StyleSheet, TouchableOpacity, View } from "react-native"
-import { AdjustmentsVerticalIcon, ChevronDownIcon } from "react-native-heroicons/outline"
-import { ConnectionsStore } from "../model/store"
-import type { Connection } from "../model/types"
-import { ConnectionCard, type MenuAction } from "./ConnectionCard"
-import type { FilterValue } from "./FilterConnections"
+import { useRouter } from 'expo-router'
+import { useAtomValue, useSetAtom } from 'jotai'
+import { compact, sortBy } from 'lodash-es'
+import { type FC, useMemo } from 'react'
+import { Platform, SectionList, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { AdjustmentsVerticalIcon, ChevronDownIcon } from 'react-native-heroicons/outline'
+
+import { NoHaveConnections } from '@/assets/images'
+
+import { ContactsStore, deleteContactAtom } from '@/entities/contact/@x/connection'
+
+import { filterNullable } from '@/shared/lib/ts-utils'
+import { BackgroundLayout } from '@/shared/ui/BackgroundLayout'
+import { Typography } from '@/shared/ui/Typography'
+
+import { ConnectionsStore } from '../model/store'
+import type { Connection } from '../model/types'
+import { ConnectionCard, type MenuAction } from './ConnectionCard'
+import type { FilterValue } from './FilterConnections'
 
 const filterByProfile = (connections: Connection[], profile: string) => {
-  if (profile === "All profiles") {
+  if (profile === 'All profiles') {
     return connections
   }
 
   const filteredConnections: Connection[] = []
 
-  if (profile === "Unspecified") {
+  if (profile === 'Unspecified') {
     connections.forEach((connection) => {
       if (!connection.profile) {
         filteredConnections.push(connection)
@@ -69,16 +73,16 @@ export const ConnectionList: FC<ConnectionListProps> = ({
   return !isPeopleView ? (
     <CompaniesList
       filter={filter}
-      selectedProfile={selectedProfile}
-      onProfilesPress={onProfilesPress}
       onFilterPress={onFilterPress}
+      onProfilesPress={onProfilesPress}
+      selectedProfile={selectedProfile}
     />
   ) : (
     <PeopleList
       filter={filter}
-      selectedProfile={selectedProfile}
-      onProfilesPress={onProfilesPress}
       onFilterPress={onFilterPress}
+      onProfilesPress={onProfilesPress}
+      selectedProfile={selectedProfile}
     />
   )
 }
@@ -89,16 +93,11 @@ interface CompaniesListProps {
   onFilterPress: () => void
 }
 
-const CompaniesList: FC<CompaniesListProps> = ({
-  filter,
-  selectedProfile,
-  onProfilesPress,
-  onFilterPress,
-}) => {
+const CompaniesList: FC<CompaniesListProps> = ({ filter, selectedProfile, onProfilesPress, onFilterPress }) => {
   const router = useRouter()
   const connections = useAtomValue(ConnectionsStore)
   const filteredData = useMemo(
-    () => sortBy(filterConnections(connections, filter, selectedProfile), "title"),
+    () => sortBy(filterConnections(connections, filter, selectedProfile), 'title'),
     [connections, filter, selectedProfile],
   )
 
@@ -108,23 +107,23 @@ const CompaniesList: FC<CompaniesListProps> = ({
   const getMenuActions = (_item: Connection) => {
     const menuActions: MenuAction[] = [
       {
-        name: "Source Profile",
-        key: "source-profile",
+        icon: 'userGroup',
+        key: 'source-profile',
+        name: 'Source Profile',
         onPress: () => {},
-        icon: "userGroup",
       },
       {
-        name: "Manage connection",
-        key: "edit",
+        icon: 'pencil',
+        key: 'edit',
+        name: 'Manage connection',
         onPress: () => {},
-        icon: "pencil",
       },
-      { name: "Link connection", key: "link", onPress: () => {}, icon: "link" },
+      { icon: 'link', key: 'link', name: 'Link connection', onPress: () => {} },
       {
-        name: "Archive Connection",
-        key: "delete",
+        icon: 'trash',
+        key: 'delete',
+        name: 'Archive Connection',
         onPress: () => {},
-        icon: "trash",
       },
     ]
     return menuActions
@@ -135,67 +134,55 @@ const CompaniesList: FC<CompaniesListProps> = ({
 
   return (
     <CollectionsContentView
-      renderData={filteredData}
-      handlePressOpen={handlePressOpen}
       getMenuActions={getMenuActions}
-      onProfilesPress={onProfilesPress}
+      handlePressOpen={handlePressOpen}
       onFilterPress={onFilterPress}
+      onProfilesPress={onProfilesPress}
+      renderData={filteredData}
       selectedProfile={selectedProfile}
     />
   )
 }
 
-const PeopleList: FC<CompaniesListProps> = ({
-  filter,
-  selectedProfile,
-  onProfilesPress,
-  onFilterPress,
-}) => {
+const PeopleList: FC<CompaniesListProps> = ({ filter, selectedProfile, onProfilesPress, onFilterPress }) => {
   const router = useRouter()
   const contacts = useAtomValue(ContactsStore)
   const deleteContact = useSetAtom(deleteContactAtom)
   const filteredIosContactsData = useMemo(
-    () =>
-      !contacts?.ios
-        ? []
-        : sortBy(filterConnections(contacts.ios, filter, selectedProfile), "title"),
+    () => (!contacts?.ios ? [] : sortBy(filterConnections(contacts.ios, filter, selectedProfile), 'title')),
     [contacts, filter, selectedProfile],
   )
   const filteredAndroidContactsData = useMemo(
-    () =>
-      !contacts?.android
-        ? []
-        : sortBy(filterConnections(contacts.android, filter, selectedProfile), "title"),
+    () => (!contacts?.android ? [] : sortBy(filterConnections(contacts.android, filter, selectedProfile), 'title')),
     [contacts, filter, selectedProfile],
   )
 
   if (
     !contacts ||
-    ((!contacts.ios || contacts.ios.length === 0) &&
-      (!contacts.android || contacts.android.length === 0))
+    ((!contacts.ios || contacts.ios.length === 0) && (!contacts.android || contacts.android.length === 0))
   ) {
     return <EmptyConnections />
   }
   const getMenuActions = (item: Connection) => {
     const menuActions: MenuAction[] = compact([
       Platform.OS === item.contactInfo?.platform && {
-        name: "Delete contact",
-        key: "delete",
+        icon: 'trash',
+        key: 'delete',
+        name: 'Delete contact',
         onPress: () => {
           if (item.contactInfo?.recordID) {
             // TODO add error handling
             deleteContact({ contact: item }).catch((err) => {
-              console.error("error deleting contact", err)
+              console.error('error deleting contact', err)
             })
           }
         },
-        icon: "trash",
       },
       {
-        name: "Manage contact",
-        key: "edit",
+        icon: 'pencil',
+        key: 'edit',
+        name: 'Manage contact',
         onPress: () => handlePressOpen(item),
-        icon: "pencil",
       },
     ])
     return menuActions
@@ -209,11 +196,11 @@ const PeopleList: FC<CompaniesListProps> = ({
 
   return (
     <CollectionsContentView
-      renderData={renderData}
-      handlePressOpen={handlePressOpen}
       getMenuActions={getMenuActions}
-      onProfilesPress={onProfilesPress}
+      handlePressOpen={handlePressOpen}
       onFilterPress={onFilterPress}
+      onProfilesPress={onProfilesPress}
+      renderData={renderData}
       selectedProfile={selectedProfile}
     />
   )
@@ -241,31 +228,27 @@ const CollectionsContentView: FC<CollectionsContentViewProps> = ({
     <>
       <BackgroundLayout />
       <View style={styles.container}>
-        <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 8 }}>
-          <TouchableOpacity style={styles.filterButtons} onPress={onProfilesPress}>
+        <View style={{ flexDirection: 'row', gap: 8, justifyContent: 'space-between' }}>
+          <TouchableOpacity onPress={onProfilesPress} style={styles.filterButtons}>
             <Typography style={styles.filterButtonsText}>{selectedProfile}</Typography>
-            <ChevronDownIcon size={20} color="black" />
+            <ChevronDownIcon color="black" size={20} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.filterButtons} onPress={onFilterPress}>
+          <TouchableOpacity onPress={onFilterPress} style={styles.filterButtons}>
             <Typography style={styles.filterButtonsText}>Filters</Typography>
-            <AdjustmentsVerticalIcon size={20} color="black" />
+            <AdjustmentsVerticalIcon color="black" size={20} />
           </TouchableOpacity>
         </View>
         <SectionList
           contentContainerStyle={{ gap: 8 }}
-          sections={[{ data: renderData }]}
           keyExtractor={(item, index) => item.id + index}
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => handlePressOpen(item)}>
-              <ConnectionCard
-                name={item.name}
-                logo={item.iconSrc}
-                menuActions={getMenuActions(item)}
-              />
+              <ConnectionCard logo={item.iconSrc} menuActions={getMenuActions(item)} name={item.name} />
             </TouchableOpacity>
           )}
           renderSectionFooter={() => <View style={{ height: 8 }} />}
           SectionSeparatorComponent={sectionSeparator}
+          sections={[{ data: renderData }]}
           style={styles.sectionContainer}
         />
       </View>
@@ -276,7 +259,7 @@ const CollectionsContentView: FC<CollectionsContentViewProps> = ({
 const EmptyConnections = () => {
   return (
     <View style={styles.emptyContainer}>
-      <NoHaveConnections style={{ flex: 1 }} height="100%" width="100%" />
+      <NoHaveConnections height="100%" style={{ flex: 1 }} width="100%" />
     </View>
   )
 }
@@ -284,20 +267,27 @@ const EmptyConnections = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
-    justifyContent: "flex-start",
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
     padding: 16,
   },
+  emptyContainer: {
+    alignItems: 'center',
+    backgroundColor: '#FDE68A',
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+  },
   filterButtons: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: 8,
+    flex: 1,
+    flexDirection: 'row',
+    height: 44,
+    justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 10,
-    flex: 1,
-    borderRadius: 8,
-    backgroundColor: "rgba(255, 255, 255, 0.95)",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    height: 44,
-    alignItems: "center",
   },
   filterButtonsText: {
     fontWeight: 500,
@@ -308,13 +298,6 @@ const styles = StyleSheet.create({
   },
   sectionSeparator: {
     height: 12,
-    width: "100%",
-  },
-  emptyContainer: {
-    backgroundColor: "#FDE68A",
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "flex-end",
-    alignItems: "center",
+    width: '100%',
   },
 })

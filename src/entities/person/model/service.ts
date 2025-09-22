@@ -1,14 +1,16 @@
-import { type Connection, mockConnections } from "@/entities/connection/@x/person"
-import { assertUnreachable } from "@/shared/lib/assert-unreachable"
+import { type Connection, mockConnections } from '@/entities/connection/@x/person'
+
+import { assertUnreachable } from '@/shared/lib/assert-unreachable'
+
 import type {
   PersonsFilter,
   PersonsListFetchParams,
   PersonsPaginatedListFetchParams,
   PersonsPaginatedListResponse,
-} from "./types"
+} from './types'
 
 export const defaultPersonsFilter: PersonsFilter = {
-  connectionStatus: "active",
+  connectionStatus: 'active',
   has: [],
 }
 
@@ -17,10 +19,7 @@ export const emptyPersonsFilter: PersonsFilter = {
   has: [],
 }
 
-export const filterPersons = (
-  persons: Connection[],
-  { filter }: PersonsListFetchParams,
-): Connection[] => {
+export const filterPersons = (persons: Connection[], { filter }: PersonsListFetchParams): Connection[] => {
   if (!filter) return persons
 
   const filterByConnectionStatus = (person: Connection) =>
@@ -31,16 +30,16 @@ export const filterPersons = (
 
     return filter.has.every((c) => {
       switch (c) {
-        case "email":
+        case 'email':
           return !!person.sharedInfo.email
 
-        case "phone":
+        case 'phone':
           return person.sharedInfo.phone
 
-        case "password":
+        case 'password':
           return person.sharedInfo.passwords?.length
 
-        case "payment_details":
+        case 'payment_details':
           return person.sharedInfo.paymentDetails?.length
 
         default:
@@ -58,7 +57,7 @@ class PersonsService {
     const connection = mockConnections.find((c) => c.id === id)
 
     if (!connection) {
-      throw new Error("Person not found")
+      throw new Error('Person not found')
     }
 
     return await Promise.resolve(connection)
@@ -70,10 +69,7 @@ class PersonsService {
 
     const response = {
       items: filteredPersons.slice(params.startIndex, params.startIndex + params.limit),
-      nextIndex:
-        filteredPersons.length > params.startIndex + params.limit
-          ? params.startIndex + params.limit
-          : null,
+      nextIndex: filteredPersons.length > params.startIndex + params.limit ? params.startIndex + params.limit : null,
       totalCount: filteredPersons.length,
     }
 

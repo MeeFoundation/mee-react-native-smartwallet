@@ -1,1 +1,1 @@
-export type { Connection, SharedInfo } from "../model/types"
+export type { Connection, SharedInfo } from '../model/types'

@@ -1,14 +1,12 @@
-import type { Locale } from "@/features/localization"
-import { COMMON_NS, GROUPS_NS, PEOPLE_NS } from "./namespaces"
+import type { Locale } from '@/features/localization'
 
-import commonEn from "./common.en.json"
-import commonEs from "./common.es.json"
-
-import groupsEn from "./groups.en.json"
-import groupsEs from "./groups.es.json"
-
-import peopleEn from "./people.en.json"
-import peopleEs from "./people.es.json"
+import commonEn from './common.en.json'
+import commonEs from './common.es.json'
+import groupsEn from './groups.en.json'
+import groupsEs from './groups.es.json'
+import { COMMON_NS, GROUPS_NS, PEOPLE_NS } from './namespaces'
+import peopleEn from './people.en.json'
+import peopleEs from './people.es.json'
 
 type Resource = {
   [COMMON_NS]: typeof commonEn
@@ -37,10 +35,10 @@ type CurlyBracesResources<T> = {
   [K in keyof T]: T[K] extends string ? K : CurlyBracesResources<T[K]>
 }
 
-declare module "i18next" {
+declare module 'i18next' {
   export interface CustomTypeOptions {
-    defaultNS: "common"
-    fallbackNS: "common"
+    defaultNS: 'common'
+    fallbackNS: 'common'
     resources: CurlyBracesResources<Resource>
   }
 }

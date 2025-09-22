@@ -1,11 +1,11 @@
 export const fonts = {
   publicSans: {
-    light: "PublicSans-Light",
-    regular: "PublicSans-Regular",
-    italic: "PublicSans-Italic",
-    medium: "PublicSans-Medium",
-    bold: "PublicSans-Bold",
-    boldItalic: "PublicSans-BoldItalic",
+    bold: 'PublicSans-Bold',
+    boldItalic: 'PublicSans-BoldItalic',
+    italic: 'PublicSans-Italic',
+    light: 'PublicSans-Light',
+    medium: 'PublicSans-Medium',
+    regular: 'PublicSans-Regular',
   },
 } as const
 

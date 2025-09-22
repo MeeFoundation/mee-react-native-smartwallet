@@ -1,8 +1,11 @@
 // Public API for shared/model segment
 
 // API types
-export type { PaginatedFetchParams, PaginatedListResponse } from "./api"
-
+export type { PaginatedFetchParams, PaginatedListResponse } from './api'
+// Drawer state
+export { drawerIsOpenedAtom } from './drawer'
+// MMKV atom utilities
+export { makeAtomWithMMKV } from './mmkv'
 // Storage utilities
 export {
   clearAll,
@@ -12,10 +15,4 @@ export {
   setItem,
   setObjectItem,
   storage,
-} from "./storage"
-
-// MMKV atom utilities
-export { makeAtomWithMMKV } from "./mmkv"
-
-// Drawer state
-export { drawerIsOpenedAtom } from "./drawer"
+} from './storage'

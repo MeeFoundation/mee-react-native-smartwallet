@@ -1,1 +1,1 @@
-export { ContactsStore, deleteContactAtom } from "../model/store"
+export { ContactsStore, deleteContactAtom } from '../model/store'

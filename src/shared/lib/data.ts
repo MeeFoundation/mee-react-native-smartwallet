@@ -1,7 +1,7 @@
-import Aes from "react-native-aes-crypto"
+import Aes from 'react-native-aes-crypto'
 
 const generateKey = (password: string, salt: string, cost: number, length: number) =>
-  Aes.pbkdf2(password, salt, cost, length, "sha256")
+  Aes.pbkdf2(password, salt, cost, length, 'sha256')
 
 export const generateUniqueDeviceKeys = async () => {
   const timestamp = Date.now() // Current timestamp
@@ -9,7 +9,7 @@ export const generateUniqueDeviceKeys = async () => {
 
   const rawData = `${timestamp}-${randomBytes}`
 
-  const deviceKey = await generateKey(rawData, "test", 12, 12)
+  const deviceKey = await generateKey(rawData, 'test', 12, 12)
 
   return deviceKey
 }
@@ -20,7 +20,7 @@ export const generateEncryptionKey = async () => {
   const randomBytes = await Aes.randomKey(12)
 
   const rawData = `${timestamp}-${randomBytes}`
-  const encryptionKey = await generateKey(rawData, "test", 12, 12)
+  const encryptionKey = await generateKey(rawData, 'test', 12, 12)
 
   return encryptionKey
 }
@@ -31,7 +31,7 @@ export const generateUserIdentifier = async () => {
   const randomBytes = await Aes.randomKey(12)
   const rawData = `${timestamp}-${randomBytes}`
 
-  const userIdentifier = await generateKey(rawData, "test", 12, 12)
+  const userIdentifier = await generateKey(rawData, 'test', 12, 12)
 
   return userIdentifier
 }
@@ -39,7 +39,7 @@ export const generateUserIdentifier = async () => {
 export const createSelfInMee = async () => {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve("Self")
+      resolve('Self')
     }, 1000)
   })
 }

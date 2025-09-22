@@ -1,1 +1,1 @@
-export { GroupChat, type GroupChatProps } from "./ui/GroupChat"
+export { GroupChat, type GroupChatProps } from './ui/GroupChat'

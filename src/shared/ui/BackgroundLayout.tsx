@@ -1,14 +1,15 @@
-import Background from "@/assets/images/background.svg"
-import type { FC } from "react"
-import { StyleSheet, View, type ViewProps } from "react-native"
-import type { SvgProps } from "react-native-svg"
+import type { FC } from 'react'
+import { StyleSheet, View, type ViewProps } from 'react-native'
+import type { SvgProps } from 'react-native-svg'
+
+import Background from '@/assets/images/background.svg'
 
 const styles = StyleSheet.create({
   backgroundLayout: {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
     flex: 1,
+    height: '100%',
+    position: 'absolute',
+    width: '100%',
   },
 })
 
@@ -24,7 +25,7 @@ const BackgroundLayout: FC<BackgroundLayoutProps> = ({ Svg, style, ...rest }) =>
 
   return (
     <View style={[styles.backgroundLayout, style]} {...rest}>
-      <SvgComponent width="100%" height="100%" />
+      <SvgComponent height="100%" width="100%" />
     </View>
   )
 }

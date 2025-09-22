@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react"
-import { useColorScheme as useRNColorScheme } from "react-native"
+import { useEffect, useState } from 'react'
+import { useColorScheme as useRNColorScheme } from 'react-native'
 
 export const useColorScheme = () => {
   const colorScheme = useRNColorScheme()
@@ -8,5 +8,5 @@ export const useColorScheme = () => {
   useEffect(() => setHasHydrated(true), [])
 
   if (hasHydrated) return colorScheme
-  return "light"
+  return 'light'
 }

@@ -1,4 +1,4 @@
-import type { ImageRequireSource } from "react-native"
+import type { ImageRequireSource } from 'react-native'
 
 export type BasicInfo = {
   email?: string
@@ -21,10 +21,10 @@ export type Connection = {
   tags: string[]
   iconSrc?: ImageRequireSource | string
   profile?: string
-  status: "active" | "archived"
+  status: 'active' | 'archived'
 
   contactInfo?: {
     recordID: string
-    platform?: "ios" | "android"
+    platform?: 'ios' | 'android'
   }
 }

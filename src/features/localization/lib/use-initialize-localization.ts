@@ -1,7 +1,8 @@
-import { useAtomValue } from "jotai"
-import { useEffect, useState } from "react"
-import { languageAtom } from "../model/store"
-import { initializeLocalizations } from "./polyfills"
+import { useAtomValue } from 'jotai'
+import { useEffect, useState } from 'react'
+
+import { languageAtom } from '../model/store'
+import { initializeLocalizations } from './polyfills'
 
 /**
  * Hook to use for display splash screen until the localizations are initialized

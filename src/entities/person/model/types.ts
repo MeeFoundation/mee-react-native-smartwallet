@@ -1,12 +1,13 @@
-import type { Connection } from "@/entities/connection/@x/person"
-import type { PaginatedFetchParams, PaginatedListResponse } from "@/shared/model"
+import type { Connection } from '@/entities/connection/@x/person'
+
+import type { PaginatedFetchParams, PaginatedListResponse } from '@/shared/model'
 
 export type ShortPerson = Connection
 export type Person = ShortPerson
 
 export type PersonsFilter = {
-  connectionStatus?: Connection["status"] | null
-  has?: ("email" | "password" | "phone" | "payment_details")[]
+  connectionStatus?: Connection['status'] | null
+  has?: ('email' | 'password' | 'phone' | 'payment_details')[]
 }
 
 export type PersonsListFetchParams = {

@@ -1,12 +1,14 @@
 // TODO refactor
-import { colors } from "@/shared/config"
-import { AnimatedTouchable } from "@/shared/ui/AnimatedTouchable"
-import { AppButton } from "@/shared/ui/AppButton"
-import { TextField } from "@/shared/ui/TextField"
-import { Typography } from "@/shared/ui/Typography"
-import { type FC, useEffect, useState } from "react"
-import { StyleSheet, View } from "react-native"
-import { PlusIcon } from "react-native-heroicons/outline"
+
+import { type FC, useEffect, useState } from 'react'
+import { StyleSheet, View } from 'react-native'
+import { PlusIcon } from 'react-native-heroicons/outline'
+
+import { colors } from '@/shared/config'
+import { AnimatedTouchable } from '@/shared/ui/AnimatedTouchable'
+import { AppButton } from '@/shared/ui/AppButton'
+import { TextField } from '@/shared/ui/TextField'
+import { Typography } from '@/shared/ui/Typography'
 
 export type FilterValue = {
   email?: string
@@ -21,34 +23,34 @@ type FilterConnectionsProps = {
 }
 
 export const FilterConnections: FC<FilterConnectionsProps> = ({ filter, onChangeFilter }) => {
-  const [email, setEmail] = useState<string>(filter.email ?? "")
-  const [paymentDetails, setPaymentDetails] = useState<string>(filter.paymentDetails ?? "")
+  const [email, setEmail] = useState<string>(filter.email ?? '')
+  const [paymentDetails, setPaymentDetails] = useState<string>(filter.paymentDetails ?? '')
   const [password, setPassword] = useState<boolean>(filter.password ?? false)
   const [phone, setPhone] = useState<boolean>(filter.phone ?? false)
 
   useEffect(() => {
-    setEmail(filter.email ?? "")
-    setPaymentDetails(filter.paymentDetails ?? "")
+    setEmail(filter.email ?? '')
+    setPaymentDetails(filter.paymentDetails ?? '')
     setPassword(filter.password ?? false)
     setPhone(filter.phone ?? false)
   }, [filter.email, filter.password, filter.paymentDetails, filter.phone])
   return (
-    <View style={{ width: "100%", height: "100%" }}>
+    <View style={{ height: '100%', width: '100%' }}>
       <View style={styles.container}>
         <TextField
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          size="md"
-          RightIcon={PlusIcon}
           isBottomSheetTextInput
+          onChangeText={setEmail}
+          placeholder="Email"
+          RightIcon={PlusIcon}
+          size="md"
+          value={email}
         />
         <AnimatedTouchable
           onPress={() => setPassword(!password)}
           style={{
             ...styles.item,
+            borderColor: password ? colors.primaryActive : colors['gray-200'],
             borderWidth: password ? 2 : 1,
-            borderColor: password ? colors.primaryActive : colors["gray-200"],
           }}
         >
           <View style={styles.itemRow}>
@@ -57,16 +59,16 @@ export const FilterConnections: FC<FilterConnectionsProps> = ({ filter, onChange
           <View
             style={{
               ...styles.checkItem,
-              borderColor: password ? colors.primaryActive : colors["gray-400"],
+              borderColor: password ? colors.primaryActive : colors['gray-400'],
             }}
           >
             {password && (
               <View
                 style={{
-                  width: 12,
-                  height: 12,
                   backgroundColor: colors.primaryActive,
                   borderRadius: 100,
+                  height: 12,
+                  width: 12,
                 }}
               />
             )}
@@ -76,8 +78,8 @@ export const FilterConnections: FC<FilterConnectionsProps> = ({ filter, onChange
           onPress={() => setPhone(!phone)}
           style={{
             ...styles.item,
+            borderColor: phone ? colors.primaryActive : colors['gray-200'],
             borderWidth: phone ? 2 : 1,
-            borderColor: phone ? colors.primaryActive : colors["gray-200"],
           }}
         >
           <View style={styles.itemRow}>
@@ -86,34 +88,34 @@ export const FilterConnections: FC<FilterConnectionsProps> = ({ filter, onChange
           <View
             style={{
               ...styles.checkItem,
-              borderColor: phone ? colors.primaryActive : colors["gray-400"],
+              borderColor: phone ? colors.primaryActive : colors['gray-400'],
             }}
           >
             {phone && (
               <View
                 style={{
-                  width: 12,
-                  height: 12,
                   backgroundColor: colors.primaryActive,
                   borderRadius: 100,
+                  height: 12,
+                  width: 12,
                 }}
               />
             )}
           </View>
         </AnimatedTouchable>
         <TextField
-          placeholder="Payment Details"
-          value={paymentDetails}
-          onChangeText={setPaymentDetails}
-          size="md"
-          RightIcon={PlusIcon}
           isBottomSheetTextInput
+          onChangeText={setPaymentDetails}
+          placeholder="Payment Details"
+          RightIcon={PlusIcon}
+          size="md"
+          value={paymentDetails}
         />
         <AppButton
-          onPress={() => onChangeFilter({ ...filter, email, paymentDetails })}
-          text="Apply filters"
-          style={{ flex: 1 }}
           fullWidth={true}
+          onPress={() => onChangeFilter({ ...filter, email, paymentDetails })}
+          style={{ flex: 1 }}
+          text="Apply filters"
         />
       </View>
     </View>
@@ -121,25 +123,25 @@ export const FilterConnections: FC<FilterConnectionsProps> = ({ filter, onChange
 }
 
 export const styles = StyleSheet.create({
-  container: { gap: 8, flex: 1, width: "100%" },
-  item: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "100%",
-    paddingVertical: 8,
-    gap: 16,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    height: 44,
-  },
-  itemRow: { flexDirection: "row", gap: 5 },
   checkItem: {
-    width: 16,
-    height: 16,
+    alignItems: 'center',
     borderRadius: 100,
     borderWidth: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    height: 16,
+    justifyContent: 'center',
+    width: 16,
   },
+  container: { flex: 1, gap: 8, width: '100%' },
+  item: {
+    alignItems: 'center',
+    borderRadius: 8,
+    flexDirection: 'row',
+    gap: 16,
+    height: 44,
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    width: '100%',
+  },
+  itemRow: { flexDirection: 'row', gap: 5 },
 })

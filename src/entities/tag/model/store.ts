@@ -1,5 +1,6 @@
-import { ConnectionsStore } from "@/entities/connection/@x/tag"
-import { atom } from "jotai"
+import { atom } from 'jotai'
+
+import { ConnectionsStore } from '@/entities/connection/@x/tag'
 
 export const TagsStore = atom(async (get) => {
   const tags: string[] = []

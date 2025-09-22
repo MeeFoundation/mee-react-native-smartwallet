@@ -1,5 +1,6 @@
-import type { FC } from "react"
-import { SelectList } from "./SelectList"
+import type { FC } from 'react'
+
+import { SelectList } from './SelectList'
 
 type SelectTagsProps = {
   tags: string[]
@@ -22,12 +23,12 @@ export const SelectTags: FC<SelectTagsProps> = ({ tags, selectedTags, onSelectTa
 
   return (
     <SelectList
-      searchPlaceholder="enter tag name"
       data={tags}
-      selected={selectedTags}
-      onSelect={selectTagHandler}
       label="Tags"
       onCreate={createTagHandler}
+      onSelect={selectTagHandler}
+      searchPlaceholder="enter tag name"
+      selected={selectedTags}
     />
   )
 }

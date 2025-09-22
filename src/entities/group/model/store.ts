@@ -1,31 +1,20 @@
-import { DEFAULT_PAGE_SIZE } from "@/shared/config"
-import { AppError, UnknownError } from "@/shared/errors"
-import {
-  INITIAL_PAGINATED_STATE,
-  type PaginatedListState,
-  type PaginationAction,
-} from "@/shared/lib/paginated-list"
-import type { PaginatedFetchParams } from "@/shared/model"
-import { atom, type SetStateAction, type WritableAtom } from "jotai"
-import { atomFamily } from "jotai/utils"
-import { isEqual } from "lodash-es"
-import { defaultGroupFilter, groupsService } from "./service"
-import type {
-  GroupsFilter,
-  GroupsListFetchParams,
-  GroupsPaginatedListResponse,
-  ShortGroup,
-} from "./types"
+import { atom, type SetStateAction, type WritableAtom } from 'jotai'
+import { atomFamily } from 'jotai/utils'
+import { isEqual } from 'lodash-es'
+
+import { DEFAULT_PAGE_SIZE } from '@/shared/config'
+import { AppError, UnknownError } from '@/shared/errors'
+import { INITIAL_PAGINATED_STATE, type PaginatedListState, type PaginationAction } from '@/shared/lib/paginated-list'
+import type { PaginatedFetchParams } from '@/shared/model'
+
+import { defaultGroupFilter, groupsService } from './service'
+import type { GroupsFilter, GroupsListFetchParams, GroupsPaginatedListResponse, ShortGroup } from './types'
 
 type PaginatedGroupsPersonsListState = PaginatedListState<ShortGroup>
 
 export const getPaginatedGroupsListStateAtom = atomFamily<
   GroupsListFetchParams,
-  WritableAtom<
-    PaginatedGroupsPersonsListState,
-    [SetStateAction<PaginatedGroupsPersonsListState>],
-    void
-  >
+  WritableAtom<PaginatedGroupsPersonsListState, [SetStateAction<PaginatedGroupsPersonsListState>], void>
 >((_params: GroupsListFetchParams) => atom(INITIAL_PAGINATED_STATE), isEqual)
 
 export const getManagePaginatedGroupsListAtom = atomFamily((params: GroupsListFetchParams) => {
@@ -36,11 +25,11 @@ export const getManagePaginatedGroupsListAtom = atomFamily((params: GroupsListFe
 
     const fetchParams: PaginatedFetchParams & GroupsListFetchParams = {
       ...params,
-      startIndex: 0,
       limit: DEFAULT_PAGE_SIZE,
+      startIndex: 0,
     }
 
-    if (action === "loadMore") {
+    if (action === 'loadMore') {
       /**
        * If there is no next index, there is no more data to load
        */
@@ -51,18 +40,18 @@ export const getManagePaginatedGroupsListAtom = atomFamily((params: GroupsListFe
     /**
      * Refresh sets the start index to 0
      */
-    if (action === "refresh") fetchParams.startIndex = 0
+    if (action === 'refresh') fetchParams.startIndex = 0
 
     /**
      * Reset sets the start index to 0
      */
-    if (action === "reset") fetchParams.startIndex = 0
+    if (action === 'reset') fetchParams.startIndex = 0
 
     set(groupsDataAtom, (prev) => ({
       ...prev,
-      isRefreshing: action === "refresh" || action === "reset",
       isFetching: true,
-      isFetchingNextPage: action === "loadMore",
+      isFetchingNextPage: action === 'loadMore',
+      isRefreshing: action === 'refresh' || action === 'reset',
     }))
 
     try {
@@ -73,29 +62,27 @@ export const getManagePaginatedGroupsListAtom = atomFamily((params: GroupsListFe
          * Only load more adds data to the list
          */
         const newData: GroupsPaginatedListResponse =
-          action === "loadMore" && prev.data
-            ? { ...result, items: [...prev.data.items, ...result.items] }
-            : result
+          action === 'loadMore' && prev.data ? { ...result, items: [...prev.data.items, ...result.items] } : result
 
         return {
           ...prev,
           data: newData,
+          error: null,
           hasNextPage: result.nextIndex !== null,
-          isRefreshing: false,
-          isFetchingNextPage: false,
           isFetched: true,
           isFetching: false,
-          error: null,
+          isFetchingNextPage: false,
+          isRefreshing: false,
         } satisfies PaginatedGroupsPersonsListState
       })
     } catch (error) {
       set(groupsDataAtom, (prev) => ({
         ...prev,
-        isRefreshing: false,
-        isFetchingNextPage: false,
+        error: error instanceof AppError ? error : new UnknownError(),
         isFetched: true,
         isFetching: false,
-        error: error instanceof AppError ? error : new UnknownError(),
+        isFetchingNextPage: false,
+        isRefreshing: false,
       }))
     }
   })

@@ -1,8 +1,10 @@
-import { LogoCharSvg } from "@/assets/images"
-import { colors } from "@/shared/config"
-import { type FC, useEffect, useRef } from "react"
-import { Animated, Easing, StyleSheet, View } from "react-native"
-import Svg, { Circle, G } from "react-native-svg"
+import { type FC, useEffect, useRef } from 'react'
+import { Animated, Easing, StyleSheet, View } from 'react-native'
+import Svg, { Circle, G } from 'react-native-svg'
+
+import { LogoCharSvg } from '@/assets/images'
+
+import { colors } from '@/shared/config'
 
 type LoaderProps = {
   progress: number
@@ -19,27 +21,27 @@ const CircleComp: FC<LoaderProps> = ({ progress }) => {
 
   useEffect(() => {
     Animated.timing(strokeDashoffset, {
-      toValue: circleCircumference - (circleCircumference * progress) / 100,
-      easing: Easing.linear, // Custom easing function
       duration: 1000, // Adjust duration for smoother or faster animation
+      easing: Easing.linear, // Custom easing function
+      toValue: circleCircumference - (circleCircumference * progress) / 100,
       useNativeDriver: false, // Must be false for non-transform animations
     }).start()
   }, [progress, circleCircumference, strokeDashoffset])
 
   return (
     <View style={styles.container}>
-      <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-        <G rotation="-90" origin={`${radius}, ${radius}`}>
+      <Svg height={size} viewBox={`0 0 ${size} ${size}`} width={size}>
+        <G origin={`${radius}, ${radius}`} rotation="-90">
           <AnimatedCircle
             cx={radius}
             cy={radius}
-            r={radius - 3}
             fill="transparent"
+            r={radius - 3}
             stroke="white"
-            strokeWidth="3"
-            strokeDasharray={circleCircumference} // Total length of the stroke
-            strokeDashoffset={strokeDashoffset} // Animated offset for progress
-            strokeLinecap="round" // Smooth edges
+            strokeDasharray={circleCircumference}
+            strokeDashoffset={strokeDashoffset} // Total length of the stroke
+            strokeLinecap="round" // Animated offset for progress
+            strokeWidth="3" // Smooth edges
           />
         </G>
       </Svg>
@@ -50,20 +52,20 @@ const CircleComp: FC<LoaderProps> = ({ progress }) => {
 export const Loader: FC<LoaderProps> = ({ progress }) => {
   return (
     <View style={styles.loader}>
-      <LogoCharSvg width={100} height={100} />
+      <LogoCharSvg height={100} width={100} />
       <CircleComp progress={progress} />
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  container: { justifyContent: "center", alignItems: "center", flex: 1, position: "absolute" },
+  container: { alignItems: 'center', flex: 1, justifyContent: 'center', position: 'absolute' },
   loader: {
-    width: 220,
-    height: 220,
-    borderRadius: 6,
+    alignItems: 'center',
     backgroundColor: colors.primary,
-    justifyContent: "center",
-    alignItems: "center",
+    borderRadius: 6,
+    height: 220,
+    justifyContent: 'center',
+    width: 220,
   },
 })

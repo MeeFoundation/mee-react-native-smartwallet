@@ -1,9 +1,9 @@
-import { mockChat } from "./mock/chat"
+import { mockChat } from './mock/chat'
 import type {
   ChatMessage,
   GetChatMessagesPaginatedListFetchParams,
   GetChatMessagesPaginatedListResponse,
-} from "./types"
+} from './types'
 
 class ChatService {
   #mockChats = new Map<string, ChatMessage[]>()
@@ -16,8 +16,7 @@ class ChatService {
     if (chat)
       return {
         items: chat.slice(params.startIndex, params.startIndex + params.limit),
-        nextIndex:
-          chat.length > params.startIndex + params.limit ? params.startIndex + params.limit : null,
+        nextIndex: chat.length > params.startIndex + params.limit ? params.startIndex + params.limit : null,
         totalCount: chat.length,
       }
 

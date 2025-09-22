@@ -1,23 +1,24 @@
-import { colors } from "@/shared/config"
-import { Typography } from "@/shared/ui/Typography"
-import type { FC, ReactNode } from "react"
-import { StyleSheet, TouchableOpacity, type TouchableOpacityProps } from "react-native"
-import { AdjustmentsVerticalIcon } from "react-native-heroicons/outline"
+import type { FC, ReactNode } from 'react'
+import { StyleSheet, TouchableOpacity, type TouchableOpacityProps } from 'react-native'
+import { AdjustmentsVerticalIcon } from 'react-native-heroicons/outline'
+
+import { colors } from '@/shared/config'
+import { Typography } from '@/shared/ui/Typography'
 
 const styles = StyleSheet.create({
   filterSelectButton: {
+    alignItems: 'center',
+    backgroundColor: colors['white/95'],
+    borderColor: colors['black/10'],
+    borderRadius: 8,
+    borderWidth: 1,
+    flex: 1,
+    flexDirection: 'row',
+    gap: 8,
+    height: 44,
+    justifyContent: 'center',
     paddingHorizontal: 16,
     paddingVertical: 10,
-    flex: 1,
-    gap: 8,
-    borderRadius: 8,
-    backgroundColor: colors["white/95"],
-    borderColor: colors["black/10"],
-    borderWidth: 1,
-    flexDirection: "row",
-    justifyContent: "center",
-    height: 44,
-    alignItems: "center",
   },
 
   text: {
@@ -33,9 +34,9 @@ type FiltersSelectButtonProps = TouchableOpacityProps & {
 }
 
 const FiltersSelectButton: FC<FiltersSelectButtonProps> = ({ style, icon, ...props }) => (
-  <TouchableOpacity style={styles.filterSelectButton} onPress={props.onPress}>
-    <Typography style={styles.text}>{props.children ?? "Filters"}</Typography>
-    {icon ?? <AdjustmentsVerticalIcon size={20} color={colors.black} />}
+  <TouchableOpacity onPress={props.onPress} style={styles.filterSelectButton}>
+    <Typography style={styles.text}>{props.children ?? 'Filters'}</Typography>
+    {icon ?? <AdjustmentsVerticalIcon color={colors.black} size={20} />}
   </TouchableOpacity>
 )
 

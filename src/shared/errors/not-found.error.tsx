@@ -1,4 +1,4 @@
-import { AppError } from "./app-error"
+import { AppError } from './app-error'
 
 type NotFoundErrorOptions = {
   message?: string
@@ -8,11 +8,11 @@ type NotFoundErrorOptions = {
 export class NotFoundError extends AppError {
   constructor(options?: NotFoundErrorOptions) {
     super({
-      message: options?.message ?? "Not found",
       description: options?.description ?? null,
-      suggestRetry: false,
+      message: options?.message ?? 'Not found',
       suggestGoBack: false,
       suggestGoHome: false,
+      suggestRetry: false,
     })
   }
 }

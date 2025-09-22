@@ -1,10 +1,11 @@
-import { Cloud1Svg, Cloud2Svg } from "@/assets/images"
-import type { WelcomeSlide } from "./WelcomeItem"
+import { Cloud1Svg, Cloud2Svg } from '@/assets/images'
+
+import type { WelcomeSlide } from './WelcomeItem'
 
 export const welcomeSlides: WelcomeSlide[] = [
   {
-    CloudImage: Cloud1Svg,
     btn: false,
+    CloudImage: Cloud1Svg,
   },
   {
     btn: true,

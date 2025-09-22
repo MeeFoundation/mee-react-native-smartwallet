@@ -1,11 +1,11 @@
-import { palettes } from "@/shared/config"
-import { useColorScheme } from "@/shared/lib/useColorScheme"
+import { palettes } from '@/shared/config'
+import { useColorScheme } from '@/shared/lib/useColorScheme'
 
 export const useThemeColor = (
   colorName: keyof typeof palettes.light & keyof typeof palettes.dark,
   params?: { light?: string; dark?: string },
 ) => {
-  const theme = useColorScheme() ?? "light"
+  const theme = useColorScheme() ?? 'light'
   const colorFromProps = params?.[theme]
 
   if (colorFromProps) {

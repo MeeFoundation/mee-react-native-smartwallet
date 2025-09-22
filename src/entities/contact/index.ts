@@ -5,4 +5,4 @@ export {
   setAndroidContactsAtom,
   setIosContactsAtom,
   updateContactAtom,
-} from "./model/store"
+} from './model/store'

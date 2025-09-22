@@ -1,7 +1,5 @@
 export const hexAlphaColor = (hex: string, opacityPercent: number) => {
-  const decimal = `0${Math.round(255 * (opacityPercent / 100)).toString(16)}`
-    .slice(-2)
-    .toUpperCase()
+  const decimal = `0${Math.round(255 * (opacityPercent / 100)).toString(16)}`.slice(-2).toUpperCase()
   return hex + decimal
 }
 
