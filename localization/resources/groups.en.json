@@ -9,5 +9,18 @@
     "myInfo": {
       "title": "My Info"
     }
+  },
+  "chat": {
+    "input": {
+      "placeholder": "write something"
+    },
+    "actions": {
+      "attach_file": {
+        "text": "Attach file"
+      },
+      "cancel": {
+        "text": "Cancel"
+      }
+    }
   }
 }
