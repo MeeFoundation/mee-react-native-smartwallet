@@ -5,6 +5,13 @@ pre-commit:
       run: pnpm lint
     check-types:
       run: pnpm check-types
+
+
+commit-msg:
+  commands:
+    "lint commit message":
+      run: pnpm commitlint --edit {1}
+
     # knip:
     #   run: yarn knip
 # EXAMPLE USAGE:

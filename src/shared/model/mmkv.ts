@@ -1,0 +1,15 @@
+import { atomWithStorage, createJSONStorage } from 'jotai/utils'
+
+import { clearAll, getItem, removeItem, setItem } from './storage'
+
+export const makeAtomWithMMKV = <T>(key: string, initialValue: T) =>
+  atomWithStorage<T>(
+    key,
+    initialValue,
+    createJSONStorage<T>(() => ({
+      clearAll,
+      getItem,
+      removeItem,
+      setItem,
+    })),
+  )
