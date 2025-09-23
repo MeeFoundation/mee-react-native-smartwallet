@@ -53,6 +53,7 @@
     "ignoreUnknown": false,
     "includes": [
       "./src/**/*",
+      "./tailwind.config.js",
       "!./biome.json",
       "!./tsconfig.json",
       "!./knip.json",

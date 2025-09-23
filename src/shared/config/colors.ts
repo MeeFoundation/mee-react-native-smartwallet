@@ -37,6 +37,7 @@ const primaryPaletteLight = {
 } as const
 
 const redPaletteLight = {
+  'red-500': '#EF4444',
   'red-700': '#B91C1C',
 } as const
 
@@ -59,7 +60,7 @@ const lightPalette = {
    * Danger colors
    */
   // TODO this colors should be based on red palette
-  danger: '#EF4444',
+  danger: redPaletteLight['red-500'],
   dangerActive: '#F87171',
   dangerLight: '#FF3B30',
   link: '#007AFF',

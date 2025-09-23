@@ -6,6 +6,8 @@ import type { Group } from '@/entities/group/model/types'
 import { fonts } from '@/shared/config'
 import { Avatar } from '@/shared/ui/Avatar'
 import * as ExpandableSection from '@/shared/ui/ExpandableSection'
+import { IconButton } from '@/shared/ui/IconButton'
+import * as TextInput from '@/shared/ui/TextInput'
 import { Typography } from '@/shared/ui/Typography'
 
 const styles = StyleSheet.create({
@@ -25,23 +27,57 @@ type PersonalDetailsSectionProps = Omit<ExpandableSection.ExpandableSectionProps
 
 const PersonalDetailsSection: FC<PersonalDetailsSectionProps> = (props) => {
   return (
-    <ExpandableSection.Root {...props}>
-      <ExpandableSection.Head>
-        <ExpandableSection.Title>
-          <ExpandableSection.TitleText>Personal details</ExpandableSection.TitleText>
-        </ExpandableSection.Title>
-        <ExpandableSection.Actions>
-          <ExpandableSection.ToggleAction />
-        </ExpandableSection.Actions>
-      </ExpandableSection.Head>
+    <>
+      <TextInput.TextInput invalid placeholder="Invalid" />
 
-      <ExpandableSection.Content>
-        <Typography>content</Typography>
-        <Typography>content</Typography>
-        <Typography>content</Typography>
-        <Typography>content</Typography>
-      </ExpandableSection.Content>
-    </ExpandableSection.Root>
+      <TextInput.Root invalid>
+        <TextInput.Input invalid placeholder="Invalid" />
+        <TextInput.Actions>
+          <Typography style={{ fontSize: 12 }}>Required</Typography>
+          <TextInput.Action>
+            <IconButton icon="pencil.outlined" size="sm" />
+          </TextInput.Action>
+          <TextInput.Action>
+            <IconButton icon="pencil.outlined" size="full" />
+          </TextInput.Action>
+        </TextInput.Actions>
+        <TextInput.Label>Label</TextInput.Label>
+      </TextInput.Root>
+
+      <ExpandableSection.Root {...props}>
+        <ExpandableSection.Head>
+          <ExpandableSection.Title>
+            <ExpandableSection.TitleText>Personal details</ExpandableSection.TitleText>
+          </ExpandableSection.Title>
+          <ExpandableSection.Actions>
+            <ExpandableSection.ToggleAction />
+          </ExpandableSection.Actions>
+        </ExpandableSection.Head>
+
+        <ExpandableSection.Content>
+          <TextInput.TextInput invalid placeholder="Invalid" />
+
+          <TextInput.Root invalid>
+            <TextInput.Input invalid placeholder="Invalid" />
+            <TextInput.Actions>
+              <Typography style={{ fontSize: 12 }}>Required</Typography>
+              <TextInput.Action>
+                <IconButton icon="pencil.outlined" size="sm" />
+              </TextInput.Action>
+              <TextInput.Action>
+                <IconButton icon="pencil.outlined" size="full" />
+              </TextInput.Action>
+            </TextInput.Actions>
+            <TextInput.Label>Label</TextInput.Label>
+          </TextInput.Root>
+
+          <Typography>content</Typography>
+          <Typography>content</Typography>
+          <Typography>content</Typography>
+          <Typography>content</Typography>
+        </ExpandableSection.Content>
+      </ExpandableSection.Root>
+    </>
   )
 }
 

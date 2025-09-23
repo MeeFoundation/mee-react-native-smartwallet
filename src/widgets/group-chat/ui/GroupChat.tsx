@@ -21,7 +21,7 @@ import type { Group } from '@/entities/group'
 
 import { colors } from '@/shared/config'
 import { IconSymbol } from '@/shared/ui/IconSymbol'
-import { PLACEHOLDER_TEXT_COLOR, textInputStyles } from '@/shared/ui/TextInput'
+import { PLACEHOLDER_TEXT_COLOR } from '@/shared/ui/TextInput'
 
 /* -------------------------------------------------------------------------------------------------
  * SendButton
@@ -260,6 +260,22 @@ const useRenderActions = () => {
   )
 }
 
+const composerStyles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    backgroundColor: colors.white,
+    borderColor: colors['black/07'],
+    borderRadius: 8,
+    borderWidth: 1,
+    flex: 1,
+    fontSize: 14,
+    fontWeight: '400',
+    height: 40,
+    paddingHorizontal: 16,
+  },
+})
+
+// FIXME Add custom component to handle focus styles
 const useRenderComposer = () => {
   const { t: groupsT } = useTranslation('groups')
 
@@ -270,7 +286,7 @@ const useRenderComposer = () => {
         placeholder={groupsT('chat.input.placeholder')}
         placeholderTextColor={PLACEHOLDER_TEXT_COLOR}
         textInputStyle={[
-          textInputStyles.textInput,
+          composerStyles.container,
           props.textInputStyle,
           { marginLeft: 0, marginTop: 0, minHeight: 40 },
         ]}

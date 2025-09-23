@@ -26,6 +26,8 @@ import {
 } from 'react-native-heroicons/solid'
 import type { SvgProps } from 'react-native-svg'
 
+import { colors } from '../config'
+
 const MAPPING = {
   'archive-box.outlined': ArchiveBoxOutlineIcon,
   'bars-3.outlined': Bars3OutlineIcon,
@@ -59,9 +61,9 @@ type IconSymbolProps = SvgProps & {
   name: IconSymbolName
 }
 
-const IconSymbol: FC<IconSymbolProps> = ({ name, ...props }) => {
+const IconSymbol: FC<IconSymbolProps> = ({ name, color, ...props }) => {
   const Icon = MAPPING[name]
-  return <Icon {...props} />
+  return <Icon {...props} color={color ?? colors['gray-900']} />
 }
 
 /* -----------------------------------------------------------------------------------------------*/

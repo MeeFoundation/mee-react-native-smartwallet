@@ -28,5 +28,6 @@
   },
   "[typescript]": {
     "editor.defaultFormatter": "biomejs.biome"
-  }
+  },
+  "tailwindCSS.classFunctions": ["cva", "cx"]
 }
