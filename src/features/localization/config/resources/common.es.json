@@ -1,4 +1,5 @@
 {
+  "filters_button": { "text": "Filtros" },
   "tabs": {
     "groups": {
       "title": "Grupos"
@@ -13,6 +14,6 @@
       "title": "Billetera"
     }
   },
-
-  "filters_button": { "text": "Filtros" }
+  "today": "Hoy",
+  "yesterday": "Ayer"
 }

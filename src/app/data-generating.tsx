@@ -100,7 +100,7 @@ export default function DataGenerating() {
         <Loader progress={progress} />
       </Animated.View>
       <Animated.View style={{ opacity: textOpacityValue }}>
-        <Typography weight="500">{steps[currentStep]?.title ?? ''}</Typography>
+        <Typography className="font-medium">{steps[currentStep]?.title ?? ''}</Typography>
       </Animated.View>
     </Animated.View>
   )

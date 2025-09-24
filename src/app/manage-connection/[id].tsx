@@ -125,7 +125,7 @@ export default function ManageConnection() {
           <ConnectionCard border logo={connection.iconSrc} menuActions={connectionCardActions} name={connection.name} />
           <Tabs />
           <SelectTags onSelectTags={setSelectedTags} selectedTags={connection.tags} tags={allTags} />
-          <Accordion collapsed={false} head={<Typography weight="500">Required info shared</Typography>}>
+          <Accordion collapsed={false} head={<Typography className="font-medium">Required info shared</Typography>}>
             <View style={styles.infoContainer}>
               <View style={StyleSheet.compose(styles.infoRow, styles.infoBorder)}>
                 <EnvelopeIcon color={colors.primary} />

@@ -2,7 +2,7 @@ import type { ReactElement } from 'react'
 import { type ImageSourcePropType, StyleSheet, Text, View, type ViewStyle } from 'react-native'
 import { EllipsisVerticalIcon, PencilSquareIcon, TrashIcon } from 'react-native-heroicons/outline'
 
-import { colors, fonts } from '@/shared/config'
+import { colors } from '@/shared/config'
 import { filterNullable } from '@/shared/lib/ts-utils'
 import { AppButton } from '@/shared/ui/AppButton'
 import { Avatar } from '@/shared/ui/Avatar'
@@ -66,7 +66,7 @@ export const ConnectionCard = (props: Props) => {
     <View>
       <View style={containerStyles}>
         <Avatar size={48} src={logo} text={name} />
-        <Typography fontFamily={fonts.publicSans.bold} style={styles.name} weight="500">
+        <Typography className="font-medium" style={styles.name}>
           {name}
         </Typography>
 

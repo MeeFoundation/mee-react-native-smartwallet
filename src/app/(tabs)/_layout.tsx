@@ -11,7 +11,7 @@ import { isAuthenticatedAtom } from '@/features/auth'
 
 import { setAndroidContactsAtom, setIosContactsAtom } from '@/entities/contact'
 
-import { colors, fonts } from '@/shared/config'
+import { colors } from '@/shared/config'
 import { useThemeColor } from '@/shared/lib/useThemeColor'
 import { Avatar } from '@/shared/ui/Avatar'
 import { BottomSheetBackDrop } from '@/shared/ui/BottomSheet'
@@ -185,7 +185,7 @@ export default function TabLayout() {
               {Platform.OS === 'ios' && (
                 <View style={styles.container}>
                   <Avatar size={48} src={IconSources.apple} text={'Apple contacts'} />
-                  <Typography fontFamily={fonts.publicSans.bold} style={styles.name} weight="500">
+                  <Typography className="font-semibold" style={styles.name}>
                     Apple contacts
                   </Typography>
 
@@ -210,7 +210,7 @@ export default function TabLayout() {
               {Platform.OS === 'android' && (
                 <View style={styles.container}>
                   <Avatar size={48} src={IconSources.android} text={'Android contacts'} />
-                  <Typography fontFamily={fonts.publicSans.bold} style={styles.name} weight="500">
+                  <Typography className="font-semibold" style={styles.name}>
                     Android contacts
                   </Typography>
 

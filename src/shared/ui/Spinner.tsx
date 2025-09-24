@@ -1,69 +1,64 @@
-import { useEffect, useRef } from 'react'
-import { Animated, Easing, StyleSheet, View } from 'react-native'
-import Svg, { Circle } from 'react-native-svg'
+import { type FC, useEffect, useId, useRef } from 'react'
+import { Animated, Easing } from 'react-native'
+import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg'
 
-import { LogoCharSvg } from '@/assets/images'
+/* -------------------------------------------------------------------------------------------------
+ * Spinner
+ * -----------------------------------------------------------------------------------------------*/
+const Spinner: FC = () => {
+  const gradientId = useId()
+  const AnimatedCircle = Animated.createAnimatedComponent(Circle)
 
-import { colors } from '@/shared/config'
+  const rotation = useRef(new Animated.Value(0))
 
-const AnimatedCircle = Animated.createAnimatedComponent(Circle)
-const size = 172
+  useEffect(() => {
+    Animated.loop(
+      Animated.timing(rotation.current, {
+        duration: 1200,
+        easing: Easing.linear,
+        toValue: 1,
+        useNativeDriver: false,
+      }),
+    ).start()
+  }, [])
 
-export const Spinner = () => {
-  const rotateValue = useRef(new Animated.Value(0)).current
+  const spin = rotation.current.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  })
+
+  const size = 100
   const radius = size / 2
+
   const circleCircumference = 2 * Math.PI * radius
   const strokeDashoffset = circleCircumference - (circleCircumference * 92) / 100
 
-  useEffect(() => {
-    const spinAnimation = Animated.loop(
-      Animated.timing(rotateValue, {
-        duration: 1000,
-        easing: Easing.linear,
-        toValue: 1,
-        useNativeDriver: true,
-      }),
-    )
-    spinAnimation.start()
-
-    return () => spinAnimation.stop()
-  }, [rotateValue])
-
-  // Interpolate the rotation value to degrees
-  const rotate = rotateValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['-90deg', '270deg'],
-  })
-
   return (
-    <View style={styles.loader}>
-      <LogoCharSvg height={100} width={100} />
-      <Animated.View style={{ position: 'absolute', transform: [{ rotate }], transformOrigin: 'center' }}>
-        <Svg height={size} viewBox={`0 0 ${size} ${size}`} width={size}>
-          <AnimatedCircle
-            cx={radius}
-            cy={radius}
-            fill="transparent"
-            r={radius - 3}
-            stroke="white"
-            strokeDasharray={circleCircumference}
-            strokeDashoffset={strokeDashoffset} // Total length of the stroke
-            strokeLinecap="round" // Animated offset for progress
-            strokeWidth="3" // Smooth edges
-          />
-        </Svg>
-      </Animated.View>
-    </View>
+    <Animated.View style={{ transform: [{ rotate: spin }] }}>
+      <Svg viewBox={`0 0 ${size} ${size}`}>
+        <Defs>
+          <LinearGradient id={gradientId} x1="0%" x2="100%" y1="0%" y2="0%">
+            <Stop offset="0%" stopColor="#668E4F" stopOpacity="1" />
+            <Stop offset="100%" stopColor="#4F868E" stopOpacity="1" />
+          </LinearGradient>
+        </Defs>
+
+        <AnimatedCircle
+          cx={50}
+          cy={50}
+          fill="none"
+          r={40}
+          stroke={`url(#${gradientId})`}
+          strokeDasharray="200"
+          strokeDashoffset={strokeDashoffset}
+          strokeLinecap="round"
+          strokeWidth="15"
+        />
+      </Svg>
+    </Animated.View>
   )
 }
 
-const styles = StyleSheet.create({
-  loader: {
-    alignItems: 'center',
-    backgroundColor: colors.primary,
-    borderRadius: 6,
-    height: 220,
-    justifyContent: 'center',
-    width: 220,
-  },
-})
+/* -----------------------------------------------------------------------------------------------*/
+
+export { Spinner }

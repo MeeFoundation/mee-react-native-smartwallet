@@ -4,6 +4,7 @@ import {
   Bars3Icon as Bars3OutlineIcon,
   BellIcon as BellOutlineIcon,
   ChevronLeftIcon as ChevronLeftOutlineIcon,
+  ChevronRightIcon as ChevronRightOutlineIcon,
   Cog8ToothIcon as Cog8ToothOutlineIcon,
   EllipsisVerticalIcon as EllipsisVerticalOutlineIcon,
   LanguageIcon as LanguageOutlineIcon,
@@ -25,11 +26,14 @@ import {
 } from 'react-native-heroicons/solid'
 import type { SvgProps } from 'react-native-svg'
 
+import { colors } from '../config'
+
 const MAPPING = {
   'archive-box.outlined': ArchiveBoxOutlineIcon,
   'bars-3.outlined': Bars3OutlineIcon,
   'bell.outlined': BellOutlineIcon,
   'chevron-left.outlined': ChevronLeftOutlineIcon,
+  'chevron-right.outlined': ChevronRightOutlineIcon,
   'cog-8-tooth.outlined': Cog8ToothOutlineIcon,
   'ellipsis-vertical.outlined': EllipsisVerticalOutlineIcon,
   'groups.filled': UserGroupSolidIcon,
@@ -57,9 +61,9 @@ type IconSymbolProps = SvgProps & {
   name: IconSymbolName
 }
 
-const IconSymbol: FC<IconSymbolProps> = ({ name, ...props }) => {
+const IconSymbol: FC<IconSymbolProps> = ({ name, color, ...props }) => {
   const Icon = MAPPING[name]
-  return <Icon {...props} />
+  return <Icon {...props} color={color ?? colors['gray-900']} />
 }
 
 /* -----------------------------------------------------------------------------------------------*/

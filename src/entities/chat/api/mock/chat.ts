@@ -1,4 +1,4 @@
-import type { ChatMessage, ChatUser } from '../types'
+import type { ChatMessage, ChatUser } from '../../model/types'
 
 export const mockMeUser: ChatUser = {
   _id: 1,
@@ -18,6 +18,18 @@ export const mockBobUser: ChatUser = {
 }
 
 export const mockChat: ChatMessage[] = [
+  {
+    _id: '2',
+    createdAt: new Date(),
+    text: "Ok, I'll text you: test@test.com\nor call you: +1234567890\nor visit your website: www.test.com",
+    user: mockMeUser,
+  },
+  {
+    _id: '3',
+    createdAt: new Date(),
+    text: 'Text me: test@test.com\nor call me: +1234567890\nor visit my website: www.test.com',
+    user: mockKristinUser,
+  },
   {
     _id: '3',
     createdAt: new Date(),
@@ -81,4 +93,5 @@ export const mockChat: ChatMessage[] = [
   ...message,
   _id: index.toString(),
   createdAt: new Date(Date.now() - index * 1000),
+  sent: true,
 }))

@@ -7,6 +7,7 @@ import { StatusBar } from 'expo-status-bar'
 import { useAtomValue } from 'jotai'
 import { type FC, useEffect } from 'react'
 import { useColorScheme } from 'react-native'
+import 'react-native-reanimated'
 
 import { Drawer } from '@/widgets/drawer'
 import { isWelcomeViewedAtom } from '@/widgets/welcome'
@@ -14,9 +15,10 @@ import { isWelcomeViewedAtom } from '@/widgets/welcome'
 import { isAuthenticatedAtom } from '@/features/auth'
 import { useInitializeLocalizations } from '@/features/localization'
 
+import '@/shared/global.css'
+
 import { fonts } from '@/shared/config'
 import { HeaderBackButton } from '@/shared/ui/HeaderBackButton'
-import 'react-native-reanimated'
 
 SplashScreen.setOptions({
   duration: 1000,

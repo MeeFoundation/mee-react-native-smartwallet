@@ -159,7 +159,7 @@ export default function SignIn() {
         <View style={styles.sheetContainer}>
           <View style={styles.infoContainer}>
             {setupPrivacy ? <FaceIdSvg /> : <CircleCheckSvg color={colors.primary} />}
-            <Typography style={styles.sheetTitle} weight="700">
+            <Typography className="font-bold" style={styles.sheetTitle}>
               {setupPrivacy ? 'Set up your Privacy Agent' : 'All Set!'}
             </Typography>
             <Typography style={styles.sheetText}>
