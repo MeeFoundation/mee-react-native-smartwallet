@@ -8,6 +8,7 @@ const red = {
 }
 
 const semantic = {
+  black: '#111827',
   danger: red['500'],
 }
 

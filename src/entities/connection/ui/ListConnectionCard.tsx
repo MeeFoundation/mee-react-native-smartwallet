@@ -2,7 +2,9 @@ import type { FC, ReactNode } from 'react'
 import { StyleSheet, View, type ViewProps } from 'react-native'
 
 import { colors } from '@/shared/config'
+import { cn } from '@/shared/lib/cn'
 import { Avatar, type AvatarProps } from '@/shared/ui/Avatar'
+import * as Skeleton from '@/shared/ui/Skeleton'
 import { Typography, type TypographyProps } from '@/shared/ui/Typography'
 
 export type ConnectionListCardVariant = 'default' | 'expanded'
@@ -166,10 +168,17 @@ const ConnectionListCard: FC<ConnectionListCardProps> = ({ style, children, vari
 /* -------------------------------------------------------------------------------------------------
  * ConnectionListCardSkeleton
  * -----------------------------------------------------------------------------------------------*/
-type ConnectionListCardSkeletonProps = ViewProps
+type ConnectionListCardSkeletonProps = {
+  style?: ViewProps['style']
+  className?: string
+}
 
-const ConnectionListCardSkeleton: FC<ConnectionListCardSkeletonProps> = ({ style, ...rest }) => (
-  <View style={[connectionListCardStyles.default, connectionListCardStyles.skeleton, style]} {...rest} />
+const ConnectionListCardSkeleton: FC<ConnectionListCardSkeletonProps> = ({ style, className }) => (
+  <Skeleton.Root className={cn('rounded-md p-2', className)} height={48} style={style} viewBox="0 0 400 48" width={400}>
+    <Skeleton.Rect height="18" rx="6" ry="6" width="192" x="56" y="7.5" />
+    <Skeleton.Rect height="12" rx="3" ry="3" width="96" x="56" y="28.5" />
+    <Skeleton.Circle cx="24" cy="24" r="24" />
+  </Skeleton.Root>
 )
 
 /* -----------------------------------------------------------------------------------------------*/
