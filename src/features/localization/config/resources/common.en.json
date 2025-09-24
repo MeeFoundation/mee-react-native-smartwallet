@@ -1,4 +1,5 @@
 {
+  "filters_button": { "text": "Filters" },
   "tabs": {
     "groups": {
       "title": "Groups"
@@ -13,6 +14,6 @@
       "title": "Wallet"
     }
   },
-
-  "filters_button": { "text": "Filters" }
+  "today": "Today",
+  "yesterday": "Yesterday"
 }

@@ -1,7 +1,7 @@
 import type { FC, ReactNode } from 'react'
 import { StyleSheet, View, type ViewProps } from 'react-native'
 
-import { colors, fonts } from '@/shared/config'
+import { colors } from '@/shared/config'
 
 import { Typography } from './Typography'
 
@@ -50,11 +50,7 @@ type StatusPanelProps = Omit<ViewProps, 'children'> & {
 const StatusPanel: FC<StatusPanelProps> = ({ title, description, style, variant, ...rest }) => {
   return (
     <View style={[styles.statusPanel, variant === 'danger' && styles.statusPanelDanger, style]} {...rest}>
-      <Typography
-        fontFamily={fonts.publicSans.bold}
-        style={[styles.title, variant === 'danger' && styles.titleDanger]}
-        weight="700"
-      >
+      <Typography className="font-bold" style={[styles.title, variant === 'danger' && styles.titleDanger]}>
         {title}
       </Typography>
       <Typography style={[styles.description, variant === 'danger' && styles.descriptionDanger]}>

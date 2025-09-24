@@ -33,8 +33,16 @@ module.exports = {
   theme: {
     extend: {
       colors,
+      fontFamily: {
+        publicSans: ['PublicSans'],
+      },
+      opacity: {
+        7: '0.07',
+      },
       spacing: {
+        4.5: '18px',
         13: '52px',
+        15: '60px',
       },
     },
   },

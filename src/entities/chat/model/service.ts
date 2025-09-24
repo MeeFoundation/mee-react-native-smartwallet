@@ -25,10 +25,11 @@ class ChatService {
     return { items: newChat, nextIndex: null, totalCount: newChat.length }
   }
 
-  async sendMessage(groupId: string, message: ChatMessage | ChatMessage[]): Promise<null> {
-    const chat = this.#mockChats.get(groupId) ?? []
-    chat.push(...[message].flat())
-    this.#mockChats.set(groupId, chat)
+  async sendMessage(_groupId: string, _message: ChatMessage | ChatMessage[]): Promise<null> {
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+    // const chat = this.#mockChats.get(groupId) ?? []
+    // chat.push(...[message].flat())
+    // this.#mockChats.set(groupId, chat)
     return null
   }
 }

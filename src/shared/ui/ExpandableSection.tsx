@@ -22,7 +22,7 @@ import {
   type ViewProps,
 } from 'react-native'
 
-import { colors, fonts } from '../config'
+import { colors } from '../config'
 import { IconSymbol } from './IconSymbol'
 import { Typography, type TypographyProps } from './Typography'
 
@@ -137,8 +137,7 @@ const ExpandableSectionActions: FC<ExpandableSectionActionsProps> = ({ style, ..
 type ExpandableSectionTitleTextProps = Omit<TypographyProps, 'fontFamily' | 'weight'>
 
 const ExpandableSectionTitleText: FC<ExpandableSectionTitleTextProps> = (props) => (
-  // FIXME It's semibold font in design
-  <Typography fontFamily={fonts.publicSans.bold} weight="600" {...props} />
+  <Typography className="font-semibold" {...props} />
 )
 
 /* -------------------------------------------------------------------------------------------------

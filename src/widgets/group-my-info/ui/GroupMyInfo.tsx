@@ -3,7 +3,6 @@ import { StyleSheet, View } from 'react-native'
 
 import type { Group } from '@/entities/group/model/types'
 
-import { fonts } from '@/shared/config'
 import { Avatar } from '@/shared/ui/Avatar'
 import * as ExpandableSection from '@/shared/ui/ExpandableSection'
 import { IconButton } from '@/shared/ui/IconButton'
@@ -175,14 +174,10 @@ const GroupMyInfo = ({ group }: GroupMyInfoProps) => {
     <View style={{ flex: 1 }}>
       <View style={styles.header}>
         <Avatar size={112} src={myConnection.iconSrc} style={{ marginBottom: 8 }} text={myConnection.name} />
-        <Typography fontFamily={fonts.publicSans.bold} style={{ fontSize: 24, lineHeight: 32 }} weight="600">
-          {myConnection.name}
-        </Typography>
+        <Typography className="font-semibold text-2xl">{myConnection.name}</Typography>
 
         {/* TODO implement  */}
-        <Typography fontFamily={fonts.publicSans.regular} style={{ fontSize: 16, lineHeight: 24 }} weight="400">
-          Admin • Open to work
-        </Typography>
+        <Typography>Admin • Open to work</Typography>
       </View>
 
       <View style={styles.sections}>

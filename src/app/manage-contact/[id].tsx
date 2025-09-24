@@ -139,7 +139,7 @@ export default function ManageContact() {
             <View style={styles.accordionsContainer}>
               <Accordion
                 collapsed={false}
-                head={<Typography weight="500">Shared with you</Typography>}
+                head={<Typography className="font-medium">Shared with you</Typography>}
                 propsStyles={{
                   container: styles.infoContainer,
                   head: styles.accordionHead,

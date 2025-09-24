@@ -1,7 +1,7 @@
 import type { FC, ReactNode } from 'react'
 import { StyleSheet, View, type ViewProps } from 'react-native'
 
-import { colors, fonts } from '@/shared/config'
+import { colors } from '@/shared/config'
 import { Avatar, type AvatarProps } from '@/shared/ui/Avatar'
 import { Typography, type TypographyProps } from '@/shared/ui/Typography'
 
@@ -86,7 +86,7 @@ type ConnectionListCardCountProps = ViewProps
 
 const ConnectionListCardCount: FC<ConnectionListCardCountProps> = ({ style, children, ...rest }) => (
   <View style={style} {...rest}>
-    <Typography fontFamily={fonts.publicSans.medium} style={styles.count} weight="500">
+    <Typography className="font-medium" style={styles.count}>
       ({children})
     </Typography>
   </View>
@@ -109,7 +109,7 @@ const ConnectionListCardActions: FC<ConnectionListCardActionsProps> = ({ style, 
 type ConnectionListCardNameProps = TypographyProps
 
 const ConnectionListCardName: FC<ConnectionListCardNameProps> = ({ style, ...rest }) => (
-  <Typography fontFamily={fonts.publicSans.medium} style={[styles.contentName, style]} weight="500" {...rest} />
+  <Typography className="font-medium" style={[styles.contentName, style]} {...rest} />
 )
 
 /* -------------------------------------------------------------------------------------------------
@@ -120,12 +120,7 @@ type ConnectionListCardHintProps = TypographyProps & {
 }
 
 const ConnectionListCardHint: FC<ConnectionListCardHintProps> = ({ style, danger, ...rest }) => (
-  <Typography
-    fontFamily={fonts.publicSans.regular}
-    style={[styles.contentHint, danger && styles.danger, style]}
-    weight="400"
-    {...rest}
-  />
+  <Typography style={[styles.contentHint, danger && styles.danger, style]} {...rest} />
 )
 
 /* -------------------------------------------------------------------------------------------------

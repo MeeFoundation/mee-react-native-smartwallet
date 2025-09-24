@@ -1,4 +1,4 @@
-import { atom, type SetStateAction, type WritableAtom } from 'jotai'
+import { atom, type Getter, type SetStateAction, type Setter, type WritableAtom } from 'jotai'
 import { atomFamily } from 'jotai/utils'
 import { isEqual } from 'lodash-es'
 
@@ -6,7 +6,7 @@ import { DEFAULT_PAGE_SIZE } from '@/shared/config'
 import { AppError, UnknownError } from '@/shared/errors'
 import { INITIAL_PAGINATED_STATE, type PaginatedListState, type PaginationAction } from '@/shared/lib/paginated-list'
 
-import { mockKristinUser, mockMeUser } from './mock/chat'
+import { mockMeUser } from './mock/chat'
 import { chatService } from './service'
 import type {
   ChatMessage,
@@ -26,10 +26,10 @@ export const getPaginatedChatMessagesListStateAtom = atomFamily<
 >((_params: GetChatMessagesFetchParams) => atom(INITIAL_PAGINATED_STATE), isEqual)
 
 export const getManagePaginatedChatMessagesListAtom = atomFamily((params: GetChatMessagesFetchParams) => {
-  const personsDataAtom = getPaginatedChatMessagesListStateAtom(params)
+  const chatMessagesDataAtom = getPaginatedChatMessagesListStateAtom(params)
 
   return atom(null, async (get, set, action: PaginationAction) => {
-    const currentState = get(personsDataAtom)
+    const currentState = get(chatMessagesDataAtom)
 
     const fetchParams: GetChatMessagesPaginatedListFetchParams = {
       ...params,
@@ -55,7 +55,7 @@ export const getManagePaginatedChatMessagesListAtom = atomFamily((params: GetCha
      */
     if (action === 'reset') fetchParams.startIndex = 0
 
-    set(personsDataAtom, (prev) => ({
+    set(chatMessagesDataAtom, (prev) => ({
       ...prev,
       isFetching: true,
       isFetchingNextPage: action === 'loadMore',
@@ -65,7 +65,7 @@ export const getManagePaginatedChatMessagesListAtom = atomFamily((params: GetCha
     try {
       const result = await chatService.getGroupMessages(fetchParams)
 
-      set(personsDataAtom, (prev) => {
+      set(chatMessagesDataAtom, (prev) => {
         /**
          * Only load more adds data to the list
          */
@@ -84,7 +84,7 @@ export const getManagePaginatedChatMessagesListAtom = atomFamily((params: GetCha
         } satisfies PaginatedChatMessagesListState
       })
     } catch (error) {
-      set(personsDataAtom, (prev) => ({
+      set(chatMessagesDataAtom, (prev) => ({
         ...prev,
         error: error instanceof AppError ? error : new UnknownError(),
         isFetched: true,
@@ -103,31 +103,45 @@ type ChatSendMessageAction = {
 
 type ChatAction = ChatSendMessageAction
 
-export const getChatActionAtom = atomFamily((params: GetChatMessagesFetchParams) => {
-  const chatAtom = getPaginatedChatMessagesListStateAtom(params)
+const addMessages = (state: PaginatedChatMessagesListState, messages: ChatMessage[]): PaginatedChatMessagesListState =>
+  !state.data ? state : { ...state, data: { ...state.data, items: [...messages, ...(state.data?.items ?? [])] } }
 
-  return atom(null, async (_get, set, action: ChatAction) => {
+const updateMessages = (
+  state: PaginatedChatMessagesListState,
+  update: (message: ChatMessage) => ChatMessage,
+): PaginatedChatMessagesListState =>
+  !state.data ? state : { ...state, data: { ...state.data, items: state.data.items.map(update) } }
+
+const handleSendMessage = async (
+  _get: Getter,
+  set: Setter,
+  chatParams: GetChatMessagesFetchParams,
+  action: ChatSendMessageAction,
+) => {
+  const chatAtom = getPaginatedChatMessagesListStateAtom(chatParams)
+  const ids = action.message.map((msg) => msg._id)
+
+  set(chatAtom, (prev) => {
+    const messagesWithPending = action.message.map((msg) => ({ ...msg, pending: true }))
+    return addMessages(prev, messagesWithPending)
+  })
+
+  try {
+    await chatService.sendMessage(chatParams.groupId, action.message)
+
+    set(chatAtom, (prev) =>
+      updateMessages(prev, (msg) => (ids.includes(msg._id) ? { ...msg, pending: false, sent: true } : msg)),
+    )
+  } catch {
+    // TODO add error handling
+  }
+}
+
+export const getChatActionAtom = atomFamily((params: GetChatMessagesFetchParams) => {
+  return atom(null, async (get, set, action: ChatAction) => {
     switch (action.type) {
       case 'send_message': {
-        set(chatAtom, (prev) => {
-          if (!prev.data) throw new Error(`Chat for group ${params.groupId} not found`)
-
-          // FIXME Remove the mock
-          const mockedMessages = (msg: ChatMessage): ChatMessage =>
-            msg.text.startsWith('/resp') ? { ...msg, text: msg.text.replace('/resp', ''), user: mockKristinUser } : msg
-
-          const newState: PaginatedChatMessagesListState = {
-            ...prev,
-            data: {
-              ...prev.data,
-              items: [...action.message.map(mockedMessages), ...(prev.data?.items ?? [])],
-            },
-          }
-
-          return newState
-        })
-        await chatService.sendMessage(params.groupId, action.message)
-        break
+        return handleSendMessage(get, set, params, action)
       }
     }
   })

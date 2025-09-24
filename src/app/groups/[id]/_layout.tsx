@@ -13,7 +13,7 @@ import {
 import type { Group } from '@/entities/group'
 import { getGroupAtom } from '@/entities/group'
 
-import { colors, fonts } from '@/shared/config'
+import { colors } from '@/shared/config'
 import { InvalidRouteParamsError } from '@/shared/errors'
 import { Avatar } from '@/shared/ui/Avatar'
 import { BackgroundLayout } from '@/shared/ui/BackgroundLayout'
@@ -87,7 +87,7 @@ const GroupScreenTab: FC<GroupScreenTabProps> = (props) => {
       onPress={handlePress}
     >
       <View>
-        <Typography fontFamily={fonts.publicSans.medium} style={styles.tabButtonText} weight="500">
+        <Typography className="font-medium" style={styles.tabButtonText}>
           {children}
         </Typography>
       </View>

@@ -2,7 +2,7 @@ import { useSetAtom } from 'jotai'
 import { type FC, useCallback } from 'react'
 import { StyleSheet, TouchableOpacity, View, type ViewProps } from 'react-native'
 
-import { colors, fonts } from '@/shared/config'
+import { colors } from '@/shared/config'
 import { useThemeColor } from '@/shared/lib/useThemeColor'
 import { drawerIsOpenedAtom } from '@/shared/model'
 import { Typography } from '@/shared/ui/Typography'
@@ -42,7 +42,7 @@ type HeaderLeftProps = ViewProps
 
 export const HeaderLeft: FC<HeaderLeftProps> = ({ style, children, ...rest }) => (
   <View style={[styles.headerLeft, style]} {...rest}>
-    <Typography fontFamily={fonts.publicSans.bold} style={styles.text} weight="700">
+    <Typography className="font-bold" style={styles.text}>
       {children}
     </Typography>
   </View>

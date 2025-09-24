@@ -1,7 +1,6 @@
 import type { FC, ReactNode } from 'react'
 import { StyleSheet, View, type ViewProps } from 'react-native'
 
-import { fonts } from '@/shared/config'
 import { Typography } from '@/shared/ui/Typography'
 
 const styles = StyleSheet.create({
@@ -33,7 +32,7 @@ const ScreenTitle: FC<ScreenTitleProps> = ({ thumbnail, style, children, ...rest
   return (
     <View style={[styles.screenTitle, style]} {...rest}>
       {!thumbnail ? null : <View style={styles.thumbnail}>{thumbnail}</View>}
-      <Typography fontFamily={fonts.publicSans.medium} numberOfLines={1} style={styles.title} weight="600">
+      <Typography className="font-semibold" numberOfLines={1} style={styles.title}>
         {children}
       </Typography>
     </View>

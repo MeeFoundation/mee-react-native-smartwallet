@@ -91,12 +91,12 @@ export const BottomSheetBackDrop: FC<Props> = (props) => {
               <AppButton onPress={handleClose} text="Cancel" variant="link" />
             </View>
             <Typography
+              className="font-bold"
               style={{
                 flex: 1,
                 fontSize: 17,
                 textAlign: 'center',
               }}
-              weight="700"
             >
               {title}
             </Typography>

@@ -29,5 +29,12 @@
   "[typescript]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
-  "tailwindCSS.classFunctions": ["cva", "cx"]
+  "tailwindCSS.classFunctions": [
+    "cva",
+    "cx",
+    "cn"
+  ],
+  "[json]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  }
 }
