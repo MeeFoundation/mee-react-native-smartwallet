@@ -6,8 +6,9 @@ import { DEFAULT_PAGE_SIZE } from '@/shared/config'
 import { AppError, UnknownError } from '@/shared/errors'
 import { INITIAL_PAGINATED_STATE, type PaginatedListState, type PaginationAction } from '@/shared/lib/paginated-list'
 
-import { mockMeUser } from './mock/chat'
-import { chatService } from './service'
+import { getGroupChatMessages } from '../api/get-group-chat-messages'
+import { mockMeUser } from '../api/mock/chat'
+import { sendGroupChatMessage } from '../api/send-group-chat-message'
 import type {
   ChatMessage,
   ChatUser,
@@ -63,7 +64,7 @@ export const getManagePaginatedChatMessagesListAtom = atomFamily((params: GetCha
     }))
 
     try {
-      const result = await chatService.getGroupMessages(fetchParams)
+      const result = await getGroupChatMessages(fetchParams)
 
       set(chatMessagesDataAtom, (prev) => {
         /**
@@ -127,7 +128,7 @@ const handleSendMessage = async (
   })
 
   try {
-    await chatService.sendMessage(chatParams.groupId, action.message)
+    await sendGroupChatMessage({ groupId: chatParams.groupId, message: action.message })
 
     set(chatAtom, (prev) =>
       updateMessages(prev, (msg) => (ids.includes(msg._id) ? { ...msg, pending: false, sent: true } : msg)),

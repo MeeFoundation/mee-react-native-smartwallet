@@ -12,3 +12,8 @@ export type GetChatMessagesFetchParams = {
 export type GetChatMessagesPaginatedListFetchParams = PaginatedFetchParams & GetChatMessagesFetchParams
 
 export type GetChatMessagesPaginatedListResponse = PaginatedListResponse<ChatMessage>
+
+export type SendChatMessageFetchParams = {
+  groupId: string
+  message: ChatMessage[]
+}
