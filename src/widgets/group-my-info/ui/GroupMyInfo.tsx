@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import { StyleSheet, View } from 'react-native'
 
-import type { Group } from '@/entities/group/model/types'
+import type { Group } from '@/entities/group'
 
 import { Avatar } from '@/shared/ui/Avatar'
 import * as ExpandableSection from '@/shared/ui/ExpandableSection'

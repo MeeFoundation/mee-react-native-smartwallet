@@ -5,6 +5,8 @@ pre-commit:
       run: pnpm lint
     check-types:
       run: pnpm check-types
+    steiger:
+      run: pnpm steiger
 
 
 commit-msg:

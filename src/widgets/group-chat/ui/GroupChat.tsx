@@ -1,6 +1,6 @@
 import { type FC, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { RefreshControl, StyleSheet, TouchableOpacity, View } from 'react-native'
 import {
   Actions,
   type ActionsProps,
@@ -10,9 +10,11 @@ import {
   GiftedChat,
   InputToolbar,
   type InputToolbarProps,
+  type LoadEarlierProps,
   type MessageProps,
   type SendProps,
 } from 'react-native-gifted-chat'
+import type { ListViewProps } from 'react-native-gifted-chat/lib/MessageContainer'
 
 import type { ChatMessage as ChatMessageType, ChatUser } from '@/entities/chat'
 import type { Group } from '@/entities/group'
@@ -20,10 +22,12 @@ import type { Group } from '@/entities/group'
 import { colors } from '@/shared/config'
 import { localizeRelativeDate } from '@/shared/lib/date-time'
 import { IconSymbol } from '@/shared/ui/IconSymbol'
+import { Spinner } from '@/shared/ui/Spinner'
 import { PLACEHOLDER_TEXT_COLOR } from '@/shared/ui/TextInput'
 import { Typography } from '@/shared/ui/Typography'
 
 import { ChatMessage } from './ChatMessage'
+import { ChatTypingIndicator } from './ChatTytpingIndicator'
 
 /* -------------------------------------------------------------------------------------------------
  * SendButton
@@ -194,11 +198,21 @@ const useRenderComposer = () => {
     [groupsT],
   )
 }
-/* -------------------------------------------------------------------------------------------------
- * Footer
- * -----------------------------------------------------------------------------------------------*/
-const useRenderFooter = (loading: boolean | undefined) =>
-  useMemo(() => (loading ? () => <ActivityIndicator color={colors.primary} size="small" /> : undefined), [loading])
+
+type ChatLoadEarlierProps = LoadEarlierProps
+
+const ChatLoadEarlier: FC<ChatLoadEarlierProps> = (props) => {
+  return props.isLoadingEarlier ? (
+    <View className="my-2 items-center gap-1">
+      <View className="h-4 w-4">
+        <Spinner />
+      </View>
+      <View>
+        <Typography className="text-gray-900 text-xs opacity-65">loading messages...</Typography>
+      </View>
+    </View>
+  ) : null
+}
 
 /* -------------------------------------------------------------------------------------------------
  * GroupChat
@@ -206,27 +220,35 @@ const useRenderFooter = (loading: boolean | undefined) =>
 type GroupChatProps = {
   group: Group
   currentUser: ChatUser
-  onSend: (message: ChatMessageType[]) => void
   messages: ChatMessageType[]
   loading?: boolean
+  typingUsers?: string[]
+
+  onSend: (message: ChatMessageType[]) => void
+
+  allLoaded?: boolean
+  isLoadingEarlier?: boolean
+  onLoadEarlier?: () => void
+
+  refreshing?: boolean
+  onRefresh?: () => void
 }
 
 const GroupChat: FC<GroupChatProps> = (props) => {
+  const { t } = useTranslation()
   const renderActions = useRenderActions()
   const renderComposer = useRenderComposer()
-  const renderFooter = useRenderFooter(props.loading)
   const renderInputToolbar = useChatInputToolbar()
   const renderSend = useRenderSend()
 
   const renderMessage = useCallback((props: MessageProps<ChatMessageType>) => <ChatMessage {...props} />, [])
 
-  const { t } = useTranslation()
   const renderDay = useCallback(
     (props: DayProps) => {
       const formattedDate = localizeRelativeDate(t, Date.now(), props.createdAt)
 
       return (
-        <View className="mx-auto mb-4.5 rounded-[6] border border-black/7 bg-white/65 px-2.5 py-1">
+        <View className="mx-auto my-4.5 rounded-[6] border border-black/7 bg-white/65 px-2.5 py-1">
           <Typography className="text-xs opacity-65">{formattedDate}</Typography>
         </View>
       )
@@ -234,18 +256,37 @@ const GroupChat: FC<GroupChatProps> = (props) => {
     [t],
   )
 
+  const useRenderTypingIndicator = useCallback(
+    () => (!props.typingUsers?.length ? null : <ChatTypingIndicator typingUsers={props.typingUsers} />),
+    [props.typingUsers],
+  )
+
+  const listViewProps = useMemo(
+    (): ListViewProps => ({
+      // @ts-expect-error it's the view prop, but in gifted typings it is set as `{ onLayout } & object`
+      refreshControl: <RefreshControl onRefresh={props.onRefresh} refreshing={!!props.refreshing} />,
+    }),
+    [props.onRefresh, props.refreshing],
+  )
+
   return (
     <GiftedChat
+      infiniteScroll
+      isLoadingEarlier={props.isLoadingEarlier}
+      listViewProps={listViewProps}
+      loadEarlier={!props.allLoaded}
       messages={props.messages}
+      onLoadEarlier={props.onLoadEarlier}
       onSend={props.onSend}
       renderActions={renderActions}
       renderAvatarOnTop
       renderComposer={renderComposer}
       renderDay={renderDay}
-      renderFooter={renderFooter}
       renderInputToolbar={renderInputToolbar}
+      renderLoadEarlier={(props) => <ChatLoadEarlier {...props} />}
       renderMessage={renderMessage}
       renderSend={renderSend}
+      renderTypingIndicator={useRenderTypingIndicator}
       renderUsernameOnMessage
       user={props.currentUser}
     />

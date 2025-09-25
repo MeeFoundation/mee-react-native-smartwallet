@@ -38,7 +38,7 @@ const MAPPING = {
   'ellipsis-vertical.outlined': EllipsisVerticalOutlineIcon,
   'groups.filled': UserGroupSolidIcon,
   'groups.outlined': UserGroupOutlineIcon,
-  'language.outline': LanguageOutlineIcon,
+  'language.outlined': LanguageOutlineIcon,
   'magnifying-glass.outlined': MagnifyingGlassOutlineIcon,
   'paper-airplane.filled': PaperAirplaneSolidIcon,
   'paper-airplane.outlined': PaperAirplaneOutlineIcon,

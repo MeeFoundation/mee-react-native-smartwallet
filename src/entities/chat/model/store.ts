@@ -1,6 +1,6 @@
 import { atom, type Getter, type Setter } from 'jotai'
 import { atomFamily } from 'jotai/utils'
-import { isEqual } from 'lodash-es'
+import { isEqual, uniq } from 'lodash-es'
 
 import {
   INITIAL_PAGINATED_STATE,
@@ -8,11 +8,19 @@ import {
   type PaginatedListState,
   type PaginatedStateAtom,
 } from '@/shared/lib/paginated-list'
+import { generateUUID } from '@/shared/lib/uuid'
 
 import { getGroupChatMessages } from '../api/get-group-chat-messages'
-import { mockMeUser } from '../api/mock/chat'
+import { mockMeUser } from '../api/mock/users'
 import { sendGroupChatMessage } from '../api/send-group-chat-message'
-import type { ChatMessage, ChatUser, GetChatMessagesFetchParams } from './types'
+import { SYSTEM_USER } from './system-user'
+import type {
+  ChatMessage,
+  ChatUser,
+  GetChatMessagesFetchParams,
+  UserJoinChatMessage,
+  UserLeaveChatMessage,
+} from './types'
 
 export const currentUserAtom = atom<ChatUser>(mockMeUser)
 
@@ -78,3 +86,71 @@ export const getChatActionAtom = atomFamily((params: GetChatMessagesFetchParams)
     }
   })
 }, isEqual)
+
+type AddNewChatMessagesAtomParams = {
+  groupId: string
+  messages: ChatMessage[]
+}
+
+export const getAddNewChatMessagesAtom = atom(null, async (_get, set, params: AddNewChatMessagesAtomParams) => {
+  const chatAtom = getPaginatedChatMessagesListStateAtom({ groupId: params.groupId })
+  set(chatAtom, (prev) => addMessages(prev, params.messages))
+})
+
+export const getIsTypingAtom = atomFamily((_groupId: string) => atom<string[]>([]))
+
+type ChangeIsTypingParams = {
+  groupId: string
+  // TODO: probably it must be an id
+  usernames: string[]
+}
+
+export const addIsTypingAtom = atom(null, async (_get, set, params: ChangeIsTypingParams) => {
+  const isTypingAtom = getIsTypingAtom(params.groupId)
+  set(isTypingAtom, (prev) => uniq([...prev, ...params.usernames]))
+})
+
+export const removeIsTypingAtom = atom(null, async (_get, set, params: ChangeIsTypingParams) => {
+  const isTypingAtom = getIsTypingAtom(params.groupId)
+  set(isTypingAtom, (prev) => {
+    return prev.filter((username) => !params.usernames.includes(username))
+  })
+})
+
+export const addUserJoinedChatMessageAtom = atom(
+  null,
+  async (_get, set, params: { groupId: string; username: string }) => {
+    set(getPaginatedChatMessagesListStateAtom({ groupId: params.groupId }), (prev) =>
+      addMessages(prev, [
+        {
+          _id: generateUUID(),
+          createdAt: new Date(),
+          system: true,
+          text: '',
+          type: 'user_join_chat',
+          user: SYSTEM_USER,
+          username: params.username,
+        } satisfies UserJoinChatMessage,
+      ]),
+    )
+  },
+)
+
+export const addUserLeaveChatMessageAtom = atom(
+  null,
+  async (_get, set, params: { groupId: string; username: string }) => {
+    set(getPaginatedChatMessagesListStateAtom({ groupId: params.groupId }), (prev) =>
+      addMessages(prev, [
+        {
+          _id: generateUUID(),
+          createdAt: new Date(),
+          system: true,
+          text: '',
+          type: 'user_leave_chat',
+          user: SYSTEM_USER,
+          username: params.username,
+        } satisfies UserLeaveChatMessage,
+      ]),
+    )
+  },
+)

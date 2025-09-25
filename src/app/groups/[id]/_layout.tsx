@@ -1,5 +1,5 @@
 import { type Href, Stack, useLocalSearchParams, usePathname, useRouter } from 'expo-router'
-import { useAtomValue } from 'jotai'
+import { useAtomValue, useSetAtom } from 'jotai'
 import { type FC, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -15,6 +15,7 @@ import { getGroupAtom } from '@/entities/group'
 
 import { colors } from '@/shared/config'
 import { InvalidRouteParamsError } from '@/shared/errors'
+import { drawerIsOpenedAtom } from '@/shared/model'
 import { Avatar } from '@/shared/ui/Avatar'
 import { BackgroundLayout } from '@/shared/ui/BackgroundLayout'
 import { HeaderBackButtonMinimal } from '@/shared/ui/HeaderBackButton'
@@ -151,39 +152,46 @@ type GroupLayoutContentProps = {
   group: Group
 }
 
-const GroupLayoutContent: FC<GroupLayoutContentProps> = ({ group }) => (
-  <>
-    <BackgroundLayout />
+const GroupLayoutContent: FC<GroupLayoutContentProps> = ({ group }) => {
+  const setDrawerIsOpened = useSetAtom(drawerIsOpenedAtom)
+  const openDrawer = useCallback(() => setDrawerIsOpened(true), [setDrawerIsOpened])
 
-    <Stack.Screen
-      options={{
-        headerLeft: () => <HeaderBackButtonMinimal color={colors['blue-700']} />,
-        // FIXME  Add a proper header right component
-        headerRight: () => (
-          <TouchableOpacity style={styles.headerRightButton}>
-            <IconSymbol color={colors['blue-700']} name="ellipsis-vertical.outlined" strokeWidth={2} />
-          </TouchableOpacity>
-        ),
-        headerTitle: () => (
-          <ScreenTitle thumbnail={<Avatar size={28} src={group.iconSrc} text={group.name} />}>{group.name}</ScreenTitle>
-        ),
-        title: group.name,
-      }}
-    />
+  return (
+    <>
+      <BackgroundLayout />
 
-    <GroupScreenTabs group={group} />
-
-    <View style={styles.stackContainer}>
-      <Stack
-        screenOptions={{
-          animation: 'none',
-          contentStyle: { backgroundColor: 'transparent' },
-          headerShown: false,
+      <Stack.Screen
+        options={{
+          headerLeft: () => <HeaderBackButtonMinimal color={colors['blue-700']} />,
+          // FIXME  Add a proper header right component
+          headerRight: () => (
+            <TouchableOpacity onPress={openDrawer} style={styles.headerRightButton}>
+              <IconSymbol color={colors['blue-700']} name="ellipsis-vertical.outlined" strokeWidth={2} />
+            </TouchableOpacity>
+          ),
+          headerTitle: () => (
+            <ScreenTitle thumbnail={<Avatar size={28} src={group.iconSrc} text={group.name} />}>
+              {group.name}
+            </ScreenTitle>
+          ),
+          title: group.name,
         }}
       />
-    </View>
-  </>
-)
+
+      <GroupScreenTabs group={group} />
+
+      <View style={styles.stackContainer}>
+        <Stack
+          screenOptions={{
+            animation: 'none',
+            contentStyle: { backgroundColor: 'transparent' },
+            headerShown: false,
+          }}
+        />
+      </View>
+    </>
+  )
+}
 
 /* -------------------------------------------------------------------------------------------------
  * GroupLayout

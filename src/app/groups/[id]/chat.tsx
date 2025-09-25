@@ -1,6 +1,6 @@
 import { type ErrorBoundaryProps, useLocalSearchParams } from 'expo-router'
 import { useAtomValue, useSetAtom } from 'jotai'
-import { type FC, useCallback } from 'react'
+import { type FC, useCallback, useMemo } from 'react'
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
 
 import { GroupChat } from '@/widgets/group-chat'
@@ -8,9 +8,12 @@ import { GroupChat } from '@/widgets/group-chat'
 import {
   type ChatMessage,
   currentUserAtom,
+  type GetChatMessagesFetchParams,
   getChatActionAtom,
+  getIsTypingAtom,
   getManagePaginatedChatMessagesListAtom,
   getPaginatedChatMessagesListStateAtom,
+  useSubscribeChatEvents,
 } from '@/entities/chat'
 import { getGroupAtom } from '@/entities/group'
 
@@ -44,11 +47,14 @@ const GroupChatScreen: FC = () => {
   const { id } = useLocalSearchParams()
   if (typeof id !== 'string') throw new InvalidRouteParamsError()
 
+  const typingUsers = useAtomValue(getIsTypingAtom(id))
   const currentChatUser = useAtomValue(currentUserAtom)
-  const chatAction = useSetAtom(getChatActionAtom({ groupId: id }))
+  const messagesFetchParams: GetChatMessagesFetchParams = useMemo(() => ({ groupId: id }), [id])
+
+  const chatAction = useSetAtom(getChatActionAtom(messagesFetchParams))
   const group = useAtomValue(getGroupAtom(id))
 
-  const [chatMessagesState] = usePaginatedState(
+  const [chatMessagesState, manageChatMessagesState] = usePaginatedState(
     { groupId: id },
     getPaginatedChatMessagesListStateAtom,
     getManagePaginatedChatMessagesListAtom,
@@ -59,14 +65,25 @@ const GroupChatScreen: FC = () => {
     [chatAction],
   )
 
+  const handleLoadEarlier = useCallback(() => manageChatMessagesState('loadMore'), [manageChatMessagesState])
+  const onRefresh = useCallback(() => manageChatMessagesState('refresh'), [manageChatMessagesState])
+
+  useSubscribeChatEvents(id)
+
   return (
     <SafeAreaView style={styles.safeView}>
       <GroupChat
+        allLoaded={chatMessagesState.data?.nextIndex === null}
         currentUser={currentChatUser}
         group={group}
+        isLoadingEarlier={chatMessagesState.isFetchingNextPage}
         loading={chatMessagesState.isFetching}
         messages={chatMessagesState.data?.items ?? []}
+        onLoadEarlier={handleLoadEarlier}
+        onRefresh={onRefresh}
         onSend={handleSend}
+        refreshing={chatMessagesState.isRefreshing}
+        typingUsers={typingUsers}
       />
     </SafeAreaView>
   )

@@ -1,15 +1,63 @@
 import type { FC } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import { Avatar, type MessageProps as GiftedMessageProps } from 'react-native-gifted-chat'
 
-import type { ChatMessage as ChatMessageType } from '@/entities/chat'
+import { type ChatMessage as ChatMessageType, isUserJoinChatMessage, isUserLeaveChatMessage } from '@/entities/chat'
 
 import { cn } from '@/shared/lib/cn'
 import { Spinner } from '@/shared/ui/Spinner'
 import { Typography } from '@/shared/ui/Typography'
 
 import { ChatBubble } from './ChatBubble'
+
+/* -------------------------------------------------------------------------------------------------
+ * SystemChatMessageContent
+ * -----------------------------------------------------------------------------------------------*/
+type SystemChatMessageContentProps = GiftedMessageProps<ChatMessageType>
+
+const SystemChatMessageContent: FC<SystemChatMessageContentProps> = ({ currentMessage }) => {
+  if (isUserJoinChatMessage(currentMessage)) {
+    return (
+      <Typography className="text-gray-900/65 text-xs">
+        <Trans
+          components={{ em: <Typography className="font-semibold text-primary text-xs" /> }}
+          i18nKey="{{name}} joined chat"
+          ns="chat"
+          values={{ name: currentMessage.username }}
+        />
+      </Typography>
+    )
+  }
+
+  if (isUserLeaveChatMessage(currentMessage)) {
+    return (
+      <Typography className="text-gray-900/65 text-xs">
+        <Trans
+          components={{ em: <Typography className="font-semibold text-primary text-xs" /> }}
+          i18nKey="{{name}} left chat"
+          ns="chat"
+          values={{ name: currentMessage.username }}
+        />
+      </Typography>
+    )
+  }
+
+  return <Typography className="text-gray-900/65 text-xs">{currentMessage.text}</Typography>
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * SystemChatMessage
+ * -----------------------------------------------------------------------------------------------*/
+type SystemChatMessageProps = GiftedMessageProps<ChatMessageType>
+
+const SystemChatMessage: FC<SystemChatMessageProps> = (props) => (
+  <View className="my-4.5 items-center">
+    <View className="rounded-md border border-black/7 bg-white/90 px-2.5 py-1">
+      <SystemChatMessageContent {...props} />
+    </View>
+  </View>
+)
 
 /* -------------------------------------------------------------------------------------------------
  * ChatMessageStatus
@@ -39,6 +87,8 @@ type ChatMessageProps = GiftedMessageProps<ChatMessageType>
 
 const ChatMessage: FC<ChatMessageProps> = (props) => {
   const isSameNextMessage = props.previousMessage?.user?._id === props.currentMessage.user?._id
+
+  if (props.currentMessage.system) return <SystemChatMessage {...props} />
 
   return (
     <View className={cn('basis-px flex-row', isSameNextMessage ? 'mt-0.5' : 'mt-2')}>
