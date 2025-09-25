@@ -215,6 +215,34 @@ const ChatLoadEarlier: FC<ChatLoadEarlierProps> = (props) => {
 }
 
 /* -------------------------------------------------------------------------------------------------
+ * GroupChatLoading
+ * -----------------------------------------------------------------------------------------------*/
+const GroupChatLoading: FC = () => {
+  const renderActions = useRenderActions()
+  const renderComposer = useRenderComposer()
+  const renderInputToolbar = useChatInputToolbar()
+  const renderSend = useRenderSend()
+
+  return (
+    <View style={{ flex: 1 }}>
+      <View className="items-center justify-center gap-3" style={{ flex: 1 }}>
+        <View className="h-10 w-10">
+          <Spinner />
+        </View>
+        <Typography>loading messages...</Typography>
+      </View>
+
+      {/* TODO add disabled state */}
+      {renderInputToolbar({
+        renderActions,
+        renderComposer,
+        renderSend,
+      })}
+    </View>
+  )
+}
+
+/* -------------------------------------------------------------------------------------------------
  * GroupChat
  * -----------------------------------------------------------------------------------------------*/
 type GroupChatProps = {
@@ -268,6 +296,8 @@ const GroupChat: FC<GroupChatProps> = (props) => {
     }),
     [props.onRefresh, props.refreshing],
   )
+
+  if (props.loading) return <GroupChatLoading />
 
   return (
     <GiftedChat
