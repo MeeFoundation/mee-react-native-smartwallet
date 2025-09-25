@@ -77,7 +77,7 @@ const GroupChatScreen: FC = () => {
         currentUser={currentChatUser}
         group={group}
         isLoadingEarlier={chatMessagesState.isFetchingNextPage}
-        loading={chatMessagesState.isFetching}
+        loading={!chatMessagesState.isFetched}
         messages={chatMessagesState.data?.items ?? []}
         onLoadEarlier={handleLoadEarlier}
         onRefresh={onRefresh}
