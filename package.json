@@ -9,7 +9,8 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "biome lint --error-on-warnings ./src",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "steiger": "npx steiger ./src"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
@@ -22,6 +23,7 @@
     "@react-navigation/native": "^7.1.6",
     "@shopify/flash-list": "^2.0.3",
     "class-variance-authority": "^0.7.1",
+    "eventemitter3": "^5.0.1",
     "expo": "53.0.22",
     "expo-blur": "~14.1.5",
     "expo-constants": "~17.1.7",
