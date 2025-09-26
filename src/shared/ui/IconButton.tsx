@@ -1,67 +1,37 @@
+import { cva, type VariantProps } from 'class-variance-authority'
 import type { FC } from 'react'
-import { StyleSheet, TouchableOpacity, type TouchableOpacityProps } from 'react-native'
+import { TouchableOpacity, type TouchableOpacityProps } from 'react-native'
 
-import { assertUnreachable } from '@/shared/lib/assert-unreachable'
-
+import { cn } from '../lib/cn'
 import { IconSymbol, type IconSymbolName } from './IconSymbol'
 
-const iconButtonStyles = StyleSheet.create({
-  iconButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    outlineColor: 'red',
-    outlineWidth: 1,
+const iconButtonVariants = cva('items-center justify-center', {
+  defaultVariants: {
+    size: 'md',
   },
-  iconButtonFull: { height: '100%', width: '100%' },
-  iconButtonMd: { height: 48, width: 48 },
-  iconButtonSm: { height: 40, width: 40 },
-  iconFull: { height: '100%', width: '100%' },
-  iconMd: { height: 24, width: 24 },
-  iconSm: { height: 24, width: 24 },
+  variants: {
+    size: {
+      full: 'size-full',
+      md: 'size-12',
+      sm: 'size-11',
+      xs: 'size-10',
+    },
+  },
 })
 
 /* -------------------------------------------------------------------------------------------------
  * IconButton
  * -----------------------------------------------------------------------------------------------*/
-type IconButtonSize = 'sm' | 'md' | 'full'
-
-const resolveButtonSizeStyle = (size: IconButtonSize = 'md') => {
-  switch (size) {
-    case 'sm':
-      return iconButtonStyles.iconButtonSm
-    case 'md':
-      return iconButtonStyles.iconButtonMd
-    case 'full':
-      return iconButtonStyles.iconButtonFull
-    default:
-      assertUnreachable(size)
-      return iconButtonStyles.iconButton
+type IconButtonProps = TouchableOpacityProps &
+  VariantProps<typeof iconButtonVariants> & {
+    icon: IconSymbolName
+    strokeWidth?: number
+    iconClassName?: string
   }
-}
 
-const resolveIconSizeStyle = (size: IconButtonSize = 'md') => {
-  switch (size) {
-    case 'sm':
-      return iconButtonStyles.iconSm
-    case 'md':
-      return iconButtonStyles.iconMd
-    case 'full':
-      return iconButtonStyles.iconMd
-    default:
-      assertUnreachable(size)
-      return undefined
-  }
-}
-
-type IconButtonProps = TouchableOpacityProps & {
-  icon: IconSymbolName
-  size?: IconButtonSize
-  color?: string
-}
-
-const IconButton: FC<IconButtonProps> = ({ style, icon, size, color, ...props }) => (
-  <TouchableOpacity {...props} style={[iconButtonStyles.iconButton, resolveButtonSizeStyle(size), style]}>
-    <IconSymbol name={icon} style={resolveIconSizeStyle(size)} />
+const IconButton: FC<IconButtonProps> = ({ className, icon, size, strokeWidth = 2, iconClassName, ...props }) => (
+  <TouchableOpacity className={cn(iconButtonVariants({ size }), className)} {...props}>
+    <IconSymbol className={cn('size-6', iconClassName)} name={icon} strokeWidth={strokeWidth} />
   </TouchableOpacity>
 )
 
@@ -70,5 +40,3 @@ const IconButton: FC<IconButtonProps> = ({ style, icon, size, color, ...props })
 export { IconButton }
 
 export type { IconButtonProps }
-
-export { iconButtonStyles }

@@ -37,6 +37,7 @@ const textInputVariants = cva(
 type TextInputContext = {
   size: VariantProps<typeof textInputVariants>['size']
   focused: boolean
+  empty: boolean
   setFocused: (focused: boolean) => void
 }
 
@@ -74,7 +75,8 @@ const TextInput: FC<TextInputProps> = ({ className, invalid, size, ...props }) =
   return (
     <NativeTextInput
       {...props}
-      className={cn(textInputVariants({ invalid, size }), 'px-2.5', 'flex-1', className)}
+      className={cn('h-13 flex-1 px-2.5 pt-4.5', 'border border-blue-500')}
+      // className={cn(textInputVariants({ invalid, size }), 'px-2.5', 'flex-1', 'h-6 pt-6', className)}
       onBlur={handleBlur}
       onFocus={handleFocus}
       placeholderTextColor={PLACEHOLDER_TEXT_COLOR}
@@ -117,15 +119,18 @@ const TextInputActions: FC<TextInputActionsProps> = ({ className, ...rest }) => 
 /* -------------------------------------------------------------------------------------------------
  * TextInputContainer
  * -----------------------------------------------------------------------------------------------*/
-type TextInputContainerProps = ViewProps & VariantProps<typeof textInputVariants>
+type TextInputContainerProps = ViewProps & VariantProps<typeof textInputVariants> & { value: string }
 
-const TextInputContainer: FC<TextInputContainerProps> = ({ className, invalid, size, ...rest }) => {
+const TextInputContainer: FC<TextInputContainerProps> = ({ className, invalid, size, value, ...rest }) => {
   const [focused, setFocused] = useState(false)
-  const value = useMemo(() => ({ focused, setFocused, size }), [focused, size])
+  const ctxValue = useMemo(() => ({ empty: !value, focused, setFocused, size }), [focused, size, value])
 
   return (
-    <TextInputProvider value={value}>
-      <View className={cn(textInputVariants({ invalid, size }), 'flex-row gap-2', className)} {...rest} />
+    <TextInputProvider value={ctxValue}>
+      <View
+        className={cn(textInputVariants({ invalid, size }), 'h-13 flex-row items-center gap-2', className)}
+        {...rest}
+      />
     </TextInputProvider>
   )
 }
@@ -135,29 +140,16 @@ const TextInputContainer: FC<TextInputContainerProps> = ({ className, invalid, s
  * -----------------------------------------------------------------------------------------------*/
 type TextInputLabelProps = TypographyProps
 
-const TextInputLabel: FC<TextInputLabelProps> = ({ style, ...rest }) => {
+const TextInputLabel: FC<TextInputLabelProps> = ({ className, ...rest }) => {
   const ctx = useContext(TextInputProvider)
 
   return (
     <Typography
-      style={[
-        !ctx?.focused
-          ? {
-              color: colors['gray-800'],
-              fontSize: 16,
-              height: 40,
-              left: 10,
-              outlineColor: colors.primary,
-              outlineWidth: 1,
-              top: 0,
-            }
-          : {
-              color: colors['gray-900'],
-              fontSize: 12,
-            },
-        { position: 'absolute' },
-        style,
-      ]}
+      className={cn(
+        'absolute left-2.5',
+        ctx?.focused || !ctx?.empty ? 'top-1.5 text-gray-900 text-xs' : 'top-3.5 text-base text-gray-800',
+        className,
+      )}
       {...rest}
     />
   )

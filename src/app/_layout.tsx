@@ -9,6 +9,8 @@ import { type FC, useEffect } from 'react'
 import { useColorScheme } from 'react-native'
 import 'react-native-reanimated'
 
+import { SafeAreaProvider } from 'react-native-safe-area-context'
+
 import { Drawer } from '@/widgets/drawer'
 import { isWelcomeViewedAtom } from '@/widgets/welcome'
 
@@ -18,7 +20,6 @@ import { useInitializeLocalizations } from '@/features/localization'
 import '@/shared/global.css'
 
 import { fonts } from '@/shared/config'
-import { HeaderBackButton } from '@/shared/ui/HeaderBackButton'
 
 SplashScreen.setOptions({
   duration: 1000,
@@ -67,27 +68,22 @@ const RootNavigator: FC = () => {
 
   return (
     <Drawer>
-      <Stack>
+      <Stack screenOptions={{ headerShown: false }}>
         <Stack.Protected guard={isAuthenticated}>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="groups/[id]" options={{ title: 'Group' }} />
-          <Stack.Screen name="companies" options={{ title: 'Companies' }} />
-          <Stack.Screen name="data-generating" options={{ headerShown: false, title: 'Data Generating' }} />
-          <Stack.Screen name="settings" options={{ title: 'Settings' }} />
-          <Stack.Screen
-            name="manage-connection/[id]"
-            options={{ headerLeft: () => <HeaderBackButton />, title: 'Manage Connection' }}
-          />
-          <Stack.Screen
-            name="manage-contact/[id]"
-            options={{ headerLeft: () => <HeaderBackButton />, title: 'Manage Contact' }}
-          />
-          <Stack.Screen name="welcome" options={{ headerShown: false }} />
+          {/* TODO Charck whether we need to keep all of the following stack screens? */}
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="groups/[id]" />
+          <Stack.Screen name="companies" />
+          <Stack.Screen name="data-generating" />
+          <Stack.Screen name="settings" />
+          <Stack.Screen name="manage-connection/[id]" />
+          <Stack.Screen name="manage-contact/[id]" />
+          <Stack.Screen name="welcome" />
           <Stack.Screen name="+not-found" />
         </Stack.Protected>
 
         <Stack.Protected guard={!isAuthenticated}>
-          <Stack.Screen name="sign-in" options={{ headerShown: false }} />
+          <Stack.Screen name="sign-in" />
         </Stack.Protected>
       </Stack>
 
@@ -101,10 +97,12 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <SplashScreenController />
-      <BottomSheetModalProvider>
-        <RootNavigator />
-      </BottomSheetModalProvider>
+      <SafeAreaProvider>
+        <SplashScreenController />
+        <BottomSheetModalProvider>
+          <RootNavigator />
+        </BottomSheetModalProvider>
+      </SafeAreaProvider>
     </ThemeProvider>
   )
 }
