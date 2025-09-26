@@ -1,4 +1,5 @@
 import type { FC } from 'react'
+import { cssInterop } from 'react-native-css-interop'
 import {
   ArchiveBoxIcon as ArchiveBoxOutlineIcon,
   Bars3Icon as Bars3OutlineIcon,
@@ -65,6 +66,15 @@ const IconSymbol: FC<IconSymbolProps> = ({ name, color, ...props }) => {
   const Icon = MAPPING[name]
   return <Icon {...props} color={color ?? colors['gray-900']} />
 }
+
+cssInterop(IconSymbol, {
+  className: {
+    nativeStyleToProp: {
+      color: 'color',
+    },
+    target: false,
+  },
+})
 
 /* -----------------------------------------------------------------------------------------------*/
 

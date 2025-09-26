@@ -2,9 +2,9 @@ import { Stack } from 'expo-router'
 import type { FC } from 'react'
 
 /* -------------------------------------------------------------------------------------------------
- * GroupLayout
+ * MyInfoLayout
  * -----------------------------------------------------------------------------------------------*/
-const GroupLayout: FC = () => (
+const MyInfoLayout: FC = () => (
   <Stack
     screenOptions={{
       animation: 'none',
@@ -16,4 +16,4 @@ const GroupLayout: FC = () => (
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export default GroupLayout
+export default MyInfoLayout

@@ -6,6 +6,8 @@ import { type FC, Fragment, useCallback, useMemo, useRef, useState } from 'react
 import { useTranslation } from 'react-i18next'
 import { RefreshControl, StyleSheet, Text, View, type ViewProps } from 'react-native'
 
+import { Header, ScreenLayout, ToggleDrawerButton } from '@/widgets/navigation'
+
 import { FilterConnections, type FilterValue } from '@/entities/connection'
 import type { PersonsListFetchParams, ShortPerson } from '@/entities/person'
 import {
@@ -19,7 +21,6 @@ import { ProfileStore } from '@/entities/profile'
 import { colors } from '@/shared/config'
 import type { AppError } from '@/shared/errors'
 import { usePaginatedState } from '@/shared/lib/paginated-list'
-import { BackgroundLayout } from '@/shared/ui/BackgroundLayout'
 import { BottomSheetBackDrop } from '@/shared/ui/BottomSheet'
 import { FiltersSelectButton } from '@/shared/ui/FiltersSelectButton'
 import * as ListLayout from '@/shared/ui/ListLayout'
@@ -140,6 +141,26 @@ const PersonsList: FC = () => {
 }
 
 /* -------------------------------------------------------------------------------------------------
+ * PeopleScreenHeader
+ * -----------------------------------------------------------------------------------------------*/
+const PeopleScreenHeader: FC = () => {
+  const { t } = useTranslation()
+
+  return (
+    <Header.Root variant="primary">
+      <Header.Actions position="left">
+        <Header.TitleText>{t('tabs.people.title')}</Header.TitleText>
+      </Header.Actions>
+      <Header.Actions position="right">
+        <Header.IconButton icon="magnifying-glass.outlined" />
+        <Header.IconButton icon="bell.outlined" />
+        <ToggleDrawerButton />
+      </Header.Actions>
+    </Header.Root>
+  )
+}
+
+/* -------------------------------------------------------------------------------------------------
  * PeopleScreen
  * -----------------------------------------------------------------------------------------------*/
 export default function PeopleScreen() {
@@ -161,15 +182,20 @@ export default function PeopleScreen() {
 
   return (
     <>
-      <BackgroundLayout />
-      <ListLayout.Root>
-        <ListLayout.Header>
-          <FiltersSelectButton>{t('filters_button.text')}</FiltersSelectButton>
-        </ListLayout.Header>
-        <ListLayout.Content>
-          <PersonsList />
-        </ListLayout.Content>
-      </ListLayout.Root>
+      <ScreenLayout.Root>
+        <PeopleScreenHeader />
+
+        <ScreenLayout.Content>
+          <ListLayout.Root>
+            <ListLayout.Header>
+              <FiltersSelectButton>{t('filters_button.text')}</FiltersSelectButton>
+            </ListLayout.Header>
+            <ListLayout.Content>
+              <PersonsList />
+            </ListLayout.Content>
+          </ListLayout.Root>
+        </ScreenLayout.Content>
+      </ScreenLayout.Root>
 
       <BottomSheetBackDrop
         ref={bottomSheetRef}

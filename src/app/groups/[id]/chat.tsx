@@ -1,9 +1,11 @@
 import { type ErrorBoundaryProps, useLocalSearchParams } from 'expo-router'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { type FC, useCallback, useMemo } from 'react'
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 
 import { GroupChat } from '@/widgets/group-chat'
+import { GroupScreenHeader, GroupScreenTabs } from '@/widgets/group-screen-header'
+import { ScreenLayout } from '@/widgets/navigation'
 
 import {
   type ChatMessage,
@@ -19,12 +21,6 @@ import { getGroupAtom } from '@/entities/group'
 
 import { InvalidRouteParamsError } from '@/shared/errors'
 import { usePaginatedState } from '@/shared/lib/paginated-list'
-
-const styles = StyleSheet.create({
-  safeView: {
-    flex: 1,
-  },
-})
 
 /* -------------------------------------------------------------------------------------------------
  * ErrorBoundary
@@ -71,21 +67,27 @@ const GroupChatScreen: FC = () => {
   useSubscribeChatEvents(id)
 
   return (
-    <SafeAreaView style={styles.safeView}>
-      <GroupChat
-        allLoaded={chatMessagesState.data?.nextIndex === null}
-        currentUser={currentChatUser}
-        group={group}
-        isLoadingEarlier={chatMessagesState.isFetchingNextPage}
-        loading={!chatMessagesState.isFetched}
-        messages={chatMessagesState.data?.items ?? []}
-        onLoadEarlier={handleLoadEarlier}
-        onRefresh={onRefresh}
-        onSend={handleSend}
-        refreshing={chatMessagesState.isRefreshing}
-        typingUsers={typingUsers}
-      />
-    </SafeAreaView>
+    <ScreenLayout.Root>
+      <GroupScreenHeader group={group} />
+
+      <GroupScreenTabs group={group} />
+
+      <ScreenLayout.Content className="px-3" safeBottomInset>
+        <GroupChat
+          allLoaded={chatMessagesState.data?.nextIndex === null}
+          currentUser={currentChatUser}
+          group={group}
+          isLoadingEarlier={chatMessagesState.isFetchingNextPage}
+          loading={!chatMessagesState.isFetched}
+          messages={chatMessagesState.data?.items ?? []}
+          onLoadEarlier={handleLoadEarlier}
+          onRefresh={onRefresh}
+          onSend={handleSend}
+          refreshing={chatMessagesState.isRefreshing}
+          typingUsers={typingUsers}
+        />
+      </ScreenLayout.Content>
+    </ScreenLayout.Root>
   )
 }
 

@@ -12,13 +12,17 @@ export type AvatarProps = {
   src?: ImageSourcePropType | string
   size?: number
   style?: ViewStyle
+  className?: string
 }
 
-export const Avatar: FC<AvatarProps> = ({ text, src, size = 24, style }) => {
+export const Avatar: FC<AvatarProps> = ({ text, src, size = 24, style, className }) => {
   const bgColor = generateColorHsl(text)
 
   return (
-    <View style={[styles.avatar, { height: size, width: size }, !src && { backgroundColor: bgColor }, style]}>
+    <View
+      className={className}
+      style={[styles.avatar, { height: size, width: size }, !src && { backgroundColor: bgColor }, style]}
+    >
       {src && <Image source={getImageSource(src)} style={styles.avatarImg} />}
       {!src && <Text style={styles.avatarText}>{text.charAt(0).toUpperCase()}</Text>}
     </View>

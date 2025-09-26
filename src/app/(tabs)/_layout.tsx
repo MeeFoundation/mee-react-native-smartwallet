@@ -15,7 +15,6 @@ import { colors } from '@/shared/config'
 import { useThemeColor } from '@/shared/lib/useThemeColor'
 import { Avatar } from '@/shared/ui/Avatar'
 import { BottomSheetBackDrop } from '@/shared/ui/BottomSheet'
-import { HeaderLeft, HeaderRight } from '@/shared/ui/Header'
 import { IconSymbol } from '@/shared/ui/IconSymbol'
 import { Typography } from '@/shared/ui/Typography'
 
@@ -90,7 +89,6 @@ export default function TabLayout() {
   const setIosContacts = useSetAtom(setIosContactsAtom)
   const setAndroidContacts = useSetAtom(setAndroidContactsAtom)
   const isAuthenticated = useAtomValue(isAuthenticatedAtom)
-  const headerBgColor = useThemeColor('primary')
 
   // FIXME fixme
   const isPeoplePage = true
@@ -102,13 +100,7 @@ export default function TabLayout() {
     <>
       <Tabs
         screenOptions={{
-          headerRight: HeaderRight,
-          headerShown: true,
-          headerStyle: {
-            backgroundColor: headerBgColor,
-          },
-          headerTitle: '',
-
+          headerShown: false,
           tabBarActiveTintColor: activeTabColor,
           tabBarInactiveTintColor: inactiveTabColor,
           tabBarLabelStyle: styles.tabBarLabel,
@@ -119,7 +111,7 @@ export default function TabLayout() {
           <Tabs.Screen
             name="index"
             options={{
-              headerLeft: () => <HeaderLeft>Groups</HeaderLeft>,
+              headerShown: false,
               tabBarIcon: ({ focused, color }) => (
                 <IconSymbol color={color} height={24} name={focused ? 'groups.filled' : 'groups.outlined'} width={24} />
               ),
@@ -131,7 +123,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="people"
           options={{
-            headerLeft: () => <HeaderLeft>People</HeaderLeft>,
+            headerShown: false,
             tabBarIcon: ({ focused, color }) => (
               <IconSymbol color={color} height={24} name={focused ? 'users.filled' : 'users.outlined'} width={24} />
             ),

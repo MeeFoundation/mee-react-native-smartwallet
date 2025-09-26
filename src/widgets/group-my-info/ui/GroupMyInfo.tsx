@@ -1,4 +1,4 @@
-import type { FC } from 'react'
+import { type FC, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 
 import type { Group } from '@/entities/group'
@@ -25,12 +25,13 @@ const styles = StyleSheet.create({
 type PersonalDetailsSectionProps = Omit<ExpandableSection.ExpandableSectionProps, 'children'>
 
 const PersonalDetailsSection: FC<PersonalDetailsSectionProps> = (props) => {
+  const [name, setName] = useState('')
   return (
     <>
       <TextInput.TextInput invalid placeholder="Invalid" />
 
-      <TextInput.Root invalid>
-        <TextInput.Input invalid placeholder="Invalid" />
+      <TextInput.Root invalid value={name}>
+        <TextInput.Input invalid onChangeText={setName} placeholder="Invalid" value={name} />
         <TextInput.Actions>
           <Typography style={{ fontSize: 12 }}>Required</Typography>
           <TextInput.Action>
@@ -56,7 +57,7 @@ const PersonalDetailsSection: FC<PersonalDetailsSectionProps> = (props) => {
         <ExpandableSection.Content>
           <TextInput.TextInput invalid placeholder="Invalid" />
 
-          <TextInput.Root invalid>
+          <TextInput.Root invalid value="">
             <TextInput.Input invalid placeholder="Invalid" />
             <TextInput.Actions>
               <Typography style={{ fontSize: 12 }}>Required</Typography>

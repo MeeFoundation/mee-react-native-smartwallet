@@ -1,4 +1,31 @@
 {
+  "chat": {
+    "actions": {
+      "attach_file": {
+        "text": "Adjuntar archivo"
+      },
+      "cancel": {
+        "text": "Cancelar"
+      }
+    },
+    "input": {
+      "placeholder": "escribe algo"
+    }
+  },
+  "my_info_tabs": {
+    "availability_calendar": {
+      "title": "Calendario de disponibilidad"
+    },
+    "documents": {
+      "title": "Documentos"
+    },
+    "health": {
+      "title": "Salud"
+    },
+    "personal_details": {
+      "title": "Detalles personales"
+    }
+  },
   "tabs": {
     "chat": {
       "title": "Chat"
@@ -8,19 +35,6 @@
     },
     "myInfo": {
       "title": "Mi Info"
-    }
-  },
-  "chat": {
-    "input": {
-      "placeholder": "escribe algo"
-    },
-    "actions": {
-      "attach_file": {
-        "text": "Adjuntar archivo"
-      },
-      "cancel": {
-        "text": "Cancelar"
-      }
     }
   }
 }
