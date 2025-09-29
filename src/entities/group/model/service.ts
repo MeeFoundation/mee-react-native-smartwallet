@@ -1,3 +1,4 @@
+import { getGroupKnownStatus } from '../lib/attribute-utils'
 import { mockGroups } from './mock/groups'
 import type {
   Group,
@@ -15,9 +16,11 @@ export const emptyGroupFilter: GroupsFilter = {
   status: null,
 }
 
-export const filterGroups = (groups: Group[], params: GroupsListFetchParams) => {
-  const filterStatus = (group: Group) =>
-    params.filter?.status === null ? true : group.status === params.filter?.status
+export const mockFilterGroups = (groups: Group[], params: GroupsListFetchParams) => {
+  const filterStatus = (group: Group) => {
+    const status = getGroupKnownStatus(group)
+    return params.filter?.status === null ? true : status === params.filter?.status
+  }
 
   return groups.filter(filterStatus)
 }
@@ -34,7 +37,7 @@ class GroupsService {
 
   async getGroups(params: GroupsPaginatedListFetchParams): Promise<GroupsPaginatedListResponse> {
     await new Promise((resolve) => setTimeout(resolve, 1000))
-    const filteredGroups = filterGroups(mockGroups, { filter: params.filter })
+    const filteredGroups = mockFilterGroups(mockGroups, { filter: params.filter })
 
     const response = {
       items: filteredGroups.slice(params.startIndex, params.startIndex + params.limit),

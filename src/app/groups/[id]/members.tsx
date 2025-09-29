@@ -5,7 +5,7 @@ import { Text, View } from 'react-native'
 import { GroupScreenHeader, GroupScreenTabs } from '@/widgets/group-screen-header'
 import { ScreenLayout } from '@/widgets/navigation'
 
-import { getGroupAtom } from '@/entities/group'
+import { getGroupAtom, useGroupView } from '@/entities/group'
 
 import { InvalidRouteParamsError } from '@/shared/errors'
 
@@ -31,12 +31,13 @@ export default function GroupMembersScreen() {
   if (typeof id !== 'string') throw new InvalidRouteParamsError()
 
   const group = useAtomValue(getGroupAtom(id))
+  const groupView = useGroupView(group)
 
   return (
     <ScreenLayout.Root>
-      <GroupScreenHeader group={group} />
+      <GroupScreenHeader group={groupView} />
 
-      <GroupScreenTabs group={group} />
+      <GroupScreenTabs group={groupView} />
 
       <ScreenLayout.Content className="px-2">
         <Text>Members</Text>

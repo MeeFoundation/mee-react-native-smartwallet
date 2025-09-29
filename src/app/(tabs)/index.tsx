@@ -16,8 +16,9 @@ import {
   GroupListCardSkeleton,
   type GroupsFilter,
   type GroupsListFetchParams,
-  getManagePaginatedGroupsListAtom,
-  getPaginatedGroupsListStateAtom,
+  getGroupLink,
+  getGroupsListStateAtom,
+  getManageGroupListAtom,
   groupFilterAtom,
   type ShortGroup,
 } from '@/entities/group'
@@ -100,13 +101,9 @@ type GroupsListProps = {
 
 const GroupsList: FC<GroupsListProps> = ({ fetchParams }) => {
   const router = useRouter()
-  const [listState, manageGroupsList] = usePaginatedState(
-    fetchParams,
-    getPaginatedGroupsListStateAtom,
-    getManagePaginatedGroupsListAtom,
-  )
+  const [listState, manageGroupsList] = usePaginatedState(fetchParams, getGroupsListStateAtom, getManageGroupListAtom)
 
-  const handleGroupItemPress = useCallback((item: ShortGroup) => router.navigate(`/groups/${item.id}`), [router])
+  const handleGroupItemPress = useCallback((item: ShortGroup) => router.navigate(getGroupLink(item)), [router])
 
   const handleEndReached = useCallback(() => {
     listState.hasNextPage && !listState.isFetchingNextPage && manageGroupsList('loadMore')

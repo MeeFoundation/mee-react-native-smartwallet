@@ -2,7 +2,7 @@ import { type Href, usePathname, useRouter } from 'expo-router'
 import { type FC, useCallback } from 'react'
 import { type GestureResponderEvent, TouchableOpacity, type TouchableOpacityProps, View } from 'react-native'
 
-import type { Group } from '@/entities/group'
+import type { GroupView } from '@/entities/group'
 
 import { colors } from '@/shared/config'
 import { cn } from '@/shared/lib/cn'
@@ -51,7 +51,7 @@ const GroupScreenTab: FC<GroupScreenTabProps> = (props) => {
  * GroupScreenTabs
  * -----------------------------------------------------------------------------------------------*/
 type GroupScreenTabsProps = {
-  group: Group
+  group: GroupView
 }
 
 const GroupScreenTabs: FC<GroupScreenTabsProps> = ({ group }) => {

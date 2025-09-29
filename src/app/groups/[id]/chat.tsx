@@ -17,7 +17,7 @@ import {
   getPaginatedChatMessagesListStateAtom,
   useSubscribeChatEvents,
 } from '@/entities/chat'
-import { getGroupAtom } from '@/entities/group'
+import { getGroupAtom, useGroupView } from '@/entities/group'
 
 import { InvalidRouteParamsError } from '@/shared/errors'
 import { usePaginatedState } from '@/shared/lib/paginated-list'
@@ -49,6 +49,7 @@ const GroupChatScreen: FC = () => {
 
   const chatAction = useSetAtom(getChatActionAtom(messagesFetchParams))
   const group = useAtomValue(getGroupAtom(id))
+  const groupView = useGroupView(group)
 
   const [chatMessagesState, manageChatMessagesState] = usePaginatedState(
     { groupId: id },
@@ -68,11 +69,11 @@ const GroupChatScreen: FC = () => {
 
   return (
     <ScreenLayout.Root>
-      <GroupScreenHeader group={group} />
+      <GroupScreenHeader group={groupView} />
 
-      <GroupScreenTabs group={group} />
+      <GroupScreenTabs group={groupView} />
 
-      <ScreenLayout.Content className="px-3" safeBottomInset>
+      <ScreenLayout.Content className="px-3" safeBottomInset scrollable={false}>
         <GroupChat
           allLoaded={chatMessagesState.data?.nextIndex === null}
           currentUser={currentChatUser}

@@ -26,6 +26,11 @@
       "title": "Personal details"
     }
   },
+  "status": {
+    "archived": {
+      "tip": "Archived/Paused"
+    }
+  },
   "tabs": {
     "chat": {
       "title": "Chat"

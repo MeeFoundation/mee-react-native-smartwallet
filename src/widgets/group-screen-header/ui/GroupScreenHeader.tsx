@@ -2,7 +2,7 @@ import type { FC } from 'react'
 
 import { BackButton, Header, ToggleDrawerButton } from '@/widgets/navigation/@x/group-screen-header'
 
-import type { Group } from '@/entities/group'
+import type { GroupView } from '@/entities/group'
 
 import { Avatar } from '@/shared/ui/Avatar'
 
@@ -10,7 +10,7 @@ import { Avatar } from '@/shared/ui/Avatar'
  * GroupScreenHeader
  * -----------------------------------------------------------------------------------------------*/
 type GroupScreenHeaderProps = {
-  group: Group
+  group: GroupView
 }
 
 const GroupScreenHeader: FC<GroupScreenHeaderProps> = ({ group }) => (
@@ -19,7 +19,7 @@ const GroupScreenHeader: FC<GroupScreenHeaderProps> = ({ group }) => (
       <BackButton />
     </Header.Actions>
     <Header.Title>
-      <Avatar src={group.iconSrc} text={group.name} />
+      <Avatar src={group.thumbnail} text={group.name} />
       <Header.TitleText>{group.name}</Header.TitleText>
     </Header.Title>
     <Header.Actions position="right">

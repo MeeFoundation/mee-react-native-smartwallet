@@ -14,6 +14,7 @@ type ScreenLayoutContentProps = ViewProps & {
   safeTopInset?: boolean
   safeLeftInset?: boolean
   safeRightInset?: boolean
+  scrollable?: boolean
 }
 
 const ScreenLayoutContent: FC<ScreenLayoutContentProps> = ({
@@ -23,13 +24,16 @@ const ScreenLayoutContent: FC<ScreenLayoutContentProps> = ({
   safeTopInset,
   safeLeftInset = true,
   safeRightInset = true,
+  scrollable = true,
   ...rest
 }) => {
   const insets = useSafeAreaInsets()
 
+  const Container = scrollable ? ScrollView : View
+
   return (
     <View style={[{ flex: 1 }, style]} {...rest}>
-      <ScrollView
+      <Container
         style={[
           { flex: 1 },
           {
@@ -41,7 +45,7 @@ const ScreenLayoutContent: FC<ScreenLayoutContentProps> = ({
         ]}
       >
         {children}
-      </ScrollView>
+      </Container>
     </View>
   )
 }

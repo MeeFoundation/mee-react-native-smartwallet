@@ -8,7 +8,15 @@ import { UserTitle } from '@/widgets/group-my-info'
 import { GroupScreenHeader, GroupScreenTabs } from '@/widgets/group-screen-header'
 import { ScreenLayout } from '@/widgets/navigation'
 
-import { type Group, getGroupAtom } from '@/entities/group'
+import {
+  type Group,
+  getGroupAtom,
+  getGroupMyInfoAvailabilityCalendarLink,
+  getGroupMyInfoDocumentsLink,
+  getGroupMyInfoHealthLink,
+  getGroupMyInfoPersonalDetailsLink,
+  useGroupView,
+} from '@/entities/group'
 
 import { InvalidRouteParamsError } from '@/shared/errors'
 import { cn } from '@/shared/lib/cn'
@@ -75,16 +83,16 @@ const useSections = (group: Group) => {
       [
         {
           children: groupsT('my_info_tabs.personal_details.title'),
-          href: `/groups/${group.id}/my-info/personal-details`,
+          href: getGroupMyInfoPersonalDetailsLink(group),
         },
         {
           children: groupsT('my_info_tabs.availability_calendar.title'),
-          href: `/groups/${group.id}/my-info/availability-calendar`,
+          href: getGroupMyInfoAvailabilityCalendarLink(group),
         },
-        { children: groupsT('my_info_tabs.health.title'), href: `/groups/${group.id}/my-info/health` },
-        { children: groupsT('my_info_tabs.documents.title'), href: `/groups/${group.id}/my-info/documents` },
+        { children: groupsT('my_info_tabs.health.title'), href: getGroupMyInfoHealthLink(group) },
+        { children: groupsT('my_info_tabs.documents.title'), href: getGroupMyInfoDocumentsLink(group) },
       ] as const,
-    [groupsT, group.id],
+    [groupsT, group],
   )
 }
 
@@ -94,12 +102,13 @@ const GroupMyInfoScreen: FC = () => {
   if (typeof id !== 'string') throw new InvalidRouteParamsError()
 
   const group = useAtomValue(getGroupAtom(id))
+  const groupView = useGroupView(group)
   const sections = useSections(group)
 
   return (
     <ScreenLayout.Root>
-      <GroupScreenHeader group={group} />
-      <GroupScreenTabs group={group} />
+      <GroupScreenHeader group={groupView} />
+      <GroupScreenTabs group={groupView} />
 
       <ScreenLayout.Content className="px-2">
         {/* FIXME add proper connection */}
@@ -107,7 +116,7 @@ const GroupMyInfoScreen: FC = () => {
 
         <View className="gap-2">
           {sections.map((section) => (
-            <SectionLink href={section.href} key={section.href}>
+            <SectionLink href={section.href} key={String(section.href)}>
               {section.children}
             </SectionLink>
           ))}

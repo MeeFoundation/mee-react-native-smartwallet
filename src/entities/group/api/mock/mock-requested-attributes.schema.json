@@ -1,5 +1,5 @@
 {
-  "$id": "http://example.com/schemas/user.json",
+  "$id": "http://example.com/schemas/requested-attributes.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "additionalProperties": false,
   "properties": {

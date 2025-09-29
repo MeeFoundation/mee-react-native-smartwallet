@@ -1,22 +1,30 @@
 import { type Href, usePathname } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 
-import type { Group } from '@/entities/group'
+import { type GroupView, getGroupChatLink, getGroupMembersLink, getGroupMyInfoLink } from '@/entities/group'
 
-export const useGroupTabs = (group: Group) => {
+type GroupTab = {
+  active: boolean
+  href: Href
+  label: string
+}
+
+export const useGroupTabs = (group: GroupView): GroupTab[] => {
   const { t: groupsT } = useTranslation('groups')
   const pathname = usePathname()
 
-  const chatHref: Href = `/groups/${group.id}/chat`
-  const membersHref: Href = `/groups/${group.id}/members`
-  const myInfoHref: Href = `/groups/${group.id}/my-info`
+  const chatHref = getGroupChatLink(group)
+  const membersHref = getGroupMembersLink(group)
+  const myInfoHref = getGroupMyInfoLink(group)
 
   return [
-    {
-      active: pathname === chatHref,
-      href: chatHref,
-      label: groupsT('tabs.chat.title'),
-    },
+    chatHref
+      ? {
+          active: pathname === chatHref,
+          href: chatHref,
+          label: groupsT('tabs.chat.title'),
+        }
+      : null,
     {
       active: pathname === membersHref,
       href: membersHref,
@@ -27,5 +35,5 @@ export const useGroupTabs = (group: Group) => {
       href: myInfoHref,
       label: groupsT('tabs.myInfo.title'),
     },
-  ]
+  ].filter((val) => !!val)
 }
