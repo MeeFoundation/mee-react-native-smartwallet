@@ -15,7 +15,10 @@ export { getGroupAtom } from './model/get-group.atom'
 export { GroupView } from './model/group.view'
 export { getGroupRequestedAttributesSchemaAtom } from './model/group-requested-attributes.atom'
 export { groupFilterAtom } from './model/groups-filter.atom'
-export { getMyGroupPersonalDetailsAtom } from './model/my-group-personal-details.atom'
+export {
+  getMyGroupPersonalDetailsAtom,
+  getMyGroupPersonalDetailsViewAtom,
+} from './model/my-group-personal-details.atom'
 export { getGroupsListStateAtom, getManageGroupListAtom } from './model/paginated-groups-list.atom'
 export { ShortGroupView } from './model/short-group.view'
 export type {

@@ -19,3 +19,19 @@ export const getGroupName = (group: ShortGroup): string | undefined => {
 export const getGroupHasChat = (group: ShortGroup): boolean => {
   return !!group.attributes.chat
 }
+
+export const getDisplayName = (attributes: Record<string, unknown>): string | undefined => {
+  return typeof attributes.display_name === 'string' ? attributes.display_name : undefined
+}
+
+export const getStatus = (attributes: Record<string, unknown>): string | undefined => {
+  return typeof attributes.status === 'string' ? attributes.status : undefined
+}
+
+export const getIsAdmin = (attributes: Record<string, unknown>): boolean => {
+  return !!attributes.is_admin
+}
+
+export const getThumbnail = (attributes: Record<string, unknown>): string | undefined => {
+  return typeof attributes.thumbnail === 'string' ? attributes.thumbnail : undefined
+}

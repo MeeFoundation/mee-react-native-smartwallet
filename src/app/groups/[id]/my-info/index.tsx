@@ -1,12 +1,12 @@
 import { type ErrorBoundaryProps, type Href, useLocalSearchParams, useRouter } from 'expo-router'
 import { useAtomValue } from 'jotai'
-import { type FC, useCallback, useMemo } from 'react'
+import { type FC, Suspense, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type GestureResponderEvent, Text, TouchableOpacity, type TouchableOpacityProps, View } from 'react-native'
 
 import { UserTitle } from '@/widgets/group-my-info'
 import { GroupScreenHeader, GroupScreenTabs } from '@/widgets/group-screen-header'
-import { ScreenLayout } from '@/widgets/navigation'
+import { LoadingScreen, ScreenLayout } from '@/widgets/navigation'
 
 import {
   type Group,
@@ -15,6 +15,7 @@ import {
   getGroupMyInfoDocumentsLink,
   getGroupMyInfoHealthLink,
   getGroupMyInfoPersonalDetailsLink,
+  getMyGroupPersonalDetailsViewAtom,
   useGroupView,
 } from '@/entities/group'
 
@@ -73,7 +74,7 @@ const SectionLink: FC<SectionLinkProps> = ({ className, children, href, onPress,
 }
 
 /* -------------------------------------------------------------------------------------------------
- * GroupMyInfoScreen
+ * GroupMyInfoScreenContent
  * -----------------------------------------------------------------------------------------------*/
 const useSections = (group: Group) => {
   const { t: groupsT } = useTranslation('groups')
@@ -96,14 +97,21 @@ const useSections = (group: Group) => {
   )
 }
 
-//  TODO Add loading & error state
-const GroupMyInfoScreen: FC = () => {
-  const { id } = useLocalSearchParams()
-  if (typeof id !== 'string') throw new InvalidRouteParamsError()
+type GroupMyInfoScreenContentProps = {
+  groupId: string
+}
 
-  const group = useAtomValue(getGroupAtom(id))
+const GroupMyInfoScreenContent: FC<GroupMyInfoScreenContentProps> = ({ groupId }) => {
+  const group = useAtomValue(getGroupAtom(groupId))
   const groupView = useGroupView(group)
   const sections = useSections(group)
+  const myGroupPersonalDetailsView = useAtomValue(getMyGroupPersonalDetailsViewAtom(group.id))
+
+  const subtitle = useMemo(
+    () =>
+      [myGroupPersonalDetailsView.isAdmin && 'Admin', myGroupPersonalDetailsView.status].filter(Boolean).join(' • '),
+    [myGroupPersonalDetailsView.isAdmin, myGroupPersonalDetailsView.status],
+  )
 
   return (
     <ScreenLayout.Root>
@@ -111,8 +119,12 @@ const GroupMyInfoScreen: FC = () => {
       <GroupScreenTabs group={groupView} />
 
       <ScreenLayout.Content className="px-2">
-        {/* FIXME add proper connection */}
-        <UserTitle connection={group.connections[0]} />
+        <UserTitle
+          // FIXME handle unknown
+          displayName={myGroupPersonalDetailsView.displayName ?? 'Unknown'}
+          subtitle={subtitle}
+          thumbnail={myGroupPersonalDetailsView.thumbnail}
+        />
 
         <View className="gap-2">
           {sections.map((section) => (
@@ -123,6 +135,20 @@ const GroupMyInfoScreen: FC = () => {
         </View>
       </ScreenLayout.Content>
     </ScreenLayout.Root>
+  )
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * GroupMyInfoScreen
+ * -----------------------------------------------------------------------------------------------*/
+const GroupMyInfoScreen: FC = () => {
+  const { id } = useLocalSearchParams()
+  if (typeof id !== 'string') throw new InvalidRouteParamsError()
+
+  return (
+    <Suspense fallback={<LoadingScreen />}>
+      <GroupMyInfoScreenContent groupId={id} />
+    </Suspense>
   )
 }
 
