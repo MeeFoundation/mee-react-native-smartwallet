@@ -8,7 +8,7 @@ import { UserTitle } from '@/widgets/group-my-info'
 import { GroupScreenHeader, GroupScreenTabs } from '@/widgets/group-screen-header'
 import { ScreenLayout } from '@/widgets/navigation'
 
-import { getGroupAtom } from '@/entities/group'
+import { type Group, getGroupAtom } from '@/entities/group'
 
 import { InvalidRouteParamsError } from '@/shared/errors'
 import { cn } from '@/shared/lib/cn'
@@ -67,22 +67,24 @@ const SectionLink: FC<SectionLinkProps> = ({ className, children, href, onPress,
 /* -------------------------------------------------------------------------------------------------
  * GroupMyInfoScreen
  * -----------------------------------------------------------------------------------------------*/
-
-const useSections = () => {
+const useSections = (group: Group) => {
   const { t: groupsT } = useTranslation('groups')
 
   return useMemo(
     () =>
       [
-        { children: groupsT('my_info_tabs.personal_details.title'), href: '/groups/[id]/my-info/personal-details' },
+        {
+          children: groupsT('my_info_tabs.personal_details.title'),
+          href: `/groups/${group.id}/my-info/personal-details`,
+        },
         {
           children: groupsT('my_info_tabs.availability_calendar.title'),
-          href: '/groups/[id]/my-info/availability-calendar',
+          href: `/groups/${group.id}/my-info/availability-calendar`,
         },
-        { children: groupsT('my_info_tabs.health.title'), href: '/groups/[id]/my-info/health' },
-        { children: groupsT('my_info_tabs.documents.title'), href: '/groups/[id]/my-info/documents' },
+        { children: groupsT('my_info_tabs.health.title'), href: `/groups/${group.id}/my-info/health` },
+        { children: groupsT('my_info_tabs.documents.title'), href: `/groups/${group.id}/my-info/documents` },
       ] as const,
-    [groupsT],
+    [groupsT, group.id],
   )
 }
 
@@ -92,7 +94,7 @@ const GroupMyInfoScreen: FC = () => {
   if (typeof id !== 'string') throw new InvalidRouteParamsError()
 
   const group = useAtomValue(getGroupAtom(id))
-  const sections = useSections()
+  const sections = useSections(group)
 
   return (
     <ScreenLayout.Root>

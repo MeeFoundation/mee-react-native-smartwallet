@@ -1,8 +1,10 @@
-import type { FC } from 'react'
-import { View, type ViewProps } from 'react-native'
+import { type FC, Suspense } from 'react'
+import { ScrollView, View, type ViewProps } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
+import { cn } from '@/shared/lib/cn'
 import { BackgroundLayout } from '@/shared/ui/BackgroundLayout'
+import { Spinner } from '@/shared/ui/Spinner'
 
 /* -------------------------------------------------------------------------------------------------
  * ScreenLayoutContent
@@ -27,7 +29,7 @@ const ScreenLayoutContent: FC<ScreenLayoutContentProps> = ({
 
   return (
     <View style={[{ flex: 1 }, style]} {...rest}>
-      <View
+      <ScrollView
         style={[
           { flex: 1 },
           {
@@ -39,7 +41,7 @@ const ScreenLayoutContent: FC<ScreenLayoutContentProps> = ({
         ]}
       >
         {children}
-      </View>
+      </ScrollView>
     </View>
   )
 }
@@ -47,13 +49,26 @@ const ScreenLayoutContent: FC<ScreenLayoutContentProps> = ({
 /* -------------------------------------------------------------------------------------------------
  * ScreenLayout
  * -----------------------------------------------------------------------------------------------*/
-type ScreenLayoutProps = ViewProps
+type ScreenLayoutProps = ViewProps & { fallback?: React.ReactNode }
 
-const ScreenLayout: FC<ScreenLayoutProps> = ({ children, style, ...rest }) => (
-  <View style={[{ flex: 1 }, style]} {...rest}>
-    <BackgroundLayout />
-    {children}
-  </View>
+const ScreenLayout: FC<ScreenLayoutProps> = ({ children, className, style, fallback, ...rest }) => (
+  <Suspense
+    fallback={
+      fallback ?? (
+        <View className={cn('items-center justify-center', className)} style={[{ flex: 1 }, style]} {...rest}>
+          <BackgroundLayout />
+          <View className="size-11">
+            <Spinner />
+          </View>
+        </View>
+      )
+    }
+  >
+    <View className={className} style={[{ flex: 1 }, style]} {...rest}>
+      <BackgroundLayout />
+      {children}
+    </View>
+  </Suspense>
 )
 
 /* -----------------------------------------------------------------------------------------------*/

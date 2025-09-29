@@ -1,20 +1,28 @@
+import { useLocalSearchParams } from 'expo-router'
+import { useAtomValue } from 'jotai'
 import type { FC } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Text, View } from 'react-native'
 
-import { BackButton, Header, ToggleDrawerButton } from '@/widgets/navigation'
+import { PersonalDetails } from '@/widgets/group-my-info'
+import { BackButton, Header, ScreenLayout, ToggleDrawerButton } from '@/widgets/navigation'
 
-import { BackgroundLayout } from '@/shared/ui/BackgroundLayout'
+import { getGroupAtom } from '@/entities/group'
+
+import { InvalidRouteParamsError } from '@/shared/errors'
 
 /* -------------------------------------------------------------------------------------------------
  * PersonalDetailsScreen
  * -----------------------------------------------------------------------------------------------*/
 const PersonalDetailsScreen: FC = () => {
+  const { id } = useLocalSearchParams()
+  if (typeof id !== 'string') throw new InvalidRouteParamsError()
+
+  const group = useAtomValue(getGroupAtom(id))
+
   const { t: groupsT } = useTranslation('groups')
 
   return (
-    <View style={{ flex: 1 }}>
-      <BackgroundLayout />
+    <ScreenLayout.Root>
       <Header.Root>
         <Header.Actions position="left">
           <BackButton />
@@ -27,10 +35,10 @@ const PersonalDetailsScreen: FC = () => {
         </Header.Actions>
       </Header.Root>
 
-      <View>
-        <Text>{groupsT('my_info_tabs.personal_details.title')}</Text>
-      </View>
-    </View>
+      <ScreenLayout.Content className="p-2" safeBottomInset>
+        <PersonalDetails group={group} />
+      </ScreenLayout.Content>
+    </ScreenLayout.Root>
   )
 }
 

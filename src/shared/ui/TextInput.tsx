@@ -17,7 +17,7 @@ import { Typography, type TypographyProps } from './Typography'
 const PLACEHOLDER_TEXT_COLOR = colors['gray-600']
 
 const textInputVariants = cva(
-  'boreder-black/07 color-gray-900 rounded-[8] border bg-white font-400 font-publicSans-regular text-[14px] leading-[20] focus:border-primary',
+  'boreder rounded-[8] border border-black/7 bg-white px-2.5 font-normal font-publicSans text-[14px] text-gray-900 leading-[20] focus:border-primary',
   {
     defaultVariants: {
       size: 'md',
@@ -30,12 +30,18 @@ const textInputVariants = cva(
         md: 'h-13',
         sm: 'h-10',
       },
+      variant: {
+        outline: 'border border-black/7',
+        plain: '',
+      },
     },
   },
 )
 
 type TextInputContext = {
   size: VariantProps<typeof textInputVariants>['size']
+  variant: VariantProps<typeof textInputVariants>['variant']
+  invalid: VariantProps<typeof textInputVariants>['invalid']
   focused: boolean
   empty: boolean
   setFocused: (focused: boolean) => void
@@ -75,8 +81,7 @@ const TextInput: FC<TextInputProps> = ({ className, invalid, size, ...props }) =
   return (
     <NativeTextInput
       {...props}
-      className={cn('h-13 flex-1 px-2.5 pt-4.5', 'border border-blue-500')}
-      // className={cn(textInputVariants({ invalid, size }), 'px-2.5', 'flex-1', 'h-6 pt-6', className)}
+      className={cn(ctx ? 'h-13 flex-1 px-2.5 pt-4.5' : textInputVariants({ invalid, size }), className)}
       onBlur={handleBlur}
       onFocus={handleFocus}
       placeholderTextColor={PLACEHOLDER_TEXT_COLOR}
@@ -94,8 +99,8 @@ const actionVariants = cva('', {
   },
   variants: {
     size: {
-      md: 'h-13 w-13',
-      sm: 'h-10 w-10',
+      md: 'size-13',
+      sm: 'size-10',
     },
   },
 })
@@ -119,16 +124,44 @@ const TextInputActions: FC<TextInputActionsProps> = ({ className, ...rest }) => 
 /* -------------------------------------------------------------------------------------------------
  * TextInputContainer
  * -----------------------------------------------------------------------------------------------*/
-type TextInputContainerProps = ViewProps & VariantProps<typeof textInputVariants> & { value: string }
+const textInputContainerVariants = cva('rounded-lg border', {
+  defaultVariants: {
+    size: 'md',
+    variant: 'outline',
+  },
+  variants: {
+    invalid: {
+      true: 'border-danger',
+    },
+    size: {
+      md: 'h-13',
+      sm: 'h-10',
+    },
+    variant: {
+      outline: 'border-black/7',
+      plain: 'border-transparent',
+    },
+  },
+})
 
-const TextInputContainer: FC<TextInputContainerProps> = ({ className, invalid, size, value, ...rest }) => {
+type TextInputContainerProps = ViewProps & VariantProps<typeof textInputContainerVariants> & { empty?: boolean }
+
+const TextInputContainer: FC<TextInputContainerProps> = ({ className, invalid, size, empty, variant, ...rest }) => {
   const [focused, setFocused] = useState(false)
-  const ctxValue = useMemo(() => ({ empty: !value, focused, setFocused, size }), [focused, size, value])
+  const ctxValue = useMemo(
+    () => ({ empty: !!empty, focused, invalid, setFocused, size, variant }),
+    [focused, size, empty, variant, invalid],
+  )
 
   return (
     <TextInputProvider value={ctxValue}>
       <View
-        className={cn(textInputVariants({ invalid, size }), 'h-13 flex-row items-center gap-2', className)}
+        className={cn(
+          textInputContainerVariants({ invalid, size, variant }),
+          focused && 'border border-primary bg-white',
+          'h-13 flex-row items-center gap-2',
+          className,
+        )}
         {...rest}
       />
     </TextInputProvider>

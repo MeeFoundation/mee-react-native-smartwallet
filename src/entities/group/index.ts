@@ -1,3 +1,5 @@
+export { getGroupRequestedAttributesSchemaAtom } from './model/group-requested-attributes.atom'
+export { getMyGroupPersonalDetailsAtom } from './model/my-group-personal-details.atom'
 export { emptyGroupFilter } from './model/service'
 export {
   getGroupAtom,

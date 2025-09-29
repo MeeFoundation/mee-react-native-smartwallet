@@ -1,0 +1,25 @@
+{
+  "$id": "http://example.com/schemas/user.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "properties": {
+    "address": {
+      "properties": {
+        "address_country": { "type": "string" },
+        "address_description": { "type": "string" },
+        "address_locality": { "type": "string" },
+        "address_postal_code": { "type": "string" },
+        "address_region": { "type": "string" },
+        "address_street": { "type": "string" }
+      },
+      "type": "object"
+    },
+    "display_name": { "$ref": "http://example.com/schemas/definitions.json#/definitions/display_name" },
+    "email": { "$ref": "http://example.com/schemas/definitions.json#/definitions/email" },
+    "first_name": { "$ref": "http://example.com/schemas/definitions.json#/definitions/first_name" },
+    "last_name": { "$ref": "http://example.com/schemas/definitions.json#/definitions/last_name" },
+    "status": { "type": "string" }
+  },
+  "required": ["display_name", "email"],
+  "type": "object"
+}

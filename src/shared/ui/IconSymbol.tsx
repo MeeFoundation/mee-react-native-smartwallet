@@ -19,6 +19,7 @@ import {
   UserIcon as UserOutlineIcon,
   UsersIcon as UsersOutlineIcon,
   WalletIcon as WalletOutlineIcon,
+  XMarkIcon as XMarkOutlineIcon,
 } from 'react-native-heroicons/outline'
 import {
   PaperAirplaneIcon as PaperAirplaneSolidIcon,
@@ -51,6 +52,7 @@ const MAPPING = {
   'users.filled': UsersSolidIcon,
   'users.outlined': UsersOutlineIcon,
   'wallet.outlined': WalletOutlineIcon,
+  'x-mark.outlined': XMarkOutlineIcon,
 } as const
 
 type IconSymbolName = keyof typeof MAPPING

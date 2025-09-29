@@ -1,22 +1,19 @@
-import type { ComponentProps, FC } from 'react'
-import { StyleSheet, View } from 'react-native'
+import type { FC } from 'react'
+import { View, type ViewProps } from 'react-native'
 
-const styles = StyleSheet.create({
-  separator: {
-    borderBottomColor: '#737373',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    marginVertical: 8,
-  },
-})
+import { cn } from '../lib/cn'
 
 /* -------------------------------------------------------------------------------------------------
  * Separator
  * -----------------------------------------------------------------------------------------------*/
-type SeparatorProps = ComponentProps<typeof View>
+type SeparatorProps = Omit<ViewProps, 'children'>
 
-const Separator: FC<SeparatorProps> = ({ style }) => <View style={StyleSheet.compose(styles.separator, style)} />
+const Separator: FC<SeparatorProps> = ({ className, ...rest }) => (
+  <View className={cn('my-2 border-b border-b-black/7', className)} {...rest} />
+)
 
 /* -----------------------------------------------------------------------------------------------*/
 
 export { Separator }
+
 export type { SeparatorProps }

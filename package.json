@@ -10,7 +10,7 @@
     "web": "expo start --web",
     "lint": "biome lint --error-on-warnings ./src",
     "check-types": "tsc --noEmit",
-    "steiger": "npx steiger ./src"
+    "steiger": "steiger ./src"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
@@ -22,6 +22,8 @@
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.6",
     "@shopify/flash-list": "^2.0.3",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
     "class-variance-authority": "^0.7.1",
     "eventemitter3": "^5.0.1",
     "expo": "53.0.22",
@@ -80,11 +82,13 @@
     "@biomejs/biome": "2.2.4",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
+    "@feature-sliced/steiger-plugin": "^0.5.7",
     "@types/lodash-es": "^4.17.12",
     "@types/react": "~19.0.10",
     "lefthook": "^1.13.0",
     "postcss": "^8.4.49",
     "react-native-svg-transformer": "^1.5.1",
+    "steiger": "^0.5.11",
     "tailwindcss": "3.4.17",
     "typescript": "~5.8.3"
   },
