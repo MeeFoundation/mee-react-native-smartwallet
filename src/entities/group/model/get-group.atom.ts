@@ -1,10 +1,10 @@
 import { atom } from 'jotai'
 import { atomFamily } from 'jotai/utils'
 
-import { groupsService } from './service'
+import { getGroup } from '../api/get-group'
 
 export const getGroupAtom = atomFamily((id: string) =>
   atom(async () => {
-    return groupsService.getGroupDetails(id)
+    return getGroup(id)
   }),
 )

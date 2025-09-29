@@ -1,6 +1,6 @@
 import { atom } from 'jotai'
 
-import { defaultGroupFilter } from './service'
+import { defaultGroupFilter } from '../config/get-groups-list'
 import type { GroupsFilter } from './types'
 
 /**

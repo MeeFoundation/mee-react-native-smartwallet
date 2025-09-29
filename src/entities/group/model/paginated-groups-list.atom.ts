@@ -9,7 +9,7 @@ import {
   type PaginatedStateAtom,
 } from '@/shared/lib/paginated-list'
 
-import { groupsService } from './service'
+import { getGroupsList } from '../api/get-groups-list'
 import type { GroupsListFetchParams, ShortGroup } from './types'
 
 export type PaginatedGroupsPersonsListState = PaginatedListState<ShortGroup>
@@ -19,4 +19,4 @@ export const getGroupsListStateAtom = atomFamily<GroupsListFetchParams, Paginate
   isEqual,
 )
 
-export const getManageGroupListAtom = makeGetManagePaginatedStateAtom(getGroupsListStateAtom, groupsService.getGroups)
+export const getManageGroupListAtom = makeGetManagePaginatedStateAtom(getGroupsListStateAtom, getGroupsList)

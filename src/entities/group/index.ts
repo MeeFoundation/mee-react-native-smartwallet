@@ -1,3 +1,4 @@
+export { emptyGroupFilter } from './config/get-groups-list'
 export {
   getGroupChatLink,
   getGroupLink,
@@ -16,7 +17,6 @@ export { getGroupRequestedAttributesSchemaAtom } from './model/group-requested-a
 export { groupFilterAtom } from './model/groups-filter.atom'
 export { getMyGroupPersonalDetailsAtom } from './model/my-group-personal-details.atom'
 export { getGroupsListStateAtom, getManageGroupListAtom } from './model/paginated-groups-list.atom'
-export { emptyGroupFilter } from './model/service'
 export { ShortGroupView } from './model/short-group.view'
 export type {
   Group,
