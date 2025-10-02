@@ -127,11 +127,7 @@ type ChatBubbleAttachmentsProps = {
 const ChatBubbleAttachments: FC<ChatBubbleAttachmentsProps> = ({ attachments, className }) => {
   const handleDownload = useCallback(async (attachment: UserChatMessageAttachment) => {
     try {
-      await Share.share({
-        message: 'Check out this file',
-        title: 'Check out this file',
-        url: attachment.uri,
-      })
+      await Share.share({ url: attachment.uri })
     } catch (error) {
       console.error('Error sharing', error)
     }

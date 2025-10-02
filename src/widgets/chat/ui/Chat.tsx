@@ -228,13 +228,15 @@ const useRenderComposer = () => {
 type ChatLoadEarlierProps = LoadEarlierProps
 
 const ChatLoadEarlier: FC<ChatLoadEarlierProps> = (props) => {
+  const { t: chatT } = useTranslation('chat')
+
   return props.isLoadingEarlier ? (
     <View className="my-2 items-center gap-1">
       <View className="h-4 w-4">
         <Spinner />
       </View>
       <View>
-        <Typography className="text-gray-900 text-xs opacity-65">loading messages...</Typography>
+        <Typography className="text-gray-900 text-xs opacity-65">{chatT('loading messages')}</Typography>
       </View>
     </View>
   ) : null
@@ -244,6 +246,8 @@ const ChatLoadEarlier: FC<ChatLoadEarlierProps> = (props) => {
  *  ChatLoading
  * -----------------------------------------------------------------------------------------------*/
 const ChatLoading: FC = () => {
+  const { t: chatT } = useTranslation('chat')
+
   const renderActions = useRenderActions()
   const renderComposer = useRenderComposer()
   const renderInputToolbar = useChatInputToolbar()
@@ -255,7 +259,7 @@ const ChatLoading: FC = () => {
         <View className="h-10 w-10">
           <Spinner />
         </View>
-        <Typography>loading messages...</Typography>
+        <Typography>{chatT('loading messages')}</Typography>
       </View>
 
       {/* TODO add disabled state */}
