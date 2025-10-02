@@ -3,7 +3,7 @@ import { useAtomValue, useSetAtom } from 'jotai'
 import { type FC, useCallback, useMemo } from 'react'
 import { Text, View } from 'react-native'
 
-import { GroupChat } from '@/widgets/group-chat'
+import { Chat } from '@/widgets/chat'
 import { GroupScreenHeader, GroupScreenTabs } from '@/widgets/group-screen-header'
 import { ScreenLayout } from '@/widgets/navigation'
 
@@ -74,7 +74,7 @@ const GroupChatScreen: FC = () => {
       <GroupScreenTabs group={groupView} />
 
       <ScreenLayout.Content className="px-3" safeBottomInset scrollable={false}>
-        <GroupChat
+        <Chat
           allLoaded={chatMessagesState.data?.nextIndex === null}
           currentUser={currentChatUser}
           group={group}

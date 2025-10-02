@@ -241,9 +241,9 @@ const ChatLoadEarlier: FC<ChatLoadEarlierProps> = (props) => {
 }
 
 /* -------------------------------------------------------------------------------------------------
- * GroupChatLoading
+ *  ChatLoading
  * -----------------------------------------------------------------------------------------------*/
-const GroupChatLoading: FC = () => {
+const ChatLoading: FC = () => {
   const renderActions = useRenderActions()
   const renderComposer = useRenderComposer()
   const renderInputToolbar = useChatInputToolbar()
@@ -269,11 +269,11 @@ const GroupChatLoading: FC = () => {
 }
 
 /* -------------------------------------------------------------------------------------------------
- * GroupChatContent
+ *  ChatContent
  *
  * @note Wee need this component to wrap the whole chat to UploadProvider
  * -----------------------------------------------------------------------------------------------*/
-const GroupChatContent: FC<GroupChatProps> = (props) => {
+const ChatContent: FC<ChatProps> = (props) => {
   const { t } = useTranslation()
   const renderActions = useRenderActions()
   const renderComposer = useRenderComposer()
@@ -308,7 +308,7 @@ const GroupChatContent: FC<GroupChatProps> = (props) => {
     [props.onRefresh, props.refreshing],
   )
 
-  if (props.loading) return <GroupChatLoading />
+  if (props.loading) return <ChatLoading />
 
   return (
     <GiftedChat
@@ -335,9 +335,9 @@ const GroupChatContent: FC<GroupChatProps> = (props) => {
 }
 
 /* -------------------------------------------------------------------------------------------------
- * GroupChat
+ *  Chat
  * -----------------------------------------------------------------------------------------------*/
-type GroupChatProps = {
+type ChatProps = {
   group: Group
   currentUser: ChatUser
   messages: ChatMessageType[]
@@ -354,14 +354,14 @@ type GroupChatProps = {
   onRefresh?: () => void
 }
 
-const GroupChat: FC<GroupChatProps> = (props) => (
+const Chat: FC<ChatProps> = (props) => (
   <UploadProvider assetsGroupIdentifier={`groip-chat-${props.group.id}`}>
-    <GroupChatContent {...props} />
+    <ChatContent {...props} />
   </UploadProvider>
 )
 
 /* -----------------------------------------------------------------------------------------------*/
 
-export { GroupChat }
+export { Chat }
 
-export type { GroupChatProps }
+export type { ChatProps }
