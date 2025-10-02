@@ -1,4 +1,4 @@
-import type { ChatUser } from '../../model/types'
+import type { ChatUser } from '../../model/chat-user.types'
 
 export const mockMeUser: ChatUser = {
   _id: 1,

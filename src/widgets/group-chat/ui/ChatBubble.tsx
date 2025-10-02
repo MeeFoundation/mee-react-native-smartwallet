@@ -1,26 +1,30 @@
 import { type FC, useCallback, useMemo } from 'react'
-import { Linking, View } from 'react-native'
+import { Linking, Share, View } from 'react-native'
 import { type BubbleProps, useChatContext } from 'react-native-gifted-chat'
 import ParsedText, { type ParseShape } from 'react-native-parsed-text'
 
-import type { ChatMessage } from '@/entities/chat'
+import { getAttachmentTip, resolveAttachmentIcon } from '@/features/upload'
 
-import { cn } from '@/shared/lib/cn'
+import type { ChatMessage, UserChatMessageAttachment } from '@/entities/chat'
+
 import { useFormattedTime } from '@/shared/lib/date-time'
+import { cn } from '@/shared/lib/styling'
 import { Typography } from '@/shared/ui/Typography'
+
+import * as ChatAttachment from './ChatAttachement'
 
 const WWW_URL_PATTERN = /^www\./i
 
 /* -------------------------------------------------------------------------------------------------
- * ChatBubble
+ * ChatBubbleText
  * -----------------------------------------------------------------------------------------------*/
-type ChatBubbleProps = BubbleProps<ChatMessage> & {
-  className?: string
+type ChatBubbleTextProps = {
+  position: 'left' | 'right'
+  text: string
 }
 
-const ChatBubble: FC<ChatBubbleProps> = (props) => {
+const ChatBubbleText: FC<ChatBubbleTextProps> = (props) => {
   const { actionSheet } = useChatContext()
-  const formattedTime = useFormattedTime(props.currentMessage.createdAt)
 
   // TODO add error handling
   const onUrlPress = useCallback((url: string) => {
@@ -63,7 +67,6 @@ const ChatBubble: FC<ChatBubbleProps> = (props) => {
     [],
   )
 
-  // FIXME Link for my message
   const linkClassName = cn('underline', props.position === 'left' ? 'text-primary' : 'text-white')
 
   const parse: ParseShape[] = useMemo(
@@ -75,6 +78,88 @@ const ChatBubble: FC<ChatBubbleProps> = (props) => {
     [linkClassName, onUrlPress, onPhonePress, onEmailPress],
   )
 
+  const textClassName = cn('font-publicSans text-base', props.position === 'left' ? 'text-gray-900' : 'text-white')
+
+  return (
+    <ParsedText childrenProps={{ className: textClassName }} parse={parse}>
+      {props.text}
+    </ParsedText>
+  )
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * ChatBubbleTIme
+ * -----------------------------------------------------------------------------------------------*/
+type ChatBubbleTimeProps = BubbleProps<ChatMessage>
+
+const ChatBubbleTime: FC<ChatBubbleTimeProps> = (props) => {
+  const formattedTime = useFormattedTime(props.currentMessage.createdAt)
+
+  return (
+    props.renderTime?.(props) ?? (
+      <Typography className={cn('text-xs opacity-65', props.position === 'left' ? 'text-gray-900' : 'text-white')}>
+        {formattedTime}
+      </Typography>
+    )
+  )
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * ChatBubbleUsername
+ * -----------------------------------------------------------------------------------------------*/
+type ChatBubbleUsernameProps = BubbleProps<ChatMessage>
+
+const ChatBubbleUsername: FC<ChatBubbleUsernameProps> = (props) =>
+  props.renderUsername?.(props.currentMessage.user) ?? (
+    <Typography className="mb-1.5 font-semibold text-primary text-xs">
+      {props.currentMessage.user.name} {props.position === 'left' ? <ChatBubbleTime {...props} /> : null}
+    </Typography>
+  )
+
+/* -------------------------------------------------------------------------------------------------
+ * ChatBubbleAttachments
+ * -----------------------------------------------------------------------------------------------*/
+type ChatBubbleAttachmentsProps = {
+  className?: string
+  attachments: UserChatMessageAttachment[]
+}
+
+const ChatBubbleAttachments: FC<ChatBubbleAttachmentsProps> = ({ attachments, className }) => {
+  const handleDownload = useCallback(async (attachment: UserChatMessageAttachment) => {
+    try {
+      await Share.share({
+        message: 'Check out this file',
+        title: 'Check out this file',
+        url: attachment.uri,
+      })
+    } catch (error) {
+      console.error('Error sharing', error)
+    }
+  }, [])
+
+  return (
+    <View className={cn('min-w-full gap-1', className)}>
+      {attachments.map((attachment, index) => (
+        <ChatAttachment.Root key={`${attachment.uri}-${index}`} onPress={() => handleDownload(attachment)}>
+          <ChatAttachment.Icon name={resolveAttachmentIcon(attachment)} />
+          <ChatAttachment.Content name={attachment.fileName ?? attachment.uri} tip={getAttachmentTip(attachment)} />
+          <ChatAttachment.Action className="text-blue-700" name="arrow-down-tray.outlined" />
+        </ChatAttachment.Root>
+      ))}
+    </View>
+  )
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * ChatBubble
+ * -----------------------------------------------------------------------------------------------*/
+type ChatBubbleProps = BubbleProps<ChatMessage> & {
+  className?: string
+}
+
+const ChatBubble: FC<ChatBubbleProps> = (props) => {
+  const attachments = 'attachments' in props.currentMessage ? props.currentMessage.attachments : null
+
   return (
     <View className={cn(props.position === 'left' ? 'items-start' : 'items-end')}>
       <View
@@ -84,38 +169,32 @@ const ChatBubble: FC<ChatBubbleProps> = (props) => {
         )}
       >
         {/* render username for incomming messages only  */}
-        {!props.renderUsernameOnMessage || props.position !== 'left'
-          ? null
-          : (props.renderUsername?.(props.currentMessage.user) ?? (
-              <Typography className="font-semibold text-primary text-xs">{props.currentMessage.user.name}</Typography>
-            ))}
+        {!props.renderUsernameOnMessage || props.position !== 'left' ? null : <ChatBubbleUsername {...props} />}
+
+        {/* render attachments for outgoing full-width */}
+        {props.position !== 'right' || !attachments?.length ? null : (
+          <ChatBubbleAttachments attachments={attachments} className="mb-1.5" />
+        )}
 
         <View className="flex-row items-end gap-2.5">
           <View className="shrink">
             {props.renderMessageText?.(props) ?? (
-              <ParsedText
-                childrenProps={{
-                  className: cn(
-                    'font-publicSans text-base',
-                    props.position === 'left' ? 'text-gray-900' : 'text-white',
-                  ),
-                }}
-                parse={parse}
-              >
-                {props.currentMessage.text}
-              </ParsedText>
+              <>
+                {props.position !== 'left' || !attachments?.length ? null : (
+                  <ChatBubbleAttachments attachments={attachments} className="mb-1.5" />
+                )}
+                {!props.currentMessage.text ? null : (
+                  <ChatBubbleText position={props.position} text={props.currentMessage.text} />
+                )}
+              </>
             )}
           </View>
 
-          {props.renderTime?.(props) ?? (
+          {props.position === 'right' ? (
             <View>
-              <Typography
-                className={cn('text-xs opacity-65', props.position === 'left' ? 'text-gray-900' : 'text-white')}
-              >
-                {formattedTime}
-              </Typography>
+              <ChatBubbleTime {...props} />
             </View>
-          )}
+          ) : null}
         </View>
       </View>
     </View>

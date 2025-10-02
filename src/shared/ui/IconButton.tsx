@@ -2,7 +2,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import type { FC } from 'react'
 import { TouchableOpacity, type TouchableOpacityProps } from 'react-native'
 
-import { cn } from '../lib/cn'
+import { cn } from '../lib/styling'
 import { IconSymbol, type IconSymbolName } from './IconSymbol'
 
 const iconButtonVariants = cva('items-center justify-center', {

@@ -1,6 +1,7 @@
 import { BusEvent } from '@/shared/lib/event-bus'
 
-import type { ChatMessage, ChatUser } from './types'
+import type { ChatUser } from './chat-user.types'
+import type { ChatMessage } from './types'
 
 export class ChatNewMessagesEvent extends BusEvent {
   name = 'chat_new_messages'

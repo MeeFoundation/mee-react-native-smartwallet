@@ -2,7 +2,7 @@ import type { FC } from 'react'
 import ContentLoader, { Circle, type IContentLoaderProps, Rect } from 'react-content-loader/native'
 import { View } from 'react-native'
 
-import { cn } from '../lib/cn'
+import { cn } from '../lib/styling'
 
 /* -------------------------------------------------------------------------------------------------
  * Skeleton

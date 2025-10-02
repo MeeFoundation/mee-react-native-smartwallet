@@ -185,7 +185,7 @@ export default function PeopleScreen() {
       <ScreenLayout.Root>
         <PeopleScreenHeader />
 
-        <ScreenLayout.Content>
+        <ScreenLayout.Content scrollable={false}>
           <ListLayout.Root>
             <ListLayout.Header>
               <FiltersSelectButton>{t('filters_button.text')}</FiltersSelectButton>

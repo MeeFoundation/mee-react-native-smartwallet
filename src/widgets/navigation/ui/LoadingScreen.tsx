@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import { View, type ViewProps } from 'react-native'
 
-import { cn } from '@/shared/lib/cn'
+import { cn } from '@/shared/lib/styling'
 import { BackgroundLayout } from '@/shared/ui/BackgroundLayout'
 import { Spinner } from '@/shared/ui/Spinner'
 

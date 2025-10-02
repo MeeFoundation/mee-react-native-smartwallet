@@ -8,7 +8,7 @@ export default  defineConfig([
     // TODO Remove this ignore
     // For now disable the insignificant-slice rule for the attribute entities
     // as it is used in one place, but it should be used in more places
-    files: ['./src/entities/attribute/**'],
+    files: ['./src/entities/attribute/**', './src/features/upload/**'],
     rules: {
       'fsd/insignificant-slice': 'off',
     },

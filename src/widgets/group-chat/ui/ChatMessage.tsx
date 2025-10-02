@@ -5,7 +5,7 @@ import { Avatar, type MessageProps as GiftedMessageProps } from 'react-native-gi
 
 import { type ChatMessage as ChatMessageType, isUserJoinChatMessage, isUserLeaveChatMessage } from '@/entities/chat'
 
-import { cn } from '@/shared/lib/cn'
+import { cn } from '@/shared/lib/styling'
 import { Spinner } from '@/shared/ui/Spinner'
 import { Typography } from '@/shared/ui/Typography'
 

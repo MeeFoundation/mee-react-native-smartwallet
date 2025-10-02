@@ -1,5 +1,5 @@
 import { palettes } from '@/shared/config'
-import { useColorScheme } from '@/shared/lib/useColorScheme'
+import { useColorScheme } from '@/shared/lib/styling'
 
 export const useThemeColor = (
   colorName: keyof typeof palettes.light & keyof typeof palettes.dark,

@@ -5,7 +5,7 @@ import { type GestureResponderEvent, TouchableOpacity, type TouchableOpacityProp
 import type { GroupView } from '@/entities/group'
 
 import { colors } from '@/shared/config'
-import { cn } from '@/shared/lib/cn'
+import { cn } from '@/shared/lib/styling'
 import { Typography } from '@/shared/ui/Typography'
 
 import { useGroupTabs } from '../model/GroupScreenTabs'

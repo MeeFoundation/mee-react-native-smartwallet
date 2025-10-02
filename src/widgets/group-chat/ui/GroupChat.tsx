@@ -16,6 +16,8 @@ import {
 } from 'react-native-gifted-chat'
 import type { ListViewProps } from 'react-native-gifted-chat/lib/MessageContainer'
 
+import { UploadProvider, useSelectFromGalery, useUpload } from '@/features/upload'
+
 import type { ChatMessage as ChatMessageType, ChatUser } from '@/entities/chat'
 import type { Group } from '@/entities/group'
 
@@ -26,6 +28,7 @@ import { Spinner } from '@/shared/ui/Spinner'
 import { PLACEHOLDER_TEXT_COLOR } from '@/shared/ui/TextInput'
 import { Typography } from '@/shared/ui/Typography'
 
+import * as ChatAttachment from './ChatAttachement'
 import { ChatMessage } from './ChatMessage'
 import { ChatTypingIndicator } from './ChatTytpingIndicator'
 
@@ -57,31 +60,37 @@ const sendButtonStyles = StyleSheet.create({
   },
 })
 
-const useRenderSend = () =>
-  useCallback((p: SendProps<ChatMessageType>) => {
-    const disabled = p.disabled || !p.text
+const useRenderSend = () => {
+  const { assets } = useUpload()
 
-    const handleSend = () => {
-      if (p.text && p.onSend) {
-        p.onSend({ text: p.text.trim() }, true)
+  return useCallback(
+    (p: SendProps<ChatMessageType>) => {
+      const disabled = p.disabled || (!p.text && !assets.length)
+
+      const handleSend = () => {
+        if (!disabled && p.onSend) {
+          p.onSend({ attachments: assets, text: p.text?.trim() }, true)
+        }
       }
-    }
 
-    return (
-      <TouchableOpacity
-        {...p.sendButtonProps}
-        disabled={disabled}
-        onPress={handleSend}
-        // Don't set containerStyle here — Toolbar already applies its own styles,
-        // and they will override anything we add.
-        style={sendButtonStyles.container}
-      >
-        <View style={[sendButtonStyles.sendButton, disabled && sendButtonStyles.disabled]}>
-          <IconSymbol color={colors.white} height={14} name="paper-airplane.filled" width={14} />
-        </View>
-      </TouchableOpacity>
-    )
-  }, [])
+      return (
+        <TouchableOpacity
+          {...p.sendButtonProps}
+          disabled={disabled}
+          onPress={handleSend}
+          // Don't set containerStyle here — Toolbar already applies its own styles,
+          // and they will override anything we add.
+          style={sendButtonStyles.container}
+        >
+          <View style={[sendButtonStyles.sendButton, disabled && sendButtonStyles.disabled]}>
+            <IconSymbol color={colors.white} height={14} name="paper-airplane.filled" width={14} />
+          </View>
+        </TouchableOpacity>
+      )
+    },
+    [assets],
+  )
+}
 
 /* -------------------------------------------------------------------------------------------------
  * InputToolbar
@@ -97,28 +106,45 @@ const chatInputToolbarStyles = StyleSheet.create({
   },
 })
 
-const useChatInputToolbar = () =>
-  useCallback(
-    (props: InputToolbarProps<ChatMessageType>) => (
+type InputToolbarWithAssetsProps = InputToolbarProps<ChatMessageType>
+
+const InputToolbarWithAssets: FC<InputToolbarWithAssetsProps> = (props) => {
+  const { assets, removeAsset } = useUpload()
+
+  return (
+    <View>
+      {!assets.length ? null : (
+        <View className="mt-2 gap-1 rounded-[10] bg-white px-3 py-2.5">
+          {assets.map((asset, index) => (
+            <ChatAttachment.Root key={`${asset.uri}-${index}`}>
+              <ChatAttachment.Icon />
+              <ChatAttachment.Content name={asset.fileName ?? asset.uri} />
+              <ChatAttachment.Action name="x-mark.outlined" onPress={() => removeAsset(asset.uri)} />
+            </ChatAttachment.Root>
+          ))}
+        </View>
+      )}
+
       <InputToolbar
         {...props}
         containerStyle={[chatInputToolbarStyles.container, props.containerStyle]}
         primaryStyle={[chatInputToolbarStyles.primary, props.primaryStyle]}
       />
-    ),
-    [],
+    </View>
   )
+}
+
+const useChatInputToolbar = () =>
+  useCallback((props: InputToolbarProps<ChatMessageType>) => <InputToolbarWithAssets {...props} />, [])
 
 /* -------------------------------------------------------------------------------------------------
- * Acrions
+ * Actions
  * -----------------------------------------------------------------------------------------------*/
 const useChatActionOptions = () => {
   const { t: groupsT } = useTranslation('groups')
+  const { addAsset } = useUpload()
 
-  const handleAttachFile = useCallback(() => {
-    // FIXME Implement
-    throw new Error('Attach file')
-  }, [])
+  const selectFromGalery = useSelectFromGalery(addAsset)
 
   const handleCancel = useCallback(() => {}, [])
 
@@ -130,11 +156,11 @@ const useChatActionOptions = () => {
   } = useMemo(() => {
     const result: { [key: string]: () => void } = {}
 
-    result[attachFileKey] = handleAttachFile
+    result[attachFileKey] = selectFromGalery
     result[cancelKey] = handleCancel
 
     return result
-  }, [attachFileKey, cancelKey, handleAttachFile, handleCancel])
+  }, [attachFileKey, cancelKey, selectFromGalery, handleCancel])
 
   return options
 }
@@ -243,26 +269,11 @@ const GroupChatLoading: FC = () => {
 }
 
 /* -------------------------------------------------------------------------------------------------
- * GroupChat
+ * GroupChatContent
+ *
+ * @note Wee need this component to wrap the whole chat to UploadProvider
  * -----------------------------------------------------------------------------------------------*/
-type GroupChatProps = {
-  group: Group
-  currentUser: ChatUser
-  messages: ChatMessageType[]
-  loading?: boolean
-  typingUsers?: string[]
-
-  onSend: (message: ChatMessageType[]) => void
-
-  allLoaded?: boolean
-  isLoadingEarlier?: boolean
-  onLoadEarlier?: () => void
-
-  refreshing?: boolean
-  onRefresh?: () => void
-}
-
-const GroupChat: FC<GroupChatProps> = (props) => {
+const GroupChatContent: FC<GroupChatProps> = (props) => {
   const { t } = useTranslation()
   const renderActions = useRenderActions()
   const renderComposer = useRenderComposer()
@@ -322,6 +333,32 @@ const GroupChat: FC<GroupChatProps> = (props) => {
     />
   )
 }
+
+/* -------------------------------------------------------------------------------------------------
+ * GroupChat
+ * -----------------------------------------------------------------------------------------------*/
+type GroupChatProps = {
+  group: Group
+  currentUser: ChatUser
+  messages: ChatMessageType[]
+  loading?: boolean
+  typingUsers?: string[]
+
+  onSend: (message: ChatMessageType[]) => void
+
+  allLoaded?: boolean
+  isLoadingEarlier?: boolean
+  onLoadEarlier?: () => void
+
+  refreshing?: boolean
+  onRefresh?: () => void
+}
+
+const GroupChat: FC<GroupChatProps> = (props) => (
+  <UploadProvider assetsGroupIdentifier={`groip-chat-${props.group.id}`}>
+    <GroupChatContent {...props} />
+  </UploadProvider>
+)
 
 /* -----------------------------------------------------------------------------------------------*/
 

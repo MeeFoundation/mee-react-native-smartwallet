@@ -4,8 +4,8 @@ import type { FC } from 'react'
 import { Image, type ImageSourcePropType, StyleSheet, Text, View, type ViewStyle } from 'react-native'
 
 import { colors } from '@/shared/config'
-import { generateColorHsl } from '@/shared/lib/color'
 import { getImageSource } from '@/shared/lib/get-image-source'
+import { generateColorHsl } from '@/shared/lib/styling'
 
 export type AvatarProps = {
   text: string

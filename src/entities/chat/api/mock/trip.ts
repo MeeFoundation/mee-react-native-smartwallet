@@ -1,5 +1,6 @@
+import type { UserJoinChatMessage } from '../../model/chat-system-message.types'
 import { SYSTEM_USER } from '../../model/system-user'
-import type { ChatMessage, UserJoinChatMessage } from '../../model/types'
+import type { ChatMessage } from '../../model/types'
 import { mockBobUser, mockKristinUser, mockMeUser } from './users'
 
 export const mockTripChatMessages: ChatMessage[] = [
@@ -163,6 +164,70 @@ export const mockTripChatMessages: ChatMessage[] = [
     _id: '2b3c-214',
     createdAt: new Date('2025-09-13T08:09:30'),
     text: 'Sharp-ish. Like… 9:47.',
+    user: mockBobUser,
+  },
+  {
+    _id: '2b3c-215',
+    attachments: [
+      {
+        fileName: 'Octoberfest.jpg',
+        fileSize: 239 * 1024,
+        height: 768,
+        type: 'image' as const,
+        uri: 'https://loremflickr.com/1024/768/nature',
+        width: 1024,
+      },
+      {
+        fileName: 'swimming.mp4',
+        fileSize: 1075 * 1024,
+        height: 768,
+        type: 'video' as const,
+        uri: 'https://loremflickr.com/1024/768/nature',
+        width: 1024,
+      },
+      {
+        fileName: 'file.pdf',
+        fileSize: 1024 * 1024,
+        height: 768,
+        type: undefined,
+        uri: 'file://loremflickr.com/1024/768/nature',
+        width: 1024,
+      },
+    ],
+    createdAt: new Date('2025-09-13T08:09:32'),
+    text: 'I send you several files: image, pdf and video',
+    user: mockMeUser,
+  },
+  {
+    _id: '2b3c-216',
+    attachments: [
+      {
+        fileName: 'Octoberfest.jpg',
+        fileSize: 239 * 1024,
+        height: 768,
+        type: 'image' as const,
+        uri: 'https://loremflickr.com/1024/768/nature',
+        width: 1024,
+      },
+      {
+        fileName: 'swimming.mp4',
+        fileSize: 1075 * 1024,
+        height: 768,
+        type: 'video' as const,
+        uri: 'https://loremflickr.com/1024/768/nature',
+        width: 1024,
+      },
+      {
+        fileName: 'file.pdf',
+        fileSize: 1024 * 1024,
+        height: 768,
+        type: undefined,
+        uri: 'file://loremflickr.com/1024/768/nature',
+        width: 1024,
+      },
+    ],
+    createdAt: new Date('2025-09-13T08:09:32'),
+    text: 'I receioved your files',
     user: mockBobUser,
   },
 ].reverse()

@@ -5,7 +5,7 @@ import { Animated, Dimensions, FlatList, type ListRenderItem, StyleSheet, View }
 import { ChevronLeftIcon } from 'react-native-heroicons/outline'
 
 import { colors } from '@/shared/config'
-import { hexAlphaColor } from '@/shared/lib/color'
+import { hexAlphaColor } from '@/shared/lib/styling'
 
 import { AnimatedTouchable } from './AnimatedTouchable'
 

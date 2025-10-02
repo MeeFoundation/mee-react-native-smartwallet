@@ -2,7 +2,7 @@ import type { FC, ReactNode } from 'react'
 import { StyleSheet, View, type ViewProps } from 'react-native'
 
 import { colors } from '@/shared/config'
-import { cn } from '@/shared/lib/cn'
+import { cn } from '@/shared/lib/styling'
 import { Avatar, type AvatarProps } from '@/shared/ui/Avatar'
 import * as Skeleton from '@/shared/ui/Skeleton'
 import { Typography, type TypographyProps } from '@/shared/ui/Typography'

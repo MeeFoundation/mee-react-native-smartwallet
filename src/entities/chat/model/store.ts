@@ -13,14 +13,10 @@ import { generateUUID } from '@/shared/lib/uuid'
 import { getGroupChatMessages } from '../api/get-group-chat-messages'
 import { mockMeUser } from '../api/mock/users'
 import { sendGroupChatMessage } from '../api/send-group-chat-message'
+import type { UserJoinChatMessage, UserLeaveChatMessage } from './chat-system-message.types'
+import type { ChatUser } from './chat-user.types'
 import { SYSTEM_USER } from './system-user'
-import type {
-  ChatMessage,
-  ChatUser,
-  GetChatMessagesFetchParams,
-  UserJoinChatMessage,
-  UserLeaveChatMessage,
-} from './types'
+import type { ChatMessage, GetChatMessagesFetchParams } from './types'
 
 export const currentUserAtom = atom<ChatUser>(mockMeUser)
 

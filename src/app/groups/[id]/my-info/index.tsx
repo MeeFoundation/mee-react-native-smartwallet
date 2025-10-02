@@ -20,7 +20,7 @@ import {
 } from '@/entities/group'
 
 import { InvalidRouteParamsError } from '@/shared/errors'
-import { cn } from '@/shared/lib/cn'
+import { cn } from '@/shared/lib/styling'
 import { IconSymbol } from '@/shared/ui/IconSymbol'
 import { Typography } from '@/shared/ui/Typography'
 
@@ -127,8 +127,8 @@ const GroupMyInfoScreenContent: FC<GroupMyInfoScreenContentProps> = ({ groupId }
         />
 
         <View className="gap-2">
-          {sections.map((section) => (
-            <SectionLink href={section.href} key={String(section.href)}>
+          {sections.map((section, index) => (
+            <SectionLink href={section.href} key={`${String(section.href)}-${index}`}>
               {section.children}
             </SectionLink>
           ))}

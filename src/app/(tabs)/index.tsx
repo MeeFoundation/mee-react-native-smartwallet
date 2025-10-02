@@ -191,7 +191,7 @@ export default function HomeScreen() {
       <ScreenLayout.Root>
         <GroupsScreenHeader />
 
-        <ScreenLayout.Content>
+        <ScreenLayout.Content scrollable={false}>
           <ListLayout.Root>
             <ListLayout.Header>
               <FiltersSelectButton onPress={handleFilterButtonPress}>{t('filters_button.text')}</FiltersSelectButton>

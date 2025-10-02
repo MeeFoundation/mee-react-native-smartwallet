@@ -12,7 +12,7 @@ import { isAuthenticatedAtom } from '@/features/auth'
 import { setAndroidContactsAtom, setIosContactsAtom } from '@/entities/contact'
 
 import { colors } from '@/shared/config'
-import { useThemeColor } from '@/shared/lib/useThemeColor'
+import { useThemeColor } from '@/shared/lib/styling'
 import { Avatar } from '@/shared/ui/Avatar'
 import { BottomSheetBackDrop } from '@/shared/ui/BottomSheet'
 import { IconSymbol } from '@/shared/ui/IconSymbol'

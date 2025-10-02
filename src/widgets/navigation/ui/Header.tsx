@@ -3,7 +3,7 @@ import { createContext, type FC, useContext, useMemo } from 'react'
 import { View, type ViewProps } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { cn } from '@/shared/lib/cn'
+import { cn } from '@/shared/lib/styling'
 import { IconButton, type IconButtonProps } from '@/shared/ui/IconButton'
 import { Typography, type TypographyProps } from '@/shared/ui/Typography'
 

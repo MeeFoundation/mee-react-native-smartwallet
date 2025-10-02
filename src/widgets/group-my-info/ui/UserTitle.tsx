@@ -1,6 +1,6 @@
 import { View, type ViewProps } from 'react-native'
 
-import { cn } from '@/shared/lib/cn'
+import { cn } from '@/shared/lib/styling'
 import { Avatar } from '@/shared/ui/Avatar'
 import { Typography } from '@/shared/ui/Typography'
 

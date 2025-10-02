@@ -11,7 +11,7 @@ import {
 
 import { colors } from '@/shared/config'
 
-import { cn } from '../lib/cn'
+import { cn } from '../lib/styling'
 import { Typography, type TypographyProps } from './Typography'
 
 const PLACEHOLDER_TEXT_COLOR = colors['gray-600']
