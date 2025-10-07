@@ -4,7 +4,7 @@ import { type FC, useCallback, useMemo, useRef } from 'react'
 
 import { UploadProvider } from '@/features/upload'
 
-import { type ChatIdentifier, isUserMessage, type Message, type User } from '@/entities/chat'
+import { type ChatIdentifier, type ChatMessagesState, isUserMessage, type Message, type User } from '@/entities/chat'
 
 import { useLoadEarlierMessages } from '../lib/use-load-earlier-messages'
 import { useLoadNewerMessages } from '../lib/use-load-newer-messages'
@@ -12,32 +12,23 @@ import { ActionsBackdrop } from './ActionsBackdrop'
 import { ChatLoading } from './ChatLoading'
 import { ChatMessage as ChatMessageComponent } from './ChatMessage'
 import { ChatMessagesLoading } from './ChatMessagesLoading'
+import { type ChatContext, ChatProvider } from './ChatProvider'
 import { ChatToolbar } from './ChatToolbar'
 
 /* -------------------------------------------------------------------------------------------------
  *  Chat
  * -----------------------------------------------------------------------------------------------*/
 type ChatProps = {
+  state: ChatMessagesState
   chatIdentifier: ChatIdentifier
   currentUser: User
-  messages: Message[]
-  loading?: boolean
   typingUsers?: string[]
 
-  onSend: (message: Message[]) => void
-
-  isLoadingEarlier?: boolean
-  onLoadEarlier?: () => Promise<void>
-  isAllEarlierLoaded?: boolean
-
-  isLoadingNewer?: boolean
-  onLoadNewer?: () => Promise<void>
-  isAllNewerLoaded?: boolean
-
-  refreshing?: boolean
   onRefresh?: () => void
-
-  onRepliedToPress?: (messageId: string) => void
+  onSend: (message: Message[]) => void
+  onLoadEarlier?: () => Promise<ChatMessagesState>
+  onLoadNewer?: () => Promise<ChatMessagesState>
+  onRepliedToPress?: (messageId: string) => Promise<ChatMessagesState>
 }
 
 const Chat: FC<ChatProps> = (props) => {
@@ -45,29 +36,25 @@ const Chat: FC<ChatProps> = (props) => {
   const scrollLockedRef = useRef(false)
   const actionsSheetRef = useRef<BottomSheet>(null)
 
-  const messages = useMemo(() => [...props.messages].reverse(), [props.messages])
+  const messages = useMemo(() => [...props.state.messages].reverse(), [props.state.messages])
 
   const handleActionsButtonPress = useCallback(() => {
     actionsSheetRef.current?.expand()
   }, [])
 
   const loadEarlierMessages = useLoadEarlierMessages({
-    hasEarlierMessages: !props.isAllEarlierLoaded,
-    isLoadingEarlier: !!props.isLoadingEarlier,
     listRef,
     loadEarlierMessages: props.onLoadEarlier,
-    messages: props.messages,
     scrollLockedRef,
+    state: props.state,
   })
 
   const loadNewerMessages = useLoadNewerMessages({
-    hasNewerMessages: !props.isAllNewerLoaded,
-    isLoadingNewer: !!props.isLoadingNewer,
     listRef,
     loadNewerMessages: props.onLoadNewer,
     scrollLockedRef,
+    state: props.state,
   })
-  // const handleForwardedPress = useGoToMessage(dispatch, ref, scrollLockedRef)
 
   const handleOnScroll = useCallback(() => {
     scrollLockedRef.current = false
@@ -94,32 +81,53 @@ const Chat: FC<ChatProps> = (props) => {
     [props.onSend, props.currentUser],
   )
 
-  return props.loading ? (
+  const onRepliedToPress = useCallback(
+    async (messageId: string) => {
+      const newState = await props.onRepliedToPress?.(messageId)
+
+      const messageToScrollTo = newState?.messages.find((message) => message.id === messageId)
+
+      scrollLockedRef.current = true
+
+      if (messageToScrollTo) {
+        setTimeout(() => {
+          listRef.current?.scrollToItem({ animated: true, item: messageToScrollTo, viewPosition: 0.5 })
+        })
+      }
+    },
+    [props.onRepliedToPress],
+  )
+
+  const chatProviderValue: ChatContext = useMemo(() => ({ onRepliedToPress }), [onRepliedToPress])
+
+  return !props.state.isLoaded ? (
     <ChatLoading />
   ) : (
-    <UploadProvider assetsGroupIdentifier={props.chatIdentifier}>
-      <FlashList
-        data={messages}
-        keyExtractor={(item) => item.id}
-        ListFooterComponent={<ChatMessagesLoading isLoading={!!props.isLoadingEarlier} />}
-        ListHeaderComponent={<ChatMessagesLoading isLoading={!!props.isLoadingEarlier} />}
-        maintainVisibleContentPosition={{
-          autoscrollToBottomThreshold: 0.1,
-          startRenderingFromBottom: true,
-        }}
-        onEndReached={loadNewerMessages}
-        onEndReachedThreshold={0.1}
-        onScroll={handleOnScroll}
-        onStartReached={loadEarlierMessages}
-        onStartReachedThreshold={0.1}
-        ref={listRef}
-        renderItem={renderItem}
-      />
+    <ChatProvider value={chatProviderValue}>
+      <UploadProvider assetsGroupIdentifier={props.chatIdentifier}>
+        <FlashList
+          data={messages}
+          keyExtractor={(item) => item.id}
+          ListFooterComponent={<ChatMessagesLoading isLoading={props.state.isLoadingNewer} />}
+          ListHeaderComponent={<ChatMessagesLoading isLoading={props.state.isLoadingEarlier} />}
+          maintainVisibleContentPosition={{
+            autoscrollToBottomThreshold: 0.1,
+            startRenderingFromBottom: true,
+          }}
+          onEndReached={loadNewerMessages}
+          onEndReachedThreshold={0.1}
+          onScroll={handleOnScroll}
+          onStartReached={loadEarlierMessages}
+          onStartReachedThreshold={0.1}
+          ref={listRef}
+          renderItem={renderItem}
+        />
 
-      <ChatToolbar onSend={handleSend} onToggleActions={handleActionsButtonPress} />
+        <ChatToolbar onSend={handleSend} onToggleActions={handleActionsButtonPress} />
 
-      <ActionsBackdrop ref={actionsSheetRef} />
-    </UploadProvider>
+        <ActionsBackdrop ref={actionsSheetRef} />
+      </UploadProvider>
+    </ChatProvider>
   )
 }
 

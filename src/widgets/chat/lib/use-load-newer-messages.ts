@@ -2,25 +2,23 @@ import type { FlashListRef } from '@shopify/flash-list'
 import type { RefObject } from 'react'
 import { useCallback } from 'react'
 
-import type { Message } from '@/entities/chat'
+import type { ChatMessagesState, Message } from '@/entities/chat'
 
 type UseLoadNewerMessagesParams = {
-  isLoadingNewer: boolean
-  hasNewerMessages: boolean
+  state: ChatMessagesState
   listRef: RefObject<FlashListRef<Message> | null>
   scrollLockedRef: RefObject<boolean>
-  loadNewerMessages: (() => Promise<void>) | undefined
+  loadNewerMessages: (() => Promise<ChatMessagesState>) | undefined
 }
 
 export const useLoadNewerMessages = ({
-  isLoadingNewer,
-  hasNewerMessages,
   listRef,
   scrollLockedRef,
   loadNewerMessages,
+  state,
 }: UseLoadNewerMessagesParams) =>
   useCallback(async () => {
-    if (isLoadingNewer || !hasNewerMessages) return
+    if (state.isLoadingNewer || !state.hasNewerMessages) return
 
     const preventAnimation = scrollLockedRef.current
     await loadNewerMessages?.()
@@ -33,4 +31,4 @@ export const useLoadNewerMessages = ({
 
       listRef.current?.scrollToOffset({ animated: true, offset: currentScroll + 100, viewPosition: 0 })
     }, 100)
-  }, [loadNewerMessages, isLoadingNewer, hasNewerMessages, listRef, scrollLockedRef])
+  }, [loadNewerMessages, state.isLoadingNewer, state.hasNewerMessages, listRef, scrollLockedRef])

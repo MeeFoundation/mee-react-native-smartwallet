@@ -2,27 +2,23 @@ import type { FlashListRef } from '@shopify/flash-list'
 import type { RefObject } from 'react'
 import { useCallback } from 'react'
 
-import type { Message } from '@/entities/chat'
+import type { ChatMessagesState, Message } from '@/entities/chat'
 
 type UseLoadEarlierMessagesParams = {
-  messages: Message[]
-  isLoadingEarlier: boolean
-  hasEarlierMessages: boolean
+  state: ChatMessagesState
   listRef: RefObject<FlashListRef<Message> | null>
   scrollLockedRef: RefObject<boolean>
-  loadEarlierMessages: (() => Promise<void>) | undefined
+  loadEarlierMessages: (() => Promise<ChatMessagesState>) | undefined
 }
 
 export const useLoadEarlierMessages = ({
   loadEarlierMessages,
-  messages,
-  isLoadingEarlier,
-  hasEarlierMessages,
+  state,
   listRef,
   scrollLockedRef,
 }: UseLoadEarlierMessagesParams) =>
   useCallback(async () => {
-    if (isLoadingEarlier || !hasEarlierMessages) return
+    if (state.isLoadingEarlier || !state.hasEarlierMessages) return
 
     const currentScroll = listRef.current?.getAbsoluteLastScrollOffset()
     const dimentions = listRef.current?.getChildContainerDimensions()
@@ -32,10 +28,10 @@ export const useLoadEarlierMessages = ({
       dimentions === undefined || windowSize === undefined || currentScroll === undefined
         ? undefined
         : dimentions.height - windowSize.height - currentScroll
-    const lastItem = messages.at(-1)
+    const lastItem = state.messages.at(-1)
     await loadEarlierMessages?.()
 
     if (lastItem && delta && delta > 10 && !scrollLockedRef.current) {
       setTimeout(() => listRef.current?.scrollToItem({ item: lastItem, viewOffset: -150, viewPosition: 0 }))
     }
-  }, [loadEarlierMessages, messages, isLoadingEarlier, hasEarlierMessages, listRef, scrollLockedRef])
+  }, [loadEarlierMessages, state.messages, state.isLoadingEarlier, state.hasEarlierMessages, listRef, scrollLockedRef])

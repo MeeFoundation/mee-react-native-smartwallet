@@ -1,5 +1,5 @@
 import { type FC, useCallback, useMemo } from 'react'
-import { Linking, Share, View } from 'react-native'
+import { Linking, Share, TouchableOpacity, View } from 'react-native'
 import ParsedText, { type ParseShape } from 'react-native-parsed-text'
 
 import { resolveAttachmentIcon } from '@/features/upload'
@@ -12,6 +12,7 @@ import { Typography } from '@/shared/ui/Typography'
 
 import { getAttachmentTip } from '../lib/get-attachment-tip'
 import * as ChatAttachment from './ChatAttachement'
+import { useChatContext } from './ChatProvider'
 
 const WWW_URL_PATTERN = /^www\./i
 
@@ -148,6 +149,32 @@ const ChatBubbleAttachments: FC<ChatBubbleAttachmentsProps> = ({ attachments, cl
 }
 
 /* -------------------------------------------------------------------------------------------------
+ * ChatBubbleReply
+ * -----------------------------------------------------------------------------------------------*/
+type ChatBubbleReplyProps = {
+  message: UserMessage
+  position: 'left' | 'right'
+}
+
+const ChatBubbleReply: FC<ChatBubbleReplyProps> = (props) => {
+  const { onRepliedToPress } = useChatContext()
+
+  const Component = onRepliedToPress ? TouchableOpacity : View
+
+  const handlePress = useCallback(() => {
+    onRepliedToPress?.(props.message.id)
+  }, [onRepliedToPress, props.message.id])
+
+  return (
+    <Component className="-mb-2 max-w-[90%] rounded-[10px] bg-white px-4 py-2.5" onPress={handlePress}>
+      <Typography className="text-gray-800 text-xs" numberOfLines={2}>
+        {props.message.text}
+      </Typography>
+    </Component>
+  )
+}
+
+/* -------------------------------------------------------------------------------------------------
  * ChatBubble
  * -----------------------------------------------------------------------------------------------*/
 type ChatBubbleProps = {
@@ -156,43 +183,49 @@ type ChatBubbleProps = {
   className?: string
 }
 
-const ChatBubble: FC<ChatBubbleProps> = ({ message, position, className }) => (
-  <View className={cn(position === 'left' ? 'items-start' : 'items-end', className)}>
-    <View
-      className={cn(
-        'rounded-[10] px-3 py-2',
-        position === 'left' ? 'max-w-full border border-black/7 bg-white' : 'max-w-[80%] bg-primary',
-      )}
-    >
-      {/* render username for incomming messages only  */}
-      {position !== 'left' ? null : <ChatBubbleUsername message={message} position={position} />}
+const ChatBubble: FC<ChatBubbleProps> = ({ message, position, className }) => {
+  const attachnetsEl = !message.attachments?.length ? null : (
+    <ChatBubbleAttachments attachments={message.attachments} className="mb-1.5" position={position} />
+  )
 
-      {/* render attachments for outgoing full-width */}
-      {position !== 'right' || !message.attachments?.length ? null : (
-        <ChatBubbleAttachments attachments={message.attachments} className="mb-1.5" position={position} />
-      )}
+  const replyEl = message.replyTo ? <ChatBubbleReply message={message.replyTo} position={position} /> : null
 
-      <View className="flex-row items-end gap-2.5">
-        <View className="shrink">
-          {
-            <>
-              {position !== 'left' || !message.attachments?.length ? null : (
-                <ChatBubbleAttachments attachments={message.attachments} className="mb-1.5" position={position} />
-              )}
-              {!message.text ? null : <ChatBubbleText position={position} text={message.text} />}
-            </>
-          }
-        </View>
+  return (
+    <View className={cn(position === 'left' ? 'items-start' : 'items-end', className)}>
+      {replyEl}
 
-        {position === 'right' ? (
-          <View>
-            <ChatBubbleTime message={message} position={position} />
+      <View
+        className={cn(
+          'rounded-[10] px-3 py-2',
+          position === 'left' ? 'max-w-full border border-black/7 bg-white' : 'max-w-[80%] bg-primary',
+        )}
+      >
+        {/* render username for incomming messages only  */}
+        {position !== 'left' ? null : <ChatBubbleUsername message={message} position={position} />}
+
+        {/* render attachments for outgoing full-width */}
+        {position !== 'right' ? null : attachnetsEl}
+
+        <View className="flex-row items-end gap-2.5">
+          <View className="shrink">
+            {
+              <>
+                {position !== 'left' ? null : attachnetsEl}
+                {!message.text ? null : <ChatBubbleText position={position} text={message.text} />}
+              </>
+            }
           </View>
-        ) : null}
+
+          {position === 'right' ? (
+            <View>
+              <ChatBubbleTime message={message} position={position} />
+            </View>
+          ) : null}
+        </View>
       </View>
     </View>
-  </View>
-)
+  )
+}
 
 /* -----------------------------------------------------------------------------------------------*/
 

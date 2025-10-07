@@ -237,13 +237,13 @@ export const mockTripChatMessages: Message[] = [
   {
     createdAt: new Date('2025-09-13T08:09:32').toISOString(),
     id: '2b3c-217',
-    // repliedTo: {
-    //   createdAt: new Date('2025-09-12T09:09:30').toISOString(),
-    //   id: '1a2b-117',
-    //   text: 'Btw, here’s the Chairbnb link I found: https://chairbnb.com/rooms/123456789 Looks nice, right?',
-    //   user: mockKristinUser,
-    // },
-    text: 'Sounds good (reply)',
+    replyTo: {
+      createdAt: new Date('2025-09-12T09:09:30').toISOString(),
+      id: '1a2b-117',
+      text: 'Btw, here’s the Chairbnb link I found: https://chairbnb.com/rooms/123456789 Looks nice, right?',
+      user: mockKristinUser,
+    },
+    text: 'Sounds good (reply to "Btw, here’s the Chairbnb link....")',
     user: mockMeUser,
   } satisfies Message,
 ].reverse()

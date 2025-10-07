@@ -55,14 +55,8 @@ const GroupChatScreen: FC = () => {
   const groupView = useGroupView(group)
 
   const handleSend = useCallback((message: Message[]) => chatAction({ message, type: 'send_message' }), [chatAction])
-
-  const handleLoadEarlier = useCallback(async () => {
-    await dispatch({ type: 'load_earlier_messages' })
-  }, [dispatch])
-
-  const handleLoadNewer = useCallback(async () => {
-    await dispatch({ type: 'load_newer_messages' })
-  }, [dispatch])
+  const handleLoadEarlier = useCallback(() => dispatch({ type: 'load_earlier_messages' }), [dispatch])
+  const handleLoadNewer = useCallback(() => dispatch({ type: 'load_newer_messages' }), [dispatch])
 
   const onRefresh = useCallback(() => dispatch({ type: 'reset' }), [dispatch])
 
@@ -89,19 +83,13 @@ const GroupChatScreen: FC = () => {
         <Chat
           chatIdentifier={id}
           currentUser={currentChatUser}
-          isAllEarlierLoaded={!messagesState.hasEarlierMessages}
-          isAllNewerLoaded={!messagesState.hasNewerMessages}
-          isLoadingEarlier={messagesState.isLoadingEarlier}
-          isLoadingNewer={messagesState.isLoadingNewer}
-          loading={!messagesState.isLoaded}
-          messages={messagesState.messages}
           onLoadEarlier={handleLoadEarlier}
           onLoadNewer={handleLoadNewer}
           onRefresh={onRefresh}
           onRepliedToPress={handleLoadMessagesAroundAnchor}
           onSend={handleSend}
           // TODO check refresh
-          refreshing={!messagesState.isLoaded}
+          state={messagesState}
           typingUsers={typingUsers}
         />
       </ScreenLayout.Content>

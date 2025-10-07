@@ -58,8 +58,8 @@ export const getChatMessagesApi = async (params: GetChatMessagesFetchParams): Pr
       const messages = mockMessages.slice(startIndex, endIndex)
 
       return {
-        hasEarlierMessages: startIndex > 0,
-        hasNewerMessages: endIndex < mockMessages.length,
+        hasEarlierMessages: endIndex < mockMessages.length,
+        hasNewerMessages: startIndex > 0,
         messages,
       }
     }

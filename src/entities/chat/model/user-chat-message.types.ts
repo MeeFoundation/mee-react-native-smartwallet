@@ -10,6 +10,7 @@ export type Attachment = {
 
 export type UserMessage = {
   id: string
+  replyTo?: UserMessage
   text: string
   user: User
   createdAt: string
