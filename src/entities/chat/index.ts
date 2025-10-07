@@ -1,8 +1,15 @@
 // FIXME Remove it
 export { mockBobUser, mockKristinUser, mockMeUser } from './api/mock/users'
 export { useSubscribeChatEvents } from './lib/subscribe-chat-events'
-export { isUserJoinChatMessage, isUserLeaveChatMessage } from './lib/type-guards'
-export type { ChatUser } from './model/chat-user.types'
+export {
+  isSystemMessage,
+  isUserJoinChatMessage,
+  isUserLeaveChatMessage,
+  isUserMessage,
+} from './lib/type-guards'
+export { type ChatAction, getChatActionAtom } from './model/chat-actions.atom'
+export type { SystemMessage, UserJoinChatMessage, UserLeaveChatMessage } from './model/chat-system-message.types'
+export type { User } from './model/chat-user.types'
 export {
   ChatNewMessagesEvent,
   ChatStartTypingEvent,
@@ -10,12 +17,16 @@ export {
   ChatUserJoinChatEvent,
   ChatUserLeaveChatEvent,
 } from './model/events'
+export { getIsTypingAtom } from './model/is-typing.atom'
 export {
   currentUserAtom,
-  getChatActionAtom,
-  getIsTypingAtom,
-  getManagePaginatedChatMessagesListAtom,
-  getPaginatedChatMessagesListStateAtom,
+  getChatMessagesStateWithDispatchAtom,
 } from './model/store'
-export type { ChatMessage, GetChatMessagesFetchParams } from './model/types'
-export type { UserChatMessage, UserChatMessageAttachment } from './model/user-chat-message.types'
+export type {
+  ChatIdentifier,
+  ChatMessagesDispatch,
+  ChatMessagesState,
+  GetChatMessagesFetchParams,
+  Message,
+} from './model/types'
+export type { Attachment, UserMessage } from './model/user-chat-message.types'

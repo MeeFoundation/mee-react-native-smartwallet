@@ -1,9 +1,8 @@
-import type { ImagePickerAsset } from 'expo-image-picker'
-
 import type { IconSymbolName } from '@/shared/ui/IconSymbol'
 
-export const resolveAttachmentIcon = (attachment: ImagePickerAsset): IconSymbolName => {
-  if (attachment.type === 'image') return 'photo.outlined'
-  if (attachment.type === 'video') return 'play-circle.outlined'
+// TODO add support for file extension
+export const resolveAttachmentIcon = (_url: string, attachmentType: string | null): IconSymbolName => {
+  if (attachmentType === 'image') return 'photo.outlined'
+  if (attachmentType === 'video') return 'play-circle.outlined'
   return 'document.outlined'
 }

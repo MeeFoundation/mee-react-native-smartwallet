@@ -106,7 +106,7 @@ const GroupsList: FC<GroupsListProps> = ({ fetchParams }) => {
   const handleGroupItemPress = useCallback((item: ShortGroup) => router.navigate(getGroupLink(item)), [router])
 
   const handleEndReached = useCallback(() => {
-    listState.hasNextPage && !listState.isFetchingNextPage && manageGroupsList('loadMore')
+    listState.hasNextPage && !listState.isFetchingNextPage && manageGroupsList('loadNextPage')
   }, [listState.hasNextPage, listState.isFetchingNextPage, manageGroupsList])
 
   const handleRefresh = useCallback(() => {

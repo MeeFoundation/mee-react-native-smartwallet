@@ -1,8 +1,19 @@
-import type { ImagePickerAsset } from 'expo-image-picker'
-import type { IChatMessage } from 'react-native-gifted-chat'
+import type { User } from './chat-user.types'
 
-export type UserChatMessageAttachment = ImagePickerAsset
+export type Attachment = {
+  id: string
+  type: 'image' | 'video' | 'file'
+  url: string
+  fileSize: number // in bytes
+  fileName: string
+}
 
-export type UserChatMessage = IChatMessage & {
-  attachments?: UserChatMessageAttachment[]
+export type UserMessage = {
+  id: string
+  text: string
+  user: User
+  createdAt: string
+  pending?: boolean
+  sent?: boolean
+  attachments?: Attachment[]
 }

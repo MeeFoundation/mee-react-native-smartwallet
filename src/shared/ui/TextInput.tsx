@@ -17,7 +17,7 @@ import { Typography, type TypographyProps } from './Typography'
 const PLACEHOLDER_TEXT_COLOR = colors['gray-600']
 
 const textInputVariants = cva(
-  'boreder rounded-[8] border border-black/7 bg-white px-2.5 font-normal font-publicSans text-[14px] text-gray-900 leading-[20] focus:border-primary',
+  'boreder rounded-[8] border border-black/7 bg-white px-2.5 font-normal font-publicSans text-[14px] text-gray-900 focus:border-primary',
   {
     defaultVariants: {
       size: 'md',

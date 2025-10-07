@@ -1,8 +1,13 @@
-import type { UserJoinChatMessage, UserLeaveChatMessage } from '../model/chat-system-message.types'
-import type { ChatMessage } from '../model/types'
+import type { SystemMessage, UserJoinChatMessage, UserLeaveChatMessage } from '../model/chat-system-message.types'
+import type { Message } from '../model/types'
+import type { UserMessage } from '../model/user-chat-message.types'
 
-export const isUserJoinChatMessage = (message: ChatMessage): message is UserJoinChatMessage =>
-  'type' in message && message.type === 'user_join_chat'
+export const isSystemMessage = (message: Message): message is SystemMessage => 'isSystem' in message && message.isSystem
 
-export const isUserLeaveChatMessage = (message: ChatMessage): message is UserLeaveChatMessage =>
-  'type' in message && message.type === 'user_leave_chat'
+export const isUserMessage = (message: Message): message is UserMessage => !isSystemMessage(message)
+
+export const isUserJoinChatMessage = (message: Message): message is UserJoinChatMessage =>
+  isSystemMessage(message) && message.type === 'user_join_chat'
+
+export const isUserLeaveChatMessage = (message: Message): message is UserLeaveChatMessage =>
+  isSystemMessage(message) && message.type === 'user_leave_chat'

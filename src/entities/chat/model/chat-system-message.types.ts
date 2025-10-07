@@ -1,15 +1,19 @@
-import type { IChatMessage } from 'react-native-gifted-chat'
+type BaseSystemMessage = {
+  id: string
+  createdAt: string
+  isSystem: true
+  text: string | null
+  type: string
+}
 
-export type UserJoinChatMessage = IChatMessage & {
-  system: true
+export type UserJoinChatMessage = BaseSystemMessage & {
   type: 'user_join_chat'
   username: string
 }
 
-export type UserLeaveChatMessage = IChatMessage & {
-  system: true
+export type UserLeaveChatMessage = BaseSystemMessage & {
   type: 'user_leave_chat'
   username: string
 }
 
-export type SystemMessage = UserJoinChatMessage | UserLeaveChatMessage
+export type SystemMessage = BaseSystemMessage | UserJoinChatMessage | UserLeaveChatMessage

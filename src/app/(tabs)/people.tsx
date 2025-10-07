@@ -104,7 +104,7 @@ const PersonsList: FC = () => {
   }, [])
 
   const handleEndReached = useCallback(() => {
-    listState.hasNextPage && !listState.isFetchingNextPage && managePersonsList('loadMore')
+    listState.hasNextPage && !listState.isFetchingNextPage && managePersonsList('loadNextPage')
   }, [listState.hasNextPage, listState.isFetchingNextPage, managePersonsList])
 
   const handleRefresh = useCallback(() => {

@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 
-import type { ChatUser } from '@/entities/chat'
+import type { User } from '@/entities/chat'
 
 import { cn } from '@/shared/lib/styling'
 import { Typography } from '@/shared/ui/Typography'
@@ -9,7 +9,7 @@ import { Typography } from '@/shared/ui/Typography'
  * ChatMessageUsername
  * -----------------------------------------------------------------------------------------------*/
 type ChatMessageUsernameProps = {
-  user: ChatUser
+  user: User
   className?: string
 }
 
