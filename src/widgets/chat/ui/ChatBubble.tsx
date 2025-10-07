@@ -119,10 +119,11 @@ const ChatBubbleUsername: FC<ChatBubbleUsernameProps> = (props) => (
  * -----------------------------------------------------------------------------------------------*/
 type ChatBubbleAttachmentsProps = {
   className?: string
+  position: 'left' | 'right'
   attachments: Attachment[]
 }
 
-const ChatBubbleAttachments: FC<ChatBubbleAttachmentsProps> = ({ attachments, className }) => {
+const ChatBubbleAttachments: FC<ChatBubbleAttachmentsProps> = ({ attachments, className, position }) => {
   const handleDownload = useCallback(async (attachment: Attachment) => {
     try {
       await Share.share({ url: attachment.url })
@@ -137,7 +138,9 @@ const ChatBubbleAttachments: FC<ChatBubbleAttachmentsProps> = ({ attachments, cl
         <ChatAttachment.Root key={`${attachment.url}-${index}`} onPress={() => handleDownload(attachment)}>
           <ChatAttachment.Icon name={resolveAttachmentIcon(attachment.url, attachment.type)} />
           <ChatAttachment.Content name={attachment.fileName ?? attachment.url} tip={getAttachmentTip(attachment)} />
-          <ChatAttachment.Action className="text-blue-700" name="arrow-down-tray.outlined" />
+          {position === 'left' ? (
+            <ChatAttachment.Action className="text-blue-700" name="arrow-down-tray.outlined" />
+          ) : null}
         </ChatAttachment.Root>
       ))}
     </View>
@@ -166,7 +169,7 @@ const ChatBubble: FC<ChatBubbleProps> = ({ message, position, className }) => (
 
       {/* render attachments for outgoing full-width */}
       {position !== 'right' || !message.attachments?.length ? null : (
-        <ChatBubbleAttachments attachments={message.attachments} className="mb-1.5" />
+        <ChatBubbleAttachments attachments={message.attachments} className="mb-1.5" position={position} />
       )}
 
       <View className="flex-row items-end gap-2.5">
@@ -174,7 +177,7 @@ const ChatBubble: FC<ChatBubbleProps> = ({ message, position, className }) => (
           {
             <>
               {position !== 'left' || !message.attachments?.length ? null : (
-                <ChatBubbleAttachments attachments={message.attachments} className="mb-1.5" />
+                <ChatBubbleAttachments attachments={message.attachments} className="mb-1.5" position={position} />
               )}
               {!message.text ? null : <ChatBubbleText position={position} text={message.text} />}
             </>
