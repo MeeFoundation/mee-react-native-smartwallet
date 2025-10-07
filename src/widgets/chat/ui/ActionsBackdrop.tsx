@@ -1,11 +1,24 @@
 import type BottomSheet from '@gorhom/bottom-sheet'
+import type { ImagePickerAsset } from 'expo-image-picker'
 import { type FC, type RefObject, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, View } from 'react-native'
 
-import { useSelectFromGalery, useUpload } from '@/features/upload'
+import { useSelectFromGalery } from '@/features/upload'
+
+import { type Attachment, isAttachmentType } from '@/entities/chat'
 
 import { BottomSheetBackDrop } from '@/shared/ui/BottomSheet'
+
+import { useChatContext } from './ChatProvider'
+
+const imagePickerAssetToAttachement = (asset: ImagePickerAsset): Attachment => ({
+  fileName: asset.fileName ?? 'Untitled',
+  fileSize: asset.fileSize ?? 0,
+  id: asset.uri,
+  type: asset.type && isAttachmentType(asset.type) ? asset.type : 'file',
+  url: asset.uri,
+})
 
 /* -------------------------------------------------------------------------------------------------
  *  ActionsBackdrop
@@ -15,8 +28,15 @@ type ActionsBackdropProps = {
 }
 
 const ActionsBackdrop: FC<ActionsBackdropProps> = ({ ref }) => {
-  const { addAsset } = useUpload()
+  const { addAttachments } = useChatContext()
   const { t: groupsT } = useTranslation('groups')
+
+  const addAsset = useCallback(
+    (assets: ImagePickerAsset[]) => {
+      addAttachments(assets.map((asset) => imagePickerAssetToAttachement(asset)))
+    },
+    [addAttachments],
+  )
 
   const selectFromGalery = useSelectFromGalery(addAsset)
 

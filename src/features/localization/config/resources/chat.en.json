@@ -3,6 +3,11 @@
   "{{name}} joined chat": "<em>{name}</em> joined chat",
   "{{name}} left chat": "<em>{name}</em> left chat",
   "{{names}} are typing": "{names} are typing...",
+  "bubble_actions": {
+    "reply": {
+      "text": "Reply"
+    }
+  },
   "loading messages": "Loading messages...",
   "message_status": {
     "sent": "Sent"

@@ -165,7 +165,7 @@ export {
   DropdownMenuSub as MenuSub,
   DropdownMenuSubContent as MenuSubContent,
   DropdownMenuSubTrigger as MenuSubTrigger,
-  DropdownMenuTrigger as MenuTrigger,
+  DropdownMenuTrigger as Trigger,
   DropdownMenu as Root,
 }
 

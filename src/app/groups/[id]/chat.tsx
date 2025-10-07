@@ -79,7 +79,7 @@ const GroupChatScreen: FC = () => {
 
       <GroupScreenTabs group={groupView} />
 
-      <ScreenLayout.Content className="px-3" safeBottomInset scrollable={false}>
+      <ScreenLayout.Content scrollable={false}>
         <Chat
           chatIdentifier={id}
           currentUser={currentChatUser}

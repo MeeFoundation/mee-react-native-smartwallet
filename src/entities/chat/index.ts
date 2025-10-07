@@ -29,4 +29,9 @@ export type {
   GetChatMessagesFetchParams,
   Message,
 } from './model/types'
-export type { Attachment, UserMessage } from './model/user-chat-message.types'
+export {
+  type Attachment,
+  type AttachmentType,
+  isAttachmentType,
+  type UserMessage,
+} from './model/user-chat-message.types'

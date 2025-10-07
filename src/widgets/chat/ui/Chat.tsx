@@ -1,10 +1,16 @@
 import type BottomSheet from '@gorhom/bottom-sheet'
 import { FlashList, type FlashListRef, type ListRenderItem } from '@shopify/flash-list'
-import { type FC, useCallback, useMemo, useRef } from 'react'
+import { type FC, useCallback, useMemo, useRef, useState } from 'react'
+import type { NativeScrollEvent, NativeSyntheticEvent } from 'react-native'
 
-import { UploadProvider } from '@/features/upload'
-
-import { type ChatIdentifier, type ChatMessagesState, isUserMessage, type Message, type User } from '@/entities/chat'
+import {
+  type Attachment,
+  type ChatIdentifier,
+  type ChatMessagesState,
+  isUserMessage,
+  type Message,
+  type User,
+} from '@/entities/chat'
 
 import { useLoadEarlierMessages } from '../lib/use-load-earlier-messages'
 import { useLoadNewerMessages } from '../lib/use-load-newer-messages'
@@ -24,7 +30,7 @@ type ChatProps = {
   currentUser: User
   typingUsers?: string[]
 
-  onRefresh?: () => void
+  onRefresh?: () => Promise<ChatMessagesState>
   onSend: (message: Message[]) => void
   onLoadEarlier?: () => Promise<ChatMessagesState>
   onLoadNewer?: () => Promise<ChatMessagesState>
@@ -35,6 +41,8 @@ const Chat: FC<ChatProps> = (props) => {
   const listRef = useRef<FlashListRef<Message>>(null)
   const scrollLockedRef = useRef(false)
   const actionsSheetRef = useRef<BottomSheet>(null)
+  const [replyToMessageId, setReplyToMessageId] = useState<string | undefined>(undefined)
+  const [attachments, setAttachments] = useState<Attachment[]>([])
 
   const messages = useMemo(() => [...props.state.messages].reverse(), [props.state.messages])
 
@@ -56,9 +64,24 @@ const Chat: FC<ChatProps> = (props) => {
     state: props.state,
   })
 
-  const handleOnScroll = useCallback(() => {
-    scrollLockedRef.current = false
-  }, [])
+  const refresh = useCallback(() => {
+    if (!props.onRefresh || props.state.isLoading || props.state.hasNewerMessages) return
+    props.onRefresh()
+  }, [props.onRefresh, props.state.isLoading, props.state.hasNewerMessages])
+
+  const handleOnScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const conentHeight = listRef.current?.getWindowSize()?.height
+      const needRefresh = !conentHeight
+        ? false
+        : conentHeight + event.nativeEvent.contentOffset.y - event.nativeEvent.contentSize.height > 50
+
+      if (needRefresh) refresh()
+
+      scrollLockedRef.current = false
+    },
+    [refresh],
+  )
 
   const renderItem: ListRenderItem<Message> = useCallback(
     ({ item, index }) => (
@@ -72,13 +95,31 @@ const Chat: FC<ChatProps> = (props) => {
     [messages, props.currentUser.id],
   )
 
+  const replyToMessage = useMemo(() => {
+    const founded = messages.find((message) => message.id === replyToMessageId)
+    return founded && isUserMessage(founded) ? founded : undefined
+  }, [messages, replyToMessageId])
+
   const handleSend = useCallback(
     (text: string) => {
-      const messages: Message[] = [{ createdAt: new Date().toISOString(), id: '1', text, user: props.currentUser }]
+      const messages: Message[] = [
+        {
+          attachments,
+          createdAt: new Date().toISOString(),
+          id: '1',
+          replyTo: replyToMessage,
+          text,
+          user: props.currentUser,
+        },
+      ]
+
       props.onSend(messages)
+
       listRef.current?.scrollToEnd({ animated: true })
+      setAttachments([])
+      setReplyToMessageId(undefined)
     },
-    [props.onSend, props.currentUser],
+    [props.onSend, props.currentUser, attachments, replyToMessage],
   )
 
   const onRepliedToPress = useCallback(
@@ -98,35 +139,54 @@ const Chat: FC<ChatProps> = (props) => {
     [props.onRepliedToPress],
   )
 
-  const chatProviderValue: ChatContext = useMemo(() => ({ onRepliedToPress }), [onRepliedToPress])
+  const removeAttachment = useCallback((attachmentId: string) => {
+    setAttachments((prev) => prev.filter((attachment) => attachment.id !== attachmentId))
+  }, [])
+
+  const addAttachments = useCallback((attachments: Attachment[]) => {
+    setAttachments((prev) => [...prev, ...attachments])
+  }, [])
+
+  const chatProviderValue: ChatContext = useMemo(
+    () => ({
+      addAttachments,
+      attachments,
+      onRepliedToPress,
+      removeAttachment,
+      replyToMessageId,
+      setAttachments,
+      setReplyToMessageId,
+    }),
+    [onRepliedToPress, replyToMessageId, attachments, removeAttachment, addAttachments],
+  )
 
   return !props.state.isLoaded ? (
     <ChatLoading />
   ) : (
     <ChatProvider value={chatProviderValue}>
-      <UploadProvider assetsGroupIdentifier={props.chatIdentifier}>
-        <FlashList
-          data={messages}
-          keyExtractor={(item) => item.id}
-          ListFooterComponent={<ChatMessagesLoading isLoading={props.state.isLoadingNewer} />}
-          ListHeaderComponent={<ChatMessagesLoading isLoading={props.state.isLoadingEarlier} />}
-          maintainVisibleContentPosition={{
-            autoscrollToBottomThreshold: 0.1,
-            startRenderingFromBottom: true,
-          }}
-          onEndReached={loadNewerMessages}
-          onEndReachedThreshold={0.1}
-          onScroll={handleOnScroll}
-          onStartReached={loadEarlierMessages}
-          onStartReachedThreshold={0.1}
-          ref={listRef}
-          renderItem={renderItem}
-        />
+      <FlashList
+        className="px-2"
+        data={messages}
+        keyExtractor={(item) => item.id}
+        ListFooterComponent={<ChatMessagesLoading isLoading={props.state.isLoading || props.state.isLoadingNewer} />}
+        ListHeaderComponent={<ChatMessagesLoading isLoading={props.state.isLoadingEarlier} />}
+        maintainVisibleContentPosition={{
+          autoscrollToBottomThreshold: 0.1,
+          startRenderingFromBottom: true,
+        }}
+        onEndReached={loadNewerMessages}
+        onEndReachedThreshold={0.1}
+        onScroll={handleOnScroll}
+        onStartReached={loadEarlierMessages}
+        onStartReachedThreshold={0.1}
+        ref={listRef}
+        refreshing={props.state.isLoading}
+        renderItem={renderItem}
+      />
 
-        <ChatToolbar onSend={handleSend} onToggleActions={handleActionsButtonPress} />
+      <ChatToolbar messages={messages} onSend={handleSend} onToggleActions={handleActionsButtonPress} />
 
-        <ActionsBackdrop ref={actionsSheetRef} />
-      </UploadProvider>
+      <ActionsBackdrop ref={actionsSheetRef} />
     </ChatProvider>
   )
 }
