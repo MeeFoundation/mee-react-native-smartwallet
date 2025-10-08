@@ -12,6 +12,8 @@ import {
   type User,
 } from '@/entities/chat'
 
+import { generateUUID } from '@/shared/lib/uuid'
+
 import { useLoadEarlierMessages } from '../lib/use-load-earlier-messages'
 import { useLoadNewerMessages } from '../lib/use-load-newer-messages'
 import { ActionsBackdrop } from './ActionsBackdrop'
@@ -20,6 +22,7 @@ import { ChatMessage as ChatMessageComponent } from './ChatMessage'
 import { ChatMessagesLoading } from './ChatMessagesLoading'
 import { type ChatContext, ChatProvider } from './ChatProvider'
 import { ChatToolbar } from './ChatToolbar'
+import { ChatTypingIndicator } from './ChatTytpingIndicator'
 
 /* -------------------------------------------------------------------------------------------------
  *  Chat
@@ -106,7 +109,7 @@ const Chat: FC<ChatProps> = (props) => {
         {
           attachments,
           createdAt: new Date().toISOString(),
-          id: '1',
+          id: generateUUID(),
           replyTo: replyToMessage,
           text,
           user: props.currentUser,
@@ -160,6 +163,15 @@ const Chat: FC<ChatProps> = (props) => {
     [onRepliedToPress, replyToMessageId, attachments, removeAttachment, addAttachments],
   )
 
+  const listFooter =
+    props.state.isLoading || props.state.isLoadingNewer ? (
+      <ChatMessagesLoading isLoading />
+    ) : props.typingUsers?.length ? (
+      <ChatTypingIndicator typingUsers={props.typingUsers} />
+    ) : null
+
+  const listHeader = <ChatMessagesLoading isLoading={props.state.isLoadingEarlier} />
+
   return !props.state.isLoaded ? (
     <ChatLoading />
   ) : (
@@ -168,8 +180,8 @@ const Chat: FC<ChatProps> = (props) => {
         className="px-2"
         data={messages}
         keyExtractor={(item) => item.id}
-        ListFooterComponent={<ChatMessagesLoading isLoading={props.state.isLoading || props.state.isLoadingNewer} />}
-        ListHeaderComponent={<ChatMessagesLoading isLoading={props.state.isLoadingEarlier} />}
+        ListFooterComponent={listFooter}
+        ListHeaderComponent={listHeader}
         maintainVisibleContentPosition={{
           autoscrollToBottomThreshold: 0.1,
           startRenderingFromBottom: true,

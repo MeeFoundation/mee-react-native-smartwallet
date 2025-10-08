@@ -3,10 +3,21 @@
   "{{name}} joined chat": "{name} se unió al chat",
   "{{name}} left chat": "<em>{name}</em> se fue del chat",
   "{{names}} are typing": "{names} están escribiendo...",
+  "actions": {
+    "attach_file": {
+      "text": "Adjuntar archivo"
+    },
+    "cancel": {
+      "text": "Cancelar"
+    }
+  },
   "bubble_actions": {
     "reply": {
       "text": "Responder"
     }
+  },
+  "input": {
+    "placeholder": "escribe algo"
   },
   "loading messages": "Cargando mensajes...",
   "message_status": {

@@ -1,4 +1,5 @@
 import { type FC, useCallback, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { TouchableOpacity, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
@@ -92,6 +93,7 @@ type ChatToolbarProps = {
 
 const ChatToolbar: FC<ChatToolbarProps> = (props) => {
   const insets = useSafeAreaInsets()
+  const { t: chatT } = useTranslation('chat')
   const { replyToMessageId, attachments, removeAttachment } = useChatContext()
   const [value, setValue] = useState('')
 
@@ -121,7 +123,7 @@ const ChatToolbar: FC<ChatToolbarProps> = (props) => {
         </View>
 
         <View style={{ flex: 1 }}>
-          <TextInput onChangeText={setValue} size="sm" value={value} />
+          <TextInput onChangeText={setValue} placeholder={chatT('input.placeholder')} size="sm" value={value} />
         </View>
 
         <View className="size-10 items-center justify-center">

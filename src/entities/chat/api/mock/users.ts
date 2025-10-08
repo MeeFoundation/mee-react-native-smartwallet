@@ -17,3 +17,21 @@ export const mockBobUser: User = {
   id: '3',
   name: 'Bob',
 }
+
+export const mockAliceUser = {
+  avatar: 'https://picsum.photos/141',
+  id: '4',
+  name: 'Alice',
+}
+
+export const mockCharlieUser = {
+  avatar: 'https://picsum.photos/142',
+  id: '5',
+  name: 'Charlie',
+}
+
+export const mockDianaUser = {
+  avatar: null,
+  id: '6',
+  name: 'Diana',
+}

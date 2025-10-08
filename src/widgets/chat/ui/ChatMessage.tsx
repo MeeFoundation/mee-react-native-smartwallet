@@ -111,7 +111,7 @@ const UserChatMessage: FC<UserChatMessageProps> = (props) => {
       {sameDate ? null : <ChatDate date={props.message.createdAt} />}
       <View className={cn('basis-px flex-row gap-1.5', isSameNextMessage ? 'mt-0.5' : 'mt-2')}>
         {props.position === 'left' && props.previousMessage?.user?.id !== props.message.user?.id ? (
-          <Avatar size={36} text={props.message.user.name} />
+          <Avatar size={36} src={props.message.user.avatar || undefined} text={props.message.user.name} />
         ) : (
           <View className="size-9" />
         )}

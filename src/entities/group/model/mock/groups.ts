@@ -34,6 +34,7 @@ export const mockGroups: Group[] = [
   {
     _short: false,
     attributes: {
+      chat: true,
       name: 'Google connection',
       status: 'active',
       thumbnail: IconSources.google,

@@ -1,5 +1,6 @@
 import type { Message } from '@/entities/chat'
 
+import { mockProjectChatMessages } from './mock/project-chat.mock'
 import { mockTripChatMessages } from './mock/trip'
 
 type GetChatMessagesFetchParams = {
@@ -18,7 +19,7 @@ type GetChatMessagesResponse = {
 }
 
 export const getChatMessagesApi = async (params: GetChatMessagesFetchParams): Promise<GetChatMessagesResponse> => {
-  const mockMessages = mockTripChatMessages
+  const mockMessages = params.groupId === '1' ? mockTripChatMessages : mockProjectChatMessages
 
   await new Promise((resolve) => setTimeout(resolve, 1000))
 

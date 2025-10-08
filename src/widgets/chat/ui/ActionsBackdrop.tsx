@@ -29,7 +29,7 @@ type ActionsBackdropProps = {
 
 const ActionsBackdrop: FC<ActionsBackdropProps> = ({ ref }) => {
   const { addAttachments } = useChatContext()
-  const { t: groupsT } = useTranslation('groups')
+  const { t: chatT } = useTranslation('chat')
 
   const addAsset = useCallback(
     (assets: ImagePickerAsset[]) => {
@@ -52,8 +52,8 @@ const ActionsBackdrop: FC<ActionsBackdropProps> = ({ ref }) => {
   return (
     <BottomSheetBackDrop ref={ref} snapPoints={[160]}>
       <View style={{ flex: 1, gap: 8, padding: 16 }}>
-        <Button onPress={handleAttachGaleryPress} title={groupsT('chat.actions.attach_file.text')} />
-        <Button onPress={handleCancel} title={groupsT('chat.actions.cancel.text')} />
+        <Button onPress={handleAttachGaleryPress} title={chatT('actions.attach_file.text')} />
+        <Button onPress={handleCancel} title={chatT('actions.cancel.text')} />
       </View>
     </BottomSheetBackDrop>
   )

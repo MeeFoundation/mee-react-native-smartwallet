@@ -1,17 +1,4 @@
 {
-  "chat": {
-    "actions": {
-      "attach_file": {
-        "text": "Adjuntar archivo"
-      },
-      "cancel": {
-        "text": "Cancelar"
-      }
-    },
-    "input": {
-      "placeholder": "escribe algo"
-    }
-  },
   "my_info_tabs": {
     "availability_calendar": {
       "title": "Calendario de disponibilidad"

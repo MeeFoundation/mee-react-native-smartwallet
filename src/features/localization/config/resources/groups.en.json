@@ -1,17 +1,4 @@
 {
-  "chat": {
-    "actions": {
-      "attach_file": {
-        "text": "Attach file"
-      },
-      "cancel": {
-        "text": "Cancel"
-      }
-    },
-    "input": {
-      "placeholder": "write something"
-    }
-  },
   "my_info_tabs": {
     "availability_calendar": {
       "title": "Availability calendar"
