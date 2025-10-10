@@ -9,13 +9,15 @@ import { DEFAULT_PAGE_SIZE } from '../config'
 import type { PaginatedFetchParams, PaginatedListResponse } from '../model/api'
 import { assertUnreachable } from './assert-unreachable'
 
-export type PaginationAction = 'loadMore' | 'refresh' | 'reset'
+export type PaginationAction = 'loadNextPage' | 'refresh' | 'reset'
 
 export type PaginatedListState<TItem> = {
   hasNextPage: boolean
+  hasPreviousPage: boolean
   isRefreshing: boolean
   isFetching: boolean
   isFetchingNextPage: boolean
+  isFetchingPreviousPage: boolean
   isFetched: boolean
   data: PaginatedListResponse<TItem> | null
   error: AppError | null
@@ -26,9 +28,11 @@ export const INITIAL_PAGINATED_STATE: PaginatedListState<any> = {
   data: null,
   error: null,
   hasNextPage: false,
+  hasPreviousPage: false,
   isFetched: false,
   isFetching: false,
   isFetchingNextPage: false,
+  isFetchingPreviousPage: false,
   isRefreshing: false,
 }
 
@@ -60,7 +64,7 @@ export type PaginatedStateAtom<TItem> = WritableAtom<
   void
 >
 
-const handleLoadMore = async <TItem>(
+const handleLoadNextPage = async <TItem>(
   get: Getter,
   set: Setter,
   paginatedStateAtom: PaginatedStateAtom<TItem>,
@@ -134,8 +138,8 @@ export const handlePaginatedStateAtomAction = async <TItem>(
 ) => {
   try {
     switch (action) {
-      case 'loadMore':
-        return await handleLoadMore(get, set, paginatedStateAtom, fetchResponse)
+      case 'loadNextPage':
+        return await handleLoadNextPage(get, set, paginatedStateAtom, fetchResponse)
       case 'reset':
       case 'refresh':
         return await handleRefresh(get, set, paginatedStateAtom, fetchResponse)

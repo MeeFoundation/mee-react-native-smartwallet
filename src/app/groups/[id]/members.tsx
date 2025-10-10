@@ -1,17 +1,13 @@
 import { type ErrorBoundaryProps, useLocalSearchParams } from 'expo-router'
 import { useAtomValue } from 'jotai'
-import { StyleSheet, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 
-import { getGroupAtom } from '@/entities/group'
+import { GroupScreenHeader, GroupScreenTabs } from '@/widgets/group-screen-header'
+import { ScreenLayout } from '@/widgets/navigation'
+
+import { getGroupAtom, useGroupView } from '@/entities/group'
 
 import { InvalidRouteParamsError } from '@/shared/errors'
-
-const styles = StyleSheet.create({
-  page: {
-    flex: 1,
-    padding: 8,
-  },
-})
 
 /* -------------------------------------------------------------------------------------------------
  * ErrorBoundary
@@ -35,11 +31,18 @@ export default function GroupMembersScreen() {
   if (typeof id !== 'string') throw new InvalidRouteParamsError()
 
   const group = useAtomValue(getGroupAtom(id))
+  const groupView = useGroupView(group)
 
   return (
-    <View style={styles.page}>
-      <Text>Members: {group.name}</Text>
-    </View>
+    <ScreenLayout.Root>
+      <GroupScreenHeader group={groupView} />
+
+      <GroupScreenTabs group={groupView} />
+
+      <ScreenLayout.Content className="px-2">
+        <Text>Members</Text>
+      </ScreenLayout.Content>
+    </ScreenLayout.Root>
   )
 }
 

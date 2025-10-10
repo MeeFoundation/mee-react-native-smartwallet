@@ -1,11 +1,10 @@
-import { type FC, useState } from 'react'
-import { TouchableOpacity } from 'react-native'
-import { ChevronDownIcon, ChevronUpIcon } from 'react-native-heroicons/outline'
+import type { FC } from 'react'
+import { useTranslation } from 'react-i18next'
+import { TouchableOpacity, type TouchableOpacityProps } from 'react-native'
 
 import { ConnectionListCard } from '@/entities/connection/@x/group'
 
-import { AppButton } from '@/shared/ui/AppButton'
-
+import { useShortGroupView } from '../lib/use-short-group-view'
 import type { ShortGroup } from '../model/types'
 
 /* -------------------------------------------------------------------------------------------------
@@ -16,31 +15,28 @@ const GroupListCardSkeleton: FC = ConnectionListCard.ConnectionListCardSkeleton
 /* -------------------------------------------------------------------------------------------------
  * GroupListCard
  * -----------------------------------------------------------------------------------------------*/
-type GroupListCardProps = { group: ShortGroup; onPress: () => void }
+type GroupListCardProps = Omit<TouchableOpacityProps, 'children'> & { group: ShortGroup }
 
-const GroupListCard: FC<GroupListCardProps> = ({ group, onPress }) => {
-  const [isExpanded, setIsExpanded] = useState(false)
-  const toggleExpanded = () => setIsExpanded(!isExpanded)
+const GroupListCard: FC<GroupListCardProps> = ({ group, ...rest }) => {
+  const { t: groupsT } = useTranslation('groups')
+  const shortGroupView = useShortGroupView(group)
 
   return (
-    <TouchableOpacity onPress={onPress}>
-      <ConnectionListCard.Root variant={isExpanded ? 'expanded' : 'default'}>
+    <TouchableOpacity {...rest}>
+      <ConnectionListCard.Root>
         <ConnectionListCard.Content>
-          <ConnectionListCard.Thumbnail src={group.iconSrc} text={group.name} />
+          <ConnectionListCard.Thumbnail src={shortGroupView.thumbnail} text={shortGroupView.name} />
           <ConnectionListCard.Description>
-            <ConnectionListCard.Name>{group.name}</ConnectionListCard.Name>
+            <ConnectionListCard.Name>{shortGroupView.name}</ConnectionListCard.Name>
 
-            {group.status === 'archived' ? (
-              <ConnectionListCard.Hint danger>Archived/Paused</ConnectionListCard.Hint>
+            {shortGroupView.status === 'archived' ? (
+              <ConnectionListCard.Hint danger>{groupsT('status.archived.tip')}</ConnectionListCard.Hint>
             ) : null}
           </ConnectionListCard.Description>
           <ConnectionListCard.Actions>
-            <ConnectionListCard.Count>{group.connections.length}</ConnectionListCard.Count>
-            <ConnectionListCard.Button>
-              <AppButton onPress={toggleExpanded} size="sm" variant="link">
-                {isExpanded ? <ChevronUpIcon color="black" /> : <ChevronDownIcon color="black" />}
-              </AppButton>
-            </ConnectionListCard.Button>
+            {!shortGroupView.connections.length ? null : (
+              <ConnectionListCard.Count>{shortGroupView.connections?.length}</ConnectionListCard.Count>
+            )}
           </ConnectionListCard.Actions>
         </ConnectionListCard.Content>
       </ConnectionListCard.Root>

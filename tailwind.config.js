@@ -35,6 +35,7 @@ module.exports = {
     extend: {
       colors,
       fontFamily: {
+        italic: ['PublicSans-Italic'],
         publicSans: ['PublicSans'],
       },
       opacity: {
@@ -42,6 +43,7 @@ module.exports = {
       },
       spacing: {
         4.5: '18px',
+        6.5: '26px',
         13: '52px',
         15: '60px',
       },

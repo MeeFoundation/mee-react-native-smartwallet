@@ -1,1 +1,2 @@
-export { GroupMyInfo } from './ui/GroupMyInfo'
+export { PersonalDetails, type PersonalDetailsProps } from './ui/PersonalDetails'
+export { UserTitle } from './ui/UserTitle'

@@ -3,63 +3,79 @@ import { IconSources } from '@/assets/images'
 import { mockConnections } from '@/entities/connection/@x/group'
 
 import type { Group } from '../types'
-
-const idGenerator = () => {
-  let lastId = 0
-
-  return () => {
-    lastId += 1
-    return lastId.toString()
-  }
-}
-
-const newGroupId = idGenerator()
+import mockGroupSchema from './mock-group.schema.json'
 
 export const mockGroups: Group[] = [
   {
+    _short: false,
+    attributes: {
+      chat: true,
+      name: 'Disney',
+      status: 'active',
+      thumbnail: IconSources.disney,
+    },
     connections: mockConnections.slice(0, 2),
-    iconSrc: IconSources.disney,
-    id: newGroupId(),
-    name: 'Disneydasdas',
-    status: 'active',
+    id: '1',
+    schema: mockGroupSchema,
   },
   {
+    _short: false,
+    attributes: {
+      name: 'Disney Plus',
+      status: 'active',
+      thumbnail: IconSources.disneyPlus,
+    },
     connections: mockConnections.slice(2, 4),
-    iconSrc: IconSources.disney,
-    id: newGroupId(),
-    name: 'Disney Plus',
-    status: 'active',
+    id: '2',
+    schema: mockGroupSchema,
   },
 
   // Google tags
   {
+    _short: false,
+    attributes: {
+      chat: true,
+      name: 'Google connection',
+      status: 'active',
+      thumbnail: IconSources.google,
+    },
     connections: mockConnections.slice(4, 6),
-    iconSrc: IconSources.google,
-    id: newGroupId(),
-    name: 'Google connection',
-    status: 'active',
+    id: '3',
+    schema: mockGroupSchema,
   },
   {
+    _short: false,
+    attributes: {
+      name: 'Google connection',
+      status: 'archived',
+      thumbnail: IconSources.google,
+    },
     connections: mockConnections.slice(6, 8),
-    iconSrc: IconSources.google,
-    id: newGroupId(),
-    name: 'Google connection',
-    status: 'archived',
+    id: '4',
+    schema: mockGroupSchema,
   },
 
   // Entertainments tags
   {
+    _short: false,
+    attributes: {
+      name: 'Disney',
+      status: 'active',
+      thumbnail: IconSources.disney,
+    },
     connections: mockConnections.slice(8, 10),
-    iconSrc: IconSources.disney,
-    id: newGroupId(),
-    name: 'Disney',
-    status: 'active',
+    id: '5',
+    schema: mockGroupSchema,
   },
   {
+    _short: false,
+    attributes: {
+      name: 'Disney Plus',
+      status: 'archived',
+      thumbnail: IconSources.disneyPlus,
+    },
     connections: [],
-    iconSrc: IconSources.disneyPlus,
-    id: newGroupId(),
-    name: 'Disney Plus',
-    status: 'archived',
+    id: '6',
+    schema: mockGroupSchema,
   },
 ]

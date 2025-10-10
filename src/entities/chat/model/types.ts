@@ -1,40 +1,43 @@
-import type { IChatMessage, User } from 'react-native-gifted-chat'
-
 import type { PaginatedFetchParams, PaginatedListResponse } from '@/shared/model'
 
-export type ChatUser = User & {
-  name: string
-}
+import type { SystemMessage } from './chat-system-message.types'
+import type { UserMessage } from './user-chat-message.types'
 
-export type UserJoinChatMessage = IChatMessage & {
-  system: true
-  type: 'user_join_chat'
-  username: string
-}
-
-export const isUserJoinChatMessage = (message: ChatMessage): message is UserJoinChatMessage =>
-  'type' in message && message.type === 'user_join_chat'
-
-export type UserLeaveChatMessage = IChatMessage & {
-  system: true
-  type: 'user_leave_chat'
-  username: string
-}
-
-export const isUserLeaveChatMessage = (message: ChatMessage): message is UserLeaveChatMessage =>
-  'type' in message && message.type === 'user_leave_chat'
-
-export type ChatMessage = IChatMessage | UserJoinChatMessage | UserLeaveChatMessage
+export type Message = UserMessage | SystemMessage
 
 export type GetChatMessagesFetchParams = {
   groupId: string
+  anchorId?: string
 }
 
 export type GetChatMessagesPaginatedListFetchParams = PaginatedFetchParams & GetChatMessagesFetchParams
 
-export type GetChatMessagesPaginatedListResponse = PaginatedListResponse<ChatMessage>
+export type GetChatMessagesPaginatedListResponse = PaginatedListResponse<Message>
 
 export type SendChatMessageFetchParams = {
   groupId: string
-  message: ChatMessage[]
+  message: Message[]
 }
+
+export type ChatIdentifier = string
+
+export type ChatMessagesState = {
+  isLoaded: boolean
+  isLoading: boolean
+  isLoadingEarlier: boolean
+  isLoadingNewer: boolean
+  hasNewerMessages: boolean
+  hasEarlierMessages: boolean
+  messages: Message[]
+}
+
+export type ChatMessagesAction =
+  | { type: 'reset' }
+  | { type: 'load_earlier_messages' }
+  | { type: 'load_newer_messages' }
+  | { type: 'clear' }
+  | { type: 'load_around_anchor'; anchorId: string }
+  | { type: 'add_messages'; messages: Message[] }
+  | { type: 'update_messages'; messages: Array<Message> }
+
+export type ChatMessagesDispatch = (action: ChatMessagesAction) => Promise<ChatMessagesState>

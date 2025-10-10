@@ -4,21 +4,25 @@ import type { FC } from 'react'
 import { Image, type ImageSourcePropType, StyleSheet, Text, View, type ViewStyle } from 'react-native'
 
 import { colors } from '@/shared/config'
-import { generateColorHsl } from '@/shared/lib/color'
 import { getImageSource } from '@/shared/lib/get-image-source'
+import { generateColorHsl } from '@/shared/lib/styling'
 
 export type AvatarProps = {
   text: string
   src?: ImageSourcePropType | string
   size?: number
   style?: ViewStyle
+  className?: string
 }
 
-export const Avatar: FC<AvatarProps> = ({ text, src, size = 24, style }) => {
+export const Avatar: FC<AvatarProps> = ({ text, src, size = 24, style, className }) => {
   const bgColor = generateColorHsl(text)
 
   return (
-    <View style={[styles.avatar, { height: size, width: size }, !src && { backgroundColor: bgColor }, style]}>
+    <View
+      className={className}
+      style={[styles.avatar, { height: size, width: size }, !src && { backgroundColor: bgColor }, style]}
+    >
       {src && <Image source={getImageSource(src)} style={styles.avatarImg} />}
       {!src && <Text style={styles.avatarText}>{text.charAt(0).toUpperCase()}</Text>}
     </View>

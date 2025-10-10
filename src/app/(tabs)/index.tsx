@@ -7,6 +7,8 @@ import { type FC, Fragment, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { RefreshControl, StyleSheet, Text, View, type ViewProps } from 'react-native'
 
+import { Header, ScreenLayout, ToggleDrawerButton } from '@/widgets/navigation'
+
 import {
   emptyGroupFilter,
   FilterGroups,
@@ -14,8 +16,9 @@ import {
   GroupListCardSkeleton,
   type GroupsFilter,
   type GroupsListFetchParams,
-  getManagePaginatedGroupsListAtom,
-  getPaginatedGroupsListStateAtom,
+  getGroupLink,
+  getGroupsListStateAtom,
+  getManageGroupListAtom,
   groupFilterAtom,
   type ShortGroup,
 } from '@/entities/group'
@@ -23,7 +26,6 @@ import {
 import { colors } from '@/shared/config'
 import type { AppError } from '@/shared/errors'
 import { usePaginatedState } from '@/shared/lib/paginated-list'
-import { BackgroundLayout } from '@/shared/ui/BackgroundLayout'
 import { BottomSheetBackDrop } from '@/shared/ui/BottomSheet'
 import { FiltersSelectButton } from '@/shared/ui/FiltersSelectButton'
 import * as ListLayout from '@/shared/ui/ListLayout'
@@ -99,16 +101,12 @@ type GroupsListProps = {
 
 const GroupsList: FC<GroupsListProps> = ({ fetchParams }) => {
   const router = useRouter()
-  const [listState, manageGroupsList] = usePaginatedState(
-    fetchParams,
-    getPaginatedGroupsListStateAtom,
-    getManagePaginatedGroupsListAtom,
-  )
+  const [listState, manageGroupsList] = usePaginatedState(fetchParams, getGroupsListStateAtom, getManageGroupListAtom)
 
-  const handleGroupItemPress = useCallback((item: ShortGroup) => router.navigate(`/groups/${item.id}`), [router])
+  const handleGroupItemPress = useCallback((item: ShortGroup) => router.navigate(getGroupLink(item)), [router])
 
   const handleEndReached = useCallback(() => {
-    listState.hasNextPage && !listState.isFetchingNextPage && manageGroupsList('loadMore')
+    listState.hasNextPage && !listState.isFetchingNextPage && manageGroupsList('loadNextPage')
   }, [listState.hasNextPage, listState.isFetchingNextPage, manageGroupsList])
 
   const handleRefresh = useCallback(() => {
@@ -145,6 +143,26 @@ const GroupsList: FC<GroupsListProps> = ({ fetchParams }) => {
 }
 
 /* -------------------------------------------------------------------------------------------------
+ * GroupsScreenHeader
+ * -----------------------------------------------------------------------------------------------*/
+const GroupsScreenHeader: FC = () => {
+  const { t } = useTranslation()
+
+  return (
+    <Header.Root variant="primary">
+      <Header.Actions position="left">
+        <Header.TitleText>{t('tabs.groups.title')}</Header.TitleText>
+      </Header.Actions>
+      <Header.Actions position="right">
+        <Header.IconButton icon="magnifying-glass.outlined" />
+        <Header.IconButton icon="bell.outlined" />
+        <ToggleDrawerButton />
+      </Header.Actions>
+    </Header.Root>
+  )
+}
+
+/* -------------------------------------------------------------------------------------------------
  * HomeScreen (Groups)
  * -----------------------------------------------------------------------------------------------*/
 export default function HomeScreen() {
@@ -170,16 +188,21 @@ export default function HomeScreen() {
 
   return (
     <>
-      <BackgroundLayout />
-      <ListLayout.Root>
-        <ListLayout.Header>
-          <FiltersSelectButton onPress={handleFilterButtonPress}>{t('filters_button.text')}</FiltersSelectButton>
-        </ListLayout.Header>
+      <ScreenLayout.Root>
+        <GroupsScreenHeader />
 
-        <ListLayout.Content>
-          <GroupsList fetchParams={groupsFetchParams} />
-        </ListLayout.Content>
-      </ListLayout.Root>
+        <ScreenLayout.Content scrollable={false}>
+          <ListLayout.Root>
+            <ListLayout.Header>
+              <FiltersSelectButton onPress={handleFilterButtonPress}>{t('filters_button.text')}</FiltersSelectButton>
+            </ListLayout.Header>
+
+            <ListLayout.Content>
+              <GroupsList fetchParams={groupsFetchParams} />
+            </ListLayout.Content>
+          </ListLayout.Root>
+        </ScreenLayout.Content>
+      </ScreenLayout.Root>
 
       <BottomSheetBackDrop
         ref={filterSheetRef}

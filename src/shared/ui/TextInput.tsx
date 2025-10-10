@@ -11,13 +11,13 @@ import {
 
 import { colors } from '@/shared/config'
 
-import { cn } from '../lib/cn'
+import { cn } from '../lib/styling'
 import { Typography, type TypographyProps } from './Typography'
 
 const PLACEHOLDER_TEXT_COLOR = colors['gray-600']
 
 const textInputVariants = cva(
-  'boreder-black/07 color-gray-900 rounded-[8] border bg-white font-400 font-publicSans-regular text-[14px] leading-[20] focus:border-primary',
+  'boreder rounded-[8] border border-black/7 bg-white px-2.5 font-normal font-publicSans text-[14px] text-gray-900 focus:border-primary',
   {
     defaultVariants: {
       size: 'md',
@@ -30,13 +30,20 @@ const textInputVariants = cva(
         md: 'h-13',
         sm: 'h-10',
       },
+      variant: {
+        outline: 'border border-black/7',
+        plain: '',
+      },
     },
   },
 )
 
 type TextInputContext = {
   size: VariantProps<typeof textInputVariants>['size']
+  variant: VariantProps<typeof textInputVariants>['variant']
+  invalid: VariantProps<typeof textInputVariants>['invalid']
   focused: boolean
+  empty: boolean
   setFocused: (focused: boolean) => void
 }
 
@@ -74,7 +81,7 @@ const TextInput: FC<TextInputProps> = ({ className, invalid, size, ...props }) =
   return (
     <NativeTextInput
       {...props}
-      className={cn(textInputVariants({ invalid, size }), 'px-2.5', 'flex-1', className)}
+      className={cn(ctx ? 'h-13 flex-1 px-2.5 pt-4.5' : textInputVariants({ invalid, size }), className)}
       onBlur={handleBlur}
       onFocus={handleFocus}
       placeholderTextColor={PLACEHOLDER_TEXT_COLOR}
@@ -92,8 +99,8 @@ const actionVariants = cva('', {
   },
   variants: {
     size: {
-      md: 'h-13 w-13',
-      sm: 'h-10 w-10',
+      md: 'size-13',
+      sm: 'size-10',
     },
   },
 })
@@ -117,15 +124,46 @@ const TextInputActions: FC<TextInputActionsProps> = ({ className, ...rest }) => 
 /* -------------------------------------------------------------------------------------------------
  * TextInputContainer
  * -----------------------------------------------------------------------------------------------*/
-type TextInputContainerProps = ViewProps & VariantProps<typeof textInputVariants>
+const textInputContainerVariants = cva('rounded-lg border', {
+  defaultVariants: {
+    size: 'md',
+    variant: 'outline',
+  },
+  variants: {
+    invalid: {
+      true: 'border-danger',
+    },
+    size: {
+      md: 'h-13',
+      sm: 'h-10',
+    },
+    variant: {
+      outline: 'border-black/7',
+      plain: 'border-transparent',
+    },
+  },
+})
 
-const TextInputContainer: FC<TextInputContainerProps> = ({ className, invalid, size, ...rest }) => {
+type TextInputContainerProps = ViewProps & VariantProps<typeof textInputContainerVariants> & { empty?: boolean }
+
+const TextInputContainer: FC<TextInputContainerProps> = ({ className, invalid, size, empty, variant, ...rest }) => {
   const [focused, setFocused] = useState(false)
-  const value = useMemo(() => ({ focused, setFocused, size }), [focused, size])
+  const ctxValue = useMemo(
+    () => ({ empty: !!empty, focused, invalid, setFocused, size, variant }),
+    [focused, size, empty, variant, invalid],
+  )
 
   return (
-    <TextInputProvider value={value}>
-      <View className={cn(textInputVariants({ invalid, size }), 'flex-row gap-2', className)} {...rest} />
+    <TextInputProvider value={ctxValue}>
+      <View
+        className={cn(
+          textInputContainerVariants({ invalid, size, variant }),
+          focused && 'border border-primary bg-white',
+          'h-13 flex-row items-center gap-2',
+          className,
+        )}
+        {...rest}
+      />
     </TextInputProvider>
   )
 }
@@ -135,29 +173,16 @@ const TextInputContainer: FC<TextInputContainerProps> = ({ className, invalid, s
  * -----------------------------------------------------------------------------------------------*/
 type TextInputLabelProps = TypographyProps
 
-const TextInputLabel: FC<TextInputLabelProps> = ({ style, ...rest }) => {
+const TextInputLabel: FC<TextInputLabelProps> = ({ className, ...rest }) => {
   const ctx = useContext(TextInputProvider)
 
   return (
     <Typography
-      style={[
-        !ctx?.focused
-          ? {
-              color: colors['gray-800'],
-              fontSize: 16,
-              height: 40,
-              left: 10,
-              outlineColor: colors.primary,
-              outlineWidth: 1,
-              top: 0,
-            }
-          : {
-              color: colors['gray-900'],
-              fontSize: 12,
-            },
-        { position: 'absolute' },
-        style,
-      ]}
+      className={cn(
+        'absolute left-2.5',
+        ctx?.focused || !ctx?.empty ? 'top-1.5 text-gray-900 text-xs' : 'top-3.5 text-base text-gray-800',
+        className,
+      )}
       {...rest}
     />
   )

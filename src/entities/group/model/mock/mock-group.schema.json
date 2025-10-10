@@ -1,0 +1,19 @@
+{
+  "$id": "http://example.com/schemas/short-group.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "properties": {
+    "attributes": {
+      "properties": {
+        "name": { "type": "string" },
+        "status": { "type": "string" },
+        "thumbnail": { "type": "string" }
+      },
+      "required": ["name", "status"],
+      "type": "object"
+    },
+    "id": { "type": "string" }
+  },
+  "required": ["attributes", "id"],
+  "type": "object"
+}

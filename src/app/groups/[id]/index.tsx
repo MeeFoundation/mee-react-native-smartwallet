@@ -1,6 +1,9 @@
 import { type ErrorBoundaryProps, useLocalSearchParams, useRouter } from 'expo-router'
+import { useAtomValue } from 'jotai'
 import { useEffect } from 'react'
 import { Text, View } from 'react-native'
+
+import { getGroupAtom, getGroupLink, useGroupView } from '@/entities/group'
 
 import { InvalidRouteParamsError } from '@/shared/errors'
 
@@ -25,9 +28,12 @@ const GroupScreen = () => {
   const { id } = useLocalSearchParams()
   if (typeof id !== 'string') throw new InvalidRouteParamsError()
 
+  const group = useAtomValue(getGroupAtom(id))
+  const groupView = useGroupView(group)
+
   useEffect(() => {
-    router.replace(`/groups/${id}/chat`)
-  }, [id, router])
+    router.replace(getGroupLink(groupView))
+  }, [groupView, router])
 
   return null
 }

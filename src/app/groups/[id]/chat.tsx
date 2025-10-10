@@ -1,30 +1,23 @@
 import { type ErrorBoundaryProps, useLocalSearchParams } from 'expo-router'
-import { useAtomValue, useSetAtom } from 'jotai'
-import { type FC, useCallback, useMemo } from 'react'
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
+import { type FC, useCallback, useEffect } from 'react'
+import { Text, View } from 'react-native'
 
-import { GroupChat } from '@/widgets/group-chat'
+import { Chat } from '@/widgets/chat'
+import { GroupScreenHeader, GroupScreenTabs } from '@/widgets/group-screen-header'
+import { ScreenLayout } from '@/widgets/navigation'
 
 import {
-  type ChatMessage,
   currentUserAtom,
-  type GetChatMessagesFetchParams,
   getChatActionAtom,
+  getChatMessagesStateWithDispatchAtom,
   getIsTypingAtom,
-  getManagePaginatedChatMessagesListAtom,
-  getPaginatedChatMessagesListStateAtom,
+  type Message,
   useSubscribeChatEvents,
 } from '@/entities/chat'
-import { getGroupAtom } from '@/entities/group'
+import { getGroupAtom, useGroupView } from '@/entities/group'
 
 import { InvalidRouteParamsError } from '@/shared/errors'
-import { usePaginatedState } from '@/shared/lib/paginated-list'
-
-const styles = StyleSheet.create({
-  safeView: {
-    flex: 1,
-  },
-})
 
 /* -------------------------------------------------------------------------------------------------
  * ErrorBoundary
@@ -47,45 +40,60 @@ const GroupChatScreen: FC = () => {
   const { id } = useLocalSearchParams()
   if (typeof id !== 'string') throw new InvalidRouteParamsError()
 
+  const [messagesState, dispatch] = useAtom(getChatMessagesStateWithDispatchAtom(id))
+
+  useEffect(() => {
+    if (!messagesState.isLoaded && !messagesState.isLoading) dispatch({ type: 'reset' })
+  }, [messagesState.isLoaded, messagesState.isLoading, dispatch])
+
+  // TODO fixme
   const typingUsers = useAtomValue(getIsTypingAtom(id))
   const currentChatUser = useAtomValue(currentUserAtom)
-  const messagesFetchParams: GetChatMessagesFetchParams = useMemo(() => ({ groupId: id }), [id])
 
-  const chatAction = useSetAtom(getChatActionAtom(messagesFetchParams))
+  const chatAction = useSetAtom(getChatActionAtom(id))
   const group = useAtomValue(getGroupAtom(id))
+  const groupView = useGroupView(group)
 
-  const [chatMessagesState, manageChatMessagesState] = usePaginatedState(
-    { groupId: id },
-    getPaginatedChatMessagesListStateAtom,
-    getManagePaginatedChatMessagesListAtom,
+  const handleSend = useCallback((message: Message[]) => chatAction({ message, type: 'send_message' }), [chatAction])
+  const handleLoadEarlier = useCallback(() => dispatch({ type: 'load_earlier_messages' }), [dispatch])
+  const handleLoadNewer = useCallback(() => dispatch({ type: 'load_newer_messages' }), [dispatch])
+
+  const onRefresh = useCallback(() => dispatch({ type: 'reset' }), [dispatch])
+
+  const handleLoadMessagesAroundAnchor = useCallback(
+    (anchorId: string) => dispatch({ anchorId, type: 'load_around_anchor' }),
+    [dispatch],
   )
 
-  const handleSend = useCallback(
-    (message: ChatMessage[]) => chatAction({ message, type: 'send_message' }),
-    [chatAction],
-  )
-
-  const handleLoadEarlier = useCallback(() => manageChatMessagesState('loadMore'), [manageChatMessagesState])
-  const onRefresh = useCallback(() => manageChatMessagesState('refresh'), [manageChatMessagesState])
-
+  // FIXME remove
+  useEffect(() => {
+    return () => {
+      dispatch({ type: 'clear' })
+    }
+  }, [dispatch])
   useSubscribeChatEvents(id)
 
   return (
-    <SafeAreaView style={styles.safeView}>
-      <GroupChat
-        allLoaded={chatMessagesState.data?.nextIndex === null}
-        currentUser={currentChatUser}
-        group={group}
-        isLoadingEarlier={chatMessagesState.isFetchingNextPage}
-        loading={!chatMessagesState.isFetched}
-        messages={chatMessagesState.data?.items ?? []}
-        onLoadEarlier={handleLoadEarlier}
-        onRefresh={onRefresh}
-        onSend={handleSend}
-        refreshing={chatMessagesState.isRefreshing}
-        typingUsers={typingUsers}
-      />
-    </SafeAreaView>
+    <ScreenLayout.Root>
+      <GroupScreenHeader group={groupView} />
+
+      <GroupScreenTabs group={groupView} />
+
+      <ScreenLayout.Content scrollable={false}>
+        <Chat
+          chatIdentifier={id}
+          currentUser={currentChatUser}
+          onLoadEarlier={handleLoadEarlier}
+          onLoadNewer={handleLoadNewer}
+          onRefresh={onRefresh}
+          onRepliedToPress={handleLoadMessagesAroundAnchor}
+          onSend={handleSend}
+          // TODO check refresh
+          state={messagesState}
+          typingUsers={typingUsers}
+        />
+      </ScreenLayout.Content>
+    </ScreenLayout.Root>
   )
 }
 

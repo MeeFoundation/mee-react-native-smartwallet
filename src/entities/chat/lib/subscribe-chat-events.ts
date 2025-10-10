@@ -10,16 +10,13 @@ import {
   ChatUserJoinChatEvent,
   ChatUserLeaveChatEvent,
 } from '../model/events'
-import {
-  addIsTypingAtom,
-  addUserJoinedChatMessageAtom,
-  addUserLeaveChatMessageAtom,
-  getAddNewChatMessagesAtom,
-  removeIsTypingAtom,
-} from '../model/store'
+import { addIsTypingAtom, removeIsTypingAtom } from '../model/is-typing.atom'
+import { addUserJoinedChatMessageAtom, addUserLeaveChatMessageAtom } from '../model/join-left-chat.atom'
+import { getChatMessagesStateWithDispatchAtom } from '../model/store'
+import type { ChatIdentifier } from '../model/types'
 
-export const useSubscribeChatEvents = (groupId: string) => {
-  const addNewChatMessagesAtom = useSetAtom(getAddNewChatMessagesAtom)
+export const useSubscribeChatEvents = (chatIdentifier: ChatIdentifier) => {
+  const dispatch = useSetAtom(getChatMessagesStateWithDispatchAtom(chatIdentifier))
   const addIsTyping = useSetAtom(addIsTypingAtom)
   const removeIsTyping = useSetAtom(removeIsTypingAtom)
   const addUserJoinedChatMessage = useSetAtom(addUserJoinedChatMessageAtom)
@@ -27,23 +24,29 @@ export const useSubscribeChatEvents = (groupId: string) => {
 
   useEffect(() => {
     const unsubscribeNewMessages = eventBus.subscribe(ChatNewMessagesEvent, (event) => {
-      addNewChatMessagesAtom({ groupId, messages: event.messages })
+      dispatch({ messages: event.messages, type: 'add_messages' })
     })
 
     const unsubscribeStartTyping = eventBus.subscribe(ChatStartTypingEvent, (event) => {
-      addIsTyping({ groupId, usernames: event.users.map((user) => user.name).filter((name) => name !== undefined) })
+      addIsTyping({
+        chatIdentifier,
+        usernames: event.users.map((user) => user.name).filter((name) => name !== undefined),
+      })
     })
 
     const unsubscribeStopTyping = eventBus.subscribe(ChatStopTypingEvent, (event) => {
-      removeIsTyping({ groupId, usernames: event.users.map((user) => user.name).filter((name) => name !== undefined) })
+      removeIsTyping({
+        chatIdentifier,
+        usernames: event.users.map((user) => user.name).filter((name) => name !== undefined),
+      })
     })
 
     const unsubscribeUserJoinChat = eventBus.subscribe(ChatUserJoinChatEvent, (event) => {
-      addUserJoinedChatMessage({ groupId, username: event.user.name })
+      addUserJoinedChatMessage({ chatIdentifier, username: event.user.name })
     })
 
     const unsubscribeUserLeaveChat = eventBus.subscribe(ChatUserLeaveChatEvent, (event) => {
-      addUserLeaveChatMessage({ groupId, username: event.user.name })
+      addUserLeaveChatMessage({ chatIdentifier, username: event.user.name })
     })
 
     return () => {
@@ -53,5 +56,5 @@ export const useSubscribeChatEvents = (groupId: string) => {
       unsubscribeUserJoinChat()
       unsubscribeUserLeaveChat()
     }
-  }, [addNewChatMessagesAtom, addIsTyping, groupId, removeIsTyping, addUserJoinedChatMessage, addUserLeaveChatMessage])
+  }, [dispatch, addIsTyping, chatIdentifier, removeIsTyping, addUserJoinedChatMessage, addUserLeaveChatMessage])
 }

@@ -56,9 +56,14 @@ const getDasyDiff = (now: Date | number, toLocalize: Date | number): number => {
   return Math.floor(timeDiff / (1000 * 60 * 60 * 24))
 }
 
-export const localizeRelativeDate = (translate: TFunction, now: Date | number, toLocalize: Date | number): string => {
+export const localizeRelativeDate = (
+  translate: TFunction,
+  now: Date | number | string,
+  toLocalize: Date | number | string,
+): string => {
   const dateToLocalize = new Date(toLocalize)
-  const daysDiff = getDasyDiff(now, toLocalize)
+  const dateNow = new Date(now)
+  const daysDiff = getDasyDiff(dateNow, dateToLocalize)
 
   if (daysDiff === 0) return translate('today')
   else if (daysDiff === 1) return translate('yesterday')
@@ -66,4 +71,10 @@ export const localizeRelativeDate = (translate: TFunction, now: Date | number, t
     const dateFormatter = getDateFormatter({ format: 'long' })
     return dateFormatter.format(dateToLocalize)
   }
+}
+
+export const isSameDate = (date1: Date | number | string, date2: Date | number | string): boolean => {
+  const date1ToCompare = date1 instanceof Date ? date1 : new Date(date1)
+  const date2ToCompare = date2 instanceof Date ? date2 : new Date(date2)
+  return date1ToCompare.toDateString() === date2ToCompare.toDateString()
 }

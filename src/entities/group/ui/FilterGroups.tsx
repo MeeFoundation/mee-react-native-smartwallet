@@ -8,7 +8,7 @@ import { AppButton } from '@/shared/ui/AppButton'
 import * as FilterRadioButton from '@/shared/ui/FilterRadioButton'
 import { Label } from '@/shared/ui/Label'
 
-import { getManagePaginatedGroupsListAtom, getPaginatedGroupsListStateAtom } from '../model/store'
+import { getGroupsListStateAtom, getManageGroupListAtom } from '../model/paginated-groups-list.atom'
 import type { GroupsFilter, GroupsListFetchParams } from '../model/types'
 
 const styles = StyleSheet.create({
@@ -32,16 +32,12 @@ const archivedFetchParams: GroupsListFetchParams = { filter: { status: 'archived
 const FilterGroups: FC<FilterGroupsProps> = ({ value, onSubmit, onSuccess, onChange }) => {
   const [currentValue, setCurrentValue] = useState(value)
 
-  const [activeGroupsListState] = usePaginatedState(
-    activeFetchParams,
-    getPaginatedGroupsListStateAtom,
-    getManagePaginatedGroupsListAtom,
-  )
+  const [activeGroupsListState] = usePaginatedState(activeFetchParams, getGroupsListStateAtom, getManageGroupListAtom)
 
   const [archivedGroupsListState] = usePaginatedState(
     archivedFetchParams,
-    getPaginatedGroupsListStateAtom,
-    getManagePaginatedGroupsListAtom,
+    getGroupsListStateAtom,
+    getManageGroupListAtom,
   )
 
   /**

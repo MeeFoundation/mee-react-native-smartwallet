@@ -12,7 +12,7 @@ import { Animated, type GestureResponderEvent, Pressable, StyleSheet, type TextS
 import type { SvgProps } from 'react-native-svg'
 
 import { colors } from '@/shared/config'
-import { hexAlphaColor } from '@/shared/lib/color'
+import { hexAlphaColor } from '@/shared/lib/styling'
 import { Typography } from '@/shared/ui/Typography'
 
 export type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'tertiary' | 'link' | 'link_danger'

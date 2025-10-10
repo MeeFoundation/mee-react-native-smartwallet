@@ -1,156 +1,220 @@
-import { atom, type Getter, type Setter } from 'jotai'
-import { atomFamily } from 'jotai/utils'
-import { isEqual, uniq } from 'lodash-es'
+import { atom, type Getter, type SetStateAction, type Setter, type WritableAtom } from 'jotai'
+import { atomFamily, atomWithDefault } from 'jotai/utils'
 
-import {
-  INITIAL_PAGINATED_STATE,
-  makeGetManagePaginatedStateAtom,
-  type PaginatedListState,
-  type PaginatedStateAtom,
-} from '@/shared/lib/paginated-list'
-import { generateUUID } from '@/shared/lib/uuid'
+import { assertUnreachable } from '@/shared/lib/assert-unreachable'
 
-import { getGroupChatMessages } from '../api/get-group-chat-messages'
+import { getChatMessagesApi } from '../api/get-chat-messages.api'
 import { mockMeUser } from '../api/mock/users'
-import { sendGroupChatMessage } from '../api/send-group-chat-message'
-import { SYSTEM_USER } from './system-user'
-import type {
-  ChatMessage,
-  ChatUser,
-  GetChatMessagesFetchParams,
-  UserJoinChatMessage,
-  UserLeaveChatMessage,
-} from './types'
+import type { User } from './chat-user.types'
+import type { ChatIdentifier, ChatMessagesAction, ChatMessagesState, Message } from './types'
 
-export const currentUserAtom = atom<ChatUser>(mockMeUser)
+export const currentUserAtom = atom<User>(mockMeUser)
 
-type PaginatedChatMessagesListState = PaginatedListState<ChatMessage>
+const MESSSAGES_PAGE_SIZE = 12
 
-export const getPaginatedChatMessagesListStateAtom = atomFamily<
-  GetChatMessagesFetchParams,
-  PaginatedStateAtom<ChatMessage>
->(() => atom(INITIAL_PAGINATED_STATE), isEqual)
+const INITIAL_MESSAGES_STATE: ChatMessagesState = {
+  hasEarlierMessages: true,
+  hasNewerMessages: true,
+  isLoaded: false,
+  isLoading: false,
+  isLoadingEarlier: false,
+  isLoadingNewer: false,
+  messages: [],
+} as const
 
-export const getManagePaginatedChatMessagesListAtom = makeGetManagePaginatedStateAtom(
-  getPaginatedChatMessagesListStateAtom,
-  getGroupChatMessages,
+type ChatMessagesStateAtom = WritableAtom<ChatMessagesState, [SetStateAction<ChatMessagesState>], void>
+
+const getChatMessagesStateAtom = atomFamily(
+  (_identifier: ChatIdentifier): ChatMessagesStateAtom =>
+    atomWithDefault<ChatMessagesState>(() => INITIAL_MESSAGES_STATE),
 )
 
-type ChatSendMessageAction = {
-  type: 'send_message'
-  message: ChatMessage[]
-}
-
-type ChatAction = ChatSendMessageAction
-
-const addMessages = (state: PaginatedChatMessagesListState, messages: ChatMessage[]): PaginatedChatMessagesListState =>
-  !state.data ? state : { ...state, data: { ...state.data, items: [...messages, ...(state.data?.items ?? [])] } }
-
-const updateMessages = (
-  state: PaginatedChatMessagesListState,
-  update: (message: ChatMessage) => ChatMessage,
-): PaginatedChatMessagesListState =>
-  !state.data ? state : { ...state, data: { ...state.data, items: state.data.items.map(update) } }
-
-const handleSendMessage = async (
-  _get: Getter,
+const handleReset = async (
+  get: Getter,
   set: Setter,
-  chatParams: GetChatMessagesFetchParams,
-  action: ChatSendMessageAction,
+  chatIdentifier: ChatIdentifier,
+  messagesStateAtom: ChatMessagesStateAtom,
 ) => {
-  const chatAtom = getPaginatedChatMessagesListStateAtom(chatParams)
-  const ids = action.message.map((msg) => msg._id)
+  set(messagesStateAtom, (prev) => ({ ...prev, isLoading: true }))
 
-  set(chatAtom, (prev) => {
-    const messagesWithPending = action.message.map((msg) => ({ ...msg, pending: true }))
-    return addMessages(prev, messagesWithPending)
+  const response = await getChatMessagesApi({
+    groupId: chatIdentifier,
+    limit: MESSSAGES_PAGE_SIZE,
   })
 
-  try {
-    await sendGroupChatMessage({ groupId: chatParams.groupId, message: action.message })
-
-    set(chatAtom, (prev) =>
-      updateMessages(prev, (msg) => (ids.includes(msg._id) ? { ...msg, pending: false, sent: true } : msg)),
-    )
-  } catch {
-    // TODO add error handling
+  const newState: ChatMessagesState = {
+    ...get(messagesStateAtom),
+    hasEarlierMessages: !!response.hasEarlierMessages,
+    hasNewerMessages: !!response.hasNewerMessages,
+    isLoaded: true,
+    isLoading: false,
+    messages: response.messages,
   }
+
+  set(messagesStateAtom, newState)
+
+  return newState
 }
 
-export const getChatActionAtom = atomFamily((params: GetChatMessagesFetchParams) => {
-  return atom(null, async (get, set, action: ChatAction) => {
-    switch (action.type) {
-      case 'send_message': {
-        return handleSendMessage(get, set, params, action)
+const handleClear = async (_get: Getter, set: Setter, messagesStateAtom: ChatMessagesStateAtom) => {
+  set(messagesStateAtom, INITIAL_MESSAGES_STATE)
+  return INITIAL_MESSAGES_STATE
+}
+
+const handleLoadEarlierMessages = async (
+  get: Getter,
+  set: Setter,
+  chatIdentifier: ChatIdentifier,
+  messagesStateAtom: ChatMessagesStateAtom,
+) => {
+  set(messagesStateAtom, (prev) => ({ ...prev, isLoadingEarlier: true }))
+  const currentState = get(messagesStateAtom)
+
+  const response = await getChatMessagesApi({
+    beforeId: currentState.messages.at(-1)?.id,
+    groupId: chatIdentifier,
+    limit: MESSSAGES_PAGE_SIZE,
+  })
+
+  const newState: ChatMessagesState = {
+    ...get(messagesStateAtom),
+    hasEarlierMessages: !!response.hasEarlierMessages,
+    isLoadingEarlier: false,
+    messages: [...currentState.messages, ...response.messages],
+  }
+
+  set(messagesStateAtom, newState)
+
+  return newState
+}
+
+const handleLoadNewerMessages = async (
+  get: Getter,
+  set: Setter,
+  chatIdentifier: ChatIdentifier,
+  messagesStateAtom: ChatMessagesStateAtom,
+) => {
+  set(messagesStateAtom, (prev) => ({ ...prev, isLoadingNewer: true }))
+  const currentState = get(messagesStateAtom)
+
+  const response = await getChatMessagesApi({
+    afterId: currentState.messages.at(0)?.id,
+    groupId: chatIdentifier,
+    limit: MESSSAGES_PAGE_SIZE,
+  })
+
+  const newState: ChatMessagesState = {
+    ...get(messagesStateAtom),
+    hasNewerMessages: !!response.hasNewerMessages,
+    isLoadingNewer: false,
+    messages: [...response.messages, ...currentState.messages],
+  }
+
+  set(messagesStateAtom, newState)
+
+  return newState
+}
+
+const handleLoadAroundAnchor = async (
+  get: Getter,
+  set: Setter,
+  chatIdentifier: ChatIdentifier,
+  messagesStateAtom: ChatMessagesStateAtom,
+  anchorId: string,
+) => {
+  set(messagesStateAtom, { ...INITIAL_MESSAGES_STATE, isLoading: true })
+
+  const response = await getChatMessagesApi({
+    anchorId,
+    groupId: chatIdentifier,
+    limit: MESSSAGES_PAGE_SIZE * 2,
+  })
+
+  const newState: ChatMessagesState = {
+    ...get(messagesStateAtom),
+    hasEarlierMessages: !!response.hasEarlierMessages,
+    hasNewerMessages: !!response.hasNewerMessages,
+    isLoaded: true,
+    isLoading: false,
+    messages: response.messages,
+  }
+
+  set(messagesStateAtom, newState)
+
+  return newState
+}
+
+const handleAddMessages = async (
+  get: Getter,
+  set: Setter,
+  messagesStateAtom: ChatMessagesStateAtom,
+  messages: Message[],
+) => {
+  const currentState = get(messagesStateAtom)
+
+  const newState: ChatMessagesState = {
+    ...get(messagesStateAtom),
+    messages: [...messages, ...currentState.messages],
+  }
+
+  set(messagesStateAtom, newState)
+
+  return newState
+}
+
+const handleUpdateMessages = async (
+  get: Getter,
+  set: Setter,
+  messagesStateAtom: ChatMessagesStateAtom,
+  messages: Array<Message>,
+) => {
+  const currentState = get(messagesStateAtom)
+
+  const newState: ChatMessagesState = {
+    ...get(messagesStateAtom),
+    messages: currentState.messages.map((message) => {
+      const updatedMessage = messages.find((m) => m.id === message.id)
+      return updatedMessage ?? message
+    }),
+  }
+
+  set(messagesStateAtom, newState)
+
+  return newState
+}
+
+export const getChatMessagesStateWithDispatchAtom = atomFamily((identifier: ChatIdentifier) => {
+  const messagesStateAtom = getChatMessagesStateAtom(identifier)
+
+  return atom(
+    (get) => get(messagesStateAtom),
+    async (get, set, action: ChatMessagesAction): Promise<ChatMessagesState> => {
+      switch (action.type) {
+        case 'reset':
+          return handleReset(get, set, identifier, messagesStateAtom)
+
+        case 'clear':
+          return handleClear(get, set, messagesStateAtom)
+
+        case 'load_earlier_messages':
+          return handleLoadEarlierMessages(get, set, identifier, messagesStateAtom)
+
+        case 'load_newer_messages':
+          return handleLoadNewerMessages(get, set, identifier, messagesStateAtom)
+
+        case 'load_around_anchor':
+          return handleLoadAroundAnchor(get, set, identifier, messagesStateAtom, action.anchorId)
+
+        case 'add_messages':
+          return handleAddMessages(get, set, messagesStateAtom, action.messages)
+
+        case 'update_messages':
+          return handleUpdateMessages(get, set, messagesStateAtom, action.messages)
+
+        default:
+          assertUnreachable(action)
+          return get(messagesStateAtom)
       }
-    }
-  })
-}, isEqual)
-
-type AddNewChatMessagesAtomParams = {
-  groupId: string
-  messages: ChatMessage[]
-}
-
-export const getAddNewChatMessagesAtom = atom(null, async (_get, set, params: AddNewChatMessagesAtomParams) => {
-  const chatAtom = getPaginatedChatMessagesListStateAtom({ groupId: params.groupId })
-  set(chatAtom, (prev) => addMessages(prev, params.messages))
+    },
+  )
 })
-
-export const getIsTypingAtom = atomFamily((_groupId: string) => atom<string[]>([]))
-
-type ChangeIsTypingParams = {
-  groupId: string
-  // TODO: probably it must be an id
-  usernames: string[]
-}
-
-export const addIsTypingAtom = atom(null, async (_get, set, params: ChangeIsTypingParams) => {
-  const isTypingAtom = getIsTypingAtom(params.groupId)
-  set(isTypingAtom, (prev) => uniq([...prev, ...params.usernames]))
-})
-
-export const removeIsTypingAtom = atom(null, async (_get, set, params: ChangeIsTypingParams) => {
-  const isTypingAtom = getIsTypingAtom(params.groupId)
-  set(isTypingAtom, (prev) => {
-    return prev.filter((username) => !params.usernames.includes(username))
-  })
-})
-
-export const addUserJoinedChatMessageAtom = atom(
-  null,
-  async (_get, set, params: { groupId: string; username: string }) => {
-    set(getPaginatedChatMessagesListStateAtom({ groupId: params.groupId }), (prev) =>
-      addMessages(prev, [
-        {
-          _id: generateUUID(),
-          createdAt: new Date(),
-          system: true,
-          text: '',
-          type: 'user_join_chat',
-          user: SYSTEM_USER,
-          username: params.username,
-        } satisfies UserJoinChatMessage,
-      ]),
-    )
-  },
-)
-
-export const addUserLeaveChatMessageAtom = atom(
-  null,
-  async (_get, set, params: { groupId: string; username: string }) => {
-    set(getPaginatedChatMessagesListStateAtom({ groupId: params.groupId }), (prev) =>
-      addMessages(prev, [
-        {
-          _id: generateUUID(),
-          createdAt: new Date(),
-          system: true,
-          text: '',
-          type: 'user_leave_chat',
-          user: SYSTEM_USER,
-          username: params.username,
-        } satisfies UserLeaveChatMessage,
-      ]),
-    )
-  },
-)

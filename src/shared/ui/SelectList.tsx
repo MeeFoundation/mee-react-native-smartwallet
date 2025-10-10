@@ -15,7 +15,7 @@ import CheckIcon from '@/assets/images/check.svg'
 import CloseIcon from '@/assets/images/close.svg'
 
 import { colors } from '@/shared/config'
-import { hexAlphaColor } from '@/shared/lib/color'
+import { hexAlphaColor } from '@/shared/lib/styling'
 
 import { Accordion } from './Accordion'
 import { Backdrop } from './Backdrop'

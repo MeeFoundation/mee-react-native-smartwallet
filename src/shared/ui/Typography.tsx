@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import { Text, type TextProps } from 'react-native'
 
-import { cn } from '../lib/cn'
+import { cn } from '../lib/styling'
 
 /* -------------------------------------------------------------------------------------------------
  * Typography

@@ -1,4 +1,23 @@
 {
+  "my_info_tabs": {
+    "availability_calendar": {
+      "title": "Availability calendar"
+    },
+    "documents": {
+      "title": "Documents"
+    },
+    "health": {
+      "title": "Health"
+    },
+    "personal_details": {
+      "title": "Personal details"
+    }
+  },
+  "status": {
+    "archived": {
+      "tip": "Archived/Paused"
+    }
+  },
   "tabs": {
     "chat": {
       "title": "Chat"
@@ -8,19 +27,6 @@
     },
     "myInfo": {
       "title": "My Info"
-    }
-  },
-  "chat": {
-    "input": {
-      "placeholder": "write something"
-    },
-    "actions": {
-      "attach_file": {
-        "text": "Attach file"
-      },
-      "cancel": {
-        "text": "Cancel"
-      }
     }
   }
 }

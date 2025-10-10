@@ -1,0 +1,9 @@
+{
+  "$id": "http://example.com/schemas/definitions.json",
+  "definitions": {
+    "display_name": { "type": "string" },
+    "email": { "format": "email", "type": "string" },
+    "first_name": { "type": "string" },
+    "last_name": { "type": "string" }
+  }
+}
