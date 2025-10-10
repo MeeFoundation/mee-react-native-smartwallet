@@ -20,7 +20,6 @@ type GetChatMessagesResponse = {
 
 export const getChatMessagesApi = async (params: GetChatMessagesFetchParams): Promise<GetChatMessagesResponse> => {
   const mockMessages = params.groupId === '1' ? mockTripChatMessages : mockProjectChatMessages
-
   await new Promise((resolve) => setTimeout(resolve, 1000))
 
   if (params.beforeId === undefined && params.afterId === undefined && !params.anchorId) {

@@ -29,11 +29,16 @@ const getChatMessagesStateAtom = atomFamily(
     atomWithDefault<ChatMessagesState>(() => INITIAL_MESSAGES_STATE),
 )
 
-const handleReset = async (get: Getter, set: Setter, messagesStateAtom: ChatMessagesStateAtom) => {
+const handleReset = async (
+  get: Getter,
+  set: Setter,
+  chatIdentifier: ChatIdentifier,
+  messagesStateAtom: ChatMessagesStateAtom,
+) => {
   set(messagesStateAtom, (prev) => ({ ...prev, isLoading: true }))
 
   const response = await getChatMessagesApi({
-    groupId: '',
+    groupId: chatIdentifier,
     limit: MESSSAGES_PAGE_SIZE,
   })
 
@@ -56,13 +61,18 @@ const handleClear = async (_get: Getter, set: Setter, messagesStateAtom: ChatMes
   return INITIAL_MESSAGES_STATE
 }
 
-const handleLoadEarlierMessages = async (get: Getter, set: Setter, messagesStateAtom: ChatMessagesStateAtom) => {
+const handleLoadEarlierMessages = async (
+  get: Getter,
+  set: Setter,
+  chatIdentifier: ChatIdentifier,
+  messagesStateAtom: ChatMessagesStateAtom,
+) => {
   set(messagesStateAtom, (prev) => ({ ...prev, isLoadingEarlier: true }))
   const currentState = get(messagesStateAtom)
 
   const response = await getChatMessagesApi({
     beforeId: currentState.messages.at(-1)?.id,
-    groupId: '',
+    groupId: chatIdentifier,
     limit: MESSSAGES_PAGE_SIZE,
   })
 
@@ -78,13 +88,18 @@ const handleLoadEarlierMessages = async (get: Getter, set: Setter, messagesState
   return newState
 }
 
-const handleLoadNewerMessages = async (get: Getter, set: Setter, messagesStateAtom: ChatMessagesStateAtom) => {
+const handleLoadNewerMessages = async (
+  get: Getter,
+  set: Setter,
+  chatIdentifier: ChatIdentifier,
+  messagesStateAtom: ChatMessagesStateAtom,
+) => {
   set(messagesStateAtom, (prev) => ({ ...prev, isLoadingNewer: true }))
   const currentState = get(messagesStateAtom)
 
   const response = await getChatMessagesApi({
     afterId: currentState.messages.at(0)?.id,
-    groupId: '',
+    groupId: chatIdentifier,
     limit: MESSSAGES_PAGE_SIZE,
   })
 
@@ -103,6 +118,7 @@ const handleLoadNewerMessages = async (get: Getter, set: Setter, messagesStateAt
 const handleLoadAroundAnchor = async (
   get: Getter,
   set: Setter,
+  chatIdentifier: ChatIdentifier,
   messagesStateAtom: ChatMessagesStateAtom,
   anchorId: string,
 ) => {
@@ -110,7 +126,7 @@ const handleLoadAroundAnchor = async (
 
   const response = await getChatMessagesApi({
     anchorId,
-    groupId: '',
+    groupId: chatIdentifier,
     limit: MESSSAGES_PAGE_SIZE * 2,
   })
 
@@ -175,19 +191,19 @@ export const getChatMessagesStateWithDispatchAtom = atomFamily((identifier: Chat
     async (get, set, action: ChatMessagesAction): Promise<ChatMessagesState> => {
       switch (action.type) {
         case 'reset':
-          return handleReset(get, set, messagesStateAtom)
+          return handleReset(get, set, identifier, messagesStateAtom)
 
         case 'clear':
           return handleClear(get, set, messagesStateAtom)
 
         case 'load_earlier_messages':
-          return handleLoadEarlierMessages(get, set, messagesStateAtom)
+          return handleLoadEarlierMessages(get, set, identifier, messagesStateAtom)
 
         case 'load_newer_messages':
-          return handleLoadNewerMessages(get, set, messagesStateAtom)
+          return handleLoadNewerMessages(get, set, identifier, messagesStateAtom)
 
         case 'load_around_anchor':
-          return handleLoadAroundAnchor(get, set, messagesStateAtom, action.anchorId)
+          return handleLoadAroundAnchor(get, set, identifier, messagesStateAtom, action.anchorId)
 
         case 'add_messages':
           return handleAddMessages(get, set, messagesStateAtom, action.messages)

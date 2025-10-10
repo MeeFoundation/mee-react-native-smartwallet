@@ -42,7 +42,6 @@ type ChatProps = {
 
 const Chat: FC<ChatProps> = (props) => {
   const listRef = useRef<FlashListRef<Message>>(null)
-  const scrollLockedRef = useRef(false)
   const actionsSheetRef = useRef<BottomSheet>(null)
   const [replyToMessageId, setReplyToMessageId] = useState<string | undefined>(undefined)
   const [attachments, setAttachments] = useState<Attachment[]>([])
@@ -54,16 +53,12 @@ const Chat: FC<ChatProps> = (props) => {
   }, [])
 
   const loadEarlierMessages = useLoadEarlierMessages({
-    listRef,
     loadEarlierMessages: props.onLoadEarlier,
-    scrollLockedRef,
     state: props.state,
   })
 
   const loadNewerMessages = useLoadNewerMessages({
-    listRef,
     loadNewerMessages: props.onLoadNewer,
-    scrollLockedRef,
     state: props.state,
   })
 
@@ -80,8 +75,6 @@ const Chat: FC<ChatProps> = (props) => {
         : conentHeight + event.nativeEvent.contentOffset.y - event.nativeEvent.contentSize.height > 50
 
       if (needRefresh) refresh()
-
-      scrollLockedRef.current = false
     },
     [refresh],
   )
@@ -131,10 +124,8 @@ const Chat: FC<ChatProps> = (props) => {
 
       const messageToScrollTo = newState?.messages.find((message) => message.id === messageId)
 
-      scrollLockedRef.current = true
-
       if (messageToScrollTo) {
-        setTimeout(() => {
+        requestAnimationFrame(() => {
           listRef.current?.scrollToItem({ animated: true, item: messageToScrollTo, viewPosition: 0.5 })
         })
       }
