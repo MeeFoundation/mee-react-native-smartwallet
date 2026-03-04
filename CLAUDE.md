@@ -39,4 +39,5 @@
 
 ## Testing
 - Run `pnpm check-types` after changes to verify types
-- Do not mark a task complete if type errors exist
+- Run `pnpm lint` after changes to verify no lint errors
+- Do not mark a task complete if type errors or lint errors exist
