@@ -1,39 +1,8 @@
 {
-  "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "verbatimModuleSyntax": true,
-    "paths": {
-      "@/assets/*": [
-        "./assets/*"
-      ],
-      "@/@types/*": [
-        "./@types/*"
-      ],
-      "@/shared/*": [
-        "./src/shared/*"
-      ],
-      "@/features/*": [
-        "./src/features/*"
-      ],
-      "@/widgets/*": [
-        "./src/widgets/*"
-      ],
-      "@/entities/*": [
-        "./src/entities/*"
-      ],
-      "@/app/*": [
-        "./src/app/*"
-      ]
-    }
-  },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts",
-    "nativewind-env.d.ts"
-  ]
+    "verbatimModuleSyntax": true
+  }
 }

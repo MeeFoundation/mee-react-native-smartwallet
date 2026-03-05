@@ -320,6 +320,7 @@ pnpm check-types    # TypeScript type check across all workspaces
 
 - **Option A** `tsc --build` (project references): requires `"composite": true` in each workspace tsconfig and a root `tsconfig.json` referencing all three workspaces. More setup, but enables incremental builds.
 - **Option B** `pnpm -r exec tsc --noEmit` (parallel per-workspace): simpler, no composite constraints, each workspace checks itself independently.
+^^^ Use this option 
 
 Recommendation: **Option B** for the initial monorepo setup. Can migrate to project references later if build times become a concern.
 

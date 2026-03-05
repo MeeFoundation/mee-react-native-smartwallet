@@ -6,7 +6,7 @@ pre-commit:
     check-types:
       run: pnpm check-types
     steiger:
-      run: pnpm steiger
+      run: pnpm steiger:concepts
 
 
 commit-msg:

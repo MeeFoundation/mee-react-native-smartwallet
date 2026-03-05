@@ -52,13 +52,20 @@
   "files": {
     "ignoreUnknown": false,
     "includes": [
-      "./src/**/*",
-      "./tailwind.config.js",
+      "./apps/**/*",
+      "./packages/**/*",
       "!./biome.json",
       "!./tsconfig.json",
       "!./knip.json",
-      "!./coverage/**/*",
-      "!./dist/**/*"
+      "!**/coverage/**/*",
+      "!**/dist/**/*",
+      "!**/node_modules/**/*",
+      "!**/Pods/**/*",
+      "!**/vendor/**/*",
+      "!**/android/**/*",
+      "!**/ios/**/*",
+      "!**/.expo/**/*",
+      "!**/@types/**/*"
     ]
   },
   "formatter": {
