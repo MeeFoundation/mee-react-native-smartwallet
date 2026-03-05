@@ -9,13 +9,43 @@
 ## Package Manager
 - Always use `pnpm` for installing and managing dependencies. Never use `npm`, `yarn`, or `bun`.
 
+## Monorepo Structure
+
+This is a **pnpm monorepo** with three workspaces:
+
+| Workspace | Path | Purpose |
+|---|---|---|
+| `app-concepts` | `apps/app-concepts/` | Full prototype app with mocked API. Has `ios/` and `android/` native projects. |
+| `app-production` | `apps/app-production/` | Minimal production app. Has `ios/` and `android/` native projects. |
+| `@mee/core` | `packages/core/` | Shared utilities imported by both apps. No Expo/RN-specific code. |
+
+### Key paths
+- Shared code lives in `packages/core/src/` — imported as `@mee/core`
+- App-concepts source: `apps/app-concepts/src/` (FSD structure)
+- App-production source: `apps/app-production/src/`
+- Native iOS projects: `apps/app-concepts/ios/`, `apps/app-production/ios/`
+- Root `node_modules/` is the pnpm hoisted store — all packages live here
+
+### iOS native module autolinking (monorepo quirk)
+pnpm hoists all packages to root `node_modules/`. The `expo-modules-autolinking` tool by default only searches the app's own `node_modules/`. For `app-production`, the Podfile is manually patched to pass `searchPaths` and an extra search path to `react-native-config` pointing to the workspace root `node_modules/`. If `expo prebuild` is re-run for `app-production`, these Podfile changes must be reapplied manually.
+
 ## Dev Workflow
-- Start: `pnpm start`
-- iOS: `pnpm ios`
-- Android: `pnpm android`
-- Lint: `pnpm lint` (uses Biome)
-- Type check: `pnpm check-types`
-- FSD architecture check: `pnpm steiger`
+
+### Run apps
+- `pnpm concepts:ios` — build and run app-concepts on iOS
+- `pnpm concepts:android` — build and run app-concepts on Android
+- `pnpm production:ios` — build and run app-production on iOS
+- `pnpm production:android` — build and run app-production on Android
+
+### Quality checks (run from repo root)
+- `pnpm lint` — Biome lint across all packages and apps
+- `pnpm check-types` — TypeScript type check across all workspaces
+- `pnpm steiger:concepts` — FSD architecture check for app-concepts
+
+### Workspace-scoped commands
+- `pnpm --filter app-concepts <script>` — run a script in app-concepts
+- `pnpm --filter app-production <script>` — run a script in app-production
+- `pnpm --filter @mee/core <script>` — run a script in core
 
 ## Code Conventions
 - Follow feature-sliced design: `/entities`, `/widgets`, `/features`, `/app`, `/shared`
