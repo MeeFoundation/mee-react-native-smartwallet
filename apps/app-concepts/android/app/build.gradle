@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.anonymous.expotst'
+    namespace 'com.mee.concepts'
     defaultConfig {
-        applicationId 'com.anonymous.expotst'
+        applicationId 'com.mee.concepts'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

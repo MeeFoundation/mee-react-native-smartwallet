@@ -1,17 +1,17 @@
 {
   "expo": {
-    "name": "expo-tst",
-    "slug": "expo-tst",
+    "name": "Mee Concepts",
+    "slug": "mee-concepts",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "expotst",
+    "scheme": "meeconcepts",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "newArchEnabled": true,
-      "bundleIdentifier": "com.anonymous.expotst"
+      "bundleIdentifier": "com.mee.concepts"
     },
     "android": {
       "adaptiveIcon": {
@@ -19,7 +19,7 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.anonymous.expotst"
+      "package": "com.mee.concepts"
     },
     "web": {
       "bundler": "metro",

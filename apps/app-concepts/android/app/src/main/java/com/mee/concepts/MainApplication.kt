@@ -1,4 +1,4 @@
-package com.anonymous.expotst
+package com.mee.concepts
 
 import android.app.Application
 import android.content.res.Configuration
