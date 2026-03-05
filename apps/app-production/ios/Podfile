@@ -14,7 +14,7 @@ install! 'cocoapods',
 prepare_react_native_project!
 
 target 'MeeProduction' do
-  use_expo_modules!
+  use_expo_modules!({ searchPaths: [File.join(__dir__, '..', '..', '..', 'node_modules')] })
 
   if ENV['EXPO_USE_COMMUNITY_AUTOLINKING'] == '1'
     config_command = ['node', '-e', "process.argv=['', '', 'config'];require('@react-native-community/cli').run()"];
@@ -25,7 +25,8 @@ target 'MeeProduction' do
       'react-native-config',
       '--json',
       '--platform',
-      'ios'
+      'ios',
+      File.join(__dir__, '..', '..', '..', 'node_modules')
     ]
   end
 
