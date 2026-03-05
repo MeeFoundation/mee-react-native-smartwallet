@@ -35,7 +35,6 @@
 - Never add placeholder or TODO code — implement fully or ask
 - Do not add comments unless the logic is non-obvious
 - Do not refactor code outside the scope of the requested task
-- Always read a file before editing it
 
 ## Testing
 - Run `pnpm check-types` after changes to verify types
