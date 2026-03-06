@@ -1,24 +1,42 @@
 # mee-react-native-smartwallet
 
+This repository is a **pnpm monorepo** containing two Expo apps and a shared core package.
+
+| Workspace | Purpose |
+|---|---|
+| `apps/app-concepts` | Full-featured concept/prototype app with mocked API |
+| `apps/app-production` | Production app — minimal, grows as real backend integrations are added |
+| `packages/core` | Shared utilities and components imported by both apps |
+
 ## Set Up Your Environment
 
 1. Follow the official [React Native Environment Setup](https://reactnative.dev/docs/set-up-your-environment)
 2. Install dependencies:
 
 ```sh
+# Install all dependencies (run once from repo root)
 pnpm install
 ```
 
-### Run on iOS
+### Run app-concepts
 
 ```sh
-pnpm ios
+pnpm concepts:ios
+pnpm concepts:android
 ```
 
-### Run on Android
+### Run app-production
 
 ```sh
-pnpm android
+pnpm production:ios
+pnpm production:android
+```
+
+## Dev Commands
+
+```sh
+pnpm lint           # Biome lint across all packages and apps
+pnpm check-types    # TypeScript type check across all workspaces
 ```
 
 ## Localization
@@ -53,7 +71,7 @@ This structure helps to:
 
 - Differentiate the same word depending on context.
 - Group related attributes/states under one key.
-- Prevent name collisions (e.g., “Filters” may be identical in English but differ in Spanish).
+- Prevent name collisions (e.g., "Filters" may be identical in English but differ in Spanish).
 
 ### ICU syntax
 
@@ -86,7 +104,7 @@ Example:
 
 If you run into android build problem with MainActivity class or cleaning cache and builds didn't help you,
 you can try "wipe data" in your Android emulator.
-![alt text](src/assets/images/readMe//wipe-data-info.png)
+![alt text](apps/app-concepts/src/assets/images/readMe//wipe-data-info.png)
 
 ### Ios build problems:
 

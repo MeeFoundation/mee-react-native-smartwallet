@@ -1,0 +1,21 @@
+{
+  "expo": {
+    "name": "Mee Production",
+    "slug": "mee-production",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "meeproduction",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.mee.production"
+    },
+    "android": {
+      "package": "com.mee.production"
+    },
+    "plugins": ["expo-router"],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
