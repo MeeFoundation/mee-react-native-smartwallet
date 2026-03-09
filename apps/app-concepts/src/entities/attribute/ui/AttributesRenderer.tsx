@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { View } from 'react-native'
 
@@ -8,10 +8,12 @@ import type {
   InferAttributeValue,
   ObjectAttributeSchema,
 } from '../model/types'
+import { setNestedValue } from '../model/utils'
 import { ObjectAttributeControl } from './ObjectAttributeControl'
 import { StringAttributeControl } from './StringAttributeControl'
 
 type HandleError = (path: string[], error: string | undefined) => void
+type HandleChange = (path: string[], value: string) => void
 
 function renderNode(
   schema: AttributeSchema,
@@ -19,15 +21,16 @@ function renderNode(
   path: string[],
   errors: Record<string, string>,
   onError: HandleError,
+  onChange: HandleChange,
 ): ReactNode {
   switch (schema.type) {
     case 'string': {
       const key = path.join('.')
-      const error = errors[key]
       return (
         <View>
           <StringAttributeControl
-            error={error}
+            error={errors[key]}
+            onChange={(v) => onChange(path, v)}
             onError={(e) => onError(path, e)}
             path={path}
             schema={schema}
@@ -44,6 +47,7 @@ function renderNode(
           [...path, key],
           errors,
           onError,
+          onChange,
         )
       return (
         <ObjectAttributeControl
@@ -63,7 +67,19 @@ function renderNode(
 export function AttributeRenderer<TSchema extends AttributeSchema>(
   props: AttributeRendererProps<TSchema>,
 ): ReactNode {
+  const [values, setValues] = useState<InferAttributeValue<TSchema>>(props.value)
   const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const handleChange = useCallback<HandleChange>(
+    (path, value) => {
+      setValues((prev) => {
+        const next = setNestedValue(prev as Record<string, unknown>, path, value) as InferAttributeValue<TSchema>
+        props.onChange?.(next)
+        return next
+      })
+    },
+    [props.onChange],
+  )
 
   const handleError = useCallback<HandleError>((path, error) => {
     const key = path.join('.')
@@ -78,5 +94,9 @@ export function AttributeRenderer<TSchema extends AttributeSchema>(
     })
   }, [])
 
-  return renderNode(props.schema, props.value, [], errors, handleError)
+  useEffect(() => {
+    props.onErrors?.(errors)
+  }, [errors, props.onErrors])
+
+  return renderNode(props.schema, values, [], errors, handleError, handleChange)
 }

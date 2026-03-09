@@ -1,7 +1,7 @@
 import Ajv from 'ajv'
 import addFormats from 'ajv-formats'
 import { isValidPhoneNumber } from 'libphonenumber-js/min'
-import { type FC, useCallback, useRef, useState } from 'react'
+import { type FC, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { KeyboardTypeOptions } from 'react-native'
 import { Text, View } from 'react-native'
@@ -19,7 +19,9 @@ const DEBOUNCE_MS = 500
 /* -------------------------------------------------------------------------------------------------
  * StringAttributeControl
  * -----------------------------------------------------------------------------------------------*/
-type StringAttributeControlProps = ControlProps<StringAttributeSchema>
+type StringAttributeControlProps = ControlProps<StringAttributeSchema> & {
+  onChange: (value: string) => void
+}
 
 const FORMAT_KEYBOARD_TYPE: Record<NonNullable<StringAttributeSchema['format']>, KeyboardTypeOptions> = {
   email: 'email-address',
@@ -28,8 +30,8 @@ const FORMAT_KEYBOARD_TYPE: Record<NonNullable<StringAttributeSchema['format']>,
 
 const StringAttributeControl: FC<StringAttributeControlProps> = (props) => {
   const { t } = useTranslation()
-  const [value, setValue] = useState(props.value ?? '')
   const debounceTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const value = props.value ?? ''
 
   const keyPath = `attribute_${props.path.join('.')}`
   const name = props.path.at(-1) ?? ''
@@ -39,8 +41,7 @@ const StringAttributeControl: FC<StringAttributeControlProps> = (props) => {
 
   const handleChangeText = useCallback(
     (text: string) => {
-      setValue(text)
-      props.onChange?.(text)
+      props.onChange(text)
       clearTimeout(debounceTimer.current)
       debounceTimer.current = setTimeout(() => {
         if (!text) {

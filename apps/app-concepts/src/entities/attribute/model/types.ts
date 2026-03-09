@@ -33,4 +33,6 @@ export type ControlProps<TSchema extends AttributeSchema> = {
 export type AttributeRendererProps<TSchema extends AttributeSchema> = {
   schema: TSchema
   value: InferAttributeValue<TSchema>
+  onChange?: (values: InferAttributeValue<TSchema>) => void
+  onErrors?: (errors: Record<string, string>) => void
 }
