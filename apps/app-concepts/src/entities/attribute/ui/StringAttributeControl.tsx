@@ -1,5 +1,6 @@
 import Ajv from 'ajv'
 import addFormats from 'ajv-formats'
+import { isValidPhoneNumber } from 'libphonenumber-js/min'
 import { type FC, useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { KeyboardTypeOptions } from 'react-native'
@@ -11,6 +12,7 @@ import type { ControlProps, StringAttributeSchema } from '../model/types'
 
 const ajv = new Ajv()
 addFormats(ajv)
+ajv.addFormat('phone', { type: 'string', validate: (value) => isValidPhoneNumber(value) })
 
 const DEBOUNCE_MS = 500
 

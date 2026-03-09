@@ -49,6 +49,7 @@
     "intl-messageformat": "^10.7.16",
     "intl-pluralrules": "^2.0.1",
     "jotai": "^2.14.0",
+    "libphonenumber-js": "^1.12.38",
     "lodash-es": "^4.17.21",
     "nativewind": "4.1.23",
     "react": "19.0.0",
