@@ -1,4 +1,18 @@
 {
+  "attribute_display_name": { "label": "Nombre de perfil" },
+  "attribute_email":        { "label": "Correo electrónico" },
+  "attribute_first_name":   { "label": "Nombre" },
+  "attribute_last_name":    { "label": "Apellido" },
+  "attribute_status":       { "label": "Estado" },
+  "attribute_address": {
+    "label": "Dirección",
+    "address_country":     { "label": "País" },
+    "address_description": { "label": "Descripción" },
+    "address_locality":    { "label": "Ciudad" },
+    "address_postal_code": { "label": "Código postal" },
+    "address_region":      { "label": "Región" },
+    "address_street":      { "label": "Calle" }
+  },
   "filters_button": { "text": "Filtros" },
   "tabs": {
     "groups": {

@@ -2,7 +2,7 @@ import { useAtomValue } from 'jotai'
 import type { FC } from 'react'
 import { View } from 'react-native'
 
-import { AnyAttributeRenderer, useAjv } from '@/entities/attribute'
+import { AttributeRenderer } from '@/entities/attribute'
 import { type Group, getGroupRequestedAttributesSchemaAtom, getMyGroupPersonalDetailsAtom } from '@/entities/group'
 
 type PersonalDetailsProps = {
@@ -15,11 +15,10 @@ type PersonalDetailsProps = {
 const PersonalDetails: FC<PersonalDetailsProps> = ({ group }) => {
   const requestedAttributesSchema = useAtomValue(getGroupRequestedAttributesSchemaAtom(group.id))
   const myGroupPersonalDetails = useAtomValue(getMyGroupPersonalDetailsAtom(group.id))
-  const ajv = useAjv(requestedAttributesSchema)
 
   return (
     <View className="rounded-xl border border-black/7 bg-white/90 p-3">
-      <AnyAttributeRenderer ajv={ajv} schema={requestedAttributesSchema} value={myGroupPersonalDetails} />
+      <AttributeRenderer schema={requestedAttributesSchema} value={myGroupPersonalDetails} />
     </View>
   )
 }

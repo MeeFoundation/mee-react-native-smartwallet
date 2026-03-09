@@ -1,1 +1,1 @@
-export type { AttributeSchema } from '../model/types'
+export type { AttributeSchema, InferAttributeValue, ObjectAttributeSchema } from '../model/types'

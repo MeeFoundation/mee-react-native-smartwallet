@@ -1,4 +1,18 @@
 {
+  "attribute_display_name": { "label": "Display name" },
+  "attribute_email":        { "label": "Email" },
+  "attribute_first_name":   { "label": "First name" },
+  "attribute_last_name":    { "label": "Last name" },
+  "attribute_status":       { "label": "Status" },
+  "attribute_address": {
+    "label": "Address",
+    "address_country":     { "label": "Country" },
+    "address_description": { "label": "Description" },
+    "address_locality":    { "label": "City" },
+    "address_postal_code": { "label": "Postal code" },
+    "address_region":      { "label": "Region" },
+    "address_street":      { "label": "Street" }
+  },
   "filters_button": { "text": "Filters" },
   "tabs": {
     "groups": {

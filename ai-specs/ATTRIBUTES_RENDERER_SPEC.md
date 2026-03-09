@@ -268,7 +268,96 @@ unchanged — only their backing mock data and return types tighten.
 
 ---
 
-## 7. File Changes Summary
+## 7. How to Add a New Attribute Type
+
+Adding a new primitive type (e.g. `number`, `boolean`) requires exactly **4 changes**:
+
+### Step 1 — Add schema type to `model/types.ts`
+
+Add a new schema variant and extend the `AttributeSchema` union and `InferAttributeValue`:
+
+```ts
+// 1a. New schema type
+export type NumberAttributeSchema = {
+  type: 'number'
+  minimum?: number
+  maximum?: number
+}
+
+// 1b. Extend the union
+export type AttributeSchema = StringAttributeSchema | ObjectAttributeSchema | NumberAttributeSchema
+
+// 1c. Extend InferAttributeValue
+export type InferAttributeValue<TSchema extends AttributeSchema> =
+  TSchema extends StringAttributeSchema
+    ? string
+    : TSchema extends NumberAttributeSchema
+      ? number
+      : TSchema extends ObjectAttributeSchema
+        ? { [K in keyof TSchema['properties']]?: InferAttributeValue<TSchema['properties'][K]> }
+        : never
+```
+
+### Step 2 — Create a control component
+
+Create `entities/attribute/ui/NumberAttributeControl.tsx`:
+
+```tsx
+import { type FC, useState } from 'react'
+import { View } from 'react-native'
+
+import * as TextInput from '@/shared/ui/TextInput'
+
+import type { ControlProps, NumberAttributeSchema } from '../model/types'
+
+type NumberAttributeControlProps = ControlProps<NumberAttributeSchema>
+
+const NumberAttributeControl: FC<NumberAttributeControlProps> = (props) => {
+  const [value, setValue] = useState(String(props.value ?? ''))
+  const name = props.path.at(-1) ?? ''
+
+  return (
+    <View>
+      <TextInput.Root empty={!value} variant="plain">
+        <TextInput.Label>{name}</TextInput.Label>
+        <TextInput.Input keyboardType="numeric" onChangeText={setValue} value={value} />
+      </TextInput.Root>
+    </View>
+  )
+}
+
+export { NumberAttributeControl }
+export type { NumberAttributeControlProps }
+```
+
+### Step 3 — Handle the new case in `renderNode` (`AttributesRenderer.tsx`)
+
+```ts
+case 'number':
+  return <NumberAttributeControl schema={schema} value={value as number} path={path} />
+```
+
+### Step 4 — Use the new type in a schema const
+
+```ts
+export const mySchema = {
+  type: 'object',
+  properties: {
+    age: { type: 'number', minimum: 0 },
+  },
+} satisfies ObjectAttributeSchema
+```
+
+TypeScript will automatically infer `{ age?: number }` as the value type — no further changes needed.
+
+---
+
+> **Rule**: never add a new schema type without all 4 steps above. The `switch` in `renderNode`
+> is exhaustive by design — the `default` branch logs an error for any unhandled type at runtime.
+
+---
+
+## 8. File Changes Summary
 
 | File | Action |
 |---|---|

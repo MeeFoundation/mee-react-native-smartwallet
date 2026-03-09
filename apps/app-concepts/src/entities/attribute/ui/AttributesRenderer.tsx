@@ -1,76 +1,52 @@
-import { type ComponentType, type FC, useCallback } from 'react'
-import type { O } from 'ts-toolbelt'
+import Ajv from 'ajv'
+import addFormats from 'ajv-formats'
+import type { ReactNode } from 'react'
 
-import { resolveSchema } from '../lib/resolve-schema'
-import type { AttributeSchema } from '../model/types'
-import type { AttributeRendererProps } from './AttributeRenderer.types'
+import type {
+  AttributeRendererProps,
+  AttributeSchema,
+  InferAttributeValue,
+  ObjectAttributeSchema,
+} from '../model/types'
 import { ObjectAttributeControl } from './ObjectAttributeControl'
 import { StringAttributeControl } from './StringAttributeControl'
 
-type AttributeRendererComponent<TSchema extends AttributeSchema = AttributeSchema> = ComponentType<
-  AttributeRendererProps<TSchema>
->
+const ajv = new Ajv()
+addFormats(ajv)
 
-type RenderAttributeByType = {
-  object: AttributeRendererComponent<AttributeSchema>
-  string: AttributeRendererComponent<AttributeSchema>
+function renderNode(schema: AttributeSchema, value: unknown, path: string[]): ReactNode {
+  const isValid = ajv.validate(schema, value)
+  if (!isValid) {
+    console.error(`[AttributeRenderer] Validation failed for "${path.join('.')}":`, ajv.errors)
+  }
+
+  switch (schema.type) {
+    case 'string':
+      return <StringAttributeControl schema={schema} value={value as string} path={path} />
+    case 'object': {
+      const renderProperty = (key: string) =>
+        renderNode(
+          schema.properties[key],
+          (value as Record<string, unknown>)?.[key],
+          [...path, key],
+        )
+      return (
+        <ObjectAttributeControl
+          schema={schema}
+          value={value as InferAttributeValue<ObjectAttributeSchema>}
+          path={path}
+          renderProperty={renderProperty}
+        />
+      )
+    }
+    default:
+      console.error(`[AttributeRenderer] Unknown schema type: ${(schema as AttributeSchema).type}`)
+      return null
+  }
 }
 
-const defaultRenderAttributeByType: RenderAttributeByType = {
-  object: ObjectAttributeControl,
-  string: StringAttributeControl,
+export function AttributeRenderer<TSchema extends AttributeSchema>(
+  props: AttributeRendererProps<TSchema>,
+): ReactNode {
+  return renderNode(props.schema, props.value, [])
 }
-
-/* -------------------------------------------------------------------------------------------------
- * ObjectAttributeControl
- * -----------------------------------------------------------------------------------------------*/
-type AnyAttributeRendererProps = O.Omit<AttributeRendererProps, 'renderAttribute'> & {
-  renderAttributeByType?: Partial<RenderAttributeByType>
-}
-
-const AnyAttributeRenderer: FC<AnyAttributeRendererProps> = (props) => {
-  const renderAttribute = useCallback(
-    (renderProps: AttributeRendererProps) => {
-      const resolvedSchema = resolveSchema(renderProps.schema, props.ajv)
-
-      switch (resolvedSchema?.type) {
-        case 'object': {
-          const Component = props.renderAttributeByType?.object ?? defaultRenderAttributeByType.object
-          return (
-            <Component
-              {...renderProps}
-              renderAttribute={renderAttribute}
-              root={renderProps.root ?? true}
-              schema={resolvedSchema}
-            />
-          )
-        }
-
-        case 'string': {
-          const Component = props.renderAttributeByType?.string ?? defaultRenderAttributeByType.string
-          return (
-            <Component
-              {...renderProps}
-              renderAttribute={renderAttribute}
-              root={renderProps.root ?? true}
-              schema={resolvedSchema}
-            />
-          )
-        }
-
-        default:
-          console.error(`Unknown schema type: ${renderProps.schema.type}`)
-          return null
-      }
-    },
-    [props],
-  )
-
-  return renderAttribute({ ...props, renderAttribute })
-}
-
-/* -----------------------------------------------------------------------------------------------*/
-
-export { AnyAttributeRenderer }
-
-export type { AnyAttributeRendererProps }

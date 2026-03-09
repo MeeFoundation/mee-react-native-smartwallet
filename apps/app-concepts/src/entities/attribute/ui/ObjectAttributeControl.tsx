@@ -1,31 +1,28 @@
-import { get } from 'lodash-es'
 import { type FC, Fragment } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Text, View } from 'react-native'
 
 import { Separator } from '@/shared/ui/Separator'
 
-import type { AttributeRendererProps } from './AttributeRenderer.types'
+import type { ControlProps, ObjectAttributeSchema } from '../model/types'
 
 /* -------------------------------------------------------------------------------------------------
  * ObjectAttributeControl
  * -----------------------------------------------------------------------------------------------*/
-type ObjectAttributeControlProps = AttributeRendererProps
+type ObjectAttributeControlProps = ControlProps<ObjectAttributeSchema>
 
 const ObjectAttributeControl: FC<ObjectAttributeControlProps> = (props) => {
+  const { t } = useTranslation()
+  const isRoot = props.path.length === 0
+  const label = isRoot ? '' : t(`attribute_${props.path.join('.')}.label`, { defaultValue: props.path.at(-1) ?? '' })
+
   return (
-    <View className={props.root ? '' : 'border border-red-500'}>
-      {!props.root && <Text>Name: {props.name}</Text>}
+    <View className={isRoot ? '' : 'border border-red-500'}>
+      {!isRoot && <Text>{label}</Text>}
       <View>
-        {Object.keys(props.schema.properties ?? {}).map((property) => (
-          <Fragment key={property}>
-            {props.renderAttribute({
-              ajv: props.ajv,
-              name: [props.name, property].filter(Boolean).join('.'),
-              renderAttribute: props.renderAttribute,
-              root: false,
-              schema: props.schema.properties[property],
-              value: get(props.value, property),
-            })}
+        {Object.keys(props.schema.properties ?? {}).map((key) => (
+          <Fragment key={key}>
+            {props.renderProperty?.(key)}
             <Separator />
           </Fragment>
         ))}
