@@ -7,6 +7,7 @@ export const mockMyGroupPersonalDetails: InferAttributeValue<typeof mockRequeste
   email: 'jane@example.com',
   first_name: 'Jane',
   last_name: '',
+  phone: '+1 (555) 000-0000',
   status: 'active',
   address: {
     address_country: 'US',

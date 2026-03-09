@@ -1,8 +1,9 @@
 {
   "attribute_display_name": { "label": "Nombre de perfil" },
-  "attribute_email":        { "label": "Correo electrónico" },
+  "attribute_email":        { "label": "Correo electrónico", "placeholder": "nombre@ejemplo.com", "error": "Dirección de correo inválida" },
   "attribute_first_name":   { "label": "Nombre" },
   "attribute_last_name":    { "label": "Apellido" },
+  "attribute_phone":        { "label": "Teléfono",   "placeholder": "+1 (555) 000-0000", "error": "Número de teléfono inválido" },
   "attribute_status":       { "label": "Estado" },
   "attribute_address": {
     "label": "Dirección",

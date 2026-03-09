@@ -4,9 +4,10 @@ export const mockRequestedAttributesSchema = {
   type: 'object',
   properties: {
     display_name: { type: 'string' },
-    email: { type: 'string', format: 'email' },
     first_name: { type: 'string' },
     last_name: { type: 'string' },
+    email: { type: 'string', format: 'email' },
+    phone: { type: 'string', format: 'phone' },
     status: { type: 'string' },
     address: {
       type: 'object',

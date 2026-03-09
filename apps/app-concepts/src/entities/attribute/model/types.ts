@@ -24,6 +24,9 @@ export type ControlProps<TSchema extends AttributeSchema> = {
   schema: TSchema
   value: InferAttributeValue<TSchema>
   path: string[]
+  error?: string
+  onChange?: (value: string) => void
+  onError?: (error: string | undefined) => void
   renderProperty?: (key: string) => ReactNode
 }
 

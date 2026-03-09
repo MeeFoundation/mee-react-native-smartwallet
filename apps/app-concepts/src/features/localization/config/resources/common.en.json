@@ -1,8 +1,9 @@
 {
   "attribute_display_name": { "label": "Display name" },
-  "attribute_email":        { "label": "Email" },
+  "attribute_email":        { "label": "Email", "placeholder": "name@example.com", "error": "Invalid email address" },
   "attribute_first_name":   { "label": "First name" },
   "attribute_last_name":    { "label": "Last name" },
+  "attribute_phone":        { "label": "Phone", "placeholder": "+1 (555) 000-0000", "error": "Invalid phone number" },
   "attribute_status":       { "label": "Status" },
   "attribute_address": {
     "label": "Address",

@@ -1,6 +1,6 @@
-import Ajv from 'ajv'
-import addFormats from 'ajv-formats'
+import { useCallback, useState } from 'react'
 import type { ReactNode } from 'react'
+import { View } from 'react-native'
 
 import type {
   AttributeRendererProps,
@@ -11,31 +11,46 @@ import type {
 import { ObjectAttributeControl } from './ObjectAttributeControl'
 import { StringAttributeControl } from './StringAttributeControl'
 
-const ajv = new Ajv()
-addFormats(ajv)
+type HandleError = (path: string[], error: string | undefined) => void
 
-function renderNode(schema: AttributeSchema, value: unknown, path: string[]): ReactNode {
-  const isValid = ajv.validate(schema, value)
-  if (!isValid) {
-    console.error(`[AttributeRenderer] Validation failed for "${path.join('.')}":`, ajv.errors)
-  }
-
+function renderNode(
+  schema: AttributeSchema,
+  value: unknown,
+  path: string[],
+  errors: Record<string, string>,
+  onError: HandleError,
+): ReactNode {
   switch (schema.type) {
-    case 'string':
-      return <StringAttributeControl schema={schema} value={value as string} path={path} />
+    case 'string': {
+      const key = path.join('.')
+      const error = errors[key]
+      return (
+        <View>
+          <StringAttributeControl
+            error={error}
+            onError={(e) => onError(path, e)}
+            path={path}
+            schema={schema}
+            value={value as string}
+          />
+        </View>
+      )
+    }
     case 'object': {
       const renderProperty = (key: string) =>
         renderNode(
           schema.properties[key],
           (value as Record<string, unknown>)?.[key],
           [...path, key],
+          errors,
+          onError,
         )
       return (
         <ObjectAttributeControl
-          schema={schema}
-          value={value as InferAttributeValue<ObjectAttributeSchema>}
           path={path}
           renderProperty={renderProperty}
+          schema={schema}
+          value={value as InferAttributeValue<ObjectAttributeSchema>}
         />
       )
     }
@@ -48,5 +63,20 @@ function renderNode(schema: AttributeSchema, value: unknown, path: string[]): Re
 export function AttributeRenderer<TSchema extends AttributeSchema>(
   props: AttributeRendererProps<TSchema>,
 ): ReactNode {
-  return renderNode(props.schema, props.value, [])
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
+  const handleError = useCallback<HandleError>((path, error) => {
+    const key = path.join('.')
+    setErrors((prev) => {
+      if (!error) {
+        if (!(key in prev)) return prev
+        const next = { ...prev }
+        delete next[key]
+        return next
+      }
+      return { ...prev, [key]: error }
+    })
+  }, [])
+
+  return renderNode(props.schema, props.value, [], errors, handleError)
 }
