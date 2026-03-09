@@ -1,8 +1,6 @@
-import { type FC, Fragment } from 'react'
+import type { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Text, View } from 'react-native'
-
-import { Separator } from '@/shared/ui/Separator'
 
 import type { ControlProps, ObjectAttributeSchema } from '../model/types'
 
@@ -16,15 +14,24 @@ const ObjectAttributeControl: FC<ObjectAttributeControlProps> = (props) => {
   const isRoot = props.path.length === 0
   const label = isRoot ? '' : t(`attribute_${props.path.join('.')}.label`, { defaultValue: props.path.at(-1) ?? '' })
 
-  return (
-    <View className={isRoot ? '' : 'border border-red-500'}>
-      {!isRoot && <Text>{label}</Text>}
+  if (isRoot) {
+    return (
       <View>
         {Object.keys(props.schema.properties ?? {}).map((key) => (
-          <Fragment key={key}>
-            {props.renderProperty?.(key)}
-            <Separator />
-          </Fragment>
+          <View key={key}>{props.renderProperty?.(key)}</View>
+        ))}
+      </View>
+    )
+  }
+
+  return (
+    <View className="mt-3">
+      <Text className="-mb-2 z-10 ml-2 self-start bg-white px-1 text-gray-600 text-xs">
+        {label}
+      </Text>
+      <View className="rounded-lg border border-black/7 p-3">
+        {Object.keys(props.schema.properties ?? {}).map((key) => (
+          <View key={key}>{props.renderProperty?.(key)}</View>
         ))}
       </View>
     </View>

@@ -47,6 +47,12 @@ pnpm hoists all packages to root `node_modules/`. The `expo-modules-autolinking`
 - `pnpm --filter app-production <script>` — run a script in app-production
 - `pnpm --filter @mee/core <script>` — run a script in core
 
+## FSD Cross-Entity Imports
+- Entities on the same layer cannot import from each other's main barrel (`@/entities/foo`)
+- Use `@x/` boundary files for controlled cross-entity access: `@/entities/foo/@x/bar.ts`
+- When adding a type needed by another entity, export it from the relevant `@x/` file, not from `index.ts`
+- Run `pnpm steiger:concepts` to catch violations
+
 ## Code Conventions
 - Follow feature-sliced design: `/entities`, `/widgets`, `/features`, `/app`, `/shared`
 - Use Jotai atoms for state — no `useState` for shared state

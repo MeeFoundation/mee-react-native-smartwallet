@@ -81,7 +81,10 @@ const TextInput: FC<TextInputProps> = ({ className, invalid, size, ...props }) =
   return (
     <NativeTextInput
       {...props}
-      className={cn(ctx ? 'h-13 flex-1 px-2.5 pt-4.5' : textInputVariants({ invalid, size }), className)}
+      className={cn(
+        ctx ? cn('flex-1 px-2.5', ctx.size === 'sm' ? 'h-10' : 'h-13') : textInputVariants({ invalid, size }),
+        className,
+      )}
       onBlur={handleBlur}
       onFocus={handleFocus}
       placeholderTextColor={PLACEHOLDER_TEXT_COLOR}
@@ -159,7 +162,7 @@ const TextInputContainer: FC<TextInputContainerProps> = ({ className, invalid, s
         className={cn(
           textInputContainerVariants({ invalid, size, variant }),
           focused && 'border border-primary bg-white',
-          'h-13 flex-row items-center gap-2',
+          'flex-row items-center gap-2',
           className,
         )}
         {...rest}
@@ -179,8 +182,10 @@ const TextInputLabel: FC<TextInputLabelProps> = ({ className, ...rest }) => {
   return (
     <Typography
       className={cn(
-        'absolute left-2.5',
-        ctx?.focused || !ctx?.empty ? 'top-1.5 text-gray-900 text-xs' : 'top-3.5 text-base text-gray-800',
+        'absolute left-2',
+        ctx?.focused || !ctx?.empty
+          ? '-top-3 bg-white px-1 text-gray-600 text-xs'
+          : cn('text-base text-gray-800', ctx?.size === 'sm' ? 'top-1.5' : 'top-3.5'),
         className,
       )}
       {...rest}
