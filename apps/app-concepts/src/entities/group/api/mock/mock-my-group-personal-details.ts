@@ -10,15 +10,11 @@ export const mockMyGroupPersonalDetails: InferAttributeValue<typeof mockRequeste
   phone: '',
   date_of_birth: '1990-06-15',
   age: 34,
-  status: 'active',
   preferred_language: 'english',
   interests: ['music', 'travel'],
   address: {
     address_country: 'US',
-    address_locality: 'New York',
     address_street: '123 Main St',
     address_postal_code: '10001',
-    address_region: 'NY',
-    address_description: '',
   },
 }
