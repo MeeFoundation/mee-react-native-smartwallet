@@ -5,27 +5,41 @@ export type StringAttributeSchema = {
   format?: 'email' | 'phone'
 }
 
+export type NumberAttributeSchema = {
+  type: 'number'
+  minimum?: number
+  maximum?: number
+}
+
+export type DateAttributeSchema = {
+  type: 'date'
+}
+
 export type ObjectAttributeSchema = {
   type: 'object'
   properties: Record<string, AttributeSchema>
   required?: string[]
 }
 
-export type AttributeSchema = StringAttributeSchema | ObjectAttributeSchema
+export type AttributeSchema = StringAttributeSchema | NumberAttributeSchema | DateAttributeSchema | ObjectAttributeSchema
 
 export type InferAttributeValue<TSchema extends AttributeSchema> =
   TSchema extends StringAttributeSchema
     ? string
-    : TSchema extends ObjectAttributeSchema
-      ? { [K in keyof TSchema['properties']]?: InferAttributeValue<TSchema['properties'][K]> }
-      : never
+    : TSchema extends NumberAttributeSchema
+      ? number
+      : TSchema extends DateAttributeSchema
+        ? string
+        : TSchema extends ObjectAttributeSchema
+          ? { [K in keyof TSchema['properties']]?: InferAttributeValue<TSchema['properties'][K]> }
+          : never
 
 export type ControlProps<TSchema extends AttributeSchema> = {
   schema: TSchema
   value: InferAttributeValue<TSchema>
   path: string[]
   error?: string
-  onChange?: (value: string) => void
+  onChange?: (value: unknown) => void
   onError?: (error: string | undefined) => void
   renderProperty?: (key: string) => ReactNode
 }

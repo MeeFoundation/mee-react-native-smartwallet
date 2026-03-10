@@ -17,6 +17,7 @@
     "@formatjs/intl-pluralrules": "^5.4.4",
     "@gorhom/bottom-sheet": "^5",
     "@mee/core": "workspace:*",
+    "@react-native-community/datetimepicker": "^8.6.0",
     "@react-native-menu/menu": "1.2.2",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/drawer": "^7.5.8",

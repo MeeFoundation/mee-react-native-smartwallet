@@ -1,7 +1,7 @@
 export function setNestedValue(
   obj: Record<string, unknown>,
   path: string[],
-  value: string,
+  value: unknown,
 ): Record<string, unknown> {
   const [head, ...rest] = path
   if (rest.length === 0) {

@@ -9,11 +9,13 @@ import type {
   ObjectAttributeSchema,
 } from '../model/types'
 import { setNestedValue } from '../model/utils'
+import { DateAttributeControl } from './DateAttributeControl'
+import { NumberAttributeControl } from './NumberAttributeControl'
 import { ObjectAttributeControl } from './ObjectAttributeControl'
 import { StringAttributeControl } from './StringAttributeControl'
 
 type HandleError = (path: string[], error: string | undefined) => void
-type HandleChange = (path: string[], value: string) => void
+type HandleChange = (path: string[], value: unknown) => void
 
 function renderNode(
   schema: AttributeSchema,
@@ -29,6 +31,36 @@ function renderNode(
       return (
         <View>
           <StringAttributeControl
+            error={errors[key]}
+            onChange={(v) => onChange(path, v)}
+            onError={(e) => onError(path, e)}
+            path={path}
+            schema={schema}
+            value={value as string}
+          />
+        </View>
+      )
+    }
+    case 'number': {
+      const key = path.join('.')
+      return (
+        <View>
+          <NumberAttributeControl
+            error={errors[key]}
+            onChange={(v) => onChange(path, v)}
+            onError={(e) => onError(path, e)}
+            path={path}
+            schema={schema}
+            value={value as number}
+          />
+        </View>
+      )
+    }
+    case 'date': {
+      const key = path.join('.')
+      return (
+        <View>
+          <DateAttributeControl
             error={errors[key]}
             onChange={(v) => onChange(path, v)}
             onError={(e) => onError(path, e)}

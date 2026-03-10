@@ -1,4 +1,6 @@
 {
+  "attribute_age":          { "label": "Age", "error": "Invalid age" },
+  "attribute_date_of_birth": { "label": "Date of birth" },
   "attribute_display_name": { "label": "Display name" },
   "attribute_email":        { "label": "Email", "placeholder": "name@example.com", "error": "Invalid email address" },
   "attribute_first_name":   { "label": "First name" },

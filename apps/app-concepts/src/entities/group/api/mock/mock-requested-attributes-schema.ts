@@ -8,6 +8,8 @@ export const mockRequestedAttributesSchema = {
     last_name: { type: 'string' },
     email: { type: 'string', format: 'email' },
     phone: { type: 'string', format: 'phone' },
+    date_of_birth: { type: 'date' },
+    age: { type: 'number', minimum: 0, maximum: 150 },
     status: { type: 'string' },
     address: {
       type: 'object',

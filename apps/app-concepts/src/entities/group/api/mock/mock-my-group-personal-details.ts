@@ -8,6 +8,8 @@ export const mockMyGroupPersonalDetails: InferAttributeValue<typeof mockRequeste
   first_name: 'Jane',
   last_name: '',
   phone: '',
+  date_of_birth: '1990-06-15',
+  age: 34,
   status: 'active',
   address: {
     address_country: 'US',

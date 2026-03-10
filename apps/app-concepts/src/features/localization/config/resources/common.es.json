@@ -1,4 +1,6 @@
 {
+  "attribute_age":          { "label": "Edad", "error": "Edad inválida" },
+  "attribute_date_of_birth": { "label": "Fecha de nacimiento" },
   "attribute_display_name": { "label": "Nombre de perfil" },
   "attribute_email":        { "label": "Correo electrónico", "placeholder": "nombre@ejemplo.com", "error": "Dirección de correo inválida" },
   "attribute_first_name":   { "label": "Nombre" },
