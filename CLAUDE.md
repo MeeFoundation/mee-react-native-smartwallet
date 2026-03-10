@@ -60,12 +60,6 @@ pnpm hoists all packages to root `node_modules/`. The `expo-modules-autolinking`
 - TypeScript strict mode — no `any`, no `// @ts-ignore`
 - Linter/formatter is **Biome** — no ESLint, no Prettier
 
-## Commit Message Format
-- Follow Conventional Commits (`@commitlint/config-conventional`)
-- Format: `<type>(<scope>): <description>`
-- Types: `feat`, `fix`, `chore`, `docs`, `style`, `refactor`, `test`, `perf`, `ci`
-- Example: `feat(chat): add message reactions`
-
 ## AI Behavior Rules
 - Never leave `console.log` debug statements in code
 - Never add placeholder or TODO code — implement fully or ask
