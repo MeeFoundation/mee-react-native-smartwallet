@@ -10,6 +10,6 @@ export const getMyGroupPersonalDetailsAtom = atomFamily((groupId: string) =>
 export const getMyGroupPersonalDetailsViewAtom = atomFamily((groupId: string) =>
   atomWithDefault(async (get) => {
     const myGroupInfo = await get(getMyGroupPersonalDetailsAtom(groupId))
-    return MyGroupPersonalDetailsView.from(myGroupInfo.attributes)
+    return MyGroupPersonalDetailsView.from(myGroupInfo as Record<string, unknown>)
   }),
 )

@@ -93,6 +93,7 @@ export const AppButton: FC<AppButtonProps> = (props) => {
     onPressOut,
     size = 'md',
     textStyles: tStyles = {},
+    disabled,
     ref,
     ...rest
   } = props
@@ -155,11 +156,12 @@ export const AppButton: FC<AppButtonProps> = (props) => {
   return (
     <View style={StyleSheet.flatten(props.fullWidth && { flexDirection: 'row', width: '100%' })}>
       <Pressable
+        disabled={disabled}
         onPress={handlePress}
         onPressOut={onRelease}
         ref={ref}
         role="button"
-        style={[{ width: props.fullWidth ? '100%' : 'auto' }]}
+        style={[{ opacity: disabled ? 0.5 : 1, width: props.fullWidth ? '100%' : 'auto' }]}
         {...rest}
       >
         <Animated.View

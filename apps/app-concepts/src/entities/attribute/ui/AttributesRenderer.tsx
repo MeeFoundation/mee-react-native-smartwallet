@@ -1,76 +1,166 @@
-import { type ComponentType, type FC, useCallback } from 'react'
-import type { O } from 'ts-toolbelt'
+import { useCallback, useEffect, useState } from 'react'
+import type { ReactNode } from 'react'
+import { View } from 'react-native'
 
-import { resolveSchema } from '../lib/resolve-schema'
-import type { AttributeSchema } from '../model/types'
-import type { AttributeRendererProps } from './AttributeRenderer.types'
+import type {
+  AttributeRendererProps,
+  AttributeSchema,
+  InferAttributeValue,
+  ObjectAttributeSchema,
+} from '../model/types'
+import { setNestedValue } from '../model/utils'
+import { DateAttributeControl } from './DateAttributeControl'
+import { MultipleSelectAttributeControl } from './MultipleSelectAttributeControl'
+import { NumberAttributeControl } from './NumberAttributeControl'
 import { ObjectAttributeControl } from './ObjectAttributeControl'
+import { SelectAttributeControl } from './SelectAttributeControl'
 import { StringAttributeControl } from './StringAttributeControl'
 
-type AttributeRendererComponent<TSchema extends AttributeSchema = AttributeSchema> = ComponentType<
-  AttributeRendererProps<TSchema>
->
+type HandleError = (path: string[], error: string | undefined) => void
+type HandleChange = (path: string[], value: unknown) => void
 
-type RenderAttributeByType = {
-  object: AttributeRendererComponent<AttributeSchema>
-  string: AttributeRendererComponent<AttributeSchema>
+function renderNode(
+  schema: AttributeSchema,
+  value: unknown,
+  path: string[],
+  errors: Record<string, string>,
+  onError: HandleError,
+  onChange: HandleChange,
+): ReactNode {
+  switch (schema.type) {
+    case 'string': {
+      const key = path.join('.')
+      return (
+        <View>
+          <StringAttributeControl
+            error={errors[key]}
+            onChange={(v) => onChange(path, v)}
+            onError={(e) => onError(path, e)}
+            path={path}
+            schema={schema}
+            value={value as string}
+          />
+        </View>
+      )
+    }
+    case 'number': {
+      const key = path.join('.')
+      return (
+        <View>
+          <NumberAttributeControl
+            error={errors[key]}
+            onChange={(v) => onChange(path, v)}
+            onError={(e) => onError(path, e)}
+            path={path}
+            schema={schema}
+            value={value as number}
+          />
+        </View>
+      )
+    }
+    case 'date': {
+      const key = path.join('.')
+      return (
+        <View>
+          <DateAttributeControl
+            error={errors[key]}
+            onChange={(v) => onChange(path, v)}
+            onError={(e) => onError(path, e)}
+            path={path}
+            schema={schema}
+            value={value as string}
+          />
+        </View>
+      )
+    }
+    case 'select': {
+      const key = path.join('.')
+      return (
+        <View>
+          <SelectAttributeControl
+            error={errors[key]}
+            onChange={(v) => onChange(path, v)}
+            onError={(e) => onError(path, e)}
+            path={path}
+            schema={schema}
+            value={value as string}
+          />
+        </View>
+      )
+    }
+    case 'multiple-select': {
+      const key = path.join('.')
+      return (
+        <View>
+          <MultipleSelectAttributeControl
+            error={errors[key]}
+            onChange={(v) => onChange(path, v)}
+            onError={(e) => onError(path, e)}
+            path={path}
+            schema={schema}
+            value={value as string[]}
+          />
+        </View>
+      )
+    }
+    case 'object': {
+      const renderProperty = (key: string) =>
+        renderNode(
+          schema.properties[key],
+          (value as Record<string, unknown>)?.[key],
+          [...path, key],
+          errors,
+          onError,
+          onChange,
+        )
+      return (
+        <ObjectAttributeControl
+          path={path}
+          renderProperty={renderProperty}
+          schema={schema}
+          value={value as InferAttributeValue<ObjectAttributeSchema>}
+        />
+      )
+    }
+    default:
+      console.error(`[AttributeRenderer] Unknown schema type: ${(schema as AttributeSchema).type}`)
+      return null
+  }
 }
 
-const defaultRenderAttributeByType: RenderAttributeByType = {
-  object: ObjectAttributeControl,
-  string: StringAttributeControl,
-}
+export function AttributeRenderer<TSchema extends AttributeSchema>(
+  props: AttributeRendererProps<TSchema>,
+): ReactNode {
+  const [values, setValues] = useState<InferAttributeValue<TSchema>>(props.value)
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
-/* -------------------------------------------------------------------------------------------------
- * ObjectAttributeControl
- * -----------------------------------------------------------------------------------------------*/
-type AnyAttributeRendererProps = O.Omit<AttributeRendererProps, 'renderAttribute'> & {
-  renderAttributeByType?: Partial<RenderAttributeByType>
-}
-
-const AnyAttributeRenderer: FC<AnyAttributeRendererProps> = (props) => {
-  const renderAttribute = useCallback(
-    (renderProps: AttributeRendererProps) => {
-      const resolvedSchema = resolveSchema(renderProps.schema, props.ajv)
-
-      switch (resolvedSchema?.type) {
-        case 'object': {
-          const Component = props.renderAttributeByType?.object ?? defaultRenderAttributeByType.object
-          return (
-            <Component
-              {...renderProps}
-              renderAttribute={renderAttribute}
-              root={renderProps.root ?? true}
-              schema={resolvedSchema}
-            />
-          )
-        }
-
-        case 'string': {
-          const Component = props.renderAttributeByType?.string ?? defaultRenderAttributeByType.string
-          return (
-            <Component
-              {...renderProps}
-              renderAttribute={renderAttribute}
-              root={renderProps.root ?? true}
-              schema={resolvedSchema}
-            />
-          )
-        }
-
-        default:
-          console.error(`Unknown schema type: ${renderProps.schema.type}`)
-          return null
-      }
+  const handleChange = useCallback<HandleChange>(
+    (path, value) => {
+      setValues((prev) => {
+        const next = setNestedValue(prev as Record<string, unknown>, path, value) as InferAttributeValue<TSchema>
+        props.onChange?.(next)
+        return next
+      })
     },
-    [props],
+    [props.onChange],
   )
 
-  return renderAttribute({ ...props, renderAttribute })
+  const handleError = useCallback<HandleError>((path, error) => {
+    const key = path.join('.')
+    setErrors((prev) => {
+      if (!error) {
+        if (!(key in prev)) return prev
+        const next = { ...prev }
+        delete next[key]
+        return next
+      }
+      return { ...prev, [key]: error }
+    })
+  }, [])
+
+  useEffect(() => {
+    props.onErrors?.(errors)
+  }, [errors, props.onErrors])
+
+  return renderNode(props.schema, values, [], errors, handleError, handleChange)
 }
-
-/* -----------------------------------------------------------------------------------------------*/
-
-export { AnyAttributeRenderer }
-
-export type { AnyAttributeRendererProps }

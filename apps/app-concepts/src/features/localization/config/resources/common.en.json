@@ -1,4 +1,40 @@
 {
+  "attribute_age":          { "label": "Age", "error": "Invalid age" },
+  "attribute_date_of_birth": { "label": "Date of birth" },
+  "attribute_display_name": { "label": "Display name" },
+  "attribute_email":        { "label": "Email", "placeholder": "name@example.com", "error": "Invalid email address" },
+  "attribute_first_name":   { "label": "First name" },
+  "attribute_last_name":    { "label": "Last name" },
+  "attribute_phone":        { "label": "Phone", "placeholder": "+1 (555) 000-0000", "error": "Invalid phone number" },
+  "attribute_status":             { "label": "Status" },
+  "attribute_preferred_language": {
+    "label": "Preferred language",
+    "options": {
+      "english": "English",
+      "spanish": "Spanish",
+      "french": "French",
+      "german": "German"
+    }
+  },
+  "attribute_interests": {
+    "label": "Interests",
+    "options": {
+      "sports": "Sports",
+      "music": "Music",
+      "travel": "Travel",
+      "technology": "Technology",
+      "art": "Art"
+    }
+  },
+  "attribute_address": {
+    "label": "Address",
+    "address_country":     { "label": "Country" },
+    "address_description": { "label": "Description" },
+    "address_locality":    { "label": "City" },
+    "address_postal_code": { "label": "Postal code" },
+    "address_region":      { "label": "Region" },
+    "address_street":      { "label": "Street" }
+  },
   "filters_button": { "text": "Filters" },
   "tabs": {
     "groups": {

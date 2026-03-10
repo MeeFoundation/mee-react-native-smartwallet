@@ -1,3 +1,72 @@
-import type { AnySchemaObject } from 'ajv'
+import type { ReactNode } from 'react'
 
-export type AttributeSchema = AnySchemaObject
+export type StringAttributeSchema = {
+  type: 'string'
+  format?: 'email' | 'phone'
+}
+
+export type NumberAttributeSchema = {
+  type: 'number'
+  minimum?: number
+  maximum?: number
+}
+
+export type DateAttributeSchema = {
+  type: 'date'
+}
+
+export type SelectAttributeSchema = {
+  type: 'select'
+  options: string[]
+}
+
+export type MultipleSelectAttributeSchema = {
+  type: 'multiple-select'
+  options: string[]
+}
+
+export type ObjectAttributeSchema = {
+  type: 'object'
+  properties: Record<string, AttributeSchema>
+  required?: string[]
+}
+
+export type AttributeSchema =
+  | StringAttributeSchema
+  | NumberAttributeSchema
+  | DateAttributeSchema
+  | SelectAttributeSchema
+  | MultipleSelectAttributeSchema
+  | ObjectAttributeSchema
+
+export type InferAttributeValue<TSchema extends AttributeSchema> =
+  TSchema extends StringAttributeSchema
+    ? string
+    : TSchema extends NumberAttributeSchema
+      ? number
+      : TSchema extends DateAttributeSchema
+        ? string
+        : TSchema extends SelectAttributeSchema
+          ? string
+          : TSchema extends MultipleSelectAttributeSchema
+            ? string[]
+            : TSchema extends ObjectAttributeSchema
+              ? { [K in keyof TSchema['properties']]?: InferAttributeValue<TSchema['properties'][K]> }
+              : never
+
+export type ControlProps<TSchema extends AttributeSchema> = {
+  schema: TSchema
+  value: InferAttributeValue<TSchema>
+  path: string[]
+  error?: string
+  onChange?: (value: unknown) => void
+  onError?: (error: string | undefined) => void
+  renderProperty?: (key: string) => ReactNode
+}
+
+export type AttributeRendererProps<TSchema extends AttributeSchema> = {
+  schema: TSchema
+  value: InferAttributeValue<TSchema>
+  onChange?: (values: InferAttributeValue<TSchema>) => void
+  onErrors?: (errors: Record<string, string>) => void
+}
