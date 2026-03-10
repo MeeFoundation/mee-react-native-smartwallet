@@ -15,13 +15,29 @@ export type DateAttributeSchema = {
   type: 'date'
 }
 
+export type SelectAttributeSchema = {
+  type: 'select'
+  options: string[]
+}
+
+export type MultipleSelectAttributeSchema = {
+  type: 'multiple-select'
+  options: string[]
+}
+
 export type ObjectAttributeSchema = {
   type: 'object'
   properties: Record<string, AttributeSchema>
   required?: string[]
 }
 
-export type AttributeSchema = StringAttributeSchema | NumberAttributeSchema | DateAttributeSchema | ObjectAttributeSchema
+export type AttributeSchema =
+  | StringAttributeSchema
+  | NumberAttributeSchema
+  | DateAttributeSchema
+  | SelectAttributeSchema
+  | MultipleSelectAttributeSchema
+  | ObjectAttributeSchema
 
 export type InferAttributeValue<TSchema extends AttributeSchema> =
   TSchema extends StringAttributeSchema
@@ -30,9 +46,13 @@ export type InferAttributeValue<TSchema extends AttributeSchema> =
       ? number
       : TSchema extends DateAttributeSchema
         ? string
-        : TSchema extends ObjectAttributeSchema
-          ? { [K in keyof TSchema['properties']]?: InferAttributeValue<TSchema['properties'][K]> }
-          : never
+        : TSchema extends SelectAttributeSchema
+          ? string
+          : TSchema extends MultipleSelectAttributeSchema
+            ? string[]
+            : TSchema extends ObjectAttributeSchema
+              ? { [K in keyof TSchema['properties']]?: InferAttributeValue<TSchema['properties'][K]> }
+              : never
 
 export type ControlProps<TSchema extends AttributeSchema> = {
   schema: TSchema

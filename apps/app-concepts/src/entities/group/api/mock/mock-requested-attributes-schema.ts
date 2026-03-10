@@ -11,6 +11,8 @@ export const mockRequestedAttributesSchema = {
     date_of_birth: { type: 'date' },
     age: { type: 'number', minimum: 0, maximum: 150 },
     status: { type: 'string' },
+    preferred_language: { type: 'select', options: ['english', 'spanish', 'french', 'german'] },
+    interests: { type: 'multiple-select', options: ['sports', 'music', 'travel', 'technology', 'art'] },
     address: {
       type: 'object',
       properties: {

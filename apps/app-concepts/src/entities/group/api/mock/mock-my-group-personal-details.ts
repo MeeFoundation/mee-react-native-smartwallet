@@ -11,6 +11,8 @@ export const mockMyGroupPersonalDetails: InferAttributeValue<typeof mockRequeste
   date_of_birth: '1990-06-15',
   age: 34,
   status: 'active',
+  preferred_language: 'english',
+  interests: ['music', 'travel'],
   address: {
     address_country: 'US',
     address_locality: 'New York',

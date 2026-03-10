@@ -6,7 +6,26 @@
   "attribute_first_name":   { "label": "First name" },
   "attribute_last_name":    { "label": "Last name" },
   "attribute_phone":        { "label": "Phone", "placeholder": "+1 (555) 000-0000", "error": "Invalid phone number" },
-  "attribute_status":       { "label": "Status" },
+  "attribute_status":             { "label": "Status" },
+  "attribute_preferred_language": {
+    "label": "Preferred language",
+    "options": {
+      "english": "English",
+      "spanish": "Spanish",
+      "french": "French",
+      "german": "German"
+    }
+  },
+  "attribute_interests": {
+    "label": "Interests",
+    "options": {
+      "sports": "Sports",
+      "music": "Music",
+      "travel": "Travel",
+      "technology": "Technology",
+      "art": "Art"
+    }
+  },
   "attribute_address": {
     "label": "Address",
     "address_country":     { "label": "Country" },

@@ -6,7 +6,26 @@
   "attribute_first_name":   { "label": "Nombre" },
   "attribute_last_name":    { "label": "Apellido" },
   "attribute_phone":        { "label": "Teléfono",   "placeholder": "+1 (555) 000-0000", "error": "Número de teléfono inválido" },
-  "attribute_status":       { "label": "Estado" },
+  "attribute_status":             { "label": "Estado" },
+  "attribute_preferred_language": {
+    "label": "Idioma preferido",
+    "options": {
+      "english": "Inglés",
+      "spanish": "Español",
+      "french": "Francés",
+      "german": "Alemán"
+    }
+  },
+  "attribute_interests": {
+    "label": "Intereses",
+    "options": {
+      "sports": "Deportes",
+      "music": "Música",
+      "travel": "Viajes",
+      "technology": "Tecnología",
+      "art": "Arte"
+    }
+  },
   "attribute_address": {
     "label": "Dirección",
     "address_country":     { "label": "País" },

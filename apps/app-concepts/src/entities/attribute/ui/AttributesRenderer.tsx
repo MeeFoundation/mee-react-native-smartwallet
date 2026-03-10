@@ -10,8 +10,10 @@ import type {
 } from '../model/types'
 import { setNestedValue } from '../model/utils'
 import { DateAttributeControl } from './DateAttributeControl'
+import { MultipleSelectAttributeControl } from './MultipleSelectAttributeControl'
 import { NumberAttributeControl } from './NumberAttributeControl'
 import { ObjectAttributeControl } from './ObjectAttributeControl'
+import { SelectAttributeControl } from './SelectAttributeControl'
 import { StringAttributeControl } from './StringAttributeControl'
 
 type HandleError = (path: string[], error: string | undefined) => void
@@ -67,6 +69,36 @@ function renderNode(
             path={path}
             schema={schema}
             value={value as string}
+          />
+        </View>
+      )
+    }
+    case 'select': {
+      const key = path.join('.')
+      return (
+        <View>
+          <SelectAttributeControl
+            error={errors[key]}
+            onChange={(v) => onChange(path, v)}
+            onError={(e) => onError(path, e)}
+            path={path}
+            schema={schema}
+            value={value as string}
+          />
+        </View>
+      )
+    }
+    case 'multiple-select': {
+      const key = path.join('.')
+      return (
+        <View>
+          <MultipleSelectAttributeControl
+            error={errors[key]}
+            onChange={(v) => onChange(path, v)}
+            onError={(e) => onError(path, e)}
+            path={path}
+            schema={schema}
+            value={value as string[]}
           />
         </View>
       )
