@@ -2,6 +2,7 @@ import type { FC } from 'react'
 import { StyleSheet, View, TouchableOpacity } from 'react-native'
 import { ChevronRightIcon } from 'react-native-heroicons/outline'
 import { useTranslation } from 'react-i18next'
+import { useRouter } from 'expo-router'
 
 import { Header, ScreenLayout, ToggleDrawerButton } from '@/widgets/navigation'
 
@@ -76,22 +77,31 @@ const WalletScreenHeader: FC = () => {
 /* -------------------------------------------------------------------------------------------------
  * WalletScreen
  * -----------------------------------------------------------------------------------------------*/
-const WALLET_ITEMS: { label: string; icon: IconSymbolName }[] = [
-  { label: 'Drivers Licence', icon: 'identification.outlined' },
-  { label: 'Date of birth certificate', icon: 'document-text.outlined' },
-  { label: 'Credit Card', icon: 'credit-card.outlined' },
-]
-
 export default function WalletScreen() {
+  const { t } = useTranslation()
+  const router = useRouter()
+
   return (
     <ScreenLayout.Root>
       <WalletScreenHeader />
       <ScreenLayout.Content scrollable={false}>
         <ListLayout.Root>
           <ListLayout.Content style={styles.cardList}>
-            {WALLET_ITEMS.map((item) => (
-              <WalletCard key={item.label} icon={item.icon} label={item.label} />
-            ))}
+            <WalletCard
+              icon="identification.outlined"
+              label={t('tabs.wallet.drivers_licence')}
+              onPress={() => router.push('/wallet/drivers-licence')}
+            />
+            <WalletCard
+              icon="document-text.outlined"
+              label={t('tabs.wallet.birth_certificate')}
+              onPress={() => router.push('/wallet/birth-certificate')}
+            />
+            <WalletCard
+              icon="credit-card.outlined"
+              label={t('tabs.wallet.credit_card')}
+              onPress={() => router.push('/wallet/credit-card')}
+            />
           </ListLayout.Content>
         </ListLayout.Root>
       </ScreenLayout.Content>

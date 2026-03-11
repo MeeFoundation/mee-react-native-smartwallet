@@ -26,6 +26,22 @@
       "art": "Art"
     }
   },
+  "attribute_card_number":         { "label": "Card number" },
+  "attribute_card_type": {
+    "label": "Card type",
+    "options": {
+      "amex":       "American Express",
+      "mastercard": "Mastercard",
+      "other":      "Other",
+      "visa":       "Visa"
+    }
+  },
+  "attribute_cardholder_name":     { "label": "Cardholder name" },
+  "attribute_expiry_date":         { "label": "Expiry date" },
+  "attribute_licence_number":      { "label": "Licence number" },
+  "attribute_place_of_birth":      { "label": "Place of birth" },
+  "attribute_registration_number": { "label": "Registration number" },
+  "attribute_state_of_issue":      { "label": "State of issue" },
   "attribute_address": {
     "label": "Address",
     "address_country":     { "label": "Country" },
@@ -47,7 +63,10 @@
       "title": "Share"
     },
     "wallet": {
-      "title": "Wallet"
+      "title": "Wallet",
+      "drivers_licence":  "Drivers Licence",
+      "birth_certificate": "Date of birth certificate",
+      "credit_card":      "Credit Card"
     }
   },
   "today": "Today",
