@@ -72,6 +72,8 @@
       "credit_card":        "Credit Card",
       "passport":           "Passport",
       "scan":               "Scan",
+      "scan_capture":       "Capture",
+      "scan_hint":          "Align the QR code within the frame",
       "share_modal_title":  "Share Document",
       "share_modal_hint":   "Scan this QR code to receive the document"
     }
