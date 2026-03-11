@@ -67,10 +67,12 @@
     },
     "wallet": {
       "title": "Wallet",
-      "drivers_licence":  "Drivers Licence",
-      "birth_certificate": "Date of birth certificate",
-      "credit_card":      "Credit Card",
-      "passport":         "Passport"
+      "drivers_licence":    "Drivers Licence",
+      "birth_certificate":  "Date of birth certificate",
+      "credit_card":        "Credit Card",
+      "passport":           "Passport",
+      "share_modal_title":  "Share Document",
+      "share_modal_hint":   "Scan this QR code to receive the document"
     }
   },
   "today": "Today",

@@ -1,14 +1,18 @@
+import type { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { useLocalSearchParams } from 'expo-router'
 import type { FC } from 'react'
-import { useState } from 'react'
-import { View } from 'react-native'
+import { useRef, useState } from 'react'
+import { StyleSheet, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
+import QRCode from 'react-native-qrcode-svg'
 
 import { BackButton, Header, ScreenLayout } from '@/widgets/navigation'
 
 import { AttributeRenderer, type InferAttributeValue, type ObjectAttributeSchema } from '@/entities/attribute'
 
 import { AppButton } from '@/shared/ui/AppButton'
+import { BottomSheetBackModal } from '@/shared/ui/BottomSheetModal'
+import { Typography } from '@/shared/ui/Typography'
 
 /* -------------------------------------------------------------------------------------------------
  * Schemas
@@ -64,32 +68,92 @@ const passportSchema = {
 } satisfies ObjectAttributeSchema
 
 /* -------------------------------------------------------------------------------------------------
+ * ShareModal
+ * -----------------------------------------------------------------------------------------------*/
+const MOCK_QR_VALUE = 'https://mee.foundation/share/doc/mock-token-a1b2c3d4e5f6'
+
+type ShareModalProps = {
+  title: string
+  modalRef: React.RefObject<BottomSheetModal | null>
+}
+
+const ShareModal: FC<ShareModalProps> = ({ title, modalRef }) => {
+  const { t } = useTranslation()
+
+  return (
+    <BottomSheetBackModal
+      enableDynamicSizing
+      ref={modalRef}
+      snapPoints={[]}
+      title={t('tabs.wallet.share_modal_title')}
+    >
+      <View style={styles.shareContent}>
+        <Typography style={styles.shareSubtitle}>{title}</Typography>
+        <View style={styles.qrContainer}>
+          <QRCode size={220} value={MOCK_QR_VALUE} />
+        </View>
+        <Typography style={styles.shareHint}>{t('tabs.wallet.share_modal_hint')}</Typography>
+      </View>
+    </BottomSheetBackModal>
+  )
+}
+
+const styles = StyleSheet.create({
+  qrContainer: {
+    alignItems: 'center',
+    paddingVertical: 24,
+  },
+  shareContent: {
+    alignItems: 'center',
+    paddingBottom: 32,
+    paddingHorizontal: 24,
+    paddingTop: 16,
+  },
+  shareHint: {
+    color: 'rgba(60,60,67,0.6)',
+    fontSize: 13,
+    textAlign: 'center',
+  },
+  shareSubtitle: {
+    fontSize: 15,
+    marginBottom: 4,
+    opacity: 0.6,
+    textAlign: 'center',
+  },
+})
+
+/* -------------------------------------------------------------------------------------------------
  * DocumentDetails — generic typed form
  * -----------------------------------------------------------------------------------------------*/
 type DocumentDetailsProps<TSchema extends ObjectAttributeSchema> = {
   schema: TSchema
   defaultValue: InferAttributeValue<TSchema>
+  title: string
 }
 
-function DocumentDetails<TSchema extends ObjectAttributeSchema>({ schema, defaultValue }: DocumentDetailsProps<TSchema>) {
+function DocumentDetails<TSchema extends ObjectAttributeSchema>({ schema, defaultValue, title }: DocumentDetailsProps<TSchema>) {
   const [value, setValue] = useState(defaultValue)
   const [hasErrors, setHasErrors] = useState(false)
+  const shareModalRef = useRef<BottomSheetModal>(null)
 
   return (
-    <View className="gap-4 p-4">
-      <View className="rounded-xl border border-black/7 bg-white/90 p-3">
-        <AttributeRenderer
-          onChange={setValue}
-          onErrors={(errors) => setHasErrors(Object.keys(errors).length > 0)}
-          schema={schema}
-          value={value}
-        />
+    <>
+      <View className="gap-4 p-4">
+        <View className="rounded-xl border border-black/7 bg-white/90 p-3">
+          <AttributeRenderer
+            onChange={setValue}
+            onErrors={(errors) => setHasErrors(Object.keys(errors).length > 0)}
+            schema={schema}
+            value={value}
+          />
+        </View>
+        <View className="gap-3">
+          <AppButton disabled={hasErrors} fullWidth text="Save" variant="primary" />
+          <AppButton fullWidth onPress={() => shareModalRef.current?.present()} text="Share" variant="secondary" />
+        </View>
       </View>
-      <View className="gap-3">
-        <AppButton disabled={hasErrors} fullWidth text="Save" variant="primary" />
-        <AppButton fullWidth text="Share" variant="secondary" />
-      </View>
-    </View>
+      <ShareModal modalRef={shareModalRef} title={title} />
+    </>
   )
 }
 
@@ -132,6 +196,7 @@ export default function WalletDocumentScreen() {
                 state_of_issue: 'California',
               }}
               schema={driversLicenceSchema}
+              title={t('tabs.wallet.drivers_licence')}
             />
           </ScreenLayout.Content>
         </>
@@ -149,6 +214,7 @@ export default function WalletDocumentScreen() {
                 registration_number: 'BC-1990-774421',
               }}
               schema={birthCertificateSchema}
+              title={t('tabs.wallet.birth_certificate')}
             />
           </ScreenLayout.Content>
         </>
@@ -165,6 +231,7 @@ export default function WalletDocumentScreen() {
                 card_type: 'visa',
               }}
               schema={creditCardSchema}
+              title={t('tabs.wallet.credit_card')}
             />
           </ScreenLayout.Content>
         </>
@@ -184,6 +251,7 @@ export default function WalletDocumentScreen() {
                 country_of_issue: 'United States',
               }}
               schema={passportSchema}
+              title={t('tabs.wallet.passport')}
             />
           </ScreenLayout.Content>
         </>

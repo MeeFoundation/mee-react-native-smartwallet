@@ -67,10 +67,12 @@
     },
     "wallet": {
       "title": "Billetera",
-      "drivers_licence":  "Licencia de conducir",
-      "birth_certificate": "Certificado de nacimiento",
-      "credit_card":      "Tarjeta de crédito",
-      "passport":         "Pasaporte"
+      "drivers_licence":    "Licencia de conducir",
+      "birth_certificate":  "Certificado de nacimiento",
+      "credit_card":        "Tarjeta de crédito",
+      "passport":           "Pasaporte",
+      "share_modal_title":  "Compartir documento",
+      "share_modal_hint":   "Escanea este código QR para recibir el documento"
     }
   },
   "today": "Hoy",
