@@ -49,6 +49,20 @@ const creditCardSchema = {
   required: ['cardholder_name', 'card_number'],
 } satisfies ObjectAttributeSchema
 
+const passportSchema = {
+  type: 'object',
+  properties: {
+    passport_number: { type: 'string' },
+    first_name: { type: 'string' },
+    last_name: { type: 'string' },
+    date_of_birth: { type: 'date' },
+    expiry_date: { type: 'date' },
+    nationality: { type: 'string' },
+    country_of_issue: { type: 'string' },
+  },
+  required: ['passport_number', 'first_name', 'last_name'],
+} satisfies ObjectAttributeSchema
+
 /* -------------------------------------------------------------------------------------------------
  * DocumentDetails — generic typed form
  * -----------------------------------------------------------------------------------------------*/
@@ -96,7 +110,7 @@ const WalletDocumentHeader: FC<WalletDocumentHeaderProps> = ({ title }) => (
 /* -------------------------------------------------------------------------------------------------
  * WalletDocumentScreen
  * -----------------------------------------------------------------------------------------------*/
-export type WalletDocumentId = 'drivers-licence' | 'birth-certificate' | 'credit-card'
+export type WalletDocumentId = 'drivers-licence' | 'birth-certificate' | 'credit-card' | 'passport'
 
 export default function WalletDocumentScreen() {
   const { document } = useLocalSearchParams<{ document: string }>()
@@ -109,7 +123,14 @@ export default function WalletDocumentScreen() {
           <WalletDocumentHeader title={t('tabs.wallet.drivers_licence')} />
           <ScreenLayout.Content>
             <DocumentDetails
-              defaultValue={{ licence_number: '', first_name: '', last_name: '', state_of_issue: '' }}
+              defaultValue={{
+                licence_number: 'DL-4821093',
+                first_name: 'Alex',
+                last_name: 'Johnson',
+                date_of_birth: '1990-06-15',
+                expiry_date: '2028-06-15',
+                state_of_issue: 'California',
+              }}
               schema={driversLicenceSchema}
             />
           </ScreenLayout.Content>
@@ -120,7 +141,13 @@ export default function WalletDocumentScreen() {
           <WalletDocumentHeader title={t('tabs.wallet.birth_certificate')} />
           <ScreenLayout.Content>
             <DocumentDetails
-              defaultValue={{ first_name: '', last_name: '' }}
+              defaultValue={{
+                first_name: 'Alex',
+                last_name: 'Johnson',
+                date_of_birth: '1990-06-15',
+                place_of_birth: 'Los Angeles, CA',
+                registration_number: 'BC-1990-774421',
+              }}
               schema={birthCertificateSchema}
             />
           </ScreenLayout.Content>
@@ -131,8 +158,32 @@ export default function WalletDocumentScreen() {
           <WalletDocumentHeader title={t('tabs.wallet.credit_card')} />
           <ScreenLayout.Content>
             <DocumentDetails
-              defaultValue={{ cardholder_name: '', card_number: '', card_type: 'visa' }}
+              defaultValue={{
+                cardholder_name: 'Alex Johnson',
+                card_number: '4111 1111 1111 1111',
+                expiry_date: '2027-09-30',
+                card_type: 'visa',
+              }}
               schema={creditCardSchema}
+            />
+          </ScreenLayout.Content>
+        </>
+      )}
+      {document === 'passport' && (
+        <>
+          <WalletDocumentHeader title={t('tabs.wallet.passport')} />
+          <ScreenLayout.Content>
+            <DocumentDetails
+              defaultValue={{
+                passport_number: 'P-A3829041',
+                first_name: 'Alex',
+                last_name: 'Johnson',
+                date_of_birth: '1990-06-15',
+                expiry_date: '2030-03-22',
+                nationality: 'American',
+                country_of_issue: 'United States',
+              }}
+              schema={passportSchema}
             />
           </ScreenLayout.Content>
         </>

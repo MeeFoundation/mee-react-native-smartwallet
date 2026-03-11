@@ -38,7 +38,10 @@
   },
   "attribute_cardholder_name":     { "label": "Cardholder name" },
   "attribute_expiry_date":         { "label": "Expiry date" },
+  "attribute_country_of_issue":    { "label": "Country of issue" },
   "attribute_licence_number":      { "label": "Licence number" },
+  "attribute_nationality":         { "label": "Nationality" },
+  "attribute_passport_number":     { "label": "Passport number" },
   "attribute_place_of_birth":      { "label": "Place of birth" },
   "attribute_registration_number": { "label": "Registration number" },
   "attribute_state_of_issue":      { "label": "State of issue" },
@@ -66,7 +69,8 @@
       "title": "Wallet",
       "drivers_licence":  "Drivers Licence",
       "birth_certificate": "Date of birth certificate",
-      "credit_card":      "Credit Card"
+      "credit_card":      "Credit Card",
+      "passport":         "Passport"
     }
   },
   "today": "Today",

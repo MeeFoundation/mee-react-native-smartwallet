@@ -102,6 +102,11 @@ export default function WalletScreen() {
               label={t('tabs.wallet.credit_card')}
               onPress={() => router.push('/wallet/credit-card')}
             />
+            <WalletCard
+              icon="identification.outlined"
+              label={t('tabs.wallet.passport')}
+              onPress={() => router.push('/wallet/passport')}
+            />
           </ListLayout.Content>
         </ListLayout.Root>
       </ScreenLayout.Content>
