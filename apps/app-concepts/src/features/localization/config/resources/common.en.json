@@ -71,6 +71,7 @@
       "birth_certificate":  "Date of birth certificate",
       "credit_card":        "Credit Card",
       "passport":           "Passport",
+      "scan":               "Scan",
       "share_modal_title":  "Share Document",
       "share_modal_hint":   "Scan this QR code to receive the document"
     }

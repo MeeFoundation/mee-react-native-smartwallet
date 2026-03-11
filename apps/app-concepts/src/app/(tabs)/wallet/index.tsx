@@ -1,8 +1,9 @@
 import type { FC } from 'react'
 import { StyleSheet, View, TouchableOpacity } from 'react-native'
-import { ChevronRightIcon } from 'react-native-heroicons/outline'
+import { ChevronRightIcon, QrCodeIcon } from 'react-native-heroicons/outline'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'expo-router'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { Header, ScreenLayout, ToggleDrawerButton } from '@/widgets/navigation'
 
@@ -26,6 +27,10 @@ const styles = StyleSheet.create({
     height: 48,
     justifyContent: 'center',
     width: 48,
+  },
+  scanFooter: {
+    paddingHorizontal: 16,
+    paddingTop: 12,
   },
 })
 
@@ -80,6 +85,7 @@ const WalletScreenHeader: FC = () => {
 export default function WalletScreen() {
   const { t } = useTranslation()
   const router = useRouter()
+  const insets = useSafeAreaInsets()
 
   return (
     <ScreenLayout.Root>
@@ -110,6 +116,14 @@ export default function WalletScreen() {
           </ListLayout.Content>
         </ListLayout.Root>
       </ScreenLayout.Content>
+      <View style={[styles.scanFooter, { paddingBottom: insets.bottom + 16 }]}>
+        <AppButton
+          fullWidth
+          IconLeft={QrCodeIcon}
+          text={t('tabs.wallet.scan')}
+          variant="primary"
+        />
+      </View>
     </ScreenLayout.Root>
   )
 }
