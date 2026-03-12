@@ -67,6 +67,52 @@ const passportSchema = {
   required: ['passport_number', 'first_name', 'last_name'],
 } satisfies ObjectAttributeSchema
 
+const employmentContractSchema = {
+  type: 'object',
+  properties: {
+    employer: { type: 'string' },
+    position: { type: 'string' },
+    start_date: { type: 'date' },
+    contract_type: { type: 'select', options: ['permanent', 'fixed_term', 'contractor'] },
+  },
+  required: ['employer', 'position'],
+} satisfies ObjectAttributeSchema
+
+const taxReturnSchema = {
+  type: 'object',
+  properties: {
+    tax_year: { type: 'string' },
+    filing_status: { type: 'string' },
+    tax_id_number: { type: 'string' },
+    gross_income: { type: 'string' },
+  },
+  required: ['tax_year', 'tax_id_number'],
+} satisfies ObjectAttributeSchema
+
+const healthInsuranceSchema = {
+  type: 'object',
+  properties: {
+    policy_number: { type: 'string' },
+    provider: { type: 'string' },
+    policy_holder: { type: 'string' },
+    expiry_date: { type: 'date' },
+    coverage_type: { type: 'select', options: ['individual', 'family', 'group'] },
+  },
+  required: ['policy_number', 'provider'],
+} satisfies ObjectAttributeSchema
+
+const vaccinationRecordSchema = {
+  type: 'object',
+  properties: {
+    patient_name: { type: 'string' },
+    date_of_birth: { type: 'date' },
+    vaccine_name: { type: 'string' },
+    administered_date: { type: 'date' },
+    dose_number: { type: 'string' },
+  },
+  required: ['patient_name', 'vaccine_name'],
+} satisfies ObjectAttributeSchema
+
 /* -------------------------------------------------------------------------------------------------
  * ShareModal
  * -----------------------------------------------------------------------------------------------*/
@@ -174,8 +220,6 @@ const WalletDocumentHeader: FC<WalletDocumentHeaderProps> = ({ title }) => (
 /* -------------------------------------------------------------------------------------------------
  * WalletDocumentScreen
  * -----------------------------------------------------------------------------------------------*/
-export type WalletDocumentId = 'drivers-licence' | 'birth-certificate' | 'credit-card' | 'passport'
-
 export default function WalletDocumentScreen() {
   const { document } = useLocalSearchParams<{ document: string }>()
   const { t } = useTranslation()
@@ -252,6 +296,76 @@ export default function WalletDocumentScreen() {
               }}
               schema={passportSchema}
               title={t('tabs.wallet.passport')}
+            />
+          </ScreenLayout.Content>
+        </>
+      )}
+      {document === 'employment-contract' && (
+        <>
+          <WalletDocumentHeader title={t('tabs.wallet.employment_contract')} />
+          <ScreenLayout.Content>
+            <DocumentDetails
+              defaultValue={{
+                employer: 'Acme Corp',
+                position: 'Software Engineer',
+                start_date: '2022-03-01',
+                contract_type: 'permanent',
+              }}
+              schema={employmentContractSchema}
+              title={t('tabs.wallet.employment_contract')}
+            />
+          </ScreenLayout.Content>
+        </>
+      )}
+      {document === 'tax-return' && (
+        <>
+          <WalletDocumentHeader title={t('tabs.wallet.tax_return')} />
+          <ScreenLayout.Content>
+            <DocumentDetails
+              defaultValue={{
+                tax_year: '2024',
+                filing_status: 'Single',
+                tax_id_number: '123-45-6789',
+                gross_income: '85000',
+              }}
+              schema={taxReturnSchema}
+              title={t('tabs.wallet.tax_return')}
+            />
+          </ScreenLayout.Content>
+        </>
+      )}
+      {document === 'health-insurance' && (
+        <>
+          <WalletDocumentHeader title={t('tabs.wallet.health_insurance')} />
+          <ScreenLayout.Content>
+            <DocumentDetails
+              defaultValue={{
+                policy_number: 'HI-8834-2291',
+                provider: 'Blue Shield',
+                policy_holder: 'Alex Johnson',
+                expiry_date: '2026-12-31',
+                coverage_type: 'individual',
+              }}
+              schema={healthInsuranceSchema}
+              title={t('tabs.wallet.health_insurance')}
+            />
+          </ScreenLayout.Content>
+        </>
+      )}
+      {document === 'vaccination-record' && (
+        <>
+          <WalletDocumentHeader title={t('tabs.wallet.vaccination_record')} />
+          <ScreenLayout.Content>
+            <DocumentDetails
+              defaultValue={{
+                patient_name: 'Alex Johnson',
+                date_of_birth: '1990-06-15',
+                vaccine_name: 'Influenza',
+                administered_date: '2025-10-05',
+                dose_number: '1',
+              }}
+              schema={vaccinationRecordSchema}
+              title={t('tabs.wallet.vaccination_record')}
             />
           </ScreenLayout.Content>
         </>

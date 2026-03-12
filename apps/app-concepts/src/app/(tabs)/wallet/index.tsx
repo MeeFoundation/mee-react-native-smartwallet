@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 12,
   },
-  // Scanner modal
   scannerOverlay: {
     backgroundColor: 'black',
     flex: 1,
@@ -64,45 +63,10 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: FRAME_SIZE,
   },
-  // dim overlay strips around the frame
-  dimTop: {
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    bottom: FRAME_SIZE,
-    left: 0,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-  },
-  dimBottom: {
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-    right: 0,
-    top: FRAME_SIZE,
-  },
-  dimLeft: {
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-    top: 0,
-    width: 0,
-  },
-  dimRight: {
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    bottom: 0,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    width: 0,
-  },
-  // Corner brackets
   cornerTL: { borderLeftWidth: CORNER_WIDTH, borderTopWidth: CORNER_WIDTH, height: CORNER_SIZE, left: 0, position: 'absolute', top: 0, width: CORNER_SIZE, borderColor: 'white' },
   cornerTR: { borderRightWidth: CORNER_WIDTH, borderTopWidth: CORNER_WIDTH, height: CORNER_SIZE, position: 'absolute', right: 0, top: 0, width: CORNER_SIZE, borderColor: 'white' },
   cornerBL: { borderBottomWidth: CORNER_WIDTH, borderLeftWidth: CORNER_WIDTH, bottom: 0, height: CORNER_SIZE, left: 0, position: 'absolute', width: CORNER_SIZE, borderColor: 'white' },
   cornerBR: { borderBottomWidth: CORNER_WIDTH, borderRightWidth: CORNER_WIDTH, bottom: 0, height: CORNER_SIZE, position: 'absolute', right: 0, width: CORNER_SIZE, borderColor: 'white' },
-  // Scan line
   scanLine: {
     backgroundColor: 'rgba(99,190,255,0.8)',
     height: 2,
@@ -167,11 +131,11 @@ const ScannerModal: FC<ScannerModalProps> = ({ visible, onClose }) => {
 }
 
 /* -------------------------------------------------------------------------------------------------
- * WalletCard
+ * SectionCard
  * -----------------------------------------------------------------------------------------------*/
-type WalletCardProps = { label: string; icon: IconSymbolName; onPress?: () => void }
+type SectionCardProps = { label: string; icon: IconSymbolName; onPress?: () => void }
 
-const WalletCard: FC<WalletCardProps> = ({ label, icon, onPress }) => (
+const SectionCard: FC<SectionCardProps> = ({ label, icon, onPress }) => (
   <TouchableOpacity onPress={onPress}>
     <ConnectionListCard.Root>
       <ConnectionListCard.Content>
@@ -226,25 +190,20 @@ export default function WalletScreen() {
       <ScreenLayout.Content scrollable={false}>
         <ListLayout.Root>
           <ListLayout.Content style={styles.cardList}>
-            <WalletCard
-              icon="identification.outlined"
-              label={t('tabs.wallet.drivers_licence')}
-              onPress={() => router.push('/wallet/drivers-licence')}
+            <SectionCard
+              icon="heart.outlined"
+              label={t('tabs.wallet.section_life')}
+              onPress={() => router.push('/wallet/life')}
             />
-            <WalletCard
-              icon="document-text.outlined"
-              label={t('tabs.wallet.birth_certificate')}
-              onPress={() => router.push('/wallet/birth-certificate')}
+            <SectionCard
+              icon="briefcase.outlined"
+              label={t('tabs.wallet.section_work')}
+              onPress={() => router.push('/wallet/work')}
             />
-            <WalletCard
-              icon="credit-card.outlined"
-              label={t('tabs.wallet.credit_card')}
-              onPress={() => router.push('/wallet/credit-card')}
-            />
-            <WalletCard
-              icon="identification.outlined"
-              label={t('tabs.wallet.passport')}
-              onPress={() => router.push('/wallet/passport')}
+            <SectionCard
+              icon="shield-check.outlined"
+              label={t('tabs.wallet.section_health')}
+              onPress={() => router.push('/wallet/health')}
             />
           </ListLayout.Content>
         </ListLayout.Root>

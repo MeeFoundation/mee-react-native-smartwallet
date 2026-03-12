@@ -5,6 +5,7 @@ import {
   ArrowDownTrayIcon as ArrowDownTrayOutlineIcon,
   Bars3Icon as Bars3OutlineIcon,
   BellIcon as BellOutlineIcon,
+  BriefcaseIcon as BriefcaseOutlineIcon,
   ChevronLeftIcon as ChevronLeftOutlineIcon,
   ChevronRightIcon as ChevronRightOutlineIcon,
   Cog8ToothIcon as Cog8ToothOutlineIcon,
@@ -12,6 +13,7 @@ import {
   DocumentIcon as DocumentOutlineIcon,
   DocumentTextIcon as DocumentTextOutlineIcon,
   EllipsisVerticalIcon as EllipsisVerticalOutlineIcon,
+  HeartIcon as HeartOutlineIcon,
   IdentificationIcon as IdentificationOutlineIcon,
   LanguageIcon as LanguageOutlineIcon,
   MagnifyingGlassIcon as MagnifyingGlassOutlineIcon,
@@ -22,6 +24,7 @@ import {
   PlusIcon as PlusOutlineIcon,
   QrCodeIcon as QrCodeOutlineIcon,
   ShareIcon as ShareOutlineIcon,
+  ShieldCheckIcon as ShieldCheckOutlineIcon,
   TrashIcon as TrashOutlineIcon,
   UserGroupIcon as UserGroupOutlineIcon,
   UserIcon as UserOutlineIcon,
@@ -40,6 +43,9 @@ import { colors } from '../config'
 
 const MAPPING = {
   'archive-box.outlined': ArchiveBoxOutlineIcon,
+  'briefcase.outlined': BriefcaseOutlineIcon,
+  'heart.outlined': HeartOutlineIcon,
+  'shield-check.outlined': ShieldCheckOutlineIcon,
   'arrow-down-tray.outlined': ArrowDownTrayOutlineIcon,
   'bars-3.outlined': Bars3OutlineIcon,
   'bell.outlined': BellOutlineIcon,

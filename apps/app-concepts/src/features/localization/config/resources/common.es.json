@@ -26,6 +26,7 @@
       "art": "Arte"
     }
   },
+  "attribute_administered_date":   { "label": "Fecha de administración" },
   "attribute_card_number":         { "label": "Número de tarjeta" },
   "attribute_card_type": {
     "label": "Tipo de tarjeta",
@@ -37,14 +38,43 @@
     }
   },
   "attribute_cardholder_name":     { "label": "Nombre del titular" },
-  "attribute_expiry_date":         { "label": "Fecha de vencimiento" },
+  "attribute_contract_type": {
+    "label": "Tipo de contrato",
+    "options": {
+      "permanent":  "Permanente",
+      "fixed_term": "Plazo fijo",
+      "contractor": "Contratista"
+    }
+  },
+  "attribute_coverage_type": {
+    "label": "Tipo de cobertura",
+    "options": {
+      "individual": "Individual",
+      "family":     "Familiar",
+      "group":      "Grupal"
+    }
+  },
   "attribute_country_of_issue":    { "label": "País emisor" },
+  "attribute_dose_number":         { "label": "Número de dosis" },
+  "attribute_employer":            { "label": "Empleador" },
+  "attribute_expiry_date":         { "label": "Fecha de vencimiento" },
+  "attribute_filing_status":       { "label": "Estado de declaración" },
+  "attribute_gross_income":        { "label": "Ingresos brutos" },
   "attribute_licence_number":      { "label": "Número de licencia" },
   "attribute_nationality":         { "label": "Nacionalidad" },
   "attribute_passport_number":     { "label": "Número de pasaporte" },
+  "attribute_patient_name":        { "label": "Nombre del paciente" },
   "attribute_place_of_birth":      { "label": "Lugar de nacimiento" },
+  "attribute_policy_holder":       { "label": "Titular de la póliza" },
+  "attribute_policy_number":       { "label": "Número de póliza" },
+  "attribute_position":            { "label": "Cargo" },
+  "attribute_provider":            { "label": "Proveedor" },
   "attribute_registration_number": { "label": "Número de registro" },
+  "attribute_start_date":          { "label": "Fecha de inicio" },
   "attribute_state_of_issue":      { "label": "Estado emisor" },
+  "attribute_tax_id_number":       { "label": "Número de identificación fiscal" },
+  "attribute_tax_year":            { "label": "Año fiscal" },
+  "attribute_vaccine_name":        { "label": "Vacuna" },
   "attribute_address": {
     "label": "Dirección",
     "address_country":     { "label": "País" },
@@ -67,15 +97,22 @@
     },
     "wallet": {
       "title": "Billetera",
-      "drivers_licence":    "Licencia de conducir",
-      "birth_certificate":  "Certificado de nacimiento",
-      "credit_card":        "Tarjeta de crédito",
-      "passport":           "Pasaporte",
-      "scan":               "Escanear",
-      "scan_capture":       "Capturar",
-      "scan_hint":          "Alinea el código QR dentro del marco",
-      "share_modal_title":  "Compartir documento",
-      "share_modal_hint":   "Escanea este código QR para recibir el documento"
+      "section_life":            "Vida",
+      "section_work":            "Trabajo",
+      "section_health":          "Salud",
+      "drivers_licence":         "Licencia de conducir",
+      "birth_certificate":       "Certificado de nacimiento",
+      "credit_card":             "Tarjeta de crédito",
+      "passport":                "Pasaporte",
+      "employment_contract":     "Contrato de trabajo",
+      "tax_return":              "Declaración de impuestos",
+      "health_insurance":        "Seguro médico",
+      "vaccination_record":      "Registro de vacunación",
+      "scan":                    "Escanear",
+      "scan_capture":            "Capturar",
+      "scan_hint":               "Alinea el código QR dentro del marco",
+      "share_modal_title":       "Compartir documento",
+      "share_modal_hint":        "Escanea este código QR para recibir el documento"
     }
   },
   "today": "Hoy",
