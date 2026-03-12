@@ -1,11 +1,13 @@
-import type { BottomSheetModal } from '@gorhom/bottom-sheet'
+import { BottomSheetTextInput, type BottomSheetModal } from '@gorhom/bottom-sheet'
 import { useLocalSearchParams } from 'expo-router'
 import type { FC } from 'react'
 import { useRef, useState } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
+import { PencilSquareIcon, XMarkIcon } from 'react-native-heroicons/outline'
 import QRCode from 'react-native-qrcode-svg'
 
+import { colors } from '@/shared/config'
 import { hexAlphaColor } from '@/shared/lib/styling'
 
 import { BackButton, Header, ScreenLayout } from '@/widgets/navigation'
@@ -15,6 +17,8 @@ import { AttributeRenderer, type InferAttributeValue, type ObjectAttributeSchema
 import { AppButton } from '@/shared/ui/AppButton'
 import { BottomSheetBackModal } from '@/shared/ui/BottomSheetModal'
 import { Typography } from '@/shared/ui/Typography'
+
+import { DEFAULT_DOCUMENT_BADGES } from '../document-badges'
 
 /* -------------------------------------------------------------------------------------------------
  * Schemas
@@ -147,6 +151,7 @@ const ShareModal: FC<ShareModalProps> = ({ title, modalRef }) => {
 }
 
 const BADGE_COLOR = '#4A6CD7'
+const CUSTOM_BADGE_COLOR = colors.primary
 
 const styles = StyleSheet.create({
   badge: {
@@ -159,6 +164,46 @@ const styles = StyleSheet.create({
   badgeText: {
     fontSize: 13,
     fontWeight: '500',
+  },
+  customBadgeRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  customBadgeChip: {
+    borderRadius: 99,
+    borderWidth: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+  },
+  badgeEditContent: {
+    gap: 16,
+    padding: 16,
+    paddingBottom: 32,
+  },
+  badgeEditChipsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  badgeEditChip: {
+    alignItems: 'center',
+    borderRadius: 99,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  tagInput: {
+    backgroundColor: colors.white,
+    borderColor: colors['gray-200'],
+    borderRadius: 8,
+    borderWidth: 1,
+    fontSize: 16,
+    height: 44,
+    paddingHorizontal: 16,
   },
   qrContainer: {
     alignItems: 'center',
@@ -184,6 +229,68 @@ const styles = StyleSheet.create({
 })
 
 /* -------------------------------------------------------------------------------------------------
+ * BadgeEditModal
+ * -----------------------------------------------------------------------------------------------*/
+type BadgeEditModalProps = {
+  modalRef: React.RefObject<BottomSheetModal | null>
+  badges: string[]
+  onRemove: (badge: string) => void
+  onAdd: (badge: string) => void
+}
+
+const BadgeEditModal: FC<BadgeEditModalProps> = ({ modalRef, badges, onRemove, onAdd }) => {
+  const { t } = useTranslation()
+  const [input, setInput] = useState('')
+
+  const handleAdd = () => {
+    const trimmed = input.trim()
+    if (trimmed && !badges.includes(trimmed)) {
+      onAdd(trimmed)
+    }
+    setInput('')
+  }
+
+  return (
+    <BottomSheetBackModal
+      enableDynamicSizing
+      ref={modalRef}
+      rightButtonAction={handleAdd}
+      rightButtonText="Done"
+      snapPoints={[]}
+      title={t('tabs.wallet.edit_tags_title')}
+    >
+      <View style={styles.badgeEditContent}>
+        {badges.length > 0 && (
+          <View style={styles.badgeEditChipsRow}>
+            {badges.map((badge) => (
+              <TouchableOpacity
+                key={badge}
+                onPress={() => onRemove(badge)}
+                style={[
+                  styles.badgeEditChip,
+                  { backgroundColor: hexAlphaColor(CUSTOM_BADGE_COLOR, 10), borderColor: hexAlphaColor(CUSTOM_BADGE_COLOR, 40) },
+                ]}
+              >
+                <Typography style={[styles.badgeText, { color: CUSTOM_BADGE_COLOR }]}>{badge}</Typography>
+                <XMarkIcon color={CUSTOM_BADGE_COLOR} size={14} />
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+        <BottomSheetTextInput
+          onChangeText={setInput}
+          onSubmitEditing={handleAdd}
+          placeholder={t('tabs.wallet.edit_tags_add_placeholder')}
+          returnKeyType="done"
+          style={styles.tagInput}
+          value={input}
+        />
+      </View>
+    </BottomSheetBackModal>
+  )
+}
+
+/* -------------------------------------------------------------------------------------------------
  * DocumentDetails — generic typed form
  * -----------------------------------------------------------------------------------------------*/
 type DocumentDetailsProps<TSchema extends ObjectAttributeSchema> = {
@@ -191,13 +298,16 @@ type DocumentDetailsProps<TSchema extends ObjectAttributeSchema> = {
   defaultValue: InferAttributeValue<TSchema>
   title: string
   section: string
+  documentSlug: string
 }
 
-function DocumentDetails<TSchema extends ObjectAttributeSchema>({ schema, defaultValue, title, section }: DocumentDetailsProps<TSchema>) {
+function DocumentDetails<TSchema extends ObjectAttributeSchema>({ schema, defaultValue, title, section, documentSlug }: DocumentDetailsProps<TSchema>) {
   const { t } = useTranslation()
   const [value, setValue] = useState(defaultValue)
   const [hasErrors, setHasErrors] = useState(false)
+  const [customBadges, setCustomBadges] = useState<string[]>(() => [...(DEFAULT_DOCUMENT_BADGES[documentSlug] ?? [])])
   const shareModalRef = useRef<BottomSheetModal>(null)
+  const badgeEditModalRef = useRef<BottomSheetModal>(null)
 
   const sectionLabels: Record<string, string> = {
     life: t('tabs.wallet.section_life'),
@@ -205,6 +315,14 @@ function DocumentDetails<TSchema extends ObjectAttributeSchema>({ schema, defaul
     health: t('tabs.wallet.section_health'),
   }
   const sectionName = sectionLabels[section] ?? section
+
+  const handleAddBadge = (badge: string) => {
+    setCustomBadges((prev) => [...prev, badge])
+  }
+
+  const handleRemoveBadge = (badge: string) => {
+    setCustomBadges((prev) => prev.filter((b) => b !== badge))
+  }
 
   return (
     <>
@@ -227,12 +345,34 @@ function DocumentDetails<TSchema extends ObjectAttributeSchema>({ schema, defaul
             {t('tabs.wallet.document_section')}: {sectionName}
           </Typography>
         </View>
+        <View style={styles.customBadgeRow}>
+          {customBadges.map((badge) => (
+            <View
+              key={badge}
+              style={[
+                styles.customBadgeChip,
+                { backgroundColor: hexAlphaColor(CUSTOM_BADGE_COLOR, 10), borderColor: hexAlphaColor(CUSTOM_BADGE_COLOR, 40) },
+              ]}
+            >
+              <Typography style={[styles.badgeText, { color: CUSTOM_BADGE_COLOR }]}>{badge}</Typography>
+            </View>
+          ))}
+          <TouchableOpacity onPress={() => badgeEditModalRef.current?.present()}>
+            <PencilSquareIcon color={colors.primaryActive} size={18} />
+          </TouchableOpacity>
+        </View>
         <View className="gap-3">
           <AppButton disabled={hasErrors} fullWidth text="Save" variant="primary" />
           <AppButton fullWidth onPress={() => shareModalRef.current?.present()} text="Share" variant="secondary" />
         </View>
       </View>
       <ShareModal modalRef={shareModalRef} title={title} />
+      <BadgeEditModal
+        badges={customBadges}
+        modalRef={badgeEditModalRef}
+        onAdd={handleAddBadge}
+        onRemove={handleRemoveBadge}
+      />
     </>
   )
 }
@@ -273,6 +413,7 @@ export default function WalletDocumentScreen() {
                 expiry_date: '2028-06-15',
                 state_of_issue: 'California',
               }}
+              documentSlug={document}
               schema={driversLicenceSchema}
               section={section}
               title={t('tabs.wallet.drivers_licence')}
@@ -292,6 +433,7 @@ export default function WalletDocumentScreen() {
                 place_of_birth: 'Los Angeles, CA',
                 registration_number: 'BC-1990-774421',
               }}
+              documentSlug={document}
               schema={birthCertificateSchema}
               section={section}
               title={t('tabs.wallet.birth_certificate')}
@@ -310,6 +452,7 @@ export default function WalletDocumentScreen() {
                 expiry_date: '2027-09-30',
                 card_type: 'visa',
               }}
+              documentSlug={document}
               schema={creditCardSchema}
               section={section}
               title={t('tabs.wallet.credit_card')}
@@ -331,6 +474,7 @@ export default function WalletDocumentScreen() {
                 nationality: 'American',
                 country_of_issue: 'United States',
               }}
+              documentSlug={document}
               schema={passportSchema}
               section={section}
               title={t('tabs.wallet.passport')}
@@ -349,6 +493,7 @@ export default function WalletDocumentScreen() {
                 start_date: '2022-03-01',
                 contract_type: 'permanent',
               }}
+              documentSlug={document}
               schema={employmentContractSchema}
               section={section}
               title={t('tabs.wallet.employment_contract')}
@@ -367,6 +512,7 @@ export default function WalletDocumentScreen() {
                 tax_id_number: '123-45-6789',
                 gross_income: '85000',
               }}
+              documentSlug={document}
               schema={taxReturnSchema}
               section={section}
               title={t('tabs.wallet.tax_return')}
@@ -386,6 +532,7 @@ export default function WalletDocumentScreen() {
                 expiry_date: '2026-12-31',
                 coverage_type: 'individual',
               }}
+              documentSlug={document}
               schema={healthInsuranceSchema}
               section={section}
               title={t('tabs.wallet.health_insurance')}
@@ -405,6 +552,7 @@ export default function WalletDocumentScreen() {
                 administered_date: '2025-10-05',
                 dose_number: '1',
               }}
+              documentSlug={document}
               schema={vaccinationRecordSchema}
               section={section}
               title={t('tabs.wallet.vaccination_record')}

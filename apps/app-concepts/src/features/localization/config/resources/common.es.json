@@ -119,7 +119,9 @@
       "scan_hint":               "Alinea el código QR dentro del marco",
       "share_modal_title":       "Compartir documento",
       "share_modal_hint":        "Escanea este código QR para recibir el documento",
-      "document_section":        "Sección"
+      "document_section":        "Sección",
+      "edit_tags_title":         "Editar etiquetas",
+      "edit_tags_add_placeholder": "Añadir etiqueta…"
     }
   },
   "today": "Hoy",
