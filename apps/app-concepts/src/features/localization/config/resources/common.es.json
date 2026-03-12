@@ -118,7 +118,8 @@
       "scan_capture":            "Capturar",
       "scan_hint":               "Alinea el código QR dentro del marco",
       "share_modal_title":       "Compartir documento",
-      "share_modal_hint":        "Escanea este código QR para recibir el documento"
+      "share_modal_hint":        "Escanea este código QR para recibir el documento",
+      "document_section":        "Sección"
     }
   },
   "today": "Hoy",

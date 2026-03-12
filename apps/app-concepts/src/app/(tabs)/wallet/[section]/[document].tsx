@@ -6,6 +6,8 @@ import { StyleSheet, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import QRCode from 'react-native-qrcode-svg'
 
+import { hexAlphaColor } from '@/shared/lib/styling'
+
 import { BackButton, Header, ScreenLayout } from '@/widgets/navigation'
 
 import { AttributeRenderer, type InferAttributeValue, type ObjectAttributeSchema } from '@/entities/attribute'
@@ -144,7 +146,20 @@ const ShareModal: FC<ShareModalProps> = ({ title, modalRef }) => {
   )
 }
 
+const BADGE_COLOR = '#4A6CD7'
+
 const styles = StyleSheet.create({
+  badge: {
+    alignSelf: 'flex-start',
+    borderRadius: 99,
+    borderWidth: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+  },
+  badgeText: {
+    fontSize: 13,
+    fontWeight: '500',
+  },
   qrContainer: {
     alignItems: 'center',
     paddingVertical: 24,
@@ -175,12 +190,21 @@ type DocumentDetailsProps<TSchema extends ObjectAttributeSchema> = {
   schema: TSchema
   defaultValue: InferAttributeValue<TSchema>
   title: string
+  section: string
 }
 
-function DocumentDetails<TSchema extends ObjectAttributeSchema>({ schema, defaultValue, title }: DocumentDetailsProps<TSchema>) {
+function DocumentDetails<TSchema extends ObjectAttributeSchema>({ schema, defaultValue, title, section }: DocumentDetailsProps<TSchema>) {
+  const { t } = useTranslation()
   const [value, setValue] = useState(defaultValue)
   const [hasErrors, setHasErrors] = useState(false)
   const shareModalRef = useRef<BottomSheetModal>(null)
+
+  const sectionLabels: Record<string, string> = {
+    life: t('tabs.wallet.section_life'),
+    work: t('tabs.wallet.section_work'),
+    health: t('tabs.wallet.section_health'),
+  }
+  const sectionName = sectionLabels[section] ?? section
 
   return (
     <>
@@ -192,6 +216,16 @@ function DocumentDetails<TSchema extends ObjectAttributeSchema>({ schema, defaul
             schema={schema}
             value={value}
           />
+        </View>
+        <View
+          style={[
+            styles.badge,
+            { backgroundColor: hexAlphaColor(BADGE_COLOR, 10), borderColor: hexAlphaColor(BADGE_COLOR, 40) },
+          ]}
+        >
+          <Typography style={[styles.badgeText, { color: BADGE_COLOR }]}>
+            {t('tabs.wallet.document_section')}: {sectionName}
+          </Typography>
         </View>
         <View className="gap-3">
           <AppButton disabled={hasErrors} fullWidth text="Save" variant="primary" />
@@ -221,7 +255,7 @@ const WalletDocumentHeader: FC<WalletDocumentHeaderProps> = ({ title }) => (
  * WalletDocumentScreen
  * -----------------------------------------------------------------------------------------------*/
 export default function WalletDocumentScreen() {
-  const { document } = useLocalSearchParams<{ document: string }>()
+  const { document, section } = useLocalSearchParams<{ document: string; section: string }>()
   const { t } = useTranslation()
 
   return (
@@ -240,6 +274,7 @@ export default function WalletDocumentScreen() {
                 state_of_issue: 'California',
               }}
               schema={driversLicenceSchema}
+              section={section}
               title={t('tabs.wallet.drivers_licence')}
             />
           </ScreenLayout.Content>
@@ -258,6 +293,7 @@ export default function WalletDocumentScreen() {
                 registration_number: 'BC-1990-774421',
               }}
               schema={birthCertificateSchema}
+              section={section}
               title={t('tabs.wallet.birth_certificate')}
             />
           </ScreenLayout.Content>
@@ -275,6 +311,7 @@ export default function WalletDocumentScreen() {
                 card_type: 'visa',
               }}
               schema={creditCardSchema}
+              section={section}
               title={t('tabs.wallet.credit_card')}
             />
           </ScreenLayout.Content>
@@ -295,6 +332,7 @@ export default function WalletDocumentScreen() {
                 country_of_issue: 'United States',
               }}
               schema={passportSchema}
+              section={section}
               title={t('tabs.wallet.passport')}
             />
           </ScreenLayout.Content>
@@ -312,6 +350,7 @@ export default function WalletDocumentScreen() {
                 contract_type: 'permanent',
               }}
               schema={employmentContractSchema}
+              section={section}
               title={t('tabs.wallet.employment_contract')}
             />
           </ScreenLayout.Content>
@@ -329,6 +368,7 @@ export default function WalletDocumentScreen() {
                 gross_income: '85000',
               }}
               schema={taxReturnSchema}
+              section={section}
               title={t('tabs.wallet.tax_return')}
             />
           </ScreenLayout.Content>
@@ -347,6 +387,7 @@ export default function WalletDocumentScreen() {
                 coverage_type: 'individual',
               }}
               schema={healthInsuranceSchema}
+              section={section}
               title={t('tabs.wallet.health_insurance')}
             />
           </ScreenLayout.Content>
@@ -365,6 +406,7 @@ export default function WalletDocumentScreen() {
                 dose_number: '1',
               }}
               schema={vaccinationRecordSchema}
+              section={section}
               title={t('tabs.wallet.vaccination_record')}
             />
           </ScreenLayout.Content>

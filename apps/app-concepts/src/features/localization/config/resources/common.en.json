@@ -118,7 +118,8 @@
       "scan_capture":            "Capture",
       "scan_hint":               "Align the QR code within the frame",
       "share_modal_title":       "Share Document",
-      "share_modal_hint":        "Scan this QR code to receive the document"
+      "share_modal_hint":        "Scan this QR code to receive the document",
+      "document_section":        "Section"
     }
   },
   "today": "Today",
