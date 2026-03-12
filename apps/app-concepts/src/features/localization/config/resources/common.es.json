@@ -110,7 +110,7 @@
       "vaccination_record":      "Registro de vacunación",
       "search_placeholder":       "Buscar documentos",
       "search_placeholder_ai":    "Pide a la IA que encuentre tus documentos…",
-      "search_placeholder_voice": "Toca para hablar",
+      "search_placeholder_voice": "Habla para buscar...",
       "search_mode_text":         "Texto",
       "search_mode_ai":           "IA",
       "search_mode_voice":        "Voz",

@@ -1,12 +1,10 @@
-import { type FC, useState } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { type FC, useEffect, useState } from 'react'
+import { Animated, StyleSheet, TouchableOpacity, View, useAnimatedValue } from 'react-native'
 import { useTranslation } from 'react-i18next'
-import { MicrophoneIcon, SparklesIcon } from 'react-native-heroicons/outline'
+import { MicrophoneIcon } from 'react-native-heroicons/outline'
 
 import { colors } from '@/shared/config'
-import { MultilineTextField } from '@/shared/ui/MultilineTextField'
-import { SearchTextField } from '@/shared/ui/SearchTextField'
-import { SearchModeSwitch, type SearchMode } from '@/shared/ui/SearchModeSwitch'
+import { TextField } from '@/shared/ui/TextField'
 
 type WalletSearchBarProps = {
   value: string
@@ -15,79 +13,109 @@ type WalletSearchBarProps = {
 
 const WalletSearchBar: FC<WalletSearchBarProps> = ({ value, onChangeText }) => {
   const { t } = useTranslation()
-  const [mode, setMode] = useState<SearchMode>('text')
+  const [voiceActive, setVoiceActive] = useState(false)
+  const pulseScale = useAnimatedValue(1)
+  const pulseOpacity = useAnimatedValue(0)
 
-  const handleModeChange = (newMode: SearchMode) => {
+  useEffect(() => {
+    if (voiceActive) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.parallel([
+            Animated.timing(pulseScale, { toValue: 1.8, duration: 700, useNativeDriver: true }),
+            Animated.timing(pulseOpacity, { toValue: 0.3, duration: 200, useNativeDriver: true }),
+          ]),
+          Animated.parallel([
+            Animated.timing(pulseScale, { toValue: 1, duration: 500, useNativeDriver: true }),
+            Animated.timing(pulseOpacity, { toValue: 0, duration: 500, useNativeDriver: true }),
+          ]),
+        ]),
+      ).start()
+    } else {
+      pulseScale.setValue(1)
+      pulseOpacity.setValue(0)
+    }
+  }, [voiceActive, pulseScale, pulseOpacity])
+
+  const onMicPressIn = () => {
     onChangeText('')
-    setMode(newMode)
+    setVoiceActive(true)
+  }
+
+  const onMicPressOut = () => {
+    setVoiceActive(false)
   }
 
   return (
     <View style={styles.container}>
-      <View style={styles.card}>
-        <View style={styles.inputContainer}>
-          {mode === 'text' && (
-            <SearchTextField
-              onChangeText={onChangeText}
-              placeholder={t('tabs.wallet.search_placeholder')}
-              value={value}
+      <View style={styles.fieldWrapper}>
+        <TextField
+          disabled={voiceActive}
+          onChangeText={onChangeText}
+          placeholder={voiceActive ? t('tabs.wallet.search_placeholder_voice') : t('tabs.wallet.search_placeholder_ai')}
+          propsStyles={{ input: styles.inputWithMic }}
+          value={value}
+        />
+        <TouchableOpacity
+          activeOpacity={1}
+          onPressIn={onMicPressIn}
+          onPressOut={onMicPressOut}
+          style={styles.micButton}
+        >
+          <Animated.View
+            style={[
+              styles.pulseCircle,
+              { opacity: pulseOpacity, transform: [{ scale: pulseScale }] },
+            ]}
+          />
+          <View style={[styles.micCircle, voiceActive && styles.micCircleActive]}>
+            <MicrophoneIcon
+              color={voiceActive ? colors.white : colors.primary}
+              height={20}
+              width={20}
             />
-          )}
-          {mode === 'ai' && (
-            <MultilineTextField
-              action={{ Icon: SparklesIcon, onPress: () => {} }}
-              numberOfLines={3}
-              onChangeText={onChangeText}
-              placeholder={t('tabs.wallet.search_placeholder_ai')}
-              value={value}
-            />
-          )}
-          {mode === 'voice' && (
-            <View style={styles.voiceContainer}>
-              <TouchableOpacity activeOpacity={0.7} style={styles.micButton}>
-                <MicrophoneIcon color={colors.white} height={32} width={32} />
-              </TouchableOpacity>
-              <Text style={styles.voiceHint}>{t('tabs.wallet.search_placeholder_voice')}</Text>
-            </View>
-          )}
-        </View>
-        <SearchModeSwitch value={mode} onChange={handleModeChange} />
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  card: {
-    borderColor: colors['white/80'],
-    borderRadius: 12,
-    borderWidth: 1,
-    gap: 8,
-    padding: 8,
-  },
   container: {
     paddingBottom: 8,
     paddingHorizontal: 8,
     paddingTop: 12,
   },
-  inputContainer: {},
+  fieldWrapper: {
+    position: 'relative',
+  },
+  inputWithMic: {
+    paddingRight: 52,
+  },
   micButton: {
     alignItems: 'center',
-    backgroundColor: colors.primary,
-    borderRadius: 36,
-    height: 72,
+    bottom: 9,
     justifyContent: 'center',
-    width: 72,
+    position: 'absolute',
+    right: 10,
   },
-  voiceContainer: {
+  micCircle: {
     alignItems: 'center',
-    gap: 12,
-    paddingVertical: 8,
+    borderRadius: 16,
+    height: 32,
+    justifyContent: 'center',
+    width: 32,
   },
-  voiceHint: {
-    color: colors['gray-400'],
-    fontSize: 14,
-    fontWeight: '400',
+  micCircleActive: {
+    backgroundColor: colors.primary,
+  },
+  pulseCircle: {
+    backgroundColor: colors.primary,
+    borderRadius: 16,
+    height: 32,
+    position: 'absolute',
+    width: 32,
   },
 })
 
