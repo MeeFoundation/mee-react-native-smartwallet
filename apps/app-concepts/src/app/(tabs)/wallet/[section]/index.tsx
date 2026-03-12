@@ -1,10 +1,12 @@
 import type { FC } from 'react'
+import { useState } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { ChevronRightIcon } from 'react-native-heroicons/outline'
 import { useTranslation } from 'react-i18next'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 
 import { BackButton, Header, ScreenLayout } from '@/widgets/navigation'
+import { WalletSearchBar } from '@/widgets/wallet'
 
 import { ConnectionListCard } from '@/entities/connection'
 
@@ -63,6 +65,7 @@ export default function SectionDocumentsScreen() {
   const { t } = useTranslation()
   const router = useRouter()
   const { section } = useLocalSearchParams<{ section: string }>()
+  const [search, setSearch] = useState('')
 
   return (
     <ScreenLayout.Root>
@@ -74,6 +77,7 @@ export default function SectionDocumentsScreen() {
               <Header.TitleText>{t('tabs.wallet.section_life')}</Header.TitleText>
             </Header.Actions>
           </Header.Root>
+          <WalletSearchBar onChangeText={setSearch} value={search} />
           <ScreenLayout.Content scrollable={false}>
             <ListLayout.Root>
               <ListLayout.Content style={styles.cardList}>
@@ -110,6 +114,7 @@ export default function SectionDocumentsScreen() {
               <Header.TitleText>{t('tabs.wallet.section_work')}</Header.TitleText>
             </Header.Actions>
           </Header.Root>
+          <WalletSearchBar onChangeText={setSearch} value={search} />
           <ScreenLayout.Content scrollable={false}>
             <ListLayout.Root>
               <ListLayout.Content style={styles.cardList}>
@@ -136,6 +141,7 @@ export default function SectionDocumentsScreen() {
               <Header.TitleText>{t('tabs.wallet.section_health')}</Header.TitleText>
             </Header.Actions>
           </Header.Root>
+          <WalletSearchBar onChangeText={setSearch} value={search} />
           <ScreenLayout.Content scrollable={false}>
             <ListLayout.Root>
               <ListLayout.Content style={styles.cardList}>

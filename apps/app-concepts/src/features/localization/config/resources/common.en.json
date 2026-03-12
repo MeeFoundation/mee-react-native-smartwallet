@@ -108,6 +108,7 @@
       "tax_return":              "Tax Return",
       "health_insurance":        "Health Insurance",
       "vaccination_record":      "Vaccination Record",
+      "search_placeholder":      "Search documents",
       "scan":                    "Scan",
       "scan_capture":            "Capture",
       "scan_hint":               "Align the QR code within the frame",

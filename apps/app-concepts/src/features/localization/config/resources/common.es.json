@@ -108,6 +108,7 @@
       "tax_return":              "Declaración de impuestos",
       "health_insurance":        "Seguro médico",
       "vaccination_record":      "Registro de vacunación",
+      "search_placeholder":      "Buscar documentos",
       "scan":                    "Escanear",
       "scan_capture":            "Capturar",
       "scan_hint":               "Alinea el código QR dentro del marco",

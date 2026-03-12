@@ -11,6 +11,8 @@ import { Header, ScreenLayout, ToggleDrawerButton } from '@/widgets/navigation'
 import { ConnectionListCard } from '@/entities/connection'
 
 import { colors } from '@/shared/config'
+import { WalletSearchBar } from '@/widgets/wallet'
+
 import { AppButton } from '@/shared/ui/AppButton'
 import { IconSymbol, type IconSymbolName } from '@/shared/ui/IconSymbol'
 import { Typography } from '@/shared/ui/Typography'
@@ -183,10 +185,12 @@ export default function WalletScreen() {
   const router = useRouter()
   const insets = useSafeAreaInsets()
   const [scannerVisible, setScannerVisible] = useState(false)
+  const [search, setSearch] = useState('')
 
   return (
     <ScreenLayout.Root>
       <WalletScreenHeader />
+      <WalletSearchBar onChangeText={setSearch} value={search} />
       <ScreenLayout.Content scrollable={false}>
         <ListLayout.Root>
           <ListLayout.Content style={styles.cardList}>
