@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { MicrophoneIcon, SparklesIcon } from 'react-native-heroicons/outline'
 
 import { colors } from '@/shared/config'
+import { MultilineTextField } from '@/shared/ui/MultilineTextField'
 import { SearchTextField } from '@/shared/ui/SearchTextField'
-import { TextField } from '@/shared/ui/TextField'
 import { SearchModeSwitch, type SearchMode } from '@/shared/ui/SearchModeSwitch'
 
 type WalletSearchBarProps = {
@@ -16,6 +16,11 @@ type WalletSearchBarProps = {
 const WalletSearchBar: FC<WalletSearchBarProps> = ({ value, onChangeText }) => {
   const { t } = useTranslation()
   const [mode, setMode] = useState<SearchMode>('text')
+
+  const handleModeChange = (newMode: SearchMode) => {
+    onChangeText('')
+    setMode(newMode)
+  }
 
   return (
     <View style={styles.container}>
@@ -29,11 +34,12 @@ const WalletSearchBar: FC<WalletSearchBarProps> = ({ value, onChangeText }) => {
             />
           )}
           {mode === 'ai' && (
-            <TextField
+            <MultilineTextField
+              action={{ Icon: SparklesIcon, onPress: () => {} }}
+              numberOfLines={3}
               onChangeText={onChangeText}
               placeholder={t('tabs.wallet.search_placeholder_ai')}
               value={value}
-              RightIcon={SparklesIcon}
             />
           )}
           {mode === 'voice' && (
@@ -45,7 +51,7 @@ const WalletSearchBar: FC<WalletSearchBarProps> = ({ value, onChangeText }) => {
             </View>
           )}
         </View>
-        <SearchModeSwitch value={mode} onChange={setMode} />
+        <SearchModeSwitch value={mode} onChange={handleModeChange} />
       </View>
     </View>
   )
@@ -64,9 +70,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingTop: 12,
   },
-  inputContainer: {
-    // minHeight: 50,
-  },
+  inputContainer: {},
   micButton: {
     alignItems: 'center',
     backgroundColor: colors.primary,

@@ -109,7 +109,7 @@
       "health_insurance":        "Seguro médico",
       "vaccination_record":      "Registro de vacunación",
       "search_placeholder":       "Buscar documentos",
-      "search_placeholder_ai":    "Haz una pregunta…",
+      "search_placeholder_ai":    "Pide a la IA que encuentre tus documentos…",
       "search_placeholder_voice": "Toca para hablar",
       "search_mode_text":         "Texto",
       "search_mode_ai":           "IA",
