@@ -4,6 +4,7 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { ChevronRightIcon } from 'react-native-heroicons/outline'
 import { useTranslation } from 'react-i18next'
 import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useAtomValue } from 'jotai'
 
 import { BackButton, Header, ScreenLayout } from '@/widgets/navigation'
 import { WalletSearchBar } from '@/widgets/wallet'
@@ -15,7 +16,8 @@ import { AppButton } from '@/shared/ui/AppButton'
 import { IconSymbol, type IconSymbolName } from '@/shared/ui/IconSymbol'
 import * as ListLayout from '@/shared/ui/ListLayout'
 
-import { SECTION_TITLE_KEYS, WALLET_DOCUMENTS, type DocumentSection } from '../document-registry'
+import { SECTION_TITLE_KEYS, WALLET_DOCUMENTS, type DocumentSection, type DocumentEntry } from '../document-registry'
+import { documentStateAtom } from '../document-state.atom'
 
 const styles = StyleSheet.create({
   cardList: {
@@ -61,19 +63,37 @@ const DocumentCard: FC<DocumentCardProps> = ({ label, icon, onPress }) => (
 )
 
 /* -------------------------------------------------------------------------------------------------
+ * DocumentCardItem — reads atom to get live section, only renders if it matches current section
+ * -----------------------------------------------------------------------------------------------*/
+type DocumentCardItemProps = { doc: DocumentEntry; currentSection: string }
+
+const DocumentCardItem: FC<DocumentCardItemProps> = ({ doc, currentSection }) => {
+  const { t } = useTranslation()
+  const router = useRouter()
+  const state = useAtomValue(documentStateAtom(doc.slug))
+
+  if (state.section !== currentSection) return null
+
+  return (
+    <DocumentCard
+      icon={doc.icon}
+      label={t(doc.translationKey)}
+      onPress={() => router.push(`/wallet/${state.section}/${doc.slug}`)}
+    />
+  )
+}
+
+/* -------------------------------------------------------------------------------------------------
  * SectionDocumentsScreen
  * -----------------------------------------------------------------------------------------------*/
 export default function SectionDocumentsScreen() {
   const { t } = useTranslation()
-  const router = useRouter()
   const { section } = useLocalSearchParams<{ section: string }>()
   const [search, setSearch] = useState('')
 
   const titleKey = SECTION_TITLE_KEYS[section as DocumentSection]
 
   if (!titleKey) return <ScreenLayout.Root />
-
-  const sectionDocs = WALLET_DOCUMENTS.filter((d) => d.section === section)
 
   return (
     <ScreenLayout.Root>
@@ -87,13 +107,8 @@ export default function SectionDocumentsScreen() {
       <ScreenLayout.Content scrollable={false}>
         <ListLayout.Root>
           <ListLayout.Content style={styles.cardList}>
-            {sectionDocs.map((doc) => (
-              <DocumentCard
-                key={doc.slug}
-                icon={doc.icon}
-                label={t(doc.translationKey)}
-                onPress={() => router.push(`/wallet/${doc.section}/${doc.slug}`)}
-              />
+            {WALLET_DOCUMENTS.map((doc) => (
+              <DocumentCardItem key={doc.slug} currentSection={section} doc={doc} />
             ))}
           </ListLayout.Content>
         </ListLayout.Root>
