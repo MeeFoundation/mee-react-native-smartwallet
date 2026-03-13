@@ -5,7 +5,7 @@ import type { FC } from 'react'
 import { useRef, useState } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
-import { CheckIcon, PencilSquareIcon, XMarkIcon } from 'react-native-heroicons/outline'
+import { ChevronDownIcon, PencilSquareIcon, XMarkIcon } from 'react-native-heroicons/outline'
 import QRCode from 'react-native-qrcode-svg'
 
 import { colors } from '@/shared/config'
@@ -18,7 +18,10 @@ import { AttributeRenderer, type InferAttributeValue, type ObjectAttributeSchema
 import { AppButton } from '@/shared/ui/AppButton'
 import { BottomSheetBackModal } from '@/shared/ui/BottomSheetModal'
 import { IconSymbol } from '@/shared/ui/IconSymbol'
+import * as DropdownMenu from '@/shared/ui/DropdownMenu'
 import { Typography } from '@/shared/ui/Typography'
+
+import type { SFSymbols6_0 } from 'sf-symbols-typescript'
 
 import { SECTION_ICONS, SECTION_TITLE_KEYS, WALLET_DOCUMENTS, type DocumentSection } from '../document-registry'
 import { documentStateAtom, type DocumentState } from '../document-state.atom'
@@ -59,6 +62,12 @@ const CUSTOM_BADGE_COLOR = colors.primary
 
 const SECTIONS: DocumentSection[] = ['life', 'work', 'health']
 
+const SECTION_SF_SYMBOLS: Record<DocumentSection, SFSymbols6_0> = {
+  life: 'heart',
+  work: 'briefcase',
+  health: 'checkmark.shield',
+}
+
 const styles = StyleSheet.create({
   badge: {
     alignSelf: 'flex-start',
@@ -70,6 +79,11 @@ const styles = StyleSheet.create({
   badgeText: {
     fontSize: 13,
     fontWeight: '500',
+  },
+  badgeInner: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 5,
   },
   customBadgeRow: {
     alignItems: 'center',
@@ -131,36 +145,6 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     opacity: 0.6,
     textAlign: 'center',
-  },
-  sectionBadgeRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 6,
-  },
-  badgeInner: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 5,
-  },
-  sectionPickerContent: {
-    paddingBottom: 32,
-    paddingHorizontal: 16,
-    paddingTop: 8,
-  },
-  sectionPickerRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 14,
-  },
-  sectionPickerSeparator: {
-    backgroundColor: colors['gray-200'],
-    height: StyleSheet.hairlineWidth,
-  },
-  sectionPickerLabel: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 10,
   },
 })
 
@@ -227,49 +211,6 @@ const BadgeEditModal: FC<BadgeEditModalProps> = ({ modalRef, badges, onRemove, o
 }
 
 /* -------------------------------------------------------------------------------------------------
- * SectionPickerModal
- * -----------------------------------------------------------------------------------------------*/
-type SectionPickerModalProps = {
-  modalRef: React.RefObject<BottomSheetModal | null>
-  currentSection: DocumentSection
-  onSelect: (section: DocumentSection) => void
-}
-
-const SectionPickerModal: FC<SectionPickerModalProps> = ({ modalRef, currentSection, onSelect }) => {
-  const { t } = useTranslation()
-
-  return (
-    <BottomSheetBackModal
-      enableDynamicSizing
-      ref={modalRef}
-      snapPoints={[]}
-      title={t('tabs.wallet.document_section')}
-    >
-      <View style={styles.sectionPickerContent}>
-        {SECTIONS.map((section, index) => (
-          <View key={section}>
-            {index > 0 && <View style={styles.sectionPickerSeparator} />}
-            <TouchableOpacity
-              onPress={() => {
-                onSelect(section)
-                modalRef.current?.dismiss()
-              }}
-              style={styles.sectionPickerRow}
-            >
-              <View style={styles.sectionPickerLabel}>
-                <IconSymbol color={colors['gray-800']} height={18} name={SECTION_ICONS[section]} width={18} />
-                <Typography style={{ fontSize: 16 }}>{t(SECTION_TITLE_KEYS[section])}</Typography>
-              </View>
-              {currentSection === section && <CheckIcon color={colors.primary} size={20} />}
-            </TouchableOpacity>
-          </View>
-        ))}
-      </View>
-    </BottomSheetBackModal>
-  )
-}
-
-/* -------------------------------------------------------------------------------------------------
  * DocumentDetails — generic typed form
  * -----------------------------------------------------------------------------------------------*/
 type DocumentDetailsProps<TSchema extends ObjectAttributeSchema> = {
@@ -285,7 +226,6 @@ function DocumentDetails<TSchema extends ObjectAttributeSchema>({ schema, title,
   const [hasErrors, setHasErrors] = useState(false)
   const shareModalRef = useRef<BottomSheetModal>(null)
   const badgeEditModalRef = useRef<BottomSheetModal>(null)
-  const sectionPickerModalRef = useRef<BottomSheetModal>(null)
 
   const sectionName = t(SECTION_TITLE_KEYS[state.section])
 
@@ -300,23 +240,33 @@ function DocumentDetails<TSchema extends ObjectAttributeSchema>({ schema, title,
             value={state.value as InferAttributeValue<TSchema>}
           />
         </View>
-        <View style={styles.sectionBadgeRow}>
-          <View
-            style={[
-              styles.badge,
-              styles.badgeInner,
-              { backgroundColor: hexAlphaColor(BADGE_COLOR, 10), borderColor: hexAlphaColor(BADGE_COLOR, 40) },
-            ]}
-          >
-            <IconSymbol color={BADGE_COLOR} height={16} name={SECTION_ICONS[state.section]} width={16} />
-            <Typography style={[styles.badgeText, { color: BADGE_COLOR }]}>
-              {sectionName}
-            </Typography>
-          </View>
-          <TouchableOpacity onPress={() => sectionPickerModalRef.current?.present()}>
-            <PencilSquareIcon color={colors.primaryActive} size={18} />
-          </TouchableOpacity>
-        </View>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger>
+            <View
+              style={[
+                styles.badge,
+                styles.badgeInner,
+                { backgroundColor: hexAlphaColor(BADGE_COLOR, 10), borderColor: hexAlphaColor(BADGE_COLOR, 40) },
+              ]}
+            >
+              <IconSymbol color={BADGE_COLOR} height={16} name={SECTION_ICONS[state.section]} width={16} />
+              <Typography style={[styles.badgeText, { color: BADGE_COLOR }]}>{sectionName}</Typography>
+              <ChevronDownIcon color={BADGE_COLOR} size={13} />
+            </View>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.MenuContent>
+            {SECTIONS.map((section) => (
+              <DropdownMenu.MenuCheckboxItem
+                key={section}
+                onValueChange={() => onStateChange({ ...state, section })}
+                value={state.section === section ? 'on' : 'off'}
+              >
+                <DropdownMenu.MenuItemTitle>{t(SECTION_TITLE_KEYS[section])}</DropdownMenu.MenuItemTitle>
+                <DropdownMenu.MenuIcon ios={{ name: SECTION_SF_SYMBOLS[section] }} />
+              </DropdownMenu.MenuCheckboxItem>
+            ))}
+          </DropdownMenu.MenuContent>
+        </DropdownMenu.Root>
         <View style={styles.customBadgeRow}>
           {state.badges.map((badge) => (
             <View
@@ -344,11 +294,6 @@ function DocumentDetails<TSchema extends ObjectAttributeSchema>({ schema, title,
         modalRef={badgeEditModalRef}
         onAdd={(badge) => onStateChange({ ...state, badges: [...state.badges, badge] })}
         onRemove={(badge) => onStateChange({ ...state, badges: state.badges.filter((b) => b !== badge) })}
-      />
-      <SectionPickerModal
-        currentSection={state.section}
-        modalRef={sectionPickerModalRef}
-        onSelect={(section) => onStateChange({ ...state, section })}
       />
     </>
   )
