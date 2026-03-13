@@ -1,10 +1,11 @@
 import { BottomSheetTextInput, type BottomSheetModal } from '@gorhom/bottom-sheet'
-import { useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useAtom } from 'jotai'
 import type { FC } from 'react'
 import { useRef, useState } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
-import { PencilSquareIcon, XMarkIcon } from 'react-native-heroicons/outline'
+import { CheckIcon, PencilSquareIcon, XMarkIcon } from 'react-native-heroicons/outline'
 import QRCode from 'react-native-qrcode-svg'
 
 import { colors } from '@/shared/config'
@@ -16,9 +17,11 @@ import { AttributeRenderer, type InferAttributeValue, type ObjectAttributeSchema
 
 import { AppButton } from '@/shared/ui/AppButton'
 import { BottomSheetBackModal } from '@/shared/ui/BottomSheetModal'
+import { IconSymbol } from '@/shared/ui/IconSymbol'
 import { Typography } from '@/shared/ui/Typography'
 
-import { SECTION_TITLE_KEYS, WALLET_DOCUMENTS, type DocumentSection } from '../document-registry'
+import { SECTION_ICONS, SECTION_TITLE_KEYS, WALLET_DOCUMENTS, type DocumentSection } from '../document-registry'
+import { documentStateAtom, type DocumentState } from '../document-state.atom'
 
 /* -------------------------------------------------------------------------------------------------
  * ShareModal
@@ -53,6 +56,8 @@ const ShareModal: FC<ShareModalProps> = ({ title, modalRef }) => {
 
 const BADGE_COLOR = '#4A6CD7'
 const CUSTOM_BADGE_COLOR = colors.primary
+
+const SECTIONS: DocumentSection[] = ['life', 'work', 'health']
 
 const styles = StyleSheet.create({
   badge: {
@@ -127,6 +132,36 @@ const styles = StyleSheet.create({
     opacity: 0.6,
     textAlign: 'center',
   },
+  sectionBadgeRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 6,
+  },
+  badgeInner: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 5,
+  },
+  sectionPickerContent: {
+    paddingBottom: 32,
+    paddingHorizontal: 16,
+    paddingTop: 8,
+  },
+  sectionPickerRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 14,
+  },
+  sectionPickerSeparator: {
+    backgroundColor: colors['gray-200'],
+    height: StyleSheet.hairlineWidth,
+  },
+  sectionPickerLabel: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 10,
+  },
 })
 
 /* -------------------------------------------------------------------------------------------------
@@ -192,57 +227,98 @@ const BadgeEditModal: FC<BadgeEditModalProps> = ({ modalRef, badges, onRemove, o
 }
 
 /* -------------------------------------------------------------------------------------------------
+ * SectionPickerModal
+ * -----------------------------------------------------------------------------------------------*/
+type SectionPickerModalProps = {
+  modalRef: React.RefObject<BottomSheetModal | null>
+  currentSection: DocumentSection
+  onSelect: (section: DocumentSection) => void
+}
+
+const SectionPickerModal: FC<SectionPickerModalProps> = ({ modalRef, currentSection, onSelect }) => {
+  const { t } = useTranslation()
+
+  return (
+    <BottomSheetBackModal
+      enableDynamicSizing
+      ref={modalRef}
+      snapPoints={[]}
+      title={t('tabs.wallet.document_section')}
+    >
+      <View style={styles.sectionPickerContent}>
+        {SECTIONS.map((section, index) => (
+          <View key={section}>
+            {index > 0 && <View style={styles.sectionPickerSeparator} />}
+            <TouchableOpacity
+              onPress={() => {
+                onSelect(section)
+                modalRef.current?.dismiss()
+              }}
+              style={styles.sectionPickerRow}
+            >
+              <View style={styles.sectionPickerLabel}>
+                <IconSymbol color={colors['gray-800']} height={18} name={SECTION_ICONS[section]} width={18} />
+                <Typography style={{ fontSize: 16 }}>{t(SECTION_TITLE_KEYS[section])}</Typography>
+              </View>
+              {currentSection === section && <CheckIcon color={colors.primary} size={20} />}
+            </TouchableOpacity>
+          </View>
+        ))}
+      </View>
+    </BottomSheetBackModal>
+  )
+}
+
+/* -------------------------------------------------------------------------------------------------
  * DocumentDetails — generic typed form
  * -----------------------------------------------------------------------------------------------*/
 type DocumentDetailsProps<TSchema extends ObjectAttributeSchema> = {
   schema: TSchema
-  defaultValue: InferAttributeValue<TSchema>
   title: string
-  section: DocumentSection
-  defaultBadges: string[]
+  state: DocumentState
+  onStateChange: (state: DocumentState) => void
 }
 
-function DocumentDetails<TSchema extends ObjectAttributeSchema>({ schema, defaultValue, title, section, defaultBadges }: DocumentDetailsProps<TSchema>) {
+function DocumentDetails<TSchema extends ObjectAttributeSchema>({ schema, title, state, onStateChange }: DocumentDetailsProps<TSchema>) {
   const { t } = useTranslation()
-  const [value, setValue] = useState(defaultValue)
+  const router = useRouter()
   const [hasErrors, setHasErrors] = useState(false)
-  const [customBadges, setCustomBadges] = useState<string[]>(() => [...defaultBadges])
   const shareModalRef = useRef<BottomSheetModal>(null)
   const badgeEditModalRef = useRef<BottomSheetModal>(null)
+  const sectionPickerModalRef = useRef<BottomSheetModal>(null)
 
-  const sectionName = t(SECTION_TITLE_KEYS[section])
-
-  const handleAddBadge = (badge: string) => {
-    setCustomBadges((prev) => [...prev, badge])
-  }
-
-  const handleRemoveBadge = (badge: string) => {
-    setCustomBadges((prev) => prev.filter((b) => b !== badge))
-  }
+  const sectionName = t(SECTION_TITLE_KEYS[state.section])
 
   return (
     <>
       <View className="gap-4 p-4">
         <View className="rounded-xl border border-black/7 bg-white/90 p-3">
           <AttributeRenderer
-            onChange={setValue}
+            onChange={(value) => onStateChange({ ...state, value: value as Record<string, unknown> })}
             onErrors={(errors) => setHasErrors(Object.keys(errors).length > 0)}
             schema={schema}
-            value={value}
+            value={state.value as InferAttributeValue<TSchema>}
           />
         </View>
-        <View
-          style={[
-            styles.badge,
-            { backgroundColor: hexAlphaColor(BADGE_COLOR, 10), borderColor: hexAlphaColor(BADGE_COLOR, 40) },
-          ]}
-        >
-          <Typography style={[styles.badgeText, { color: BADGE_COLOR }]}>
-            {t('tabs.wallet.document_section')}: {sectionName}
-          </Typography>
+        <View style={styles.sectionBadgeRow}>
+          <View
+            style={[
+              styles.badge,
+              styles.badgeInner,
+              { backgroundColor: hexAlphaColor(BADGE_COLOR, 10), borderColor: hexAlphaColor(BADGE_COLOR, 40) },
+            ]}
+          >
+            <IconSymbol color={BADGE_COLOR} height={16} name={SECTION_ICONS[state.section]} width={16} />
+            <Typography style={[styles.badgeText, { color: BADGE_COLOR }]}>
+              {t('tabs.wallet.document_section')}: {sectionName}
+            </Typography>
+          </View>
+          <TouchableOpacity onPress={() => sectionPickerModalRef.current?.present()}>
+            <PencilSquareIcon color={colors.primaryActive} size={18} />
+          </TouchableOpacity>
         </View>
         <View style={styles.customBadgeRow}>
-          {customBadges.map((badge) => (
+          {state.badges.map((badge) => (
             <View
               key={badge}
               style={[
@@ -258,16 +334,21 @@ function DocumentDetails<TSchema extends ObjectAttributeSchema>({ schema, defaul
           </TouchableOpacity>
         </View>
         <View className="gap-3">
-          <AppButton disabled={hasErrors} fullWidth text="Save" variant="primary" />
+          <AppButton disabled={hasErrors} fullWidth onPress={() => router.canGoBack() && router.back()} text="Save" variant="primary" />
           <AppButton fullWidth onPress={() => shareModalRef.current?.present()} text="Share" variant="secondary" />
         </View>
       </View>
       <ShareModal modalRef={shareModalRef} title={title} />
       <BadgeEditModal
-        badges={customBadges}
+        badges={state.badges}
         modalRef={badgeEditModalRef}
-        onAdd={handleAddBadge}
-        onRemove={handleRemoveBadge}
+        onAdd={(badge) => onStateChange({ ...state, badges: [...state.badges, badge] })}
+        onRemove={(badge) => onStateChange({ ...state, badges: state.badges.filter((b) => b !== badge) })}
+      />
+      <SectionPickerModal
+        currentSection={state.section}
+        modalRef={sectionPickerModalRef}
+        onSelect={(section) => onStateChange({ ...state, section })}
       />
     </>
   )
@@ -295,6 +376,7 @@ export default function WalletDocumentScreen() {
   const { t } = useTranslation()
 
   const entry = WALLET_DOCUMENTS.find((d) => d.slug === document)
+  const [state, setState] = useAtom(documentStateAtom(document ?? ''))
 
   if (!entry) return <ScreenLayout.Root />
 
@@ -305,10 +387,9 @@ export default function WalletDocumentScreen() {
       <WalletDocumentHeader title={title} />
       <ScreenLayout.Content>
         <DocumentDetails
-          defaultBadges={entry.defaultBadges}
-          defaultValue={entry.defaultValue as unknown as InferAttributeValue<ObjectAttributeSchema>}
+          onStateChange={setState}
           schema={entry.schema}
-          section={entry.section}
+          state={state}
           title={title}
         />
       </ScreenLayout.Content>

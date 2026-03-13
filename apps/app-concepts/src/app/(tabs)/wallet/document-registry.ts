@@ -134,6 +134,12 @@ export const SECTION_TITLE_KEYS: Record<DocumentSection, ParseKeys> = {
   health: 'tabs.wallet.section_health',
 }
 
+export const SECTION_ICONS: Record<DocumentSection, IconSymbolName> = {
+  life: 'heart.outlined',
+  work: 'briefcase.outlined',
+  health: 'shield-check.outlined',
+}
+
 /* -------------------------------------------------------------------------------------------------
  * Helper — preserves type-safety at definition time, stores as DocumentEntry
  * -----------------------------------------------------------------------------------------------*/
