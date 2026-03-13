@@ -114,6 +114,8 @@
       "search_mode_text":         "Text",
       "search_mode_ai":           "AI",
       "search_mode_voice":        "Voice",
+      "search_scope_current":     "Current",
+      "search_scope_global":      "Global",
       "scan":                    "Scan",
       "scan_capture":            "Capture",
       "scan_hint":               "Align the QR code within the frame",
