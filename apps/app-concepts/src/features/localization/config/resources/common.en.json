@@ -26,6 +26,55 @@
       "art": "Art"
     }
   },
+  "attribute_administered_date":   { "label": "Administered date" },
+  "attribute_card_number":         { "label": "Card number" },
+  "attribute_card_type": {
+    "label": "Card type",
+    "options": {
+      "amex":       "American Express",
+      "mastercard": "Mastercard",
+      "other":      "Other",
+      "visa":       "Visa"
+    }
+  },
+  "attribute_cardholder_name":     { "label": "Cardholder name" },
+  "attribute_contract_type": {
+    "label": "Contract type",
+    "options": {
+      "permanent":  "Permanent",
+      "fixed_term": "Fixed term",
+      "contractor": "Contractor"
+    }
+  },
+  "attribute_coverage_type": {
+    "label": "Coverage type",
+    "options": {
+      "individual": "Individual",
+      "family":     "Family",
+      "group":      "Group"
+    }
+  },
+  "attribute_country_of_issue":    { "label": "Country of issue" },
+  "attribute_dose_number":         { "label": "Dose number" },
+  "attribute_employer":            { "label": "Employer" },
+  "attribute_expiry_date":         { "label": "Expiry date" },
+  "attribute_filing_status":       { "label": "Filing status" },
+  "attribute_gross_income":        { "label": "Gross income" },
+  "attribute_licence_number":      { "label": "Licence number" },
+  "attribute_nationality":         { "label": "Nationality" },
+  "attribute_passport_number":     { "label": "Passport number" },
+  "attribute_patient_name":        { "label": "Patient name" },
+  "attribute_place_of_birth":      { "label": "Place of birth" },
+  "attribute_policy_holder":       { "label": "Policy holder" },
+  "attribute_policy_number":       { "label": "Policy number" },
+  "attribute_position":            { "label": "Position" },
+  "attribute_provider":            { "label": "Provider" },
+  "attribute_registration_number": { "label": "Registration number" },
+  "attribute_start_date":          { "label": "Start date" },
+  "attribute_state_of_issue":      { "label": "State of issue" },
+  "attribute_tax_id_number":       { "label": "Tax ID number" },
+  "attribute_tax_year":            { "label": "Tax year" },
+  "attribute_vaccine_name":        { "label": "Vaccine" },
   "attribute_address": {
     "label": "Address",
     "address_country":     { "label": "Country" },
@@ -47,7 +96,35 @@
       "title": "Share"
     },
     "wallet": {
-      "title": "Wallet"
+      "title": "Wallet",
+      "section_life":            "Life",
+      "section_work":            "Work",
+      "section_health":          "Health",
+      "drivers_licence":         "Drivers licence",
+      "birth_certificate":       "Date of birth certificate",
+      "credit_card":             "Visa ···· 1111",
+      "credit_card_mc":          "MC ···· 5555",
+      "passport":                "Passport (US) ···· 041",
+      "employment_contract":     "Employment contract Acmee",
+      "tax_return":              "Tax return 2024",
+      "health_insurance":        "Health insurance 2291",
+      "vaccination_record":      "Vaccination record 123",
+      "search_placeholder":       "Search documents",
+      "search_placeholder_ai":    "Ask AI to find your documents…",
+      "search_placeholder_voice": "Speak to search...",
+      "search_mode_text":         "Text",
+      "search_mode_ai":           "AI",
+      "search_mode_voice":        "Voice",
+      "search_scope_current":     "Current",
+      "search_scope_global":      "Global",
+      "scan":                    "Scan",
+      "scan_capture":            "Capture",
+      "scan_hint":               "Align the QR code within the frame",
+      "share_modal_title":       "Share Document",
+      "share_modal_hint":        "Scan this QR code to receive the document",
+      "document_section":        "Section",
+      "edit_tags_title":         "Edit Tags",
+      "edit_tags_add_placeholder": "Add a tag…"
     }
   },
   "today": "Today",
