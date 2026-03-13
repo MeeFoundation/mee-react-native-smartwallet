@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 import { useEffect, useRef, useState } from 'react'
-import { Animated, Easing, Modal, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Animated, Easing, Keyboard, Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import { ChevronRightIcon, QrCodeIcon, XMarkIcon } from 'react-native-heroicons/outline'
 import { useTranslation } from 'react-i18next'
 import { useRouter } from 'expo-router'
@@ -188,6 +188,7 @@ export default function WalletScreen() {
   const [search, setSearch] = useState('')
 
   return (
+    <TouchableWithoutFeedback accessible={false} onPress={Keyboard.dismiss}>
     <ScreenLayout.Root>
       <WalletScreenHeader />
       <WalletSearchBar onChangeText={setSearch} value={search} />
@@ -223,5 +224,6 @@ export default function WalletScreen() {
       </View>
       <ScannerModal onClose={() => setScannerVisible(false)} visible={scannerVisible} />
     </ScreenLayout.Root>
+    </TouchableWithoutFeedback>
   )
 }

@@ -10,7 +10,7 @@ import {
 } from 'react-native-heroicons/outline'
 
 import { colors } from '@/shared/config'
-import { TextField } from '@/shared/ui/TextField'
+import { MultilineTextField } from '@/shared/ui/MultilineTextField'
 
 type SearchScope = 'current' | 'global'
 
@@ -27,6 +27,7 @@ const SCOPE_CONFIG = {
 const WalletSearchBar: FC<WalletSearchBarProps> = ({ value, onChangeText }) => {
   const { t } = useTranslation()
   const [voiceActive, setVoiceActive] = useState(false)
+  const [isFieldFocused, setIsFieldFocused] = useState(false)
   const [scope, setScope] = useState<SearchScope>('current')
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const pulseScale = useAnimatedValue(1)
@@ -72,13 +73,23 @@ const WalletSearchBar: FC<WalletSearchBarProps> = ({ value, onChangeText }) => {
   return (
     <View style={styles.container}>
       <View style={styles.fieldWrapper}>
-        <TextField
+        <MultilineTextField
           disabled={voiceActive}
+          numberOfLines={3}
+          onBlur={() => setIsFieldFocused(false)}
           onChangeText={onChangeText}
-          placeholder={voiceActive ? t('tabs.wallet.search_placeholder_voice') : t('tabs.wallet.search_placeholder_ai')}
-          propsStyles={{ input: styles.inputInner }}
+          onFocus={() => setIsFieldFocused(true)}
+          propsStyles={{ container: styles.textFieldContainer, input: styles.inputInner }}
           value={value}
         />
+
+        {!value && !isFieldFocused && (
+          <View pointerEvents="none" style={styles.placeholderOverlay}>
+            <Text style={styles.placeholderText}>
+              {voiceActive ? t('tabs.wallet.search_placeholder_voice') : t('tabs.wallet.search_placeholder_ai')}
+            </Text>
+          </View>
+        )}
 
         <TouchableOpacity
           activeOpacity={0.7}
@@ -155,7 +166,7 @@ const styles = StyleSheet.create({
     left: 0,
     overflow: 'hidden',
     position: 'absolute',
-    top: 54,
+    top: 88,
     zIndex: 20,
   },
   dropdownItem: {
@@ -184,12 +195,28 @@ const styles = StyleSheet.create({
     paddingLeft: 58,
     paddingRight: 52,
   },
+  placeholderOverlay: {
+    bottom: 0,
+    justifyContent: 'center',
+    left: 58,
+    position: 'absolute',
+    right: 52,
+    top: 0,
+  },
+  placeholderText: {
+    color: colors['gray-400'],
+    fontSize: 16,
+  },
+  textFieldContainer: {
+    paddingHorizontal: 0,
+  },
   micButton: {
     alignItems: 'center',
-    bottom: 9,
+    bottom: 0,
     justifyContent: 'center',
     position: 'absolute',
     right: 10,
+    top: 0,
   },
   micCircle: {
     alignItems: 'center',
@@ -210,10 +237,10 @@ const styles = StyleSheet.create({
   },
   scopeDivider: {
     backgroundColor: colors['gray-200'],
-    bottom: 10,
+    bottom: 0,
     left: 52,
     position: 'absolute',
-    top: 10,
+    top: 0,
     width: 1,
   },
   scopeTrigger: {
