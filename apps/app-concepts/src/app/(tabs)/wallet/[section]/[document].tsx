@@ -18,106 +18,7 @@ import { AppButton } from '@/shared/ui/AppButton'
 import { BottomSheetBackModal } from '@/shared/ui/BottomSheetModal'
 import { Typography } from '@/shared/ui/Typography'
 
-import { DEFAULT_DOCUMENT_BADGES } from '../document-badges'
-
-/* -------------------------------------------------------------------------------------------------
- * Schemas
- * -----------------------------------------------------------------------------------------------*/
-const driversLicenceSchema = {
-  type: 'object',
-  properties: {
-    licence_number: { type: 'string' },
-    first_name: { type: 'string' },
-    last_name: { type: 'string' },
-    date_of_birth: { type: 'date' },
-    expiry_date: { type: 'date' },
-    state_of_issue: { type: 'string' },
-  },
-  required: ['licence_number'],
-} satisfies ObjectAttributeSchema
-
-const birthCertificateSchema = {
-  type: 'object',
-  properties: {
-    first_name: { type: 'string' },
-    last_name: { type: 'string' },
-    date_of_birth: { type: 'date' },
-    place_of_birth: { type: 'string' },
-    registration_number: { type: 'string' },
-  },
-  required: ['first_name', 'last_name', 'date_of_birth'],
-} satisfies ObjectAttributeSchema
-
-const creditCardSchema = {
-  type: 'object',
-  properties: {
-    cardholder_name: { type: 'string' },
-    card_number: { type: 'string' },
-    expiry_date: { type: 'date' },
-    card_type: { type: 'select', options: ['visa', 'mastercard', 'amex', 'other'] },
-  },
-  required: ['cardholder_name', 'card_number'],
-} satisfies ObjectAttributeSchema
-
-const passportSchema = {
-  type: 'object',
-  properties: {
-    passport_number: { type: 'string' },
-    first_name: { type: 'string' },
-    last_name: { type: 'string' },
-    date_of_birth: { type: 'date' },
-    expiry_date: { type: 'date' },
-    nationality: { type: 'string' },
-    country_of_issue: { type: 'string' },
-  },
-  required: ['passport_number', 'first_name', 'last_name'],
-} satisfies ObjectAttributeSchema
-
-const employmentContractSchema = {
-  type: 'object',
-  properties: {
-    employer: { type: 'string' },
-    position: { type: 'string' },
-    start_date: { type: 'date' },
-    contract_type: { type: 'select', options: ['permanent', 'fixed_term', 'contractor'] },
-  },
-  required: ['employer', 'position'],
-} satisfies ObjectAttributeSchema
-
-const taxReturnSchema = {
-  type: 'object',
-  properties: {
-    tax_year: { type: 'string' },
-    filing_status: { type: 'string' },
-    tax_id_number: { type: 'string' },
-    gross_income: { type: 'string' },
-  },
-  required: ['tax_year', 'tax_id_number'],
-} satisfies ObjectAttributeSchema
-
-const healthInsuranceSchema = {
-  type: 'object',
-  properties: {
-    policy_number: { type: 'string' },
-    provider: { type: 'string' },
-    policy_holder: { type: 'string' },
-    expiry_date: { type: 'date' },
-    coverage_type: { type: 'select', options: ['individual', 'family', 'group'] },
-  },
-  required: ['policy_number', 'provider'],
-} satisfies ObjectAttributeSchema
-
-const vaccinationRecordSchema = {
-  type: 'object',
-  properties: {
-    patient_name: { type: 'string' },
-    date_of_birth: { type: 'date' },
-    vaccine_name: { type: 'string' },
-    administered_date: { type: 'date' },
-    dose_number: { type: 'string' },
-  },
-  required: ['patient_name', 'vaccine_name'],
-} satisfies ObjectAttributeSchema
+import { SECTION_TITLE_KEYS, WALLET_DOCUMENTS, type DocumentSection } from '../document-registry'
 
 /* -------------------------------------------------------------------------------------------------
  * ShareModal
@@ -297,24 +198,19 @@ type DocumentDetailsProps<TSchema extends ObjectAttributeSchema> = {
   schema: TSchema
   defaultValue: InferAttributeValue<TSchema>
   title: string
-  section: string
-  documentSlug: string
+  section: DocumentSection
+  defaultBadges: string[]
 }
 
-function DocumentDetails<TSchema extends ObjectAttributeSchema>({ schema, defaultValue, title, section, documentSlug }: DocumentDetailsProps<TSchema>) {
+function DocumentDetails<TSchema extends ObjectAttributeSchema>({ schema, defaultValue, title, section, defaultBadges }: DocumentDetailsProps<TSchema>) {
   const { t } = useTranslation()
   const [value, setValue] = useState(defaultValue)
   const [hasErrors, setHasErrors] = useState(false)
-  const [customBadges, setCustomBadges] = useState<string[]>(() => [...(DEFAULT_DOCUMENT_BADGES[documentSlug] ?? [])])
+  const [customBadges, setCustomBadges] = useState<string[]>(() => [...defaultBadges])
   const shareModalRef = useRef<BottomSheetModal>(null)
   const badgeEditModalRef = useRef<BottomSheetModal>(null)
 
-  const sectionLabels: Record<string, string> = {
-    life: t('tabs.wallet.section_life'),
-    work: t('tabs.wallet.section_work'),
-    health: t('tabs.wallet.section_health'),
-  }
-  const sectionName = sectionLabels[section] ?? section
+  const sectionName = t(SECTION_TITLE_KEYS[section])
 
   const handleAddBadge = (badge: string) => {
     setCustomBadges((prev) => [...prev, badge])
@@ -395,171 +291,27 @@ const WalletDocumentHeader: FC<WalletDocumentHeaderProps> = ({ title }) => (
  * WalletDocumentScreen
  * -----------------------------------------------------------------------------------------------*/
 export default function WalletDocumentScreen() {
-  const { document, section } = useLocalSearchParams<{ document: string; section: string }>()
+  const { document } = useLocalSearchParams<{ document: string }>()
   const { t } = useTranslation()
+
+  const entry = WALLET_DOCUMENTS.find((d) => d.slug === document)
+
+  if (!entry) return <ScreenLayout.Root />
+
+  const title = t(entry.translationKey)
 
   return (
     <ScreenLayout.Root>
-      {document === 'drivers-licence' && (
-        <>
-          <WalletDocumentHeader title={t('tabs.wallet.drivers_licence')} />
-          <ScreenLayout.Content>
-            <DocumentDetails
-              defaultValue={{
-                licence_number: 'DL-4821093',
-                first_name: 'Alex',
-                last_name: 'Johnson',
-                date_of_birth: '1990-06-15',
-                expiry_date: '2028-06-15',
-                state_of_issue: 'California',
-              }}
-              documentSlug={document}
-              schema={driversLicenceSchema}
-              section={section}
-              title={t('tabs.wallet.drivers_licence')}
-            />
-          </ScreenLayout.Content>
-        </>
-      )}
-      {document === 'birth-certificate' && (
-        <>
-          <WalletDocumentHeader title={t('tabs.wallet.birth_certificate')} />
-          <ScreenLayout.Content>
-            <DocumentDetails
-              defaultValue={{
-                first_name: 'Alex',
-                last_name: 'Johnson',
-                date_of_birth: '1990-06-15',
-                place_of_birth: 'Los Angeles, CA',
-                registration_number: 'BC-1990-774421',
-              }}
-              documentSlug={document}
-              schema={birthCertificateSchema}
-              section={section}
-              title={t('tabs.wallet.birth_certificate')}
-            />
-          </ScreenLayout.Content>
-        </>
-      )}
-      {document === 'credit-card' && (
-        <>
-          <WalletDocumentHeader title={t('tabs.wallet.credit_card')} />
-          <ScreenLayout.Content>
-            <DocumentDetails
-              defaultValue={{
-                cardholder_name: 'Alex Johnson',
-                card_number: '4111 1111 1111 1111',
-                expiry_date: '2027-09-30',
-                card_type: 'visa',
-              }}
-              documentSlug={document}
-              schema={creditCardSchema}
-              section={section}
-              title={t('tabs.wallet.credit_card')}
-            />
-          </ScreenLayout.Content>
-        </>
-      )}
-      {document === 'passport' && (
-        <>
-          <WalletDocumentHeader title={t('tabs.wallet.passport')} />
-          <ScreenLayout.Content>
-            <DocumentDetails
-              defaultValue={{
-                passport_number: 'P-A3829041',
-                first_name: 'Alex',
-                last_name: 'Johnson',
-                date_of_birth: '1990-06-15',
-                expiry_date: '2030-03-22',
-                nationality: 'American',
-                country_of_issue: 'United States',
-              }}
-              documentSlug={document}
-              schema={passportSchema}
-              section={section}
-              title={t('tabs.wallet.passport')}
-            />
-          </ScreenLayout.Content>
-        </>
-      )}
-      {document === 'employment-contract' && (
-        <>
-          <WalletDocumentHeader title={t('tabs.wallet.employment_contract')} />
-          <ScreenLayout.Content>
-            <DocumentDetails
-              defaultValue={{
-                employer: 'Acme Corp',
-                position: 'Software Engineer',
-                start_date: '2022-03-01',
-                contract_type: 'permanent',
-              }}
-              documentSlug={document}
-              schema={employmentContractSchema}
-              section={section}
-              title={t('tabs.wallet.employment_contract')}
-            />
-          </ScreenLayout.Content>
-        </>
-      )}
-      {document === 'tax-return' && (
-        <>
-          <WalletDocumentHeader title={t('tabs.wallet.tax_return')} />
-          <ScreenLayout.Content>
-            <DocumentDetails
-              defaultValue={{
-                tax_year: '2024',
-                filing_status: 'Single',
-                tax_id_number: '123-45-6789',
-                gross_income: '85000',
-              }}
-              documentSlug={document}
-              schema={taxReturnSchema}
-              section={section}
-              title={t('tabs.wallet.tax_return')}
-            />
-          </ScreenLayout.Content>
-        </>
-      )}
-      {document === 'health-insurance' && (
-        <>
-          <WalletDocumentHeader title={t('tabs.wallet.health_insurance')} />
-          <ScreenLayout.Content>
-            <DocumentDetails
-              defaultValue={{
-                policy_number: 'HI-8834-2291',
-                provider: 'Blue Shield',
-                policy_holder: 'Alex Johnson',
-                expiry_date: '2026-12-31',
-                coverage_type: 'individual',
-              }}
-              documentSlug={document}
-              schema={healthInsuranceSchema}
-              section={section}
-              title={t('tabs.wallet.health_insurance')}
-            />
-          </ScreenLayout.Content>
-        </>
-      )}
-      {document === 'vaccination-record' && (
-        <>
-          <WalletDocumentHeader title={t('tabs.wallet.vaccination_record')} />
-          <ScreenLayout.Content>
-            <DocumentDetails
-              defaultValue={{
-                patient_name: 'Alex Johnson',
-                date_of_birth: '1990-06-15',
-                vaccine_name: 'Influenza',
-                administered_date: '2025-10-05',
-                dose_number: '1',
-              }}
-              documentSlug={document}
-              schema={vaccinationRecordSchema}
-              section={section}
-              title={t('tabs.wallet.vaccination_record')}
-            />
-          </ScreenLayout.Content>
-        </>
-      )}
+      <WalletDocumentHeader title={title} />
+      <ScreenLayout.Content>
+        <DocumentDetails
+          defaultBadges={entry.defaultBadges}
+          defaultValue={entry.defaultValue as unknown as InferAttributeValue<ObjectAttributeSchema>}
+          schema={entry.schema}
+          section={entry.section}
+          title={title}
+        />
+      </ScreenLayout.Content>
     </ScreenLayout.Root>
   )
 }

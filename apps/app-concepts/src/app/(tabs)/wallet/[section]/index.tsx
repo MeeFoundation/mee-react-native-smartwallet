@@ -15,6 +15,8 @@ import { AppButton } from '@/shared/ui/AppButton'
 import { IconSymbol, type IconSymbolName } from '@/shared/ui/IconSymbol'
 import * as ListLayout from '@/shared/ui/ListLayout'
 
+import { SECTION_TITLE_KEYS, WALLET_DOCUMENTS, type DocumentSection } from '../document-registry'
+
 const styles = StyleSheet.create({
   cardList: {
     gap: 8,
@@ -67,99 +69,35 @@ export default function SectionDocumentsScreen() {
   const { section } = useLocalSearchParams<{ section: string }>()
   const [search, setSearch] = useState('')
 
+  const titleKey = SECTION_TITLE_KEYS[section as DocumentSection]
+
+  if (!titleKey) return <ScreenLayout.Root />
+
+  const sectionDocs = WALLET_DOCUMENTS.filter((d) => d.section === section)
+
   return (
     <ScreenLayout.Root>
-      {section === 'life' && (
-        <>
-          <Header.Root variant="primary">
-            <Header.Actions position="left">
-              <BackButton />
-              <Header.TitleText>{t('tabs.wallet.section_life')}</Header.TitleText>
-            </Header.Actions>
-          </Header.Root>
-          <WalletSearchBar onChangeText={setSearch} value={search} />
-          <ScreenLayout.Content scrollable={false}>
-            <ListLayout.Root>
-              <ListLayout.Content style={styles.cardList}>
-                <DocumentCard
-                  icon="identification.outlined"
-                  label={t('tabs.wallet.drivers_licence')}
-                  onPress={() => router.push('/wallet/life/drivers-licence')}
-                />
-                <DocumentCard
-                  icon="identification.outlined"
-                  label={t('tabs.wallet.passport')}
-                  onPress={() => router.push('/wallet/life/passport')}
-                />
-                <DocumentCard
-                  icon="document-text.outlined"
-                  label={t('tabs.wallet.birth_certificate')}
-                  onPress={() => router.push('/wallet/life/birth-certificate')}
-                />
-                <DocumentCard
-                  icon="credit-card.outlined"
-                  label={t('tabs.wallet.credit_card')}
-                  onPress={() => router.push('/wallet/life/credit-card')}
-                />
-              </ListLayout.Content>
-            </ListLayout.Root>
-          </ScreenLayout.Content>
-        </>
-      )}
-      {section === 'work' && (
-        <>
-          <Header.Root variant="primary">
-            <Header.Actions position="left">
-              <BackButton />
-              <Header.TitleText>{t('tabs.wallet.section_work')}</Header.TitleText>
-            </Header.Actions>
-          </Header.Root>
-          <WalletSearchBar onChangeText={setSearch} value={search} />
-          <ScreenLayout.Content scrollable={false}>
-            <ListLayout.Root>
-              <ListLayout.Content style={styles.cardList}>
-                <DocumentCard
-                  icon="briefcase.outlined"
-                  label={t('tabs.wallet.employment_contract')}
-                  onPress={() => router.push('/wallet/work/employment-contract')}
-                />
-                <DocumentCard
-                  icon="document.outlined"
-                  label={t('tabs.wallet.tax_return')}
-                  onPress={() => router.push('/wallet/work/tax-return')}
-                />
-              </ListLayout.Content>
-            </ListLayout.Root>
-          </ScreenLayout.Content>
-        </>
-      )}
-      {section === 'health' && (
-        <>
-          <Header.Root variant="primary">
-            <Header.Actions position="left">
-              <BackButton />
-              <Header.TitleText>{t('tabs.wallet.section_health')}</Header.TitleText>
-            </Header.Actions>
-          </Header.Root>
-          <WalletSearchBar onChangeText={setSearch} value={search} />
-          <ScreenLayout.Content scrollable={false}>
-            <ListLayout.Root>
-              <ListLayout.Content style={styles.cardList}>
-                <DocumentCard
-                  icon="shield-check.outlined"
-                  label={t('tabs.wallet.health_insurance')}
-                  onPress={() => router.push('/wallet/health/health-insurance')}
-                />
-                <DocumentCard
-                  icon="plus.outlined"
-                  label={t('tabs.wallet.vaccination_record')}
-                  onPress={() => router.push('/wallet/health/vaccination-record')}
-                />
-              </ListLayout.Content>
-            </ListLayout.Root>
-          </ScreenLayout.Content>
-        </>
-      )}
+      <Header.Root variant="primary">
+        <Header.Actions position="left">
+          <BackButton />
+          <Header.TitleText>{t(titleKey)}</Header.TitleText>
+        </Header.Actions>
+      </Header.Root>
+      <WalletSearchBar onChangeText={setSearch} value={search} />
+      <ScreenLayout.Content scrollable={false}>
+        <ListLayout.Root>
+          <ListLayout.Content style={styles.cardList}>
+            {sectionDocs.map((doc) => (
+              <DocumentCard
+                key={doc.slug}
+                icon={doc.icon}
+                label={t(doc.translationKey)}
+                onPress={() => router.push(`/wallet/${doc.section}/${doc.slug}`)}
+              />
+            ))}
+          </ListLayout.Content>
+        </ListLayout.Root>
+      </ScreenLayout.Content>
     </ScreenLayout.Root>
   )
 }
