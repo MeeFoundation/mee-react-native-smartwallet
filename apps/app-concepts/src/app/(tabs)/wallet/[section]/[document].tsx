@@ -310,7 +310,7 @@ function DocumentDetails<TSchema extends ObjectAttributeSchema>({ schema, title,
           >
             <IconSymbol color={BADGE_COLOR} height={16} name={SECTION_ICONS[state.section]} width={16} />
             <Typography style={[styles.badgeText, { color: BADGE_COLOR }]}>
-              {t('tabs.wallet.document_section')}: {sectionName}
+              {sectionName}
             </Typography>
           </View>
           <TouchableOpacity onPress={() => sectionPickerModalRef.current?.present()}>
