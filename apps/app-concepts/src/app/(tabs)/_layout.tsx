@@ -146,13 +146,7 @@ export default function TabLayout() {
         />
 
         <Tabs.Screen
-          listeners={{
-            tabPress: (e) => {
-              e.preventDefault()
-              onAddPress()
-            },
-          }}
-          name="wallet-placeholder"
+          name="wallet"
           options={{
             tabBarIcon: ({ color }) => <IconSymbol color={color} height={24} name="wallet.outlined" width={24} />,
             title: t('tabs.wallet.title'),
